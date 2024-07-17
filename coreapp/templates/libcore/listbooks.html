@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} {{parent}} Liste des livres de {{ librairie.nom }} {% endblock %}
+{% block css %} 
+
+    <link href="{% static 'css/dataTables.bootstrap4.css' %} " rel="stylesheet">
+    <style>
+        th{
+            text-transform: uppercase;
+            
+        }
+    </style>
+{% endblock %}
+{% block content %}
+   
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ librairie.nom }} - Nos livres 
+                        
+                    </h5>
+                    <div class="row">
+                        {% for liv in livres %}
+                            <div class="col-md-6 col-lg-2 col-xlg-3">
+                                <div class="card card-hover">
+                                    <div class="box bg-danger text-center">
+                                        <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
+                                        </h1>
+                                        <h6 class="text-white">{{ liv.prix}} </h6>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <h5 class="card-title"><a href="{% url 'show_book' liv.id %}"> {{liv.nom}} </a></h5>
+                                        <p> {{liv.description}} </p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="text-info">
+                                            {{ liv.auteur}}
+                                        </div>
+                                    </div>
+
+                                    
+                                </div> 
+                            </div>
+                        {% endfor %} 
+                             
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+
+            <h5 class="card-title">{{librairie.nom}} </h5>
+            <div class="table-responsive">
+                <table id="zero_config" class="table table-striped table-bordered">
+                    <thead class="bg-danger">
+                        <tr>
+                            <th>Titre</th>
+                            <th>Description</th>
+                            <th>Prix</th>
+                            <th>Auteur</th>
+                            <th>Domaine</th>
+                          
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for liv in livres %}
+                            <tr>
+                                <td class="text-capitalize">
+                                    <a href="{% url 'show_book' liv.id %}"> {{liv.nom}} </a></td>
+                                <td class="text-capitalize">{{ liv.description}} </td>
+                                <td>{{liv.prix}} XAF</td>
+                                <td class="text-capitalize">{{liv.auteur}} </td>
+                                <td class="text-capitalize">{{liv.domaine}}</td>
+                                
+                            </tr>
+                        {% endfor %}
+                         
+                    </tbody>
+                     
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/datatables.min.js' %}"></script>
+    <script> 
+        $('#zero_config').DataTable();
+    </script>
+{% endblock %}

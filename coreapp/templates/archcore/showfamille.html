@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} {{parent}} Detail - {{ famille.nom }} {% endblock %}
+{% block css %}  
+    <style>
+      
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="row bg">
+        <div class="col-md-3">
+            <div class="card mt-0">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="peity_line_neutral left text-center mt-2"><span><span style="display: none;"><span style="display: none;"><span style="display: none;"><span style="display: none;">10,15,8,14,13,10,10</span><canvas width="50" height="24"></canvas></span>
+                                <canvas width="50" height="24"></canvas>
+                            </span><canvas width="50" height="24"></canvas></span><canvas width="50" height="24"></canvas></span>
+                            <h6>{{famille.get_members|length}}</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-6 border-left text-center pt-2">
+                        <h3 class="mb-0 fw-bold">150</h3>
+                        <span class="text-muted">Fils</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card mt-0">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="peity_bar_bad left text-center mt-2"><span><span style="display: none;"><span style="display: none;"><span style="display: none;"><span style="display: none;">3,5,6,16,8,10,6</span><canvas width="50" height="24"></canvas></span>
+                                <canvas width="50" height="24"></canvas>
+                            </span><canvas width="50" height="24"></canvas></span><canvas width="50" height="24"></canvas></span>
+                            <h6>-40%</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-6 border-left text-center pt-2">
+                        <h3 class="mb-0 fw-bold">4560</h3>
+                        <span class="text-muted">Petits fils</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card mt-0">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="peity_line_good left text-center mt-2"><span><span style="display: none;"><span style="display: none;"><span style="display: none;"><span style="display: none;">12,6,9,23,14,10,17</span><canvas width="50" height="24"></canvas></span>
+                                <canvas width="50" height="24"></canvas>
+                            </span><canvas width="50" height="24"></canvas></span><canvas width="50" height="24"></canvas></span>
+                            <h6>+60%</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-6 border-left text-center pt-2">
+                        <h3 class="mb-0 ">5672</h3>
+                        <span class="text-muted">Arriere petit fils</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card mt-0">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="peity_bar_good left text-center mt-2"><span><span style="display: none;">12,6,9,23,14,10,13</span><canvas width="50" height="24"></canvas></span>
+                            <h6>+30%</h6>
+                        </div>
+                    </div>
+                    <div class="col-md-6 border-left text-center pt-2">
+                        <h3 class="mb-0 fw-bold">2560</h3>
+                        <span class="text-muted">Archives</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-body printableArea">
+                <h3><b>{{famille.nom}}</b> <span class="pull-right">#5669626</span></h3>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="pull-left">
+                            <address>
+                                <h3> &nbsp;<b class="text-danger text-capitalize">{{famille.description}} </b></h3>
+                                <p class="text-muted ms-1">{{famille.chef.nomcomplet}}
+                                    <br> {{famille.description}}
+                                    {% comment %} <br> Talaja Road, {% endcomment %}
+                                    {% comment %} <br> Bhavnagar - 364002</p> {% endcomment %}
+                            </address>
+                        </div>
+                        {% comment %} <div class="pull-right text-end">
+                            <address>
+                                <h3>To,</h3>
+                                <h4 class="font-bold">Gaala &amp; Sons,</h4>
+                                <p class="text-muted ms-4">E 104, Dharti-2,
+                                    <br> Nr' Viswakarma Temple,
+                                    <br> Talaja Road,
+                                    <br> Bhavnagar - 364002</p>
+                                <p class="mt-4"><b>Invoice Date :</b> <i class="fa fa-calendar"></i> 23rd
+                                    Jan 2018</p>
+                                <p><b>Due Date :</b> <i class="fa fa-calendar"></i> 25th Jan 2018</p>
+                            </address>
+                        </div> {% endcomment %}
+                    </div>
+                    <div class="col-md-12">
+                        <div class="table-responsive mt-5" style="clear: both;">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Nom Complet</th>
+                                        <th class="text-end">.</th>
+                                        <th class="text-end">.</th>
+                                        <th class="text-end">.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for  membre in famille.get_members %}
+                                    <tr>
+                                        <td class="text-center">1</td>
+                                        <td>{{membre.nomcomplet}} </td>
+                                        <td class="text-end"> 1 </td>
+                                        <td class="text-end"> . </td>
+                                        <td class="text-end"> . </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="pull-right mt-4 text-end">
+                            {% comment %} <p>Sub - Total amount: $13,848</p> {% endcomment %}
+                           
+                            <hr>
+                            <h3><b>  </b> {{livre.prix}} </h3>
+                        </div>
+                        <div class="clearfix"></div>
+                        <hr>
+                        <div class="text-end">
+                            <button class="btn btn-danger text-white" type="button"> ... </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %} Liste de nos Marchés {% endblock %}
+{% block content %}
+   
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Nos Marchés  </h5>
+                    <div class="row">
+                        {% for mar in marches %}
+                            <div class="col-md-6 col-lg-2 col-xlg-3">
+                                <div class="card card-hover">
+                                    <div class="box bg-info text-center">
+                                        <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
+                                        </h1>
+                                        <h6 class="text-white">{{ mar.nom}} </h6>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ mar.nom}}</h5>
+                                        <p> {{mar.description}} </p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="text-info">
+                                            {{ mar.lien}}
+                                        </div>
+                                    </div>
+
+                                    
+                                </div> 
+                            </div>
+                        {% endfor %} 
+                             
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/>
+
+ {% endblock %}

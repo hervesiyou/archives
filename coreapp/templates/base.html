@@ -1,0 +1,112 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="wrappixel, admin dashboard, html css dashboard, web dashboard, bootstrap 5 admin, bootstrap 5, css3 dashboard, bootstrap 5 dashboard, Matrix lite admin bootstrap 5 dashboard, frontend, responsive bootstrap 5 admin template, Matrix admin lite design, Matrix admin lite dashboard bootstrap 5 dashboard template">
+    <meta name="description" content="Matrix Admin Lite Free Version is powerful and clean admin dashboard template, inpired from Bootstrap Framework">
+    <meta name="robots" content="noindex,nofollow">
+    <title>  {% block title %} Archives {% endblock %} </title> 
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/images/favicon.png"> 
+   
+    {% block css %} {% endblock %}
+    {% comment %} <link rel="stylesheet" href="{% static 'css/core.css' %}" /> {% endcomment %}
+    {% comment %} <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" /> {% endcomment %}
+    <link rel="stylesheet" href="{% static 'css/style.min.css' %}" />
+  
+</head>
+
+<body>
+
+        <div class="main-wrapper"> 
+            <div class="preloader">
+                <div class="lds-ripple">
+                    <div class="lds-pos"></div>
+                    <div class="lds-pos"></div>
+                </div>
+            </div> 
+           
+                
+                <div class="row fixed-top">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title"> 
+                                    <a href="{% url 'index' %}"> Accueil </a> | 
+                                    <a href="{% url 'index' %}"> A propos  </a> | 
+                                    <span class="card-title text-success"> Nous contacter </span>
+                                </h5> 
+                                
+                                <div class="row">
+                                    <!-- Column -->
+                                    <div class="col-md-6 col-lg-4 col-xlg-4">
+                                        <div class="card card-hover">
+                                            <div class="box bg-success text-center">
+                                                <a href="{% url 'listcom' %}">
+                                                    <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
+                                                    </h1>
+                                                    <h6 class=" text-uppercase text-white">Archives Communautaires</h6>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Column -->
+                                    <div class="col-md-6 col-lg-4 col-xlg-4">
+                                        <div class="card card-hover">
+                                            <div class="box bg-danger text-center">
+                                                <a href="{% url 'listlibs' %}">
+                                                <h1 class="font-light text-white"><i class="mdi mdi-chart-areaspline"></i></h1>
+                                                <h6 class="text-white text-uppercase">Librairies</h6>
+                                                </a> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 col-lg-4 col-xlg-4">
+                                        <div class="card card-hover">
+                                            <div class="box bg-warning text-center">
+                                                <a href="{% url 'listmarches' %}">
+                                                <h1 class="font-light text-white"><i class="mdi mdi-arrow-all"></i></h1>
+                                                <h6 class="text-white text-uppercase"> Nos Marchés </h6>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+           
+            <div class="" style="margin-top:160px;">
+                {% block content %}
+                <div class="error-box">
+                    <div class="error-body text-center">
+                        <h1 class="error-title text-danger">ARCHIVES</h1>
+                        <h3 class="text-uppercase error-subtitle">Savoir pour comprendre !</h3>
+                        <p class="text-muted mt-4 mb-4">Comprendre pour impacter</p>
+                        <a href="#" class="btn btn-danger btn-rounded waves-effect waves-light mb-5 text-white">Impacter pour illuminer</a> 
+                    </div>
+                </div>
+                {% endblock %}
+            </div>
+
+        </div>
+
+    <script type="text/javascript" src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+
+    <script>
+        $(".preloader").fadeOut();
+    </script>
+   
+    {% block js %}
+    {% endblock %}
+</body>
+
+</html>
