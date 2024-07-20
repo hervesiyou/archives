@@ -1,22 +1,22 @@
 from django.contrib import admin
 
 # Register your models here.
-from coreapp.models.communautes import Communautes
-from coreapp.models.familles import Familles
-from coreapp.models.membres import Membres
-from coreapp.models.associations import Associations
-from coreapp.models.librairies import Librairies
-from coreapp.models.livres import Livres
-from coreapp.models.galeries import Galeries
-from coreapp.models.images import Images
-from coreapp.models.marches import Marches
+from coreapp.models.communaute import Communaute
+from coreapp.models.famille import Famille
+from coreapp.models.association import Association
+from libcore.models.librairie import Librairie
+from libcore.models.livre import Livre
+from coreapp.models.membre import Membre
+from coreapp.models.galerie import Galerie
+from coreapp.models.image import Image
+from coreapp.models.marche import Marche
 
-admin.site.register(Communautes)
-admin.site.register(Familles)
-admin.site.register(Membres)
-admin.site.register(Associations)
-admin.site.register(Librairies)
-admin.site.register(Livres)
-admin.site.register(Galeries)
-admin.site.register(Images)
-admin.site.register(Marches)
+admin.site.register(Communaute)
+admin.site.register(Famille)
+admin.site.register(Membre)
+admin.site.register(Association)
+admin.site.register(Librairie)
+admin.site.register(Livre)
+admin.site.register(Galerie)
+admin.site.register(Image)
+admin.site.register(Marche)

@@ -20,6 +20,7 @@
                     <h5 class="card-title">
                         {{ librairie.nom }} - Nos livres 
                         
+                        <a href="{% url 'addbook' %}" class="btn btn-sm btn-info"> Ajouter un livre</a>
                     </h5>
                     <div class="row">
                         {% for liv in livres %}

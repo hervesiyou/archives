@@ -15,7 +15,8 @@
                         <div class="peity_line_neutral left text-center mt-2"><span><span style="display: none;"><span style="display: none;"><span style="display: none;"><span style="display: none;">10,15,8,14,13,10,10</span><canvas width="50" height="24"></canvas></span>
                                 <canvas width="50" height="24"></canvas>
                             </span><canvas width="50" height="24"></canvas></span><canvas width="50" height="24"></canvas></span>
-                            <h6>{{famille.get_members|length}}</h6>
+                            <a class="btn btn-sm btn-info" href="{% url 'add_user' %}"> Inscrire un membre</a>
+                            <h6>{{famille.membres_set|length}}</h6>
                         </div>
                     </div>
                     <div class="col-md-6 border-left text-center pt-2">

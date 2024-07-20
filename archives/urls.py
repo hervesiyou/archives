@@ -26,6 +26,7 @@ urlpatterns = [
     path('login', views.log_user, name="login"),
     path('logout', views.log_out, name="logout"),
     
+     path('us/', include('coreapp.urls')),
      path('ar/', include('archcore.urls')),
      path('li/', include('libcore.urls')),
      path('mar/', include('marketcore.urls')),

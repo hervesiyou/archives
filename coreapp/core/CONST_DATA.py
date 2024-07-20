@@ -3,6 +3,12 @@ SEX_CHOICES =(
     ("F","Female"),
     ("M","Male")
 )
+
+TYPE_MEMBER_CHOICES =(
+    ("Chef","CHEF"),
+    ("Admin","ADMINISTRATEUR"),
+    ("Membre","MEMBRE")
+)
 ETATCIVIL_CHOICES =(
     ("Celibataire","Celibataire"),
     ("Marie","Marié Monogame"),

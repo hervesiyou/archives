@@ -5,6 +5,6 @@ from coreapp.models import *
  
 
 def listmarkets(request):
-    mar = Marches.objects.all()
+    mar = Marche.objects.all()
  
     return render(request, "marketcore/listmarches.html", { "marches" : mar, })
