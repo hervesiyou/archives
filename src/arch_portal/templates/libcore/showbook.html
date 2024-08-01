@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} {{parent}} Detail - {{ livre.nom }} {% endblock %}
+{% block css %}  
+    <style>
+      
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-body printableArea">
+                <h3><b>{{livre.nom}}</b> <span class="pull-right">#5669626</span></h3>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="pull-left">
+                            <address>
+                                <h3> &nbsp;<b class="text-danger text-capitalize">{{livre.description}} </b></h3>
+                                <p class="text-muted ms-1">{{livre.auteur}}
+                                    <br> {{livre.domaine}} 
+                            </address>
+                        </div>
+                        {% comment %} <div class="pull-right text-end">
+                            <address>
+                                <h3>To,</h3>
+                                <h4 class="font-bold">Gaala &amp; Sons,</h4>
+                                <p class="text-muted ms-4">E 104, Dharti-2,
+                                    <br> Nr' Viswakarma Temple,
+                                    <br> Talaja Road,
+                                    <br> Bhavnagar - 364002</p>
+                                <p class="mt-4"><b>Invoice Date :</b> <i class="fa fa-calendar"></i> 23rd
+                                    Jan 2018</p>
+                                <p><b>Due Date :</b> <i class="fa fa-calendar"></i> 25th Jan 2018</p>
+                            </address>
+                        </div> {% endcomment %}
+                    </div>
+                    <div class="col-md-12">
+                        <div class="table-responsive mt-5" style="clear: both;">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Description</th>
+                                        <th class="text-end">Quantité</th>
+                                        <th class="text-end">Cout</th>
+                                        <th class="text-end">Auteur</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center">1</td>
+                                        <td>{{livre.description}} </td>
+                                        <td class="text-end"> 1 </td>
+                                        <td class="text-end"> {{livre.prix}}  </td>
+                                        <td class="text-end"> {{livre.auteur}} </td>
+                                    </tr>
+                                      
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="pull-right mt-4 text-end"> 
+                            <hr>
+                            <h3><b>Cout :</b> {{livre.prix}} XAF</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                        <hr>
+                        <div class="text-end">
+                            <button class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#orderModal"type="button"> Me le procurer </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-danger text-white ">
+              <h5 class="modal-title " id="exampleModalLabel"> Commande de {{ livre.nom}} </h5>
+              <button type="button" class="btn-close clos" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form action=" " method="post" novalidate >
+                <div class="modal-body"> 
+                    {% csrf_token %}
+                    <label class="form_label"> Proprietaire</label>
+                    <input type="text" id="possesseur" value="{{ librairie.possesseur.nomcomplet }}" data-id="{{librairie.possesseur.id }}" class="form-control" />
+                    <label class="form_label"> Son contact</label>
+                    <input type="text" id="email" value="{{ librairie.possesseur.email }}" class="form-control"/>
+                    <input type="text" id="livre" value="{{ livre.nom }} / {{ livre.description}}" data-id="{{livre.id}}" class="form-control" />
+                    <label class="form_label"> Mon nom</label>
+                    <input type="text" id="nom" value="" placeholder="Votre nom complet"  class="form-control" />
+                    <label class="form_label"> Mon Telephone</label>
+                    <input type="text" id="telephone" value="" placeholder="Votre numero de telephone" class="form-control" />
+                    <label class="form_label"> Message au Proprietaire</label>
+                    <textarea id="message" placeholder="Laissez un message au Proprietaire ..." class="form-control"></textarea> 
+                </div>
+                <div class="modal-footer">
+                 <input type="button" class="btn btn-primary" id="addOrderID" value="Enregistrer" />
+                </div>
+
+            </form>
+          </div>
+        </div>
+    </div> 
+{% endblock content %}

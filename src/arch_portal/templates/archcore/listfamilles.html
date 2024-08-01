@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} {{parent}} Liste des Familles {{ communaute.nom }} {% endblock %}
+{% block css %} 
+
+    <link href="{% static 'css/dataTables.bootstrap4.css' %} " rel="stylesheet">
+    <style>
+        th{
+            text-transform: uppercase;
+            
+        }
+    </style>
+{% endblock %}
+{% block content %}
+   
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ communaute.nom }} -  Familles 
+                        
+                    </h5>
+                    <div class="row">
+                        {% for liv in familles %}
+                            <div class="col-md-6 col-lg-2 col-xlg-3">
+                                <div class="card card-hover">
+                                    <div class="box bg-success text-center">
+                                        <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
+                                        </h1>
+                                        <h6 class="text-white">{{ liv.nom}} </h6>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <h5 class="card-title"><a href="{% url 'show_famille' liv.id %}"> {{liv.nom}} </a></h5>
+                                        <p> {{liv.description}} </p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="text-info">
+                                           Chef:  {{ liv.chef.nomcomplet}}
+                                        </div>
+                                    </div>
+
+                                    
+                                </div> 
+                            </div>
+                        {% endfor %} 
+                             
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+
+            <h5 class="card-title">{{communaute.nom}} </h5>
+            <div class="table-responsive">
+                <table id="zero_config" class="table table-striped table-bordered">
+                    <thead class="bg-success">
+                        <tr>
+                            <th>Nom</th>
+                            <th>Description</th>
+                            <th>Origine</th>
+                            <th>Chef</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for liv in familles %}
+                            <tr>
+                                <td class="text-capitalize">
+                                    <a href="{% url 'show_famille' liv.id %}"> {{liv.nom}} </a>
+                                </td>
+                                <td class="text-capitalize">{{ liv.description}} </td>
+                                <td class="text-capitalize">{{liv.origine}} </td>
+                                <td class="text-capitalize">{{liv.chef.nomcomplet}}</td>
+                                <td class="text-capitalize">{{liv.type}}</td>
+                            </tr>
+                        {% endfor %}
+                         
+                    </tbody>
+                     
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/datatables.min.js' %}"></script>
+    <script> 
+        $('#zero_config').DataTable();
+    </script>
+{% endblock %}

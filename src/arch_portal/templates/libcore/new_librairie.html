@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %} Nouvelle Librairie {% endblock %}
+{% block content %}
+    <div class="card-body">
+        <h3> Nouvelle Librairie</h3>
+        {% comment %} <div class="row">
+            <div class="col-lg-12"> {% endcomment %}
+                {% comment %} <h5 class="bg-info text-center">.{{id}}</h5> {% endcomment %}
+                <form method="post" action="{% url 'add_librairie' %}">
+                    {% comment %} {% csrf_token %} {% endcomment %}
+                    {% crispy form %}
+                    <input type="submit" class="btn btn-success" value="Ajouter cette Librairie" />
+                </form>
+            {% comment %} </div> 
+        </div> {% endcomment %}
+    </div> 
+ {% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %} {{parent}} Liste de communautés {% endblock %}
+{% block content %}
+   
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Nos Communautés archivées</h5>
+                    <div class="row">
+                        {% for com in communautes %}
+                            <div class="col-md-6 col-lg-2 col-xlg-3">
+                                <div class="card card-hover">
+                                    <a href="{% url 'listfamilles' com.id %}">
+                                        <div class="box bg-cyan text-center">
+                                            <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
+                                            </h1>
+                                            <h6 class="text-white">{{ com.nom}} </h6>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ com.nom}}</h5>
+                                            <p> {{com.description}} </p>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="text-info">
+                                                {{ com.type}} , {{ com.origine}}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div> 
+                            </div>
+                        {% endfor %}  
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/>
+
+ {% endblock %}
