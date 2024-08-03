@@ -1,16 +1,17 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 {% block title %}Inscription d'un Utilisateur {% endblock %}
 {% block content %}
 
 <div class="row">
     <div class="col-lg-3"></div>
     <div class="col-lg-6">
-        <h3 class="bg-success text-center">  Inscription d'un Utilisateur  </h3>
+        <h3 class="bg-success text-center text-white">  Inscription d'un Utilisateur  </h3>
         <p>  Merci de nous en dire plus    </p>
 
         <form action="" method="post" validate >
             {% csrf_token %}
-            {{ form.as_p}}
+            {% crispy form %}
             <input type="submit"  class="btn btn-info" value="M'inscrire" />
         </form>
 

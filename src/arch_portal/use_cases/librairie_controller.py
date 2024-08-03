@@ -11,6 +11,11 @@ from arch_portal.domain.models.serializers import *
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 
+def show_commandes(request):
+    coms = CommandeLivre.objects.all()
+    print(f"{coms} total")
+    return render(request, "usercore/home.html", { "commandes" : coms} )
+
 def listlibs(request):
     libs = Librairie.objects.all()
     return render(request, "libcore/listlibrairies.html", { "librairies" : libs, } )

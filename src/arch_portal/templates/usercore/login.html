@@ -1,19 +1,20 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 {% block title %} Connexion {% endblock %}
 {% block content %}
 
 <div class="row">
     <div class="col-lg-3"></div>
     <div class="col-lg-6">
-        <h3 class="bg-info text-center">  Connexion </h3>
+        <h3 class="bg-info text-center text-white">  Connexion </h3>
         <p>  Merci de vous Connecter  </p>
 
-        <form action="" method="post" validate >
+        <form action="{% url 'login' %}" method="post"  >
             {% csrf_token %}
-            {{ form.as_p}}
+            {% crispy form %}
             <input type="submit"  class="btn btn-success" value="Se Connecter" />
         </form>
-        <a href="{% url 'subscribe' %}"> S'inscrire</a>
+        <a href="{% url 'subscribe' %}" class="text-info"> Pas encore de compte? S'inscrire</a>
     </div>
     <div class="col-lg-3"></div>
 </div>

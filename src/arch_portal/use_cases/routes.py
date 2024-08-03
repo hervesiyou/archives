@@ -31,7 +31,9 @@ urlpatterns += [
     path('u/<int:id>', membre.show_user, name="show_user"),
     path('new/', membre.add_user, name="add_user"),
     path('u/login', membre.log_user, name="login"),
+    path('u/logout', membre.log_out, name="logout"),
     path('u/sign', membre.subscribe, name="subscribe"),
+    path('u/home', membre.show_user_home, name="home"),
     
 ]
 
@@ -42,6 +44,7 @@ urlpatterns += [
     path('ab/', librairie.add_book, name="addbook"),
     path('al/', librairie.add_librairie, name="add_librairie"),
     path('sl/<int:id>', librairie.show_librairie, name="show_librairie"),
+    path('booked/', librairie.show_commandes, name="commandes_livres"),
     
     path('add_order/', librairie.api_add_order, name="api_add_order"),
 ]

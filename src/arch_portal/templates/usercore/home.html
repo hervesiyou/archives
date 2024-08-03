@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %} {{ request.session.nomcomplet }} {% endblock %}
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-10">
+        <h3 class="bg-info text-center text-white">  {{ request.session.nomcomplet}} </h3>
+        <p>  {{user}} </p>
+        <a href="{% url 'commandes_livres' %}" class="btn btn-info"> Livres demandés</a>
+
+        {% if commandes %}
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Message</th>
+                        <th>Livres</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    {% for com in commandes %}
+                        <tr>
+                            <td>{{com.nom}} / {{com.telephone}}</td>
+                            <td>{{com.message}}</td>
+                            <td>{{com.livre}} / {{com.librairie}} </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+    </div>
+    <div class="col-lg-1"></div>
+</div>
+{% endblock %}
