@@ -61,7 +61,9 @@ def show_user_home(request):
         return redirect("login")
 
 def show_user(request,id):
-    pass
+    membre = Membre.objects.get(id=id)
+    return render(request, "usercore/show_user.html", {"membre":membre})
+
 def add_user(request):
     
     if request.method == "POST":

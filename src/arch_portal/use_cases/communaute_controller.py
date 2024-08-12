@@ -14,7 +14,6 @@ def listcom(request):
 def show_association(request,id):
     pass
 def add_association(request):
-    
     if request.method == "POST":
         form = AssociationForm(request.POST)
         if form.is_valid():  
@@ -26,13 +25,11 @@ def add_association(request):
         form = AssociationForm()
 
     return render(request, "archcore/new_association.html", { "form":form  })
+ 
 
-def show_communaute(request, id):
-    pass
-
-def show_com(request,id):
+def show_communaute(request,id):
     com = Communaute.objects.get(id=id)
-    return render(request, "show_com.html", {"communaute":com})
+    return render(request, "archcore/show_com.html", {"communaute":com})
 
 def add_communaute(request):
     
