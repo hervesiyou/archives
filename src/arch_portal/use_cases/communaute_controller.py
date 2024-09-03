@@ -6,13 +6,23 @@ from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.famille import Famille
 from arch_portal.domain.models import *
 
+from arch_portal.domain.models import Association
+
 
 def listcom(request):
     communautes = Communaute.objects.all()
     return render(request, "archcore/listcom.html", { "communautes":communautes, })
 
 def show_association(request,id):
-    pass
+    asso = Association.objects.get(id=id)
+    return render(request, "archcore/showassociation.html", {"association": asso})
+
+
+def listassociations(request, id):
+    assos = Association.objects.filter(communaute=id)
+    com = Communaute.objects.get(id=id)
+    return render(request, "archcore/listassociations.html", {"associations": assos, "communaute": com})
+
 def add_association(request):
     if request.method == "POST":
         form = AssociationForm(request.POST)

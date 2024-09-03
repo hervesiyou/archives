@@ -19,7 +19,7 @@
                 <div class="card-body">
                     <h5 class="card-title">
                         {{ communaute.nom }} -  Familles 
-                        
+                        <a href="{% url 'add_famille' %}" class="btn btn-xs btn-success text-white"> Nouvelle famille</a>
                     </h5>
                     <div class="row">
                         {% for liv in familles %}

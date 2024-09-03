@@ -12,7 +12,7 @@ def listfamilles(request, id):
 
 def show_famille(request,id):
     liv = Famille.objects.get(id=id)
-    print( "membres: {}".format(liv.get_members()) )
+    # print( "membres: {}".format(liv.get_members()) )
     return render(request, "archcore/showfamille.html", {"famille" : liv} )
 
 def add_famille(request):
@@ -22,7 +22,6 @@ def add_famille(request):
         if form.is_valid():  
             com = form.save() 
             com.save()
-            
         return redirect("show_famille",com.id )
     else:
         form = FamilleForm()

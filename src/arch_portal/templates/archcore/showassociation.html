@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} {{parent}} Detail - {{ association.titre }} {% endblock %}
+{% block css %}  
+    <style>
+      
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="row bg">
+        <div class="col-md-3">
+            <div class="card mt-0">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="text-info text-center mt-2"> 
+                            <h3 class="mb-0 fw-bold">{{association.communaute}}</h3>
+                            <span class="text-muted">
+                                <a href="{% url 'listassociations' association.communaute.id %} ">Autres associations</a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 border-left text-center pt-2">
+                        <h3 class="mb-0 fw-bold">150</h3>
+                        <span class="text-muted">Interessés</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-body printableArea">
+                <h3><b>{{association.nom}}</b> <span class="pull-right"></h3>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="pull-left">
+                            <address>
+                                <h3> &nbsp;<b class="text-danger text-capitalize">{{association.description}} </b></h3>
+                                <p class="text-muted ms-1">{{association.type}}
+                                    <br> {{association.description}}
+                                    <br> {{association.adhesion}}
+                                    <br> {{association.localisation}}
+                                    <br>
+                            </address>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block js %}
+{% endblock %}

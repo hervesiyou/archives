@@ -6,12 +6,16 @@ import arch_portal.use_cases.membre_controller as membre
 import arch_portal.use_cases.communaute_controller as communaute
 import arch_portal.use_cases.famille_controller as famille
 import arch_portal.use_cases.core_controller as core
- 
+import arch_portal.use_cases.evenement_controller as evenement
 
 urlpatterns = [ 
     path('lfam/<int:id>', famille.listfamilles, name="listfamilles"),
     path('sf/<int:id>', famille.show_famille, name="show_famille"),
     path('nf/', famille.add_famille, name="add_famille"),
+
+    path('levts/<int:id>', evenement.listevenements, name="listevenements"),
+    path('sev/<int:id>', evenement.show_evenement, name="show_evenement"),
+    path('nev/', evenement.add_evenement, name="add_evenement"),
 ]
 
 urlpatterns += [ 
@@ -23,6 +27,7 @@ urlpatterns += [
     path('sc/<int:id>', communaute.show_communaute, name="show_communaute"),
     path('nc/', communaute.add_communaute, name="add_communaute"),
     path('na/', communaute.add_association, name="add_association"),
+    path('lass/<int:id>', communaute.listassociations, name="listassociations"),
     path('ngal/', communaute.add_galerie, name="add_galerie"),
     path('ga/<int:id>', communaute.show_galerie, name="show_galerie"),
 ]

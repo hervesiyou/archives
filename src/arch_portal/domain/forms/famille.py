@@ -13,7 +13,8 @@ class FamilleForm(forms.ModelForm):
         self.helper.form_tag = False 
         self.helper.layout = Layout(
             Row(
-                Column('nom', css_class='col-md-12'),
+                Column('nom', css_class='col-md-8'),
+                Column('famille_mere', css_class='col-md-4'),
                 Column('description', css_class='col-md-6'),
                 Column('origine', css_class='col-md-6'),
                 Column('histoire', css_class='col-md-12'), 

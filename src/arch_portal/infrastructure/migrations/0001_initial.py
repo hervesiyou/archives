@@ -4,6 +4,7 @@ import django.db.models.deletion
 from django.db import migrations, models
 
 
+
 class Migration(migrations.Migration):
 
     initial = True
@@ -184,4 +185,5 @@ class Migration(migrations.Migration):
             name='chef',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='arch_portal.membre'),
         ),
+
     ]

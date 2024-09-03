@@ -18,3 +18,8 @@ nav div, nav h3{
 footer span{
     text-align: center;
 }
+.bg_default{
+    background-color:darkgray;
+    text-transform: uppercase;
+    font-weight: bold;
+}

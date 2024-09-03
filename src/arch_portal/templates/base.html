@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="{% static 'css/toastr.min.css' %}" />
 
     <link rel="stylesheet" href="{% static 'css/style.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/core.css' %}" />
   
 </head>
 
@@ -30,30 +31,34 @@
                     <div class="lds-pos"></div>
                 </div>
             </div> 
-           
-                
+
             <div class="row fixed-top">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title"> 
-                                <a href="{% url 'index' %}"> Accueil </a> | 
-                                <a href="{% url 'add_communaute' %}"> + Communauté </a> | 
-                                <a href="{% url 'add_famille' %}"> + Famille </a> | 
-                                <a href="{% url 'add_user' %}"> + Membre  </a> | 
-                                <a href="{% url 'add_librairie' %}"> + Librairie  </a> | 
-                                <a href="{% url 'addbook' %}"> + Livre  </a> | 
-                                <a href="{% url 'add_association' %}"> + Association  </a> | 
-                                <a href="{% url 'add_galerie' %}"> + Galerie  </a> | 
-                                {% if not request.session.username %}
-                                    <a href="{% url 'login' %}"> Login </a> |  
-                                {% else %}
-                                    <a href="{% url 'home' %}" class="text-success text-uppercase"> {{ request.session.username}} </a> | 
-                                    <a href="{% url 'logout' %}" class="text-danger text-uppercase"> X </a> | 
-                                {% endif %}
-                                <a href="{% url 'index' %}"> A propos  </a> | 
-                                <span class="card-title text-success"> Contactez-Nous</span>
-                            </h5> 
+                            <div class="row"> 
+                                <div class="col-8 pull-left">
+                                    <a href="{% url 'index' %}"> Accueil </a> | 
+                                    <a href="{% url 'add_communaute' %}"> + Communauté </a> | 
+                                    <a href="{% url 'add_famille' %}"> + Famille </a> | 
+                                    <a href="{% url 'add_user' %}"> + Membre </a> | 
+                                    <a href="{% url 'add_librairie' %}"> + Librairie </a> | 
+                                    <a href="{% url 'addbook' %}"> + Livre  </a> | 
+                                    <a href="{% url 'add_association' %}"> + Association </a> |
+                                    <a href="{% url 'add_galerie' %}"> + Galerie  </a> | 
+                                    <a href="{% url 'add_evenement' %}"> + Evenement  </a> |
+                                </div>
+                                <div class="col-4 pull-right">
+                                    {% if not request.session.username %}
+                                        <a href="{% url 'login' %}"> Login </a> |  
+                                    {% else %}
+                                        <a href="{% url 'home' %}" class="text-success text-uppercase"> {{ request.session.username}} </a> | 
+                                        <a href="{% url 'logout' %}" class="text-danger text-uppercase"> X </a> | 
+                                    {% endif %}
+                                    <a href="{% url 'index' %}"> A propos  </a> | 
+                                    <span class="card-title text-success"> Contactez-Nous</span>
+                                </div>
+                            </div> 
                             
                             <div class="row"> 
                                 <div class="col-md-6 col-lg-4 col-xlg-4">

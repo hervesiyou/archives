@@ -7,13 +7,16 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Nos Librairies archivées</h5>
+                    <h5 class="card-title">
+                        Nos Librairies archivées
+                        <a href="{% url 'add_librairie' %}" class="btn btn-success btn-xs">Nouvelle librairie </a>
+                    </h5>
                     <div class="row">
                         {% for lib in librairies %}
                             <div class="col-md-6 col-lg-2 col-xlg-3">
                                 <div class="card card-hover">
                                     <a href="{% url 'listbooks' lib.id %}">
-                                        <div class="box bg-success text-center">
+                                        <div class="box bg-danger text-center">
                                             <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
                                             </h1>
                                             <h6 class="text-white">{{ lib.nom}} </h6>
@@ -31,11 +34,9 @@
                                             </div>
                                         </div>
                                     </a>
-                                    
                                 </div> 
                             </div>
                         {% endfor %} 
-                             
                     </div>
                 </div>
             </div>

@@ -27,13 +27,13 @@ def log_out(request):
 def log_user(request):
     if request.method == "POST":
         form = UsersLoginForm(request.POST)
-       
-        if form.is_valid(): 
+        if form.is_valid():
+            print(compute_sha1( form.cleaned_data["pwd"]) )
             user = Membre.objects.filter(
                 login=form.cleaned_data["login"],
                 pwd=compute_sha1(form.cleaned_data["pwd"]),
             ).first()
-             
+
             if user != None:
                 request.session["username"] = user.login 
                 request.session["nomcomplet"] = user.nomcomplet 
@@ -42,12 +42,12 @@ def log_user(request):
                 messages.info(request,f"Bienvenue { user.nomcomplet }")
                 return redirect("home" )
             else:
-                messages.info(request,f"Desolé { form.cleaned_data["login"]} nous est inconnu !")
+                messages.info(request,f" Desolé { form.cleaned_data["login"]} nous est inconnu !")
     else:
         request.session.get("username1","")
         request.session.get("userid1",0) 
         form = UsersLoginForm()
- 
+
     return render(request, "usercore/login.html", {"form":form})
 
 def show_user_home(request):
@@ -65,7 +65,7 @@ def show_user(request,id):
     return render(request, "usercore/show_user.html", {"membre":membre})
 
 def add_user(request):
-    
+
     if request.method == "POST":
         form = MembreForm(request.POST)
         if form.is_valid():  
