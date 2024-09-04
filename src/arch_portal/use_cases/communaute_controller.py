@@ -30,7 +30,7 @@ def add_association(request):
             com = form.save() 
             com.save()
             
-        return redirect("show_association",com.id )
+            return redirect("show_association",com.id )
     else:
         form = AssociationForm()
 
@@ -48,8 +48,7 @@ def add_communaute(request):
         if form.is_valid():  
             com = form.save() 
             com.save()
-            
-        return redirect("show_communaute",com.id )
+            return redirect("show_communaute",com.id )
     else:
         form = CommunauteForm()
 
@@ -65,7 +64,7 @@ def add_galerie(request):
             com = form.save() 
             com.save()
             
-        return redirect("show_galerie",com.id )
+            return redirect("show_galerie",com.id )
     else:
         form = GalerieForm()
 

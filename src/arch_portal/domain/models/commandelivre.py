@@ -3,12 +3,12 @@ from django.db import models
 class CommandeLivre(models.Model):
     class Meta:
         verbose_name = "Commande de Livre"
-        verbose_name_plural = "Les commandes "
+        verbose_name_plural = "Les commandes de livres"
     
     db_table = "commandes_livres"
     nom = models.CharField(max_length=150)
     telephone = models.CharField(max_length=150)
-    date= models.DateTimeField(auto_now=True, auto_now_add=False) 
+    date= models.DateTimeField(auto_now=True)
     message = models.TextField( blank=True)
     proprietaire = models.ForeignKey(
         "Membre",
@@ -26,5 +26,5 @@ class CommandeLivre(models.Model):
         blank=True,null=1
     )
     def __str__(self):
-        return f"{self.nom} = {self.livre.nom}"
+        return f"{self.nom} ,{self.livre.nom}"
     

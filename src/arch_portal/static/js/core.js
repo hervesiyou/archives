@@ -46,6 +46,7 @@ $(document).ready(function(){
                                     showConfirmButton: false
         
                                 });
+                                window.location.reload()
                             }
                             
                         

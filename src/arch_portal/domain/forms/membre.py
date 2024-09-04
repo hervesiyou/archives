@@ -54,6 +54,7 @@ class UsersLoginForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_tag = False
 
+
 class UsersSubscribeForm(forms.ModelForm):
     class Meta:
         model = Membre
@@ -62,7 +63,16 @@ class UsersSubscribeForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
-        
+
+    def clean(self):
+        cleaned_data = super().clean()
+        nom = cleaned_data.get("nomcomplet")
+        sexe = cleaned_data.get("type")
+        pere = cleaned_data.get("pere")
+        if Membre.objects.filter(nom=nom, sexe=sexe, pere=pere).exists():
+            raise forms.ValidationError("Ce membre existe dejà ! ")
+        return cleaned_data
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.pwd = compute_sha1(self.cleaned_data['pwd']) 

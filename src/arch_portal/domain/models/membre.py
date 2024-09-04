@@ -4,6 +4,7 @@ from .famille import Famille
 from .association import Association
 from .image import Image
 from .galerie import Galerie
+from .role import Role
 
 class Membre(models.Model):
     class Meta:
@@ -12,7 +13,7 @@ class Membre(models.Model):
     
     nomcomplet = models.CharField(max_length=100)
     login = models.CharField(max_length=50)
-    pwd = models.CharField(max_length=50)
+    pwd = models.CharField(max_length=300)
     email = models.CharField(max_length=50)
     telephone = models.CharField(max_length=50)
     etatvalidation = models.BooleanField(default=0,null=True)
@@ -41,6 +42,10 @@ class Membre(models.Model):
     mere = models.CharField(max_length=150)
     vivant = models.BooleanField(default=True)
     datedeces = models.CharField(max_length=50, null=True, blank=True)
+
+    role = models.ManyToManyField(
+        Role
+    )
     def __str__(self):
         return self.nomcomplet
 

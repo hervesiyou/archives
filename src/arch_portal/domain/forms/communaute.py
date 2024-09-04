@@ -7,7 +7,17 @@ class CommunauteForm(forms.ModelForm):
     class Meta:
         model = Communaute
         exclude  = ["chef"]
-    
+
+    def clean(self):
+        cleaned_data = super().clean()
+        nom = cleaned_data.get("nom")
+        type = cleaned_data.get("type")
+        origine = cleaned_data.get("origine")
+        region = cleaned_data.get("region")
+        if Communaute.objects.filter(nom=nom, type=type, origine=origine,region=region).exists():
+            raise forms.ValidationError("Cette communauté existe dejà !")
+        return cleaned_data
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()

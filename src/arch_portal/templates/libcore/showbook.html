@@ -21,19 +21,7 @@
                                     <br> {{livre.domaine}} 
                             </address>
                         </div>
-                        {% comment %} <div class="pull-right text-end">
-                            <address>
-                                <h3>To,</h3>
-                                <h4 class="font-bold">Gaala &amp; Sons,</h4>
-                                <p class="text-muted ms-4">E 104, Dharti-2,
-                                    <br> Nr' Viswakarma Temple,
-                                    <br> Talaja Road,
-                                    <br> Bhavnagar - 364002</p>
-                                <p class="mt-4"><b>Invoice Date :</b> <i class="fa fa-calendar"></i> 23rd
-                                    Jan 2018</p>
-                                <p><b>Due Date :</b> <i class="fa fa-calendar"></i> 25th Jan 2018</p>
-                            </address>
-                        </div> {% endcomment %}
+
                     </div>
                     <div class="col-md-12">
                         <div class="table-responsive mt-5" style="clear: both;">
@@ -93,7 +81,11 @@
                     <input type="text" id="email" value="{{ librairie.possesseur.email }}" class="form-control"/>
                     <input type="text" id="livre" value="{{ livre.nom }} / {{ livre.description}}" data-id="{{livre.id}}" class="form-control" />
                     <label class="form_label"> Mon nom</label>
-                    <input type="text" id="nom" value="" placeholder="Votre nom complet"  class="form-control" />
+                    {% if not request.session.username %}
+                        <input type="text" id="nom" value="" placeholder="Votre nom complet"  class="form-control" />
+                    {% else %}
+                        <input type="text" id="nom" value="{{request.session.nomcomplet}}" class="form-control" />
+                    {% endif %}
                     <label class="form_label"> Mon Telephone</label>
                     <input type="text" id="telephone" value="" placeholder="Votre numero de telephone" class="form-control" />
                     <label class="form_label"> Message au Proprietaire</label>

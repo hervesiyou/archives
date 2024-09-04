@@ -42,7 +42,7 @@ def log_user(request):
                 messages.info(request,f"Bienvenue { user.nomcomplet }")
                 return redirect("home" )
             else:
-                messages.info(request,f" Desolé { form.cleaned_data["login"]} nous est inconnu !")
+                messages.info(request,f" Desolé { form.cleaned_data["login"]}  nous est inconnu !")
     else:
         request.session.get("username1","")
         request.session.get("userid1",0) 
@@ -71,7 +71,7 @@ def add_user(request):
         if form.is_valid():  
             com = form.save() 
             com.save()
-        return redirect("show_user",com.id )
+            return redirect("show_user",com.id )
     else:
         form = MembreForm()
 

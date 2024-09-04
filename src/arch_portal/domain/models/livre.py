@@ -14,3 +14,7 @@ class Livre(models.Model):
     librairies = models.ManyToManyField("Librairie",related_name="mes_librairies", null=True)
     def __str__(self):
         return f"{self.nom}, {self.auteur}"
+
+    def get_librairies(self):
+        return self.librairies.all().first().nom
+        # return [lib.nom for lib in self.librairies.all()]

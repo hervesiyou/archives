@@ -10,7 +10,7 @@
         <p>  Merci de vous Connecter  </p>
 
         <form action="{% url 'login' %}" method="post"  >
-            {% csrf_token %}
+             
             {% crispy form %}
             <input type="submit"  class="btn btn-success" value="Se Connecter" />
         </form>

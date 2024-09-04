@@ -5,7 +5,8 @@ from .communaute import Communaute
 from .librairie import Librairie
 from .livre import Livre
 from  .evenement import Evenement
-
+from .permission import Permission
+from .role import Role
 __all__ = [
     "Association",
     "Membre",
@@ -13,5 +14,7 @@ __all__ = [
     "Communaute",
     "Librairie",
     "Livre",
-    "Evenement"
+    "Evenement",
+    "Role",
+    "Permission"
 ]

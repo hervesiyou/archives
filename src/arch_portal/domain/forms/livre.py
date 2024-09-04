@@ -1,5 +1,5 @@
 from arch_portal.domain.models.livre import Livre
-from django.forms import ModelForm
+from django.forms import ModelForm,ValidationError
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column
 
@@ -7,7 +7,16 @@ class LivreForm(ModelForm):
     class Meta:
         model = Livre
         exclude = ["librairies"]
-    
+
+    def clean(self):
+        cleaned_data = super().clean()
+        nom = cleaned_data.get("nom")
+        auteur = cleaned_data.get("auteur")
+        prix = cleaned_data.get("prix")
+        if Livre.objects.filter(nom=nom, auteur=auteur, prix=prix).exists():
+            raise ValidationError("Ce livre existe dejà !")
+        return cleaned_data
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()

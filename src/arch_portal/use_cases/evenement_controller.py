@@ -20,7 +20,7 @@ def add_evenement(request):
         if form.is_valid():
             event = form.save()
             event.save()
-        return redirect("show_evenement", event.id)
+            return redirect("show_evenement", event.id)
     else:
         form = EvenementForm()
 

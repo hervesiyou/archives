@@ -1,4 +1,5 @@
 import json
+import datetime
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from arch_portal.domain.forms.librairie import LibrairieForm
@@ -66,11 +67,11 @@ def show_librairie(request,id):
 def add_librairie(request):
     if request.method == "POST": 
         form = LibrairieForm(request.POST)
+
         if form.is_valid():  
             com = form.save() 
             com.save()
-            
-        return redirect("show_librairie",com.id )
+            return redirect("show_librairie",com.id )
     else: 
         form = LibrairieForm()
 
@@ -91,17 +92,22 @@ def api_add_order(request):
             
             proprietaire=Membre.objects.get(id=data.get("possesseur"))
             livre=Livre.objects.get(id=data.get("livre"))
-            
-            com=CommandeLivre.objects.create(
+
+
+            com,already = CommandeLivre.objects.get_or_create(
                 nom=data.get("nom"),
                 telephone=data.get("telephone"),
                 livre=livre,
+                date=datetime.datetime.now(),
                 proprietaire=proprietaire, 
                 message=data.get("message"),
             )
-            com.save()  
+            if not already:
+                com.save()
+                return JsonResponse({'status':True,"message":f"{com.id}  ajouté avec success"})
+            else:
+                return JsonResponse({'status': False, "message": f"Vous avez dejà commandé {com.livre.nom} "})
 
-            return JsonResponse({'status':True,"message":f"{com.id}  ajouté avec success"})
         return JsonResponse({"status":False, 'message': 'Invalid request'}, status=400)
 
     return JsonResponse({"status":False,'message': is_ajax })

@@ -22,7 +22,7 @@ def add_famille(request):
         if form.is_valid():  
             com = form.save() 
             com.save()
-        return redirect("show_famille",com.id )
+            return redirect("show_famille",com.id )
     else:
         form = FamilleForm()
 

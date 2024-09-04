@@ -13,11 +13,12 @@
         {% if commandes %}
         <div class="card-body">
             <table class="table">
-                <thead>
-                    <tr>
+                <thead >
+                    <tr class="text-danger">
                         <th>Nom</th>
                         <th>Message</th>
                         <th>Livres</th>
+                        <th>Librairie</th>
                     </tr>
                 </thead>
                 <tbody> 
@@ -26,6 +27,7 @@
                             <td>{{com.nom}} / {{com.telephone}}</td>
                             <td>{{com.message}}</td>
                             <td>{{com.livre}} / {{com.librairie}} </td>
+                            <td>{{com.livre.get_librairies}} </td>
                         </tr>
                     {% endfor %}
                 </tbody>
