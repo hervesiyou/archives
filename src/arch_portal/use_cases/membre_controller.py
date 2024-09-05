@@ -1,10 +1,14 @@
+import json
 
+from django.core.serializers import serialize
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from arch_portal.domain.exceptions.membre_exception import MembreException
 from arch_portal.use_cases.services.core import compute_sha1
 from arch_portal.domain.forms.membre import MembreForm,UsersLoginForm,UsersSubscribeForm
 from arch_portal.domain.models.membre import Membre
+
+from arch_portal.domain.serializers import MembreSerializer
 
 
 def subscribe(request):
@@ -35,8 +39,10 @@ def log_user(request):
             ).first()
 
             if user != None:
+
                 request.session["username"] = user.login 
-                request.session["nomcomplet"] = user.nomcomplet 
+                request.session["userrights"] =  user.get_rights()
+                request.session["nomcomplet"] = user.nomcomplet
                 request.session["userid"] = user.id
                 request.session.modified = True
                 messages.info(request,f"Bienvenue { user.nomcomplet }")

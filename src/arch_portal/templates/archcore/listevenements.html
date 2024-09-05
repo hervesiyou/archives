@@ -18,8 +18,10 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">
-                        {{ communaute.nom }} -  evenements 
+                        {{ communaute.nom }} -  evenements
+                        {% if  'ADD_EVENEMENT' in request.session.userrights %}
                         <a href="{% url 'add_evenement' %}" class="btn btn-xs btn-success text-white"> Nouvel evenement</a>
+                        {% endif %}
                     </h5>
                     <div class="row">
                         {% for liv in evenements %}

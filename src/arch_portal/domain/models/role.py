@@ -1,7 +1,5 @@
 import uuid
-
 from django.db import models
-
 from arch_portal.domain.enums import RoleEnum
 
 

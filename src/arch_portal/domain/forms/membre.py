@@ -2,7 +2,7 @@
 from django import forms
 from arch_portal.use_cases.services.core import compute_sha1
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Row, Column
+from crispy_forms.layout import Layout, Row, Column,Field
 from arch_portal.domain.models.membre import Membre 
 
 class MembreForm(forms.ModelForm):
@@ -45,20 +45,30 @@ class MembreForm(forms.ModelForm):
                 css_class='row'
             ),
         )
+
 class UsersLoginForm(forms.ModelForm):
+    pwd = forms.CharField(widget=forms.PasswordInput, label="Mot de passe")
+    login = forms.CharField( label="Login ou Pseudonyme")
+
     class Meta:
         model = Membre
         fields = ['login','pwd']
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_tag = False
+        self.helper.layout = Layout(
+            Field('login', css_class='form-control'),
+            Field('pwd', css_class='form-control'),
+        )
 
 
 class UsersSubscribeForm(forms.ModelForm):
     class Meta:
         model = Membre
         fields = ["nomcomplet","login","pwd","email","telephone","sexe","datenaissance","lieunaissance","residence"]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -79,4 +89,6 @@ class UsersSubscribeForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
         

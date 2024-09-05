@@ -9,7 +9,9 @@
                 <div class="card-body">
                     <h5 class="card-title">
                         Nos Librairies archivées
-                        <a href="{% url 'add_librairie' %}" class="btn btn-success btn-xs">Nouvelle librairie </a>
+                        {% if  'ADD_LIBRAIRIE' in request.session.userrights %}
+                            <a href="{% url 'add_librairie' %}" class="btn btn-success btn-xs">Nouvelle librairie </a>
+                        {% endif %}
                     </h5>
                     <div class="row">
                         {% for lib in librairies %}

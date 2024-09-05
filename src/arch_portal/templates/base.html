@@ -38,15 +38,33 @@
                         <div class="card-body">
                             <div class="row"> 
                                 <div class="col-8 pull-left">
-                                    <a href="{% url 'index' %}"> Accueil </a> | 
-                                    <a href="{% url 'add_communaute' %}"> + Communauté </a> | 
-                                    <a href="{% url 'add_famille' %}"> + Famille </a> | 
-                                    <a href="{% url 'add_user' %}"> + Membre </a> | 
-                                    <a href="{% url 'add_librairie' %}"> + Librairie </a> | 
-                                    <a href="{% url 'addbook' %}"> + Livre  </a> | 
+                                    <a href="{% url 'index' %}"> Accueil </a> |
+                                    {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                                        {{ request.session.userrights}}
+                                        <a href="{% url 'add_communaute' %}"> + Communauté </a> |
+                                    {% endif %}
+                                    {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                                    <a href="{% url 'add_famille' %}"> + Famille </a> |
+                                    {% endif %}
+                                    {% if  'ADD_MEMBRE' in request.session.userrights %}
+                                    <a href="{% url 'add_user' %}"> + Membre </a> |
+                                    {% endif %}
+                                    {% if  'ADD_LIBRAIRIE' in request.session.userrights %}
+                                    <a href="{% url 'add_librairie' %}"> + Librairie </a> |
+                                    {% endif %}
+                                    {% if  'ADD_LIVRE' in request.session.userrights %}
+                                    <a href="{% url 'addbook' %}"> + Livre  </a> |
+                                    {% endif %}
+                                    {% if  'ADD_ASSOCIATION' in request.session.userrights %}
                                     <a href="{% url 'add_association' %}"> + Association </a> |
-                                    <a href="{% url 'add_galerie' %}"> + Galerie  </a> | 
-                                    <a href="{% url 'add_evenement' %}"> + Evenement  </a> |
+                                    {% endif %}
+                                    {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                                    <a href="{% url 'add_galerie' %}"> + Galerie  </a> |
+                                    {% endif %}
+                                    {% if  'ADD_EVENEMENT' in request.session.userrights %}
+                                    <a href="{% url 'add_evenement' %}"> + Evenement  </a>
+                                    {% endif %}
+
                                 </div>
                                 <div class="col-4 pull-right">
                                     {% if not request.session.username %}

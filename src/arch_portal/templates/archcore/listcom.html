@@ -8,7 +8,9 @@
                 <div class="card-body">
                     <h5 class="card-title">
                         Nos Communautés archivées
-                        <a href="{% url 'add_communaute' %}" class="btn btn-success btn-xs"> Nouvelle Communaté </a>
+                        {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                            <a href="{% url 'add_communaute' %}" class="btn btn-success btn-xs"> Nouvelle Communaté </a>
+                        {% endif %}
                     </h5>
                     <div class="row">
                         {% for com in communautes %}

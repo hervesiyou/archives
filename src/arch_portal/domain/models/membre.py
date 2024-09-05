@@ -49,3 +49,7 @@ class Membre(models.Model):
     def __str__(self):
         return self.nomcomplet
 
+    def get_rights(self):
+        return [perm.nom for role in self.role.all() for perm in role.permissions.all() ]
+
+
