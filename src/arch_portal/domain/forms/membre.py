@@ -39,8 +39,10 @@ class MembreForm(forms.ModelForm):
                 Column('profession', css_class='col-md-3'), 
                 Column('associations', css_class='col-md-3'), 
                 Column('familles', css_class='col-md-12'), 
-                Column('pere', css_class='col-md-6'), 
-                Column('mere', css_class='col-md-6'), 
+                Column('pere', css_class='col-md-3'), 
+                Column('mere', css_class='col-md-3'), 
+                Column('nompere', css_class='col-md-3'), 
+                Column('nommere', css_class='col-md-3'), 
                 
                 css_class='row'
             ),

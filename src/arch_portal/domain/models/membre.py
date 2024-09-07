@@ -38,14 +38,25 @@ class Membre(models.Model):
     galeries = models.ManyToManyField(Galerie, related_name="mes_galeries", null=True, blank=True)
     approbateurs = models.ManyToManyField("self", null=True, blank=True)
     
-    pere = models.CharField(max_length=150)
-    mere = models.CharField(max_length=150)
+    pere = models.CharField(max_length=150,null=True, blank=True)
+    mere = models.CharField(max_length=150,null=True, blank=True)
+    nompere = models.ForeignKey('self',on_delete=models.SET_NULL, related_name="papa",null=True, blank=True)
+    nommere = models.ForeignKey('self',on_delete=models.SET_NULL,related_name="mama",null=True, blank=True)
     vivant = models.BooleanField(default=True)
     datedeces = models.CharField(max_length=50, null=True, blank=True)
 
     role = models.ManyToManyField(
         Role
     )
+
+    def save(self, *args, **kwargs):
+        if len(self.pere)<3 and len(self.mere)<3:
+            if len(self.nompere.nomcomplet)<3 and len(self.nommere.nomocomplet)<3:
+                print("merci de choisir les parents")
+                raise ValueError("Merci de fournir les parents de ce membre")
+
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.nomcomplet
 

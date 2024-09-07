@@ -74,6 +74,7 @@ def add_user(request):
 
     if request.method == "POST":
         form = MembreForm(request.POST)
+        print(form.errors)
         if form.is_valid():  
             com = form.save() 
             com.save()
