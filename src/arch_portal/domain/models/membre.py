@@ -62,5 +62,9 @@ class Membre(models.Model):
 
     def get_rights(self):
         return [perm.nom for role in self.role.all() for perm in role.permissions.all() ]
+    
+    def get_familles(self):
+        # return self.librairies.all().first().nom
+        return [lib.nom for lib in self.familles.all()]
 
 

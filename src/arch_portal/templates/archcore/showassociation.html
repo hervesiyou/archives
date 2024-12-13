@@ -9,11 +9,12 @@
 {% block content %}
     <div class="row bg">
         <div class="col-md-3">
-            <div class="card mt-0">
+            <div class="  mt-0">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="text-info text-center mt-2"> 
-                            <h3 class="mb-0 fw-bold">{{association.communaute}}</h3>
+                        <div class="text-info text-center mt-3"> 
+                            <h3 class="mb-0 fw-bold">
+                                {{association.communaute}}</h3>
                             <span class="text-muted">
                                 <a href="{% url 'listassociations' association.communaute.id %} ">Autres associations</a>
                             </span>
@@ -21,7 +22,7 @@
                     </div>
                     <div class="col-md-6 border-left text-center pt-2">
                         <h3 class="mb-0 fw-bold">150</h3>
-                        <span class="text-muted">Interessés</span>
+                        <span class="text-muted">Membres</span>
                     </div>
                 </div>
             </div>
@@ -31,7 +32,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-body printableArea">
+            <div class="  card-body printableArea">
                 <h3><b>{{association.nom}}</b> <span class="pull-right"></h3>
                 <hr>
                 <div class="row">
@@ -48,6 +49,7 @@
                         </div>
                     </div>
                 </div>
+                <hr/>
             </div>
         </div>
     </div>

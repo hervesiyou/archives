@@ -5,71 +5,63 @@
    
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        Nos Librairies archivées
-                        {% if  'ADD_LIBRAIRIE' in request.session.userrights %}
-                            <a href="{% url 'add_librairie' %}" class="btn btn-success btn-xs">Nouvelle librairie </a>
-                        {% endif %}
-                    </h5>
-                    <div class="row">
-                        {% for lib in librairies %}
-                            <div class="col-md-6 col-lg-2 col-xlg-3">
-                                <div class="card card-hover">
-                                    <a href="{% url 'listbooks' lib.id %}">
-                                        <div class="box bg-danger text-center">
-                                            <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
-                                            </h1>
-                                            <h6 class="text-white">{{ lib.nom}} </h6>
-                                        </div>
+            
+            <div class="card-body">
+                <h5 class="card-title">
+                    Nos Librairies archivées
+                    {% if  'ADD_LIBRAIRIE' in request.session.userrights %}
+                        <a href="{% url 'add_librairie' %}" class="btn btn-success btn-xs">Nouvelle librairie </a>
+                    {% endif %}
+                </h5>
+                <div class="row el-element-overlay">
+                    {% for lib in librairies %}
+                        <div class="col-md-6 col-lg-2 col-xlg-3">
+                            <div class="card card-hover">
+                                <a href="{% url 'listbooks' lib.id %}">
+                                    <div class="box bg-danger text-center">
+                                        <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
+                                        </h1>
+                                        <h6 class="text-white">{{ lib.nom}} </h6>
+                                    </div>
+                                </a>
 
-                                        <div class="card-body">
-                                            <p> {{lib.description}} </p>
+                                
+                                    
+                                        <div class="el-card-item">
+                                            
+                                                <div class="el-card-avatar el-overlay-1"> <img src="{% static 'images/big/img2.jpg' %} " alt="user" style="width:100%;">
+                                                    <div class="el-overlay">
+                                                        <ul class="list-style-none el-info">
+                                                            <li class="el-item"><a class="btn default btn-outline image-popup-vertical-fit el-link" href="{% static 'images/big/img1.jpg'%}  "><i class="mdi mdi-magnify-plus"></i></a></li>
+                                                            
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="el-card-content">
+                                                    <a href="{% url 'listbooks' lib.id %}">
+                                                        <h4 class="mb-0">{{ lib.nom}} </h4> <span class="text-muted">  {{ lib.description }} </span>
+                                                    </a>
+                                                </div>
                                         </div>
-                                    </a>
-                                    <a href="{% url 'show_librairie' lib.id %}">
-                                        <div class="card-footer">
-                                            <div class="text-info">
-                                                {{ lib.type}}
-                                            </div>
+                                
+                                
+
+                                <a href="{% url 'show_librairie' lib.id %}">
+                                    <div class="card-footer">
+                                        <div class="text-info">
+                                            {{ lib.type}}
                                         </div>
-                                    </a>
-                                </div> 
-                            </div>
-                        {% endfor %} 
-                    </div>
+                                    </div>
+                                </a>
+                            </div> 
+                        </div>
+                    {% endfor %} 
                 </div>
             </div>
+        
         </div>
     </div>
 
-    <div class="card-body">
-        <div class="row el-element-overlay">
-            {% for lib in librairies %}
-                <div class="col-lg-2 col-md-6">
-                    <div class="card">
-                        <div class="el-card-item">
-                            
-                                <div class="el-card-avatar el-overlay-1"> <img src="{% static 'images/big/img2.jpg' %} " alt="user">
-                                    <div class="el-overlay">
-                                        <ul class="list-style-none el-info">
-                                            <li class="el-item"><a class="btn default btn-outline image-popup-vertical-fit el-link" href="{% static 'images/big/img1.jpg'%}  "><i class="mdi mdi-magnify-plus"></i></a></li>
-                                            <li class="el-item"><a class="btn default btn-outline el-link" href="javascript:void(0);"><i class="mdi mdi-link"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="el-card-content">
-                                    <a href="{% url 'listbooks' lib.id %}">
-                                        <h4 class="mb-0">{{ lib.nom}} </h4> <span class="text-muted">  {{ lib.description }} </span>
-                                    </a>
-                                </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-    <br/>
+  
 
  {% endblock %}

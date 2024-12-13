@@ -15,44 +15,45 @@
    
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        {{ communaute.nom }} -  Familles 
-                        <a href="{% url 'add_famille' %}" class="btn btn-xs btn-success text-white"> Nouvelle famille</a>
-                    </h5>
-                    <div class="row">
-                        {% for liv in familles %}
-                            <div class="col-md-6 col-lg-2 col-xlg-3">
-                                <div class="card card-hover">
-                                    <div class="box bg-success text-center">
-                                        <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
-                                        </h1>
-                                        <h6 class="text-white">{{ liv.nom}} </h6>
-                                    </div>
+            
+            <div class="card-body">
+                <h5 class="card-title my-3">
+                    <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a> 
+                    &nbsp; 
+                    <a href="{% url 'add_famille' %}" class="btn btn-xs btn-success text-white"> Nouvelle famille</a>
+                </h5>
+                <div class="row">
+                    {% for liv in familles %}
+                        <div class="col-md-6 col-lg-2 col-xlg-3">
+                            <div class="card card-hover">
+                                <div class="box bg-success text-center">
+                                    <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
+                                    </h1>
+                                    <h6 class="text-white">{{ liv.nom}} </h6>
+                                </div>
 
-                                    <div class="card-body">
-                                        <h5 class="card-title"><a href="{% url 'show_famille' liv.id %}"> {{liv.nom}} </a></h5>
-                                        <p> {{liv.description}} </p>
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="{% url 'show_famille' liv.id %}"> {{liv.nom}} </a></h5>
+                                    <p> {{liv.description}} </p>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="text-info">
+                                        Chef:  {{ liv.chef.nomcomplet}}
                                     </div>
-                                    <div class="card-footer">
-                                        <div class="text-info">
-                                           Chef:  {{ liv.chef.nomcomplet}}
-                                        </div>
-                                    </div>
+                                </div>
 
-                                    
-                                </div> 
-                            </div>
-                        {% endfor %} 
-                             
-                    </div>
+                                
+                            </div> 
+                        </div>
+                    {% endfor %} 
+                            
                 </div>
             </div>
+            
         </div>
     </div>
 
-    <div class="card">
+    
         <div class="card-body">
 
             <h5 class="card-title">{{communaute.nom}} </h5>
@@ -86,7 +87,7 @@
             </div>
 
         </div>
-    </div>
+    
 
 {% endblock %}
 

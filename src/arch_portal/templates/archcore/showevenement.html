@@ -7,13 +7,13 @@
     </style>
 {% endblock %}
 {% block content %}
-    <div class="row bg">
+    <div-- class="row bg">
         <div class="col-md-3">
-            <div class="card mt-0">
+            <div class="  mt-0">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="text-info text-center mt-2"> 
-                            <h3 class="mb-0 fw-bold">{{evenement.communaute}}</h3>
+                            <h3 class="mb-2 fw-bold">{{evenement.communaute}}</h3>
                             <span class="text-muted">
                                 <a href="{% url 'listevenements' evenement.communaute.id %} ">Autres evenements</a>
                             </span>
@@ -27,21 +27,20 @@
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card mt-0">
-                <div class="row">
-                    <div class="col-md-6 border-left text-center pt-2">
-                        <h3 class="mb-0 ">Mediathèque</h3>
-                        <span class="text-muted">....</span>
-                    </div>
+        <!-- div class="col-md-3">
+            <div class="  mt-0"> 
+                <div class="col-md-6 border-left text-center pt-2">
+                    <h3 class="mb-0 "> Mediathèque </h3>
+                    <span class="text-muted">....</span>
                 </div>
+                 
             </div>
-        </div>
+        </div-->
 
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-body printableArea">
+            <div class="  card-body printableArea">
                 <h3><b>{{evenement.titre}}</b> <span class="pull-right"></h3>
                 <hr>
                 <div class="row">
@@ -49,7 +48,8 @@
                         <div class="pull-left">
                             <address>
                                 <h3> &nbsp;<b class="text-danger text-capitalize">{{evenement.description}} </b></h3>
-                                <p class="text-muted ms-1">{{evenement.periodicite}}
+                                <p class="text-muted ms-1">
+                                    <span class="badge bg-info my-2">{{evenement.periodicite}} </span>
                                     <br> {{evenement.description}}
                                     <br>
                             </address>

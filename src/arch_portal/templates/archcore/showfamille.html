@@ -7,9 +7,9 @@
     </style>
 {% endblock %}
 {% block content %}
-    <div class="row bg">
+    <div class="row bg my-5">
         <div class="col-md-3">
-            <div class="card mt-0">
+            <div class=" mt-0">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="text-info text-center mt-2"> 
@@ -25,7 +25,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card mt-0">
+            <div class=" mt-0">
                 <div class="row"> 
                     <div class="col-md-6 border-left text-center pt-2">
                         <h3 class="mb-0 fw-bold">4560</h3>
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card mt-0">
+            <div class=" mt-0">
                 <div class="row"> 
                     <div class="col-md-6 border-left text-center pt-2">
                         <h3 class="mb-0 ">5672</h3>
@@ -45,7 +45,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card mt-0">
+            <div class=" mt-0">
                 <div class="row"> 
                     <div class="col-md-6 border-left text-center pt-2">
                         <h5 class="mb-0 fw-bold">
@@ -55,15 +55,17 @@
                                 <span class="text-info">FAMILLE MERE</span>
                             {% endif %}
                         </h5>
+                        <a href="{% url 'show_communaute' famille.communaute.id %}" class="text-center"> {{famille.communaute.nom}}</a>
                         <span class="text-muted">Mediathèque</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-body printableArea">
+            <div class=" card-body printableArea">
                 <h3><b>{{famille.nom}}</b> <span class="pull-right"><a class="btn btn-xs btn-success text-white" href="{% url 'add_user' %}"> Ajouter un membre</a></span></h3>
                 <hr>
                 <div class="row">

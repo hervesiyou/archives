@@ -45,3 +45,8 @@ LIB_CHOICES =(
     ("Physique","Librairie Physique"),
     ("Digitale","Librairie Digitale"),
 )
+
+LIV_CHOICES =(
+    ("Physique","Livre papier"),
+    ("Numerique","Livre numerique"),
+)

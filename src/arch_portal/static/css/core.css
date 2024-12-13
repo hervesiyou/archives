@@ -12,14 +12,33 @@ nav div, nav h3{
     font-weight: bolder;
     text-align: center;
 }
-.button_widget{  
- }
+
 
 footer span{
     text-align: center;
 }
-.bg_default{
+.bg_default, .bg-default {
     background-color:darkgray;
     text-transform: uppercase;
     font-weight: bold;
+}
+
+.div-info{
+    background-color: rgba(0, 206, 209, 0.244);
+    border-left: solid 5px darkturquoise;
+    padding: 15px;
+}
+.div-default{
+    background-color: rgba(219, 226, 226, 0.244) !important;
+    border-left: solid 5px rgb(182, 192, 192);
+    padding: 15px;
+}
+.m-4{
+    margin: 20px;
+}
+.p-3{
+    padding:15px;
+}
+a{
+    text-decoration: none;
 }

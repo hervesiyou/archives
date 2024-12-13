@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %} {{communaute.nom}} {% endblock %}
 {% block content %}
 
@@ -52,22 +53,22 @@
         </div>
         <!-- Column -->
     </div>
-    <div class="row">
+    <div class="row my-5">
         <div class="col-lg-4">
-            <div class="card">
-                <h5 class="text-success text-bold">Liste des chefs</h5>
+            {% if communaute.listerois %}
+                <h5 class="text-success text-bold">Liste des rois</h5>
                 <ul class="list">
-                    <li class="list-item">Roi </li>
+                    <li class="list-item">{{communaute.listerois}} </li>
                 </ul>
-            </div>
+            {% endif %}
         </div>
         <div class="col-lg-8">
-            <div class="card">
+             {% if communaute.histoire %}
                 <h5 class="text-success text-bold">Histoire</h5>
                 <div class=" ">
                     {{ communaute.histoire }}
                 </div>
-            </div>
+            {% endif %}
         </div>
      </div>
 
@@ -85,6 +86,10 @@
                         <div class="col-lg-9">
                             <span> Carte geographique </span>
                             <div class="flot-chart">
+                                <div class=" ">
+                                    <img src="{% static 'images/big/img2.jpg' %} " alt="user" style="max-width: 100; max-height: 400px;">
+                                </div>
+                                <!--
                                 <div class="flot-chart-content" id="flot-line-chart" style="padding: 0px; position: relative;">
                                     <canvas class="flot-base" width="827" height="300" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 827.5px; height: 300px;"></canvas>
                                     <div class="flot-text" style="position: absolute; inset: 0px; font-size: smaller; color: rgb(84, 84, 84);">
@@ -134,6 +139,7 @@
                                         </table>
                                     </div>
                                 </div>
+                            -->
                             </div>
                         </div>
                         <div class="col-lg-3">

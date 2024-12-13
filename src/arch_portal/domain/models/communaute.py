@@ -16,6 +16,7 @@ class  Communaute(models.Model):
     histoire = models.TextField(default="", blank=True)
     geographie = models.TextField(default="", blank=True)
     origine = models.CharField(max_length=150, default="")
+    listerois = models.CharField(max_length=150, default="")
     type =  models.CharField(max_length=50, choices=COM_CHOICES,blank=True,null=1)
     region = models.CharField(max_length=50, choices=REGIONS_CHOICES,blank=True,null=1)
     chef = models.ForeignKey("Membre",on_delete=models.CASCADE, blank=True, null=True)

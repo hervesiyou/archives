@@ -4,48 +4,47 @@
 {% block content %}
 
 <div class="card-body">
-    <div class="card">
-        <div class="row">
-            <div class="col-lg-12">
-                <p> <span class="text-bold"> {{ membre.nomcomplet}} </span> fils de <span class="text-info"> {{membre.pere}}</span> et de <span class="text-info">{{membre.mere}} </span></p>
+    <div class="row">
+        <div class="col-lg-12 my-4">
+            {% comment %} {{ membre.get_familles() }} {% endcomment %}
+            {% for fam in membre.familles.all %}
+            <p> <a href="{% url 'show_famille' fam.id %}" class="badge bg-info"> {{fam.nom}} </a></p>
+            {% endfor %} 
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 my-4">
+            <p> <span class="text-bold"> {{ membre.nomcomplet}} </span> fils de <span class="text-info"> {{membre.pere}}</span> et de <span class="text-info">{{membre.mere}} </span></p>
+        </div>
+    </div>
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item"> <a class="nav-link active" data-bs-toggle="tab" href="#home" role="tab"><span class="hidden-sm-up"></span> <span class="hidden-xs-down">Identité</span></a> </li>
+        <li class="nav-item"> <a class="nav-link" data-bs-toggle="tab" href="#profile" role="tab"><span class="hidden-sm-up"></span> <span class="hidden-xs-down">Vie Sociale</span></a> </li>
+        <li class="nav-item"> <a class="nav-link" data-bs-toggle="tab" href="#messages" role="tab"><span class="hidden-sm-up"></span> <span class="hidden-xs-down">Famille</span></a> </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content tabcontent-border">
+        <div class="tab-pane active" id="home" role="tabpanel">
+            <div class="p-20">
+                <p> Identité ..</p>
+                <img src="{% static 'images/big/img2.jpg' %}" class="img-fluid">
             </div>
         </div>
-        <ul class="nav nav-tabs" role="tablist">
-            <li class="nav-item"> <a class="nav-link active" data-bs-toggle="tab" href="#home" role="tab"><span class="hidden-sm-up"></span> <span class="hidden-xs-down">Identité</span></a> </li>
-            <li class="nav-item"> <a class="nav-link" data-bs-toggle="tab" href="#profile" role="tab"><span class="hidden-sm-up"></span> <span class="hidden-xs-down">Vie Sociale</span></a> </li>
-            <li class="nav-item"> <a class="nav-link" data-bs-toggle="tab" href="#messages" role="tab"><span class="hidden-sm-up"></span> <span class="hidden-xs-down">Famille</span></a> </li>
-        </ul>
-        <!-- Tab panes -->
-        <div class="tab-content tabcontent-border">
-            <div class="tab-pane active" id="home" role="tabpanel">
-                <div class="p-20">
-                    <p>And is full of waffle to It has multiple paragraphs and is full of waffle to
-                        pad out the comment. Usually, you just wish these sorts of comments would
-                        come to an end.multiple paragraphs and is full of waffle to pad out the
-                        comment..</p>
-                    <img src="{% static 'images/background/img4.jpg' %}" class="img-fluid">
-                </div>
+        <div class="tab-pane  p-20" id="profile" role="tabpanel">
+            <div class="p-20">
+                <p class="mt-2"> Vie sociale ..</p>
+                <img src="{% static 'images/big/img2.jpg' %}" class="img-fluid">
             </div>
-            <div class="tab-pane  p-20" id="profile" role="tabpanel">
-                <div class="p-20">
-                    <img src="{% static 'images/background/img4.jpg' %}" class="img-fluid">
-                    <p class="mt-2">And is full of waffle to It has multiple paragraphs and is
-                        full of waffle to pad out the comment. Usually, you just wish these sorts of
-                        comments would come to an end.multiple paragraphs and is full of waffle to
-                        pad out the comment..</p>
-                </div>
-            </div>
-            <div class="tab-pane p-20" id="messages" role="tabpanel">
-                <div class="p-20">
-                    <p>And is full of waffle to It has multiple paragraphs and is full of waffle to
-                        pad out the comment. Usually, you just wish these sorts of comments would
-                        come to an end.multiple paragraphs and is full of waffle to pad out the
-                        comment..</p>
-                    <img src="{% static 'images/background/img4.jpg' %}" class="img-fluid">
-                </div>
+        </div>
+        <div class="tab-pane p-20" id="messages" role="tabpanel">
+            <div class="p-20">
+                <p> Famille..</p>
+                <img src="{% static 'images/big/img2.jpg' %}" class="img-fluid">
             </div>
         </div>
     </div>
+    
 </div>
 
 {% endblock %}
