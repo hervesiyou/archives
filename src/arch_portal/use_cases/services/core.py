@@ -1,6 +1,17 @@
 import random
 import time
 import hashlib
+from django.core.mail import send_mail
+
+def send_email(subject, message, recipient_list):
+    send_mail(
+        subject,
+        message,
+        'mfrelyon@gmail.com',
+        recipient_list,
+        fail_silently=False,
+    )
+
 
 def generate_code(string):
     return "".join( random.sample(string,len(string)) )+str(int(time.time()));

@@ -13,6 +13,8 @@ from arch_portal.domain.models.marche import Marche
 from arch_portal.domain.models.commandelivre import CommandeLivre
 from arch_portal.domain.models import Role,Permission
 from arch_portal.domain.models.evenement import Evenement
+from arch_portal.domain.models.abonnement import Abonnement
+from arch_portal.domain.models.plantarifaire import Plan
 
 admin.site.register(Communaute)
 admin.site.register(Famille)
@@ -27,3 +29,5 @@ admin.site.register(CommandeLivre)
 admin.site.register(Evenement)
 admin.site.register(Permission)
 admin.site.register(Role)
+admin.site.register(Abonnement)
+admin.site.register(Plan)

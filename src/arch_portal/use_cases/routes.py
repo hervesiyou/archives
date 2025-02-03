@@ -23,6 +23,7 @@ urlpatterns += [
 ]
 urlpatterns += [ 
     path('lcom', communaute.listcom, name="listcom"),
+    path('comab', communaute.abonement_archive, name="abonement_archive"),
     path('sa/<int:id>', communaute.show_association, name="show_association"),
     path('sc/<int:id>', communaute.show_communaute, name="show_communaute"),
     path('nc/', communaute.add_communaute, name="add_communaute"),
@@ -44,6 +45,7 @@ urlpatterns += [
 
 urlpatterns += [ 
     path('libs', librairie.listlibs, name="listlibs"),
+    path('libab', librairie.abonement_librairie, name="abonement_librairie"),
     path('lbs/<int:id>', librairie.listbooks, name="listbooks"),
     path('sb/<int:id>', librairie.show_book, name="show_book"),
     path('ab/', librairie.add_book, name="addbook"),

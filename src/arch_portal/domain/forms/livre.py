@@ -1,9 +1,20 @@
 from arch_portal.domain.models.livre import Livre
-from django.forms import ModelForm,ValidationError
+from arch_portal.domain.models.image import Image
+from django.forms import ModelForm,ValidationError, modelformset_factory
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Row, Column
+from crispy_forms.layout import Layout, Row, Column,Fieldset, HTML
+  
+
+class ImageInlineForm(ModelForm):
+    class Meta:
+        model = Image
+        fields = ('fichier',)
+
+ImageFormSet = modelformset_factory(Image, form=ImageInlineForm, extra=3)
 
 class LivreForm(ModelForm):
+    # images = forms.ModelMultipleChoiceField(queryset=Image.objects.all(), widget=forms.CheckboxSelectMultiple)
+
     class Meta:
         model = Livre
         exclude = ["librairies"]
@@ -32,5 +43,9 @@ class LivreForm(ModelForm):
                 Column('domaine', css_class='col-md-6'),
                 Column('prix', css_class='col-md-6'),
                 css_class='row'
-            ),
+            ), 
+            Fieldset(
+                '',
+                HTML('<div id="form-container"> <div id="id_images_0"></div></div>')
+            )
         )

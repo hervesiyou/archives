@@ -4,15 +4,29 @@
 {% block title %} {{parent}} Nouveau livre {% endblock %}
 {% block css %}  
     <style>
-      
+      .delete-image{
+        color:red;
+        background-color: pink;
+        border-color: red;
+        border-radius: 50px;
+        padding: 7px;
+      }
+      .image-form{
+        margin: 5px 0 5px 0;
+      }
+      form{
+        overflow:hidden;
+      }
     </style>
 {% endblock %}
 {% block content %}
     <div class="row">
         <div class="col-md-12">
             <div class="card card-body printableArea">
-                <h3><b>{{librairie}}</b>  - <span class="pull-right"> Ajout d'un livre </span></h3>
-                <a href="{% url 'addbook' %}" class="btn btn-sm btn-info w-25"> Ajouter un nouveau livre</a>
+                <h3><b>{{librairie}}</b>  - <span class="pull-right"> Ajout d'un livre </span>
+                <a href="{% url 'addbook' %}" class="btn btn-sm btn-danger w-25"> Ajouter un nouveau livre</a>
+                </h3>
+
                 <hr>
                 <div class="row">
                     <div class="col-md-12">
@@ -27,15 +41,26 @@
                     </div>
                     <div class="col-md-12">
                         <div class="table-responsive mt-5" style="clear: both;">
-                            <form method="post">
+                            <form id="monForm" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {% crispy form %}
+
+                                <h3>Images du livre</h3>
+                                    {{ image_formset.management_form }}
+                                    {% for form in image_formset %}
+                                        <div class="image-form">
+                                            {{ form.fichier }}
+                                            <a  class="delete-image">X</a>
+                                        </div>
+                                    {% endfor %}
+                        
+                                <!--button type="button" id="add-image-button" >Ajouter une image</button -->
+                                <br/><br/>
                                 <input type="submit" class="btn btn-success" value="Ajouter ce livre" />
                             </form>
                         </div>
                     </div>
                     <div class="col-md-12">
-                       
                         <hr>
                         <div class="text-end">
                             <button class="btn btn-danger text-white" type="button">... </button>
@@ -45,4 +70,32 @@
             </div>
         </div>
     </div>
+
+    
 {% endblock content %}
+
+  {% block js %}
+
+  <!-- script> 
+
+    $(document).ready(function() {
+                
+        $('#add-image-button').click(function() {
+            addImageField();
+        });
+    });
+
+        $(document).ready(function() {
+            $('#add-image-button').click(function() {
+                var newField = $('#id_images_0').clone(true);
+                newField.find('input').val('');
+                newField.find('label').text('Image ' + ($('#form-container .image-form').length + 1));
+                $('#form-container').append(newField);
+            });
+
+            $(document).on('click', '.delete-image', function() {
+                $(this).closest('.image-form').remove();
+            });
+        }); 
+    </script -->
+    {% endblock %}

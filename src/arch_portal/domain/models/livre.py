@@ -1,4 +1,5 @@
 from django.db import models
+from .image import Image
 
 from arch_portal.domain.models.CONST_DATA import LIV_CHOICES
 class Livre(models.Model):
@@ -10,6 +11,13 @@ class Livre(models.Model):
     nom = models.CharField(max_length=150)
     description = models.TextField(null=True)
     auteur = models.CharField(max_length=250)
+
+    isbn = models.CharField(max_length=250, null=True, blank=True)
+    langue = models.CharField(max_length=250, null=True, blank=True)
+    # cover_image = models.ImageField(upload_to='couvertures/')
+    file = models.FileField(upload_to='livres/',null=True, blank=True)
+    images = models.ManyToManyField(Image, null=True, blank=True)
+
     domaine = models.CharField(max_length=250, null=True, blank=True)
     prix = models.IntegerField(default=0)
     type = models.CharField(max_length=50, choices=LIV_CHOICES,blank=True)

@@ -3,14 +3,18 @@ import datetime
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from arch_portal.domain.forms.librairie import LibrairieForm
-from arch_portal.domain.forms.livre import LivreForm
+from arch_portal.domain.forms.livre import LivreForm, ImageFormSet
 from arch_portal.domain.models.librairie import Librairie
+from arch_portal.domain.models.image import Image
 from arch_portal.domain.models.livre import Livre
+from arch_portal.domain.models.plantarifaire import Plan
 from arch_portal.domain.models.membre import Membre
 from arch_portal.domain.models.commandelivre import CommandeLivre
 from arch_portal.domain.models.serializers import *
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
+from arch_portal.use_cases.services.core import send_email
+import threading
 
 def show_commandes(request):
     coms = CommandeLivre.objects.all()
@@ -48,17 +52,34 @@ def add_book(request):
         return  redirect("listlibs")
     
     if request.method == "POST":
-        form = LivreForm(request.POST)
-        if form.is_valid():  
-            com = form.save() 
-            com.librairies.add(Librairie.objects.get(id=librairieid)) 
-            com.save()
-            return redirect("show_book",com.id )
+        form = LivreForm(request.POST, request.FILES)
+        image_formset = ImageFormSet(request.POST, request.FILES) 
+        if form.is_valid(): 
+
+            livre = form.save()
+            livre.librairies.add(Librairie.objects.get(id=librairieid)) 
+            livre.save()
+
+            if image_formset.is_valid():
+                
+                for image_form in image_formset:
+                    if image_form.has_changed(): 
+                        image = image_form.save(commit=False)
+                        image.livre = livre 
+                        image.save()
+                        livre.images.add(image) 
+            # else:
+            #     com = form.save() 
+            #     com.librairies.add(Librairie.objects.get(id=librairieid)) 
+            #     com.save()
+            return redirect("show_book",livre.id )
         else:
             messages.error(request, f"Veuillez corriger les erreurs suivantes.{form.errors}") 
     else:
         form = LivreForm()
-    return render(request, "libcore/addbook.html", {"librairie" : librairie, "form":form} )
+        image_formset = ImageFormSet(queryset=Image.objects.none())  
+
+    return render(request, "libcore/addbook.html", {"librairie" : librairie, "form":form, 'image_formset': image_formset,} )
 
 def show_librairie(request,id):
     lib = Librairie.objects.get(id=id)
@@ -77,13 +98,18 @@ def add_librairie(request):
 
     return render(request, "libcore/new_librairie.html", { "form":form  })
 
+def abonement_librairie(request): 
+    plans = Plan.objects.filter(appli="LIB")
+    return render(request, "libcore/abonement.html", {"plans" : plans} )
+
+
 @csrf_exempt
 def api_add_order(request):
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     if is_ajax :
         if request.method == "POST" :
             data = json.loads(request.body.decode('utf-8'))
-            print(data,data.get('livre'))
+            # print(data,data.get('livre'))
             if data.get('livre') is None:
                 return JsonResponse({'status': False ,"message": "Livre incorrect"})
             
@@ -98,15 +124,25 @@ def api_add_order(request):
                 nom=data.get("nom"),
                 telephone=data.get("telephone"),
                 livre=livre,
-                date=datetime.datetime.now(),
+                # date=datetime.datetime.now(),
                 proprietaire=proprietaire, 
                 message=data.get("message"),
             )
-            if not already:
+            # print( already )
+            if already:
                 com.save()
+                # envoi du mail au propriotaire
+                sujet = f'Commande de {livre.nom} par {proprietaire.nomcomplet} '
+                message = f' {proprietaire.nomcomplet} à commandé {livre.nom}'
+                destinataires = [proprietaire.email, "hervesiyou@gmail.com"]
+
+                # t = threading.Thread(target=send_email, args=(sujet, message,  [destinataires]))
+                # t.start()
+                # send_email(sujet, message, destinataires )
                 return JsonResponse({'status':True,"message":f"{com.id}  ajouté avec success"})
             else:
-                return JsonResponse({'status': False, "message": f"Vous avez dejà commandé {com.livre.nom} "})
+                # print( com, livre.nom)
+                return JsonResponse({'status': False, "message": f"Vous avez dejà commandé {livre.nom} "})
 
         return JsonResponse({"status":False, 'message': 'Invalid request'}, status=400)
 

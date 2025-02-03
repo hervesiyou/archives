@@ -1,8 +1,16 @@
 $(document).ready(function(){
     const BASEURL = $("body").data('url');
  
-    $("#addOrderID").on('click', function(){                         
 
+    $(".abClass").on('click', function(e){                         
+        e.preventDefault();
+        let code = $(this).data("code")
+        let an = $("select[name='an"+code+"'] option:selected").val()
+        alert(code + ", " + an)
+    })
+
+    $("#addOrderID").on('click', function(e){                         
+        e.preventDefault();
 			var data = {                      
 				"nom": $("#nom").val(),
 				"telephone": $("#telephone").val(),
@@ -20,10 +28,15 @@ $(document).ready(function(){
                     url         : BASEURL+"/add_order/",  
                     dataType    : "JSON",
                     beforeSend      : function(){
-
+                        // alert(JSON.stringify(data))
+                    },
+                    error: function(error) {
+                        console.error(error);
+                        alert(JSON.stringify(error))
                     },
                     success  : function(returnedData){
                             console.log(returnedData);
+                            // alert(JSON.stringify(returnedData))
                     
                             if (returnedData.status) {
                                 Swal.fire({
@@ -45,14 +58,18 @@ $(document).ready(function(){
                                     timer: 4000,
                                     showConfirmButton: false
         
-                                });
-                                window.location.reload()
-                            }
-                            
-                        
+                                }).then((result) => {
+                                    window.location.reload()
+                                    // if (result.isConfirmed) {
+                                    //   Swal.fire("Saved!", "", "success")
+                                     
+                                    // }  
+                                  });
+                                // 
+                            }   
                     }, 
-                    complete    : function(){ 
-                    }
+                    // complete    : function(){ 
+                    // }
 
                 });
 			}else{
@@ -68,4 +85,6 @@ $(document).ready(function(){
 			}
 
     });
+
+    
 })

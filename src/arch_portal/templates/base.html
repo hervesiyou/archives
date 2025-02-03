@@ -73,6 +73,8 @@
                                         <a href="{% url 'home' %}" class="text-success text-uppercase"> {{ request.session.username}} </a> | 
                                         <a href="{% url 'logout' %}" class="text-danger text-uppercase"> X </a> | 
                                     {% endif %}
+                                    <a href="{% url 'abonement_librairie' %}"> Abonements Librairies </a> | 
+                                    <a href="{% url 'abonement_archive' %}"> Abonements Archives </a> | 
                                     <a href="{% url 'index' %}"> A propos  </a> | 
                                     <span class="card-title text-success"> Contactez-Nous</span>
                                 </div>
@@ -151,6 +153,8 @@
      <script type="text/javascript" src="{% static 'js/sweetalert.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/toastr.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/core.js' %}"></script>
+
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 
     <script>
         $(".preloader").fadeOut();

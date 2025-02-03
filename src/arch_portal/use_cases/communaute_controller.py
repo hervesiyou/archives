@@ -4,10 +4,22 @@ from arch_portal.domain.forms.association import AssociationForm
 from arch_portal.domain.forms.communaute import CommunauteForm 
 from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.famille import Famille
+from arch_portal.domain.models.plantarifaire import Plan
 from arch_portal.domain.models import *
-
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 from arch_portal.domain.models import Association
 
+@login_required
+def premium_content(request):
+    user = request.user
+    if not hasattr(user, 'subscription') or not user.subscription.is_active:
+        return HttpResponseForbidden("Vous devez être abonné pour accéder à ce contenu.")
+    return render(request, 'premium_content.html')
+
+def abonement_archive(request): 
+    plans = Plan.objects.filter(appli="COM")
+    return render(request, "archcore/abonement.html", {"plans" : plans} )
 
 def listcom(request):
     communautes = Communaute.objects.all()
