@@ -6,7 +6,69 @@ $(document).ready(function(){
         e.preventDefault();
         let code = $(this).data("code")
         let an = $("select[name='an"+code+"'] option:selected").val()
-        alert(code + ", " + an)
+       
+
+        var data = {                      
+            "code": code,
+            "nbannee": an, 
+        };
+
+        if( data.code.length > 2 && data.nbannee.length > 0 ){
+
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : BASEURL+"/add_abonnement",  
+                dataType    : "JSON",
+                beforeSend      : function(){
+                    // alert(JSON.stringify(data) + ", url: " + this.url)
+                },
+                error: function(error) {
+                    console.error(error);
+                    // alert(JSON.stringify(error))
+                },
+                success  : function(returnedData){
+                    // console.log(returnedData); 
+            
+                    if (returnedData.status) {
+                        Swal.fire({
+                            icon: "success",
+                            title: " Merci !" ,
+                            text:   " Ajout Reussi de Votre Abonnement ! " ,
+                            timer: 4000,
+                            showConfirmButton: false
+
+                        }).then(
+                            ()=>{
+                                $("#payMessage").html(` <div class="alert alert-info messageDiv">${returnedData.message} </div>`  )
+                            }
+                        ); 
+
+                    }else{
+                        Swal.fire({
+                            icon: "error",
+                            title: " Oups !" ,
+                            text:   " " + returnedData.message ,
+                            timer: 4000,
+                            showConfirmButton: true
+
+                        }); 
+                    }
+                }
+
+            })
+
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de fournir toutes les informations requises pour cet abonnement !!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
     })
 
     $("#addOrderID").on('click', function(e){                         

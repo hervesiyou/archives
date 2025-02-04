@@ -40,8 +40,11 @@ class LivreForm(ModelForm):
                 css_class='row'
             ),
             Row(
-                Column('domaine', css_class='col-md-6'),
-                Column('prix', css_class='col-md-6'),
+                Column('type', css_class='col-md-2 typeClass'),
+                Column('file', css_class='col-md-2 fichierClass'),
+                Column('stock', css_class='col-md-1 stockClass'),
+                Column('domaine', css_class='col-md-4'),
+                Column('prix', css_class='col-md-4'),
                 css_class='row'
             ), 
             Fieldset(

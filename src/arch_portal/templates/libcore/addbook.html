@@ -17,6 +17,10 @@
       form{
         overflow:hidden;
       }
+
+      .fichierClass, .stockClass{
+        display:none;
+      }
     </style>
 {% endblock %}
 {% block content %}
@@ -75,6 +79,19 @@
 {% endblock content %}
 
   {% block js %}
+  <script>
+        $('.typeClass').on("change",function() {
+            let val= $("select#id_type option:selected").val()
+             
+            if(val == "Numerique"){
+                $(".fichierClass").css("display","block")
+                $(".stockClass").css("display","none")
+            }else{
+                $(".stockClass").css("display","block")
+                $(".fichierClass").css("display","none")
+            }
+        });
+  </script>
 
   <!-- script> 
 

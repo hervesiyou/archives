@@ -32,7 +32,7 @@
                 </div>
             </div> 
 
-            <div class="row fixed-top">
+            <div class="row fixed-top" style="background-color:white;">
                 <div class="col-12">
                     
                         <div class="card-body">
@@ -70,13 +70,13 @@
                                     {% if not request.session.username %}
                                         <a href="{% url 'login' %}"> Login </a> |  
                                     {% else %}
+                                     
                                         <a href="{% url 'home' %}" class="text-success text-uppercase"> {{ request.session.username}} </a> | 
                                         <a href="{% url 'logout' %}" class="text-danger text-uppercase"> X </a> | 
                                     {% endif %}
                                     <a href="{% url 'abonement_librairie' %}"> Abonements Librairies </a> | 
-                                    <a href="{% url 'abonement_archive' %}"> Abonements Archives </a> | 
-                                    <a href="{% url 'index' %}"> A propos  </a> | 
-                                    <span class="card-title text-success"> Contactez-Nous</span>
+                                    <a href="{% url 'abonement_archive' %}"> Abonements Archives </a> 
+                                    
                                 </div>
                             </div> 
                             
@@ -144,6 +144,14 @@
                 {% endblock %}
             </div>
 
+        </div>
+        <div class="row"> 
+            <div class="col-md-6 col-lg-4 col-xlg-4"></div>
+            <div class="col-md-6 col-lg-4 col-xlg-4">
+                <a href="{% url 'index' %}"> A propos  </a> | 
+                <span class="card-title text-success"> Contactez-Nous</span>
+
+            </div>
         </div>
 
         

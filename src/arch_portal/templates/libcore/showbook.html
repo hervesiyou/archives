@@ -3,7 +3,10 @@
 {% block title %} {{parent}} Detail - {{ livre.nom }} {% endblock %}
 {% block css %}  
     <style>
-      
+      .book-image img{
+        max-height:90px;
+        max-width:90px;
+      }
     </style>
     <script>
         function enableCommandeButton() {  
@@ -32,6 +35,8 @@
                         </div>
 
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-md-12">
                         <div class="table-responsive mt-5" style="clear: both;">
                             <table class="table table-hover">
@@ -52,7 +57,7 @@
                                                 {% for image in livre.images.all %}
                                                     <div class="book-image">
                                                         <img src="{{ image.fichier.url }}" alt="{{livre.description}}">
-                                                        <p>{{ image.fichier.url }}</p>
+                                                        
                                                     </div>
                                                 {% endfor %}
                                             {% else %}
@@ -61,8 +66,17 @@
                                             </div>
                                          </td>
                                         <td><span class="text-info text-bold"> {{livre.description}} </span></td>
-                                        <td class="text-end"><span class="badge bg-secondary"> 1 </span></td>
-                                        <td class="text-end text-danger"> {{livre.prix}} XAF </td>
+                                        <td class="text-end">
+                                        <span class="badge bg-secondary"> {{livre.stock}} exemplaires </span>
+                                        </td>
+                                        <td > 
+                                        <span class="text-end text-danger"> {{livre.prix}} XAF </span>
+                                        {% if achat %}
+                                        <a href=" {{livre.file.url}}"  class="text-success" target="_blank">
+                                         Telecharger
+                                        </a>
+                                        {% endif %}
+                                        </td>
                                         <td class="text-end"> {{livre.auteur}} </td>
                                     </tr>
                                       
@@ -70,25 +84,50 @@
                             </table>
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-md-12">
-                        <div class="pull-right mt-4 text-end"> 
-                            
+                       
+                        <div class="pull-right mt-4 text-end">
                             <h3>Cout :<b> {{livre.prix}} XAF</b></h3>
                         </div>
                          
-                        <hr>
+                        <hr>                   
+                       
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="mt-4 text-start">
+                            {% if livre.type == "Numerique" %}
+                                {% if connecte %}
+                                    
+                                        <button class="btn btn-success text-white">Acheter directement</button>
+                                        {% if achat %}
+                                            <div class="text-success"> Votre abonnement vous permet de directement telecharger ce livre </div>
+                                        {% else %}
+                                            <span class="text-danger"> Merci de recharger votre compte ou  vous abonner pour obtenir ce livre</span>
+                                        {% endif %}
+                                    
+                                {% else %}
+                                    <a href="{% url 'login' %}" class="div-error"> Merci de vous connecter pour commander directement ce livre </a> 
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
                         {% if  'COMMANDER_LIVRE' in request.session.userrights %}
-                            <div class="text-end">
-                                <button class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#orderModal"type="button"> Me le procurer </button>
+                            <div class=" text-end pull-right">
+                                <button class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#orderModal"type="button"> Me le procurer chez le propriétaire</button>
                             </div>
 
 
                             <div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog">
-                                  <div class="modal-content">
+                                <div class="modal-content">
                                     <div class="modal-header bg-danger text-white ">
-                                      <h5 class="modal-title " id="exampleModalLabel"> Commande de {{ livre.nom}} </h5>
-                                      <button type="button" class="btn-close clos" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <h5 class="modal-title " id="exampleModalLabel"> Commande de {{ livre.nom}} </h5>
+                                    <button type="button" class="btn-close clos" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                         
                                     <form    method="post" >
@@ -114,13 +153,13 @@
 
                                         <div class="modal-footer">
 
-                                         <input type="button" class="btn btn-primary" id="addOrderID" 
-                                         disabled 
-                                         value="Enregistrer" />
+                                        <input type="button" class="btn btn-primary" id="addOrderID" 
+                                        disabled 
+                                        value="Enregistrer" />
                                         </div>
                         
                                     </form>
-                                  </div>
+                                </div>
                                 </div>
                             </div> 
 
@@ -128,6 +167,7 @@
                             <div class="div-info"> Merci de vous connecter pour commander ce livre </div>
                         {% endif %}
                     </div>
+                     
                 </div>
             </div>
         </div>

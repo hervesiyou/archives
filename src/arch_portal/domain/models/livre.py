@@ -11,6 +11,7 @@ class Livre(models.Model):
     nom = models.CharField(max_length=150)
     description = models.TextField(null=True)
     auteur = models.CharField(max_length=250)
+    stock = models.IntegerField(default=1,null=True)
 
     isbn = models.CharField(max_length=250, null=True, blank=True)
     langue = models.CharField(max_length=250, null=True, blank=True)

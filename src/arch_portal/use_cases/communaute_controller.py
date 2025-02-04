@@ -4,11 +4,15 @@ from arch_portal.domain.forms.association import AssociationForm
 from arch_portal.domain.forms.communaute import CommunauteForm 
 from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.famille import Famille
+from arch_portal.domain.models.abonnement import Abonnement
 from arch_portal.domain.models.plantarifaire import Plan
 from arch_portal.domain.models import *
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseForbidden, JsonResponse
 from arch_portal.domain.models import Association
+import json
+from datetime import date
 
 @login_required
 def premium_content(request):
@@ -16,6 +20,51 @@ def premium_content(request):
     if not hasattr(user, 'subscription') or not user.subscription.is_active:
         return HttpResponseForbidden("Vous devez être abonné pour accéder à ce contenu.")
     return render(request, 'premium_content.html')
+
+# @login_required
+@csrf_exempt
+def add_abonnement(request):
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    if is_ajax :
+        if request.method == "POST" :
+            data = json.loads(request.body.decode('utf-8'))
+            userid = request.session.get("userid","")
+            # user = f' un: {request.session.get("username","")} ,id: {request.session.get("userid","")},n: {request.session.get("nomocomplet","")}'
+            # print(data ,data.get("code"))
+            
+            if data.get('nbannee') is None:
+                return JsonResponse({'status': False ,"message": "Nombre d'année incorrect"})
+            else:
+                if data.get("code") is None:
+                    return JsonResponse({'status': False ,"message": "Identification abonnement incorrecte"})
+                else:
+                    if userid is None:
+                        return JsonResponse({'status': False ,"message": "Merci de vous connecter avant tout abonnement !"})
+                    else:
+                        user = Membre.objects.get(id=userid)
+                        plan = Plan.objects.get(code=data.get("code"))
+
+                        ab = Abonnement.objects.filter(plan=plan, membre=user)
+                        # print(ab, plan, user)
+                        if len(ab) == 0:
+                            ab = Abonnement(
+                                code= f"{plan.code}@{plan.appli}",
+                                debut= date.today(),
+                                prix= int(data.get("nbannee")) * plan.prix,
+                                membre= user,
+                                plan= plan,
+                                duree = int(data.get("nbannee"))
+                            )
+                            ab.save()
+                            message = '''
+                            Merci de faire le depot au numero 690000000 pour OM et  677777777 pour MOMO pour l'activation de votre compte !
+                            '''
+                            return JsonResponse({'status': True ,"message": message})
+                        else:
+                            return JsonResponse({'status': False ,"message": "Desolé, vous avez dejà souscris à cet abonnement !"})
+
+            
+            
 
 def abonement_archive(request): 
     plans = Plan.objects.filter(appli="COM")

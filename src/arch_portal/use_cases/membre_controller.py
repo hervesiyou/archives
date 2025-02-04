@@ -10,7 +10,6 @@ from arch_portal.domain.models.membre import Membre
 
 from arch_portal.domain.serializers import MembreSerializer
 
-
 def subscribe(request):
     if request.method == "POST":
         form = UsersSubscribeForm(request.POST)
@@ -32,7 +31,7 @@ def log_user(request):
     if request.method == "POST":
         form = UsersLoginForm(request.POST)
         if form.is_valid():
-            print(compute_sha1( form.cleaned_data["pwd"]) )
+            # print(compute_sha1( form.cleaned_data["pwd"]) )
             user = Membre.objects.filter(
                 login=form.cleaned_data["login"],
                 pwd=compute_sha1(form.cleaned_data["pwd"]),
@@ -43,6 +42,7 @@ def log_user(request):
                 request.session["username"] = user.login 
                 request.session["userrights"] =  user.get_rights()
                 request.session["nomcomplet"] = user.nomcomplet
+                # request.session["user"] = user
                 request.session["userid"] = user.id
                 request.session.modified = True
                 messages.info(request,f"Bienvenue { user.nomcomplet }")

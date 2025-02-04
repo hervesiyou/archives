@@ -37,12 +37,22 @@ def listbooks(request, id):
 def show_book(request,id):
     liv = Livre.objects.get(id=id)
     librairieid = request.session.get('librairieid',"")
+    abos=achat=connecte=False
+    userid = request.session.get("userid","")
+    if( isinstance(userid, int) and userid !="" ):
+        user = Membre.objects.get(id=userid)
+        abos = user.abonnements.all()
+        for a in abos :
+            if a.is_active and a.plan.appli == "LIB":
+                achat = True
+        
+        connecte = True
     
     if librairieid is None:
         messages.error(request, "La librairie de ce livre n'existe pas , merci de choisir la librairie de ce livre .")
         return  redirect("listlibs")
     
-    return render(request, "libcore/showbook.html", {"livre" : liv,"librairie" : Librairie.objects.get(id=librairieid)} )
+    return render(request, "libcore/showbook.html", {"livre" : liv,"librairie" : Librairie.objects.get(id=librairieid), "connecte":connecte, "abonnements":abos , "achat":achat} )
 
 def add_book(request):
     librairie = request.session.get('librairie',"")
@@ -55,8 +65,11 @@ def add_book(request):
         form = LivreForm(request.POST, request.FILES)
         image_formset = ImageFormSet(request.POST, request.FILES) 
         if form.is_valid(): 
+            livre = form.save(commit=False)
+            if( livre.type == "Numerique"):
+                livre.stock = 1000
 
-            livre = form.save()
+            # print(form, livre)
             livre.librairies.add(Librairie.objects.get(id=librairieid)) 
             livre.save()
 

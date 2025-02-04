@@ -24,6 +24,7 @@ urlpatterns += [
 urlpatterns += [ 
     path('lcom', communaute.listcom, name="listcom"),
     path('comab', communaute.abonement_archive, name="abonement_archive"),
+    path('add_abonnement', communaute.add_abonnement, name="add_abonnement"),
     path('sa/<int:id>', communaute.show_association, name="show_association"),
     path('sc/<int:id>', communaute.show_communaute, name="show_communaute"),
     path('nc/', communaute.add_communaute, name="add_communaute"),
