@@ -6,7 +6,7 @@ class RoleEnum(Enum):
     SUPERADMIN = "SUPERADMIN"
     ADMIN = "ADMIN"
     LIBRAIRE = "LIBRAIRE"
-    # COMM_ADMIN = "COMM_ADMIN"
+    CLIENT = "CLIENT"
     # FAM_CHEF = "FAM_CHEF"
     # FAM_USER = "FAM_USER"
     # FAM_ADMIN = "FAM_ADMIN"

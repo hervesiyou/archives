@@ -71,7 +71,7 @@
                                         </td>
                                         <td > 
                                         <span class="text-end text-danger"> {{livre.prix}} XAF </span>
-                                        {% if achat %}
+                                        {% if achat and livre.file.url %}
                                         <a href=" {{livre.file.url}}"  class="text-success" target="_blank">
                                          Telecharger
                                         </a>

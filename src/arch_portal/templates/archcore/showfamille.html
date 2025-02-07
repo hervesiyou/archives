@@ -56,7 +56,21 @@
                             {% endif %}
                         </h5>
                         <a href="{% url 'show_communaute' famille.communaute.id %}" class="text-center"> {{famille.communaute.nom}}</a>
-                        <span class="text-muted">Mediathèque</span>
+                        <h6> <span class="text-muted">{{ famille.administrateurs.all|length }} Administrateurs</span></h6>
+                        <div >
+                            {% if  'ADD_FAMILLE_ADMIN' in request.session.userrights %}
+                                <a href="{% url 'show_admin_fam' famille.id %}" class="text-success py-3" >Voir les Administrateurs </a> 
+                                 
+                            {% endif %}
+                        </div>
+                        <small class="font-light"> 
+                            {% if  'ADD_FAMILLE_ADMIN' in request.session.userrights %}
+                            <div class=" text-end pull-right">
+                                <button class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#adminModal"type="button"> Ajouter un Administrateur </button>
+                            </div>
+                            
+                        {% endif %}
+                        </small>
                     </div>
                 </div>
             </div>
@@ -106,7 +120,11 @@
                                         <td>{{membre.nomcomplet}} </td>
                                         <td class="text-end"> . </td>
                                         <td class="text-end"> . </td>
-                                        <td class="text-end"> <a href="{% url 'show_user' membre.id %}"> Fiche individuelle </a> </td>
+                                        <td class="text-end"> 
+                                           {% if appartient %}
+                                            <a href="{% url 'show_user' membre.id %}"> Fiche individuelle </a>
+                                           {% endif %}
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -118,6 +136,45 @@
             </div>
         </div>
     </div>
+
+     {% if  'ADD_FAMILLE_ADMIN' in request.session.userrights %} 
+
+        <div class="modal fade" id="adminModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white ">
+                <h5 class="modal-title " id="exampleModalLabel"> Ajout d'un administrateur à  {{ famille.nom}} </h5>
+                <button type="button" class="btn-close clos" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+    
+                <form  method="post" >
+                    <div class="modal-body"> 
+                        {% csrf_token %}
+                        <h3 class=""> Choisir l'administrateur</h3><br/>
+                        <select name="adminFam" class="form-control">
+                            <option value="">--------</option>
+                            {% for membre in famille.membres_famille.all %}
+                                <option value="{{membre.id}}">{{membre.nomcomplet}}</option>
+                            {% endfor %}
+                        </select> 
+                        {% comment %} <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div> {% endcomment %}
+                    </div>
+
+                    <div class="modal-footer">
+
+                    {% comment %} disabled  {% endcomment %}
+                    <input type="button" data-fam="{{famille.id}}" class="btn btn-primary" id="addAdminFamID" 
+                    value="Enregistrer" />
+                    </div>
+    
+                </form>
+            </div>
+            </div>
+        </div> 
+
+     
+    {% endif %}
+
 {% endblock content %}
 {% block js %}
     <script src="{% static 'js/datatables.min.js' %}"></script>

@@ -12,7 +12,8 @@ urlpatterns = [
     path('lfam/<int:id>', famille.listfamilles, name="listfamilles"),
     path('sf/<int:id>', famille.show_famille, name="show_famille"),
     path('nf/', famille.add_famille, name="add_famille"),
-
+    path('sh_ad_fa/<int:id>', famille.show_admin_fam, name="show_admin_fam"),
+    path('add_ad_fam', famille.add_admin_fam, name="add_admin_fam"),
     path('levts/<int:id>', evenement.listevenements, name="listevenements"),
     path('sev/<int:id>', evenement.show_evenement, name="show_evenement"),
     path('nev/', evenement.add_evenement, name="add_evenement"),
@@ -23,7 +24,9 @@ urlpatterns += [
 ]
 urlpatterns += [ 
     path('lcom', communaute.listcom, name="listcom"),
+    path('sh_ad_co/<int:id>', communaute.show_admin_com, name="show_admin_com"),
     path('comab', communaute.abonement_archive, name="abonement_archive"),
+    path('add_ad_com', communaute.add_admin_com, name="add_admin_com"),
     path('add_abonnement', communaute.add_abonnement, name="add_abonnement"),
     path('sa/<int:id>', communaute.show_association, name="show_association"),
     path('sc/<int:id>', communaute.show_communaute, name="show_communaute"),

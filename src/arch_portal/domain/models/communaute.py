@@ -11,6 +11,7 @@ class  Communaute(models.Model):
     
     db_table = "communautes"
     nom = models.CharField(max_length=150)
+    publique = models.BooleanField(default=True)
     description = models.TextField( default="")
     superficie = models.CharField(max_length=50, default=0)
     histoire = models.TextField(default="", blank=True)
@@ -20,6 +21,7 @@ class  Communaute(models.Model):
     type =  models.CharField(max_length=50, choices=COM_CHOICES,blank=True,null=1)
     region = models.CharField(max_length=50, choices=REGIONS_CHOICES,blank=True,null=1)
     chef = models.ForeignKey("Membre",on_delete=models.CASCADE, blank=True, null=True)
+    administrateurs = models.ManyToManyField("Membre", related_name="com_admins", blank=True, null=True)
 
     def __str__(self):
         return self.nom

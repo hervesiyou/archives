@@ -5,6 +5,7 @@ from .association import Association
 from .image import Image
 from .galerie import Galerie
 from .role import Role
+from .communaute import Communaute
 
 class Membre(models.Model):
     class Meta:
@@ -32,9 +33,10 @@ class Membre(models.Model):
     diplomes = models.CharField(max_length=250, null=True, blank=True)
     profession = models.CharField(max_length=150, null=True, blank=True)
     
-    familles = models.ManyToManyField(Famille,related_name="mes_familles", null=True)
+    familles = models.ManyToManyField(Famille,related_name="membres_famille", null=True)
     associations = models.ManyToManyField(Association, null=True, blank=True)
     images = models.ManyToManyField(Image, null=True, blank=True)
+    communautes = models.ManyToManyField(Communaute, related_name="membres_communaute",  null=True, blank=True)
     galeries = models.ManyToManyField(Galerie, related_name="mes_galeries", null=True, blank=True)
     approbateurs = models.ManyToManyField("self", null=True, blank=True)
     

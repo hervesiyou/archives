@@ -33,12 +33,18 @@
                                 </div>
 
                                 <div class="card-body">
-                                    <h5 class="card-title"><a href="{% url 'show_famille' liv.id %}"> {{liv.nom}} </a></h5>
+                                {% if  'VOIR_FAMILLE' in request.session.userrights or liv.publique %}
+                                    <h5 >
+                                    {% comment %} {{liv.membres_famille.all}} {% endcomment %}
+                                    
+                                    <a href="{% url 'show_famille' liv.id %}" class="text-center"> Voir en détail </a>
+                                    </h5>
+                                {% endif %}
                                     <p> {{liv.description}} </p>
                                 </div>
                                 <div class="card-footer">
                                     <div class="text-info">
-                                        Chef:  {{ liv.chef.nomcomplet}}
+                                        Chef: <span class="badge bg-info"> {{ liv.chef.nomcomplet}}</span>
                                     </div>
                                 </div>
 

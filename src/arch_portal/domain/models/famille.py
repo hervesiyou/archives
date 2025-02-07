@@ -12,6 +12,7 @@ class Famille(models.Model):
     
     db_table = "familles"
     nom = models.CharField(max_length=150)
+    publique = models.BooleanField(default=True)
     description = models.TextField()
     histoire = models.TextField( null=True, blank=True)
     origine = models.TextField(  null=True, blank=True)
@@ -21,7 +22,8 @@ class Famille(models.Model):
     communaute = models.ForeignKey("Communaute",on_delete=models.SET_NULL, null=True, blank=True)
     chef = models.ForeignKey("Membre",on_delete=models.SET_NULL,related_name="mon_chef", null=True, blank=True)
     galeries = models.ManyToManyField(Galerie, related_name="galeries_famille", null=True, blank=True)
-    
+    administrateurs = models.ManyToManyField("Membre", related_name="fam_admins", blank=True, null=True)
+
     def __str__(self):
         return self.nom
     

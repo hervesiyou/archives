@@ -43,10 +43,14 @@ def add_abonnement(request):
                     else:
                         user = Membre.objects.get(id=userid)
                         plan = Plan.objects.get(code=data.get("code"))
+                        
 
                         ab = Abonnement.objects.filter(plan=plan, membre=user)
                         # print(ab, plan, user)
                         if len(ab) == 0:
+                            #  je lui ajoute le role client
+                            role = Role.objects.get(nom="CLIENT")
+                            user.role.add(role)
                             ab = Abonnement(
                                 code= f"{plan.code}@{plan.appli}",
                                 debut= date.today(),
@@ -56,6 +60,7 @@ def add_abonnement(request):
                                 duree = int(data.get("nbannee"))
                             )
                             ab.save()
+                            user.save()
                             message = '''
                             Merci de faire le depot au numero 690000000 pour OM et  677777777 pour MOMO pour l'activation de votre compte !
                             '''
@@ -63,8 +68,37 @@ def add_abonnement(request):
                         else:
                             return JsonResponse({'status': False ,"message": "Desolé, vous avez dejà souscris à cet abonnement !"})
 
-            
-            
+
+@csrf_exempt
+def add_admin_com(request):
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    if is_ajax :
+        if request.method == "POST" :
+            data = json.loads(request.body.decode('utf-8'))
+            userid = request.session.get("userid","")
+            # user = f' un: {request.session.get("username","")} ,id: {request.session.get("userid","")},n: {request.session.get("nomocomplet","")}'
+             
+            if data.get('comid') is None:
+                return JsonResponse({'status': False ,"message": "Communauté incorrecte !"})
+            else:
+                if data.get("adminid") is None:
+                    return JsonResponse({'status': False ,"message": "Identification utilisateur incorrecte"})
+                else:
+                    if userid is None:
+                        return JsonResponse({'status': False ,"message": "Merci de vous connecter avant tout abonnement !"})
+                    else:
+                        user = Membre.objects.get(id=data.get("adminid"))
+                        com = Communaute.objects.get(id=data.get("comid"))
+                        role = Role.objects.get(nom="ADMIN")
+                        # print(role, user)
+                        user.role.add(role)
+                        user.save()
+                        com.administrateurs.add(user)
+                        com.save()
+
+                        
+                        return JsonResponse({'status': True ,"message": f"{user.nomcomplet} a été ajouté comme administrateur à la communauté {com.nom}"})
+                       
 
 def abonement_archive(request): 
     plans = Plan.objects.filter(appli="COM")
@@ -73,7 +107,7 @@ def abonement_archive(request):
 def listcom(request):
     communautes = Communaute.objects.all()
     return render(request, "archcore/listcom.html", { "communautes":communautes, })
-
+ 
 def show_association(request,id):
     asso = Association.objects.get(id=id)
     return render(request, "archcore/showassociation.html", {"association": asso})
@@ -100,7 +134,21 @@ def add_association(request):
 
 def show_communaute(request,id):
     com = Communaute.objects.get(id=id)
-    return render(request, "archcore/show_com.html", {"communaute":com})
+    #  ce utilisateur ne peut voir les info detaillée de la famille que si il appartient à la famille ou a des droits
+    userid = request.session.get("userid","")
+    user = Membre.objects.get(id=userid)
+    appartient=False
+    if ( user in com.membres_communaute.all()):
+        appartient = True
+
+    return render(request, "archcore/show_com.html", {"communaute":com, "appartient" : appartient})
+
+def show_admin_com(request,id):
+    com = Communaute.objects.get(id=id)
+    print(com.administrateurs.all())
+    return render(request, "archcore/listadmincom.html", {"admins": com.administrateurs.all(), "communaute": com})
+
+
 
 def add_communaute(request):
     

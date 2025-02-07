@@ -71,6 +71,151 @@ $(document).ready(function(){
         }
     })
 
+    $("#addAdminFamID").on('click', function(e){                         
+        e.preventDefault();
+       
+			var data = {                      
+				"adminid": $("select[name='adminFam'] option:selected").val(), 
+				"famid": $(this).data("fam"), 
+			};
+            
+           
+			if( data.adminid.length > 0 && data.famid != undefined   ){
+
+                $.ajax({
+                    method      : "POST",
+                    data        : JSON.stringify(data),
+                    url         : BASEURL+"/add_ad_fam",  
+                    dataType    : "JSON",
+                    beforeSend      : function(){
+                        alert(JSON.stringify(data))
+                    },
+                    error: function(error) {
+                        console.error(error);
+                        alert(JSON.stringify(error))
+                    },
+                    success  : function(returnedData){
+                            console.log(returnedData);
+                            // alert(JSON.stringify(returnedData))
+                    
+                            if (returnedData.status) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: " Merci !" ,
+                                    text:   " Ajout Reussi de ce administrateur " ,
+                                    timer: 4000,
+                                    showConfirmButton: false
+        
+                                }).then((result) => {
+                                    $(".clos").click();
+                                    window.location.reload()
+                                     
+                                  });
+
+                            }else{
+                                Swal.fire({
+                    
+                                    icon: "error",
+                                    title: " Oupps !" ,
+                                    text:   "  " + returnedData.message ,
+                                    timer: 4000,
+                                    showConfirmButton: false
+        
+                                }).then((result) => {
+                                    window.location.reload()
+                                     
+                                  });
+                                 
+                            }   
+                    }, 
+
+                });
+
+			}else{
+
+                Swal.fire({
+                    icon: "error",
+                    title: " Oupps !" ,
+                    text:   " Merci de fournir toutes les informations requises!!!" ,
+                    timer: 4000,
+                    showConfirmButton: false
+                });
+                console.table( data )
+			}
+
+    });
+    $("#addAdminComID").on('click', function(e){                         
+        e.preventDefault();
+       
+			var data = {                      
+				"adminid": $("select[name='admin'] option:selected").val(), 
+				"comid": $(this).data("com"), 
+			};
+           
+			if( data.adminid.length > 0 && data.comid != undefined   ){
+
+                $.ajax({
+                    method      : "POST",
+                    data        : JSON.stringify(data),
+                    url         : BASEURL+"/add_ad_com",  
+                    dataType    : "JSON",
+                    beforeSend      : function(){
+                        //alert(JSON.stringify(data))
+                    },
+                    error: function(error) {
+                        console.error(error);
+                        alert(JSON.stringify(error))
+                    },
+                    success  : function(returnedData){
+                            console.log(returnedData);
+                            // alert(JSON.stringify(returnedData))
+                    
+                            if (returnedData.status) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: " Merci !" ,
+                                    text:   " Ajout Reussi de ce administrateur " ,
+                                    timer: 4000,
+                                    showConfirmButton: false
+        
+                                }).then((result) => {
+                                    $(".clos").click();
+                                    window.location.reload()
+                                     
+                                  });
+
+                            }else{
+                                Swal.fire({
+                    
+                                    icon: "error",
+                                    title: " Oupps !" ,
+                                    text:   "  " + returnedData.message ,
+                                    timer: 4000,
+                                    showConfirmButton: false
+        
+                                }).then((result) => {
+                                    window.location.reload()
+                                     
+                                  });
+                                 
+                            }   
+                    }, 
+
+                });
+			}else{
+
+                Swal.fire({
+                    icon: "error",
+                    title: " Oupps !" ,
+                    text:   " Merci de fournir toutes les informations requises!!!" ,
+                    timer: 4000,
+                    showConfirmButton: false
+                });
+                console.table( data )
+			}
+
+    });
+
     $("#addOrderID").on('click', function(e){                         
         e.preventDefault();
 			var data = {                      

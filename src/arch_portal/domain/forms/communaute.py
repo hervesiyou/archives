@@ -24,7 +24,8 @@ class CommunauteForm(forms.ModelForm):
         self.helper.form_tag = False
         self.helper.layout = Layout(
             Row(
-                Column('nom', css_class='col-md-12'),
+                Column('nom', css_class='col-md-10'),
+                Column('publique', css_class='col-md-2 div-check'),
                 Column('description', css_class='col-md-12'),
             ),
             Row(

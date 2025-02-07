@@ -40,7 +40,7 @@
                                 <div class="col-8 pull-left">
                                     <a href="{% url 'index' %}"> Accueil </a> |
                                     {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
-                                        {{ request.session.userrights}}
+                                        {% comment %} {{ request.session.userrights}} {% endcomment %}
                                         <a href="{% url 'add_communaute' %}"> + Communauté </a> |
                                     {% endif %}
                                     {% if  'ADD_COMMUNAUTE' in request.session.userrights %}

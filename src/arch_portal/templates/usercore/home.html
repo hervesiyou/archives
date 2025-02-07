@@ -9,6 +9,8 @@
         <h3 class="bg-info text-center text-white">  {{ request.session.nomcomplet}} </h3>
         <p>  {{user}} </p>
         <a href="{% url 'commandes_livres' %}" class="btn btn-info"> Livres demandés (Commandes)</a>
+        <a href="{% url 'commandes_livres' %}" class="btn btn-success"> Mes Communautés </a>
+        <a href="{% url 'commandes_livres' %}" class="btn btn-warning"> Mes Familles </a>
 
         {% if commandes %}
         <div class="card-body">
