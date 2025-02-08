@@ -21,6 +21,10 @@ urlpatterns = [
 
 urlpatterns += [ 
     path('', core.index, name="index"),
+    path('add_ad_famsalleatt', core.add_user_salleattfam, name="ad_sal_fam"),
+    path('add_ad_comsalleatt', core.add_user_salleattcom, name="ad_sal_com"),
+    path('shfasal/<int:id>', core.show_fam_salle, name="show_fam_salle"),
+    path('shcosal/<int:id>', core.show_com_salle, name="show_com_salle"),
 ]
 urlpatterns += [ 
     path('lcom', communaute.listcom, name="listcom"),
@@ -44,6 +48,8 @@ urlpatterns += [
     path('u/logout', membre.log_out, name="logout"),
     path('u/sign', membre.subscribe, name="subscribe"),
     path('u/home', membre.show_user_home, name="home"),
+    path('u/adfam', membre.show_user_famadmin, name="home_famadmin"),
+    path('u/adcom', membre.show_user_comadmin, name="home_comadmin"),
     
 ]
 

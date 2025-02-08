@@ -71,6 +71,157 @@ $(document).ready(function(){
         }
     })
 
+    $(".partComID").on('click', function(e){                         
+        e.preventDefault();
+       
+			var data = {                      
+ 				"comid": $(this).data("com"), 
+ 				"userid": $(this).data("user"), 
+			} 
+            if( parseInt(data.userid) > 0 && data.comid != undefined   ){
+
+                $.ajax({
+                    method      : "POST",
+                    data        : JSON.stringify(data),
+                    url         : BASEURL+"/add_ad_comsalleatt",  
+                    dataType    : "JSON",
+                    beforeSend      : function(){
+                        alert(JSON.stringify(data))
+                    },
+                    error: function(error) {
+                        console.error(error); 
+                    },
+                    success  : function(returnedData){
+                            console.log(returnedData);
+                            // alert(JSON.stringify(returnedData))
+                    
+                            if (returnedData.status) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: " Merci !" ,
+                                    text:   " Ajout Reussi , votre demande à été pris en compte, un adminitrateur etudiera et vous serez notifié de la validation de votre accès ! " ,
+                                    timer: 4000,
+                                    showConfirmButton: false
+        
+                                }).then((result) => {
+                                    $(".clos").click();
+                                    window.location.reload()
+                                     
+                                  });
+
+                            }else{
+                                Swal.fire({
+                    
+                                    icon: "error",
+                                    title: " Oupps !" ,
+                                    text:   "  " + returnedData.message ,
+                                    timer: 4000,
+                                    showConfirmButton: false
+        
+                                }).then((result) => {
+                                    window.location.reload()
+                                     
+                                  });
+                                 
+                            }   
+                    }, 
+
+                });
+
+			}else{
+
+                Swal.fire({
+                    icon: "error",
+                    title: " Oupps !" ,
+                    text:   " Merci de vous connecter d'abord !!!" ,
+                    timer: 4000,
+                    showConfirmButton: false
+                });
+                console.table( data )
+			}
+    })
+
+
+    $(".valideUserID").on('click', function(e){                         
+        e.preventDefault();
+       
+			var data = {                      
+ 				"salle": $(this).data("salle"), 
+ 				"direction": $(this).data("dir"), 
+			} 
+            alert(JSON.stringify(data))
+        })
+
+    $(".partFamID").on('click', function(e){                         
+        e.preventDefault();
+       
+			var data = {                      
+ 				"famid": $(this).data("fam"), 
+ 				"userid": $(this).data("user"), 
+			} 
+            if( parseInt(data.userid) > 0 && data.famid != undefined   ){
+
+                $.ajax({
+                    method      : "POST",
+                    data        : JSON.stringify(data),
+                    url         : BASEURL+"/add_ad_famsalleatt",  
+                    dataType    : "JSON",
+                    beforeSend      : function(){
+                        // alert(JSON.stringify(data))
+                    },
+                    error: function(error) {
+                        console.error(error); 
+                    },
+                    success  : function(returnedData){
+                            console.log(returnedData);
+                            // alert(JSON.stringify(returnedData))
+                    
+                            if (returnedData.status) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: " Merci !" ,
+                                    text:   " Ajout Reussi , votre demande à été pris en compte, un adminitrateur etudiera et vous serez notifié de la validation de votre accès ! " ,
+                                    timer: 4000,
+                                    showConfirmButton: false
+        
+                                }).then((result) => {
+                                    $(".clos").click();
+                                    window.location.reload()
+                                     
+                                  });
+
+                            }else{
+                                Swal.fire({
+                    
+                                    icon: "error",
+                                    title: " Oupps !" ,
+                                    text:   "  " + returnedData.message ,
+                                    timer: 4000,
+                                    showConfirmButton: false
+        
+                                }).then((result) => {
+                                    window.location.reload()
+                                     
+                                  });
+                                 
+                            }   
+                    }, 
+
+                });
+
+			}else{
+
+                Swal.fire({
+                    icon: "error",
+                    title: " Oupps !" ,
+                    text:   " Merci de vous connecter d'abord !!!" ,
+                    timer: 4000,
+                    showConfirmButton: false
+                });
+                console.table( data )
+			}
+    })
+
     $("#addAdminFamID").on('click', function(e){                         
         e.preventDefault();
        
@@ -88,7 +239,7 @@ $(document).ready(function(){
                     url         : BASEURL+"/add_ad_fam",  
                     dataType    : "JSON",
                     beforeSend      : function(){
-                        alert(JSON.stringify(data))
+                        // alert(JSON.stringify(data))
                     },
                     error: function(error) {
                         console.error(error);

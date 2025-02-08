@@ -33,12 +33,14 @@
                                 </div>
 
                                 <div class="card-body">
-                                {% if  'VOIR_FAMILLE' in request.session.userrights or liv.publique %}
-                                    <h5 >
-                                    {% comment %} {{liv.membres_famille.all}} {% endcomment %}
-                                    
+                                {% comment %} {% if  'VOIR_FAMILLE' in request.session.userrights or liv.publique %} {% endcomment %}
+                                {% if liv.publique %}
+                                    <h5 > 
                                     <a href="{% url 'show_famille' liv.id %}" class="text-center"> Voir en détail </a>
                                     </h5>
+                                {% else %}
+                                        <a href="#" data-fam="{{liv.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partFamID"> Je veux appartenir à {{ liv.nom }}</a>
+                                    
                                 {% endif %}
                                     <p> {{liv.description}} </p>
                                 </div>

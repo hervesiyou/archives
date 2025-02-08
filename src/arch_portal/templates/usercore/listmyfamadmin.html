@@ -1,0 +1,70 @@
+{% extends "usercore/home.html" %}
+{% load crispy_forms_tags %}
+{% block title %} {{ request.session.nomcomplet }} {% endblock %}
+{% block body %}
+ 
+<div class="row mt-5"> 
+        {% if familles %}
+            <div class="col-lg-8">
+            <h3 class="text-success"> Mes familles </h3>
+                <div class="card-body card">
+                    <table class="table">
+                        <thead >
+                            <tr class="text-danger">
+                                <th>Nom</th>
+                                <th>Description</th>
+                                <th>Informations</th>
+                                <th>Chef</th>
+                            </tr>
+                        </thead>
+                        <tbody> 
+                            {% for com in familles %}
+                                <tr>
+                                    <td>
+                                    <a href="{% url 'show_famille' com.id %}" class="text-center">  {{com.nom}}  </a>
+                                    {% if not  com.publique %} <span class="badge bg-danger"> privée</span>{% endif %}</td>
+                                    <td>{{com.description}}</td>
+                                    <td>{{com.origine}} - {{com.type}} </td>
+                                    <td>{{com.chef.nomcomplet}} </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+        {% if adfamilles %}
+            <div class="col-lg-4">
+            <h3 class="text-danger"> Les familles que j'administre</h3>
+                <div class="card-body card  ">
+                    <table class="table">
+                        <thead >
+                            <tr class="text-danger">
+                                <th>Nom</th>
+                                <th>Description</th> 
+                                <th>.</th>
+                            </tr>
+                        </thead>
+                        <tbody> 
+                            {% for com in adfamilles %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'show_famille' com.id %}" class="text-center">  {{com.nom}}  </a>
+                                   
+                                      {% if not  com.publique %} <span class="badge bg-danger"> privée</span>{% endif %} 
+                                    </td>
+                                    <td>{{com.description}}
+                                    <br/>
+                                    {{com.origine}}  - {{com.type}} </td>
+                                    <td>
+                                    <a href="{% url 'show_fam_salle' com.id %}" class="btn btn-info"> Salle d'attente </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %} 
+</div>
+{% endblock %}

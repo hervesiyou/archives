@@ -1,0 +1,70 @@
+{% extends "usercore/home.html" %}
+{% load crispy_forms_tags %}
+{% block title %} {{ request.session.nomcomplet }} {% endblock %}
+{% block body %}
+
+<div class="row mt-5"> 
+    <div class="col-lg-8">
+        <h3 class="bg-info text-center text-white">Mes communautés </h3>
+       
+        {% if communautes %}
+        <div class="card-body">
+            <table class="table">
+                <thead >
+                    <tr class="text-danger">
+                        <th>Nom</th>
+                        <th>Description</th>
+                        <th>Informations</th>
+                        <th>Chef</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    {% for com in communautes %}
+                        <tr>
+                            <td>
+                            <a href="{% url 'show_communaute' com.id %}" class="text-center">  {{com.nom}}  </a> 
+                            {% if not  com.publique %} <span class="badge bg-danger"> privée</span>{% endif %} 
+                            </td>
+                            <td>{{com.description}}</td>
+                            <td>{{com.superficie}} km2 / {{com.origine}} </td>
+                            <td>{{com.chef.nomcomplet}} </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+    </div> 
+    <div class="col-lg-4">
+        <h3 class="bg-danger text-center text-white">Mes communautés administrées </h3>
+       
+        {% if adcommunautes %}
+        <div class="card-body">
+            <table class="table">
+                <thead >
+                    <tr class="text-danger">
+                        <th>Nom</th>
+                        <th>Description</th> 
+                        <th>.</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    {% for com in adcommunautes %}
+                        <tr>
+                            <td>
+                            <a href="{% url 'show_communaute' com.id %}" class="text-center">  {{com.nom}}  </a> 
+                            {% if not  com.publique %} <span class="badge bg-danger"> privée</span>{% endif %} 
+                            </td>
+                            <td>{{com.description}}</td> 
+                            <td><a href="{% url 'show_com_salle' com.id %}" class="btn btn-info"> Salle d'attente </a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

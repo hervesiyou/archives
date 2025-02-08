@@ -1,0 +1,52 @@
+{% extends "usercore/home.html" %}
+{% load crispy_forms_tags %}
+{% block title %} Salle attente {{communaute.nom}}  : {{ request.session.nomcomplet }} {% endblock %}
+{% block body %}
+
+<div class="row mt-5"> 
+    <div class="col-lg-12">
+        <h3 class="bg-info text-center text-white">Utilisateur souhaitant adherer à <a href="{% url 'show_communaute' communaute.id %}" class="text-center">   {{communaute.nom}} </a> </h3>
+       
+        
+        <div class="card-body">
+            <table class="table">
+                <thead >
+                    <tr class="text-danger">
+                        <th>Nom</th>
+                        <th>Description</th>
+                        <th>Informations</th>
+                        <th>Demandé le</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    {% for com in users %}
+                    
+                        <tr>
+                            <td>
+                            <a href="{% url 'show_user' com.id %}" class="text-center">  {{com.personne.nomcomplet}}  </a> 
+                         
+                            </td>
+                            <td>{{com.personne.telephone}}, {{com.personne.sexe}} , fils de {{com.personne.pere}} et de {{com.personne.mere}} </td>
+                            <td>  
+                             {% if com.valide %} 
+                                <span class="badge bg-success"> Déja validé</span>
+                             {% else %}
+                             <span class="badge bg-danger"> Pas encore validé</span>
+                             {% endif %}
+                            </td>
+                            <td>
+                                {{com.date_demande}}
+                                {% if not com.valide %} 
+                                <a href="#" class="badge bg-success valideUserID" data-dir="COM" data-salle="{{com.id}}">Valider son appartenance</a>
+                                {% endif %}
+                             </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+      
+
+    </div>  
+</div>
+{% endblock %}

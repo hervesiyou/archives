@@ -66,6 +66,31 @@ def show_user_home(request):
     else:
         return redirect("login")
 
+def show_user_famadmin(request):
+    if(request.session["userid"]!=None):
+        user=Membre.objects.get(id=request.session["userid"])
+        if(user != None):
+            adfamilles = user.familles.all()
+            fams = user.fam_admins.all()
+            return render(request, "usercore/listmyfamadmin.html", {"user":user, "familles":fams, "adfamilles": adfamilles})
+        else:
+            raise MembreException( f" Membre {request.session["userid"]} introuvable ")  
+    else:
+        return redirect("login")
+
+def show_user_comadmin(request):
+    if(request.session["userid"]!=None):
+        user=Membre.objects.get(id=request.session["userid"])
+        if(user != None):
+            coms = user.com_admins.all()
+            adcoms = user.communautes.all()
+            return render(request, "usercore/listmycomadmin.html", {"user":user , "communautes": coms, "adcommunautes":adcoms})
+        else:
+            raise MembreException( f" Membre {request.session["userid"]} introuvable ")  
+    else:
+        return redirect("login")
+
+
 def show_user(request,id):
     membre = Membre.objects.get(id=id)
     return render(request, "usercore/show_user.html", {"membre":membre})
