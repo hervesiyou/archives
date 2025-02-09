@@ -23,8 +23,11 @@ urlpatterns += [
     path('', core.index, name="index"),
     path('add_ad_famsalleatt', core.add_user_salleattfam, name="ad_sal_fam"),
     path('add_ad_comsalleatt', core.add_user_salleattcom, name="ad_sal_com"),
+    path('add_ad_assosalleatt', core.add_user_salleattasso, name="ad_sal_asso"),
+    path('valsatt', core.valide_salleatt, name="valide_salle_att"),
     path('shfasal/<int:id>', core.show_fam_salle, name="show_fam_salle"),
     path('shcosal/<int:id>', core.show_com_salle, name="show_com_salle"),
+    path('shassosal/<int:id>', core.show_asso_salle, name="show_asso_salle"),
 ]
 urlpatterns += [ 
     path('lcom', communaute.listcom, name="listcom"),
@@ -33,10 +36,12 @@ urlpatterns += [
     path('add_ad_com', communaute.add_admin_com, name="add_admin_com"),
     path('add_abonnement', communaute.add_abonnement, name="add_abonnement"),
     path('sa/<int:id>', communaute.show_association, name="show_association"),
+    path('sma/<int:id>', communaute.listmembresassociation, name="listmembresassociation"),
     path('sc/<int:id>', communaute.show_communaute, name="show_communaute"),
     path('nc/', communaute.add_communaute, name="add_communaute"),
     path('na/', communaute.add_association, name="add_association"),
     path('lass/<int:id>', communaute.listassociations, name="listassociations"),
+    path('lassfam/<int:id>', communaute.listassociationsfam, name="listassociationsfam"),
     path('ngal/', communaute.add_galerie, name="add_galerie"),
     path('ga/<int:id>', communaute.show_galerie, name="show_galerie"),
 ]
@@ -50,6 +55,8 @@ urlpatterns += [
     path('u/home', membre.show_user_home, name="home"),
     path('u/adfam', membre.show_user_famadmin, name="home_famadmin"),
     path('u/adcom', membre.show_user_comadmin, name="home_comadmin"),
+    path('u/adasso', membre.show_user_assoadmin, name="home_assoadmin"),
+    path('u/seemes', membre.show_user_messages, name="home_messageadmin"),
     
 ]
 

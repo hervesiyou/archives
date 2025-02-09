@@ -1,0 +1,40 @@
+{% extends "usercore/home.html" %}
+{% load crispy_forms_tags %}
+{% block title %} Messages de  {{ request.session.nomcomplet }} {% endblock %}
+{% block body %}
+
+<div class="row mt-5"> 
+    <div class="col-lg-12">
+        <h3 class="bg-info text-center text-white">Mes Messages </h3>
+       {% comment %} {{user.messages.all}} {% endcomment %}
+        {% if user.messages %}
+        <div class="card-body">
+            <table class="table">
+                <thead >
+                    <tr class="text-danger">
+                        <th>Sujet</th>
+                        <th>Contenu</th> 
+                        <th>Envoyé le</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    {% for com in user.messages.all %}
+                        <tr>
+                            <td>
+                            <a href="#" class="text-center">  {{com.sujet}}  </a> 
+                      
+                            </td>
+                            <td>{{com.contenu}}</td> 
+                            <td>{{com.date_ajout}} </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <div class="div-info"> Vous avez pas encore de messages !</div>
+        {% endif %}
+
+    </div>  
+</div>
+{% endblock %}

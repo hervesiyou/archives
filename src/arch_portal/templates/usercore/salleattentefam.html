@@ -22,7 +22,7 @@
                     {% for com in users %}
                         <tr>
                             <td>
-                            <a href="{% url 'show_communaute' com.id %}" class="text-center">  {{com.personne.nomcomplet}}  </a> 
+                            <a href="{% url 'show_user' com.id %}" class="text-center">  {{com.personne.nomcomplet}}  </a> 
                          
                             </td>
                             <td>{{com.personne.telephone}}, {{com.personne.sexe}} , fils de {{com.personne.pere}} et de {{com.personne.mere}} </td>

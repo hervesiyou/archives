@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} {{parent}} Membres de {{ association.nom }} {% endblock %}
+{% block css %} 
+
+    <link href="{% static 'css/dataTables.bootstrap4.css' %} " rel="stylesheet">
+    <style>
+        th{
+            text-transform: uppercase;
+            color: white !important  ;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+   
+    <div class="row">
+        <div class="col-12">
+            
+            <div class="card-body">
+                <h5 class="card-title my-5">
+                    <a href="{% url 'show_association' association.id %}" class="text-center"> {{ association.nom }} </a>
+                </h5> 
+            </div>
+            
+        </div>
+    </div>
+
+    
+    <div class="card-body">
+
+        <h5 class="card-title">Liste des membre de l'association - {{association.nom}} </h5>
+        <div class="table-responsive">
+            <table id="zero_config" class="table table-striped table-bordered">
+                <thead class="bg-success text-white">
+                    <tr>
+                        <th>Nom </th>
+                        <th>Informations</th> 
+                        <th>.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for liv in association.membres_association.all %}
+                        <tr>
+                            <td class="text-capitalize"> 
+                               
+                            <a href="{% url 'show_user' liv.id %}" class="text-center "> {{liv.nomcomplet}} </a>
+                                
+                            </td>
+                            <td class="text-capitalize">{{ liv.email}} ,{{liv.sexe }}</td>
+                            <td class="text-capitalize">{{liv.residence}}</td>
+                        </tr>
+                    {% endfor %}
+                        
+                </tbody>
+                    
+            </table>
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/datatables.min.js' %}"></script>
+    <script> 
+        $('#zero_config').DataTable();
+    </script>
+{% endblock %}

@@ -15,8 +15,10 @@ from arch_portal.domain.models import Role,Permission
 from arch_portal.domain.models.evenement import Evenement
 from arch_portal.domain.models.abonnement import Abonnement
 from arch_portal.domain.models.plantarifaire import Plan
+from arch_portal.domain.models.message import Message
 from arch_portal.domain.models.salleattentefamille import SalleAttenteFamille
 from arch_portal.domain.models.salleattentecommunaute import SalleAttenteCommunaute
+from arch_portal.domain.models.salleattenteassociation import SalleAttenteAssociation
 
 admin.site.register(Communaute)
 admin.site.register(Famille)
@@ -34,4 +36,6 @@ admin.site.register(Role)
 admin.site.register(Abonnement)
 admin.site.register(Plan)
 admin.site.register(SalleAttenteCommunaute)
+admin.site.register(SalleAttenteAssociation)
 admin.site.register(SalleAttenteFamille)
+admin.site.register(Message)

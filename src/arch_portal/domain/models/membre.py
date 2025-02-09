@@ -5,6 +5,7 @@ from .association import Association
 from .image import Image
 from .galerie import Galerie
 from .role import Role
+from .message import Message
 from .communaute import Communaute
 
 class Membre(models.Model):
@@ -33,10 +34,11 @@ class Membre(models.Model):
     diplomes = models.CharField(max_length=250, null=True, blank=True)
     profession = models.CharField(max_length=150, null=True, blank=True)
     
+    messages = models.ManyToManyField(Message,related_name="membres_message", null=True)
     familles = models.ManyToManyField(Famille,related_name="membres_famille", null=True)
-    associations = models.ManyToManyField(Association, null=True, blank=True)
+    associations = models.ManyToManyField(Association, related_name="membres_association", null=True, blank=True)
     images = models.ManyToManyField(Image, null=True, blank=True)
-    communautes = models.ManyToManyField(Communaute, related_name="membres_communaute",  null=True, blank=True)
+    communautes = models.ManyToManyField(Communaute, related_name="membres_communaute", null=True, blank=True)
     galeries = models.ManyToManyField(Galerie, related_name="mes_galeries", null=True, blank=True)
     approbateurs = models.ManyToManyField("self", null=True, blank=True)
     
@@ -61,7 +63,9 @@ class Membre(models.Model):
 
     def __str__(self):
         return self.nomcomplet
-
+    def jappartient_asso(self,asso):
+        return ( asso in self.associations.all() )
+           
     def get_rights(self):
         return [perm.nom for role in self.role.all() for perm in role.permissions.all() ]
     

@@ -11,6 +11,8 @@
         <a href="{% url 'commandes_livres' %}" class="btn btn-info"> Livres demandés (Commandes)</a>
         <a href="{% url 'home_comadmin' %}" class="btn btn-success"> Mes Communautés </a>
         <a href="{% url 'home_famadmin' %}" class="btn btn-warning"> Mes Familles </a>
+        <a href="{% url 'home_assoadmin' %}" class="btn btn-primary"> Mes Associations </a>
+        <a href="{% url 'home_messageadmin' %}" class="btn btn-info"> Mes Messages </a>
         {% block body %}
             {% if commandes %}
             <div class="card-body">

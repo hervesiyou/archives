@@ -112,6 +112,14 @@ def show_association(request,id):
     asso = Association.objects.get(id=id)
     return render(request, "archcore/showassociation.html", {"association": asso})
 
+def listassociationsfam(request, id): 
+    com = Famille.objects.get(id=id)
+    return render(request, "archcore/listassociationsfam.html", { "famille": com})
+
+def listmembresassociation(request, id): 
+    com = Association.objects.get(id=id)
+    return render(request, "archcore/listmembresassociation.html", { "association": com})
+
 
 def listassociations(request, id):
     assos = Association.objects.filter(communaute=id)

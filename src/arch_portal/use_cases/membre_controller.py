@@ -56,6 +56,17 @@ def log_user(request):
 
     return render(request, "usercore/login.html", {"form":form})
 
+def show_user_messages(request):
+    if(request.session["userid"]!=None):
+        user=Membre.objects.get(id=request.session["userid"])
+        
+        if(user != None):
+            return render(request, "usercore/listmessages.html", {"user":user, })
+        else:
+            raise MembreException( f" Membre {request.session["userid"]} introuvable ")  
+    else:
+        return redirect("login")
+
 def show_user_home(request):
     if(request.session["userid"]!=None):
         user=Membre.objects.get(id=request.session["userid"])
@@ -85,6 +96,18 @@ def show_user_comadmin(request):
             coms = user.com_admins.all()
             adcoms = user.communautes.all()
             return render(request, "usercore/listmycomadmin.html", {"user":user , "communautes": coms, "adcommunautes":adcoms})
+        else:
+            raise MembreException( f" Membre {request.session["userid"]} introuvable ")  
+    else:
+        return redirect("login")
+
+def show_user_assoadmin(request):
+    if(request.session["userid"] != None):
+        user = Membre.objects.get(id=request.session["userid"])
+        if(user != None):
+            adasso = user.asso_admins.all()
+            assos = user.associations.all()
+            return render(request, "usercore/listmyassoadmin.html", {"user":user , "associations": assos, "adassos":adasso })
         else:
             raise MembreException( f" Membre {request.session["userid"]} introuvable ")  
     else:

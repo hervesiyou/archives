@@ -9,11 +9,17 @@ class Association(models.Model):
     
     db_table = "associations"
     nom = models.CharField(max_length=150)
+    publique = models.BooleanField(default=True)
     description = models.TextField( blank=True)
     adhesion = models.TextField( blank=True)
     contact = models.TextField( blank=True)
-    communaute = models.ForeignKey("Communaute", on_delete=models.SET_NULL, null=True)
+    famille = models.ForeignKey("Famille", on_delete=models.SET_NULL,blank=True, null=True)
+    communaute = models.ForeignKey("Communaute", on_delete=models.SET_NULL,blank=True, null=True)
     localisation = models.TextField( blank=True)
+
+    administrateurs = models.ManyToManyField("Membre", related_name="asso_admins", blank=True, null=True)
+
+
     type = models.CharField(
         max_length=50, 
         choices=ASSO_CHOICES,
@@ -21,4 +27,10 @@ class Association(models.Model):
     )
     def __str__(self):
         return self.nom
+    
+    def userid_appartient(self, userid ):
+        for m in self.membres_association.all():
+            if( userid == m.id):
+                return True
+        return False
     

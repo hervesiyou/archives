@@ -80,7 +80,15 @@
                         {% for liv in familles %}
                             <tr>
                                 <td class="text-capitalize">
-                                    <a href="{% url 'show_famille' liv.id %}"> {{liv.nom}} </a>
+                                     
+                                    {% if liv.publique %}
+                                        <h5 > 
+                                        <a href="{% url 'show_famille' liv.id %}" class="text-center"> {{liv.nom}} </a>
+                                        </h5>
+                                    {% else %}
+                                            <a href="#" data-fam="{{liv.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partFamID"> Je veux appartenir à {{ liv.nom }}</a>
+                                        
+                                    {% endif %}
                                 </td>
                                 <td class="text-capitalize">{{ liv.description}} </td>
                                 <td class="text-capitalize">{{liv.origine}} </td>

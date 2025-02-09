@@ -1,6 +1,7 @@
 from django.db import models
 
 from arch_portal.domain.models.galerie import Galerie
+from arch_portal.domain.models.association import Association
 from arch_portal.domain import models as mod
  
 
@@ -21,6 +22,7 @@ class Famille(models.Model):
     famille_mere = models.ForeignKey("Famille",on_delete=models.SET_NULL, null=True, blank=True)
     communaute = models.ForeignKey("Communaute",on_delete=models.SET_NULL, null=True, blank=True)
     chef = models.ForeignKey("Membre",on_delete=models.SET_NULL,related_name="mon_chef", null=True, blank=True)
+    associations = models.ManyToManyField(Association, related_name="association_familles", null=True, blank=True)
     galeries = models.ManyToManyField(Galerie, related_name="galeries_famille", null=True, blank=True)
     administrateurs = models.ManyToManyField("Membre", related_name="fam_admins", blank=True, null=True)
 

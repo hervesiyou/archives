@@ -12,7 +12,7 @@ class SalleAttenteFamille(models.Model):
     famille = models.ForeignKey(Famille, on_delete=models.CASCADE)
     date_demande = models.DateField(auto_now=True)
     date_validation = models.DateField(null=True)
-    valide =models.BooleanField(default=False)
+    valide = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.personne.nomcomplet} pour {self.famille.nom}'

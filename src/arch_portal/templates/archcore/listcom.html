@@ -20,7 +20,7 @@
                                     <div class="box bg-success text-center">
                                         <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i> </h1>
                                         <h6 class="text-white">{{ com.nom}} </h6>
-                                        {% if    com.publique %}
+                                        {% if  com.publique %}
                                         {% comment %} {% if  'VOIR_COMMUNAUTE' in request.session.userrights or com.publique %} {% endcomment %}
                                            <a href="{% url 'show_communaute' com.id %}" class="text-center badge bg-secondary"> Voir en détail</a>
                                         {% else %}

@@ -8,7 +8,7 @@
 {% endblock %}
 {% block content %}
     <div class="row bg my-5">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class=" mt-0">
                 <div class="row">
                     <div class="col-md-6">
@@ -24,7 +24,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class=" mt-0">
                 <div class="row"> 
                     <div class="col-md-6 border-left text-center pt-2">
@@ -34,12 +34,25 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class=" mt-0">
                 <div class="row"> 
                     <div class="col-md-6 border-left text-center pt-2">
                         <h3 class="mb-0 ">5672</h3>
                         <span class="text-muted">Arriere petit fils</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class=" mt-0">
+                <div class="row"> 
+                    <div class="col-md-6 border-left text-center pt-2">
+                    
+                    <a href="{% url 'listassociationsfam' famille.id %}">
+                        <h3 class="mb-0 ">{{famille.associations.all|length}}</h3>
+                        <span class="text-muted">Associations</span>
+                    </a>
                     </div>
                 </div>
             </div>

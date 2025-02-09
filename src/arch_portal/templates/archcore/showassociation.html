@@ -16,13 +16,15 @@
                             <h3 class="mb-0 fw-bold">
                                 {{association.communaute}}</h3>
                             <span class="text-muted">
-                                <a href="{% url 'listassociations' association.communaute.id %} ">Autres associations</a>
+                                <a href="{% url 'listassociations' association.communaute.id %}">Autres associations</a>
                             </span>
                         </div>
                     </div>
                     <div class="col-md-6 border-left text-center pt-2">
-                        <h3 class="mb-0 fw-bold">150</h3>
+                    <a href="{% url 'listmembresassociation' association.id %}">
+                        <h3 class="mb-0 fw-bold">{{association.membres_association.all|length}}</h3>
                         <span class="text-muted">Membres</span>
+                    </a>
                     </div>
                 </div>
             </div>

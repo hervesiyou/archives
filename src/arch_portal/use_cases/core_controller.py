@@ -3,11 +3,14 @@ from arch_portal.domain.models.salleattentefamille import SalleAttenteFamille
 from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.famille import Famille
 from arch_portal.domain.models.membre import Membre
+from arch_portal.domain.models.message import Message
+from arch_portal.domain.models.association import Association
 from arch_portal.domain.models.salleattentecommunaute import SalleAttenteCommunaute
+from arch_portal.domain.models.salleattenteassociation import SalleAttenteAssociation
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import HttpResponseForbidden, JsonResponse
-
+from datetime import date
 
 def index(request): 
     return render(request, "base.html" )
@@ -37,6 +40,93 @@ def show_fam_salle(request,id):
             raise MembreException( f" Membre {request.session["userid"]} introuvable ")  
     else:
         return redirect("login")
+
+def show_asso_salle(request,id):
+    if(request.session["userid"]!=None):
+        user = Membre.objects.get(id=request.session["userid"])
+        if(user != None):
+            com = Association.objects.get(id=id)
+
+            users = SalleAttenteAssociation.objects.filter(association=com)
+            return render(request, "usercore/salleattenteasso.html", { "association": com, "users":users})
+        else:
+            raise MembreException( f" Membre {request.session["userid"]} introuvable ")  
+    else:
+        return redirect("login")
+
+
+@csrf_exempt
+def valide_salleatt(request):
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    if is_ajax :
+        if request.method == "POST" :
+            data = json.loads(request.body.decode('utf-8'))
+            userid = request.session.get("userid","") 
+            
+            if data.get('salle') is None:
+                return JsonResponse({'status': False ,"message": "Famille incorrecte"})
+            else: 
+                if userid is None:
+                    return JsonResponse({'status': False ,"message": "Merci de vous connecter avant tout abonnement !"})
+                else:
+                    if data.get('direction') is None:
+                        return JsonResponse({'status': False ,"message": "Probleme de procedure !"})
+                    else:
+                        user = Membre.objects.get(id=userid)
+                        if( data.get("direction") == "FAM"):
+                            salle = SalleAttenteFamille.objects.get(id=data.get("salle"))
+                            salle.famille.membres_famille.add(salle.personne)
+                            mes = Message(
+                                sujet=f" Votre validation d'accès à {salle.famille.nom} ",
+                                contenu=f" Un administrateur à validé votre accès à la FAMILLE : {salle.famille.nom}, vous pouvez desormais y acceder .",
+                                date_ajout=date.today()
+                            )
+                            mes.save()
+                            salle.personne.messages.add( mes )
+                            salle.personne.save()
+                            salle.famille.save()
+                            message = f"Merci {salle.personne.nomcomplet} , a été autorisé a adherer à  {salle.famille.nom} "
+                        else:
+                            if( data.get("direction") == "COM"):
+                                salle = SalleAttenteCommunaute.objects.get(id=data.get("salle"))
+                                salle.communaute.membres_communaute.add(salle.personne)
+                                mes = Message(
+                                    sujet=f" Votre validation d'accès à {salle.communaute.nom} ",
+                                    contenu=f" Un administrateur à validé votre accès à la COMMUNAUTE : {salle.communaute.nom}, vous pouvez desormais y acceder .",
+                                    date_ajout=date.today()
+                                )
+                                 
+                                mes.save()
+                                salle.personne.messages.add( mes )
+                                salle.personne.save()
+                                salle.communaute.save()
+                                message = f"Merci {salle.personne.nomcomplet} , a été autorisé a adherer à  {salle.communaute.nom} "
+                            else:
+                                if( data.get("direction") == "ASSO"):
+                                    salle = SalleAttenteAssociation.objects.get(id=data.get("salle"))
+                                    salle.association.membres_association.add(salle.personne)
+                                    mes = Message(
+                                        sujet=f" Votre validation d'accès à {salle.association.nom} ",
+                                        contenu = f" Un administrateur à validé votre accès à l'ASSOCIATION : {salle.association.nom}, vous pouvez desormais y acceder .",
+                                        date_ajout = date.today()
+                                    )
+                                    
+                                    mes.save()
+                                    salle.personne.messages.add( mes )
+                                    salle.personne.save()
+                                    salle.association.save()
+                                    message = f"Merci {salle.personne.nomcomplet} , a été autorisé a adherer à  {salle.association.nom} "
+                                else:
+                                    return JsonResponse({'status': False ,"message": "Probleme de procedure de validation !"})
+                        
+                        salle.validateur =  user
+                        salle.date_validation =  date.today()
+                        salle.valide = True
+                        
+                        salle.save()
+                        #  ici je peux aussi envoyer un mail à l'utilisateur
+                        return JsonResponse({'status': True ,"message": message})
+               
 
 @csrf_exempt
 def add_user_salleattfam(request):
@@ -102,6 +192,36 @@ def add_user_salleattcom(request):
                     else:
                         return JsonResponse({'status': False ,"message": "Desolé, vous avez etes deja dans la salle d'attente !"})
 
+@csrf_exempt
+def add_user_salleattasso(request):
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    if is_ajax :
+        if request.method == "POST" :
+            data = json.loads(request.body.decode('utf-8'))
+            userid = request.session.get("userid","") 
+            
+            if data.get('assoid') is None:
+                return JsonResponse({'status': False ,"message": "Association incorrecte"})
+            else: 
+                if userid is None:
+                    return JsonResponse({'status': False ,"message": "Merci de vous connecter avant tout abonnement !"})
+                else:
+                    user = Membre.objects.get(id=userid)
+                    asso = Association.objects.get(id=data.get("assoid"))
+                
+                    ab = SalleAttenteAssociation.objects.filter(personne=user, association=asso)
+                    # print(ab, plan, user)
+                    if len(ab) == 0: 
+                        ab = SalleAttenteAssociation( 
+                            personne = user,
+                            association = asso, 
+                        )
+                        ab.save() 
+                        message = f"Merci {user.nomcomplet} , votre sollitation d'adherer à l'association {asso.nom} a été prise en compte, un administrateur vous reviendrait dès la fin de l'etude"
+                        
+                        return JsonResponse({'status': True ,"message": message})
+                    else:
+                        return JsonResponse({'status': False ,"message": "Desolé, vous avez etes deja dans la salle d'attente !"})
 
 
 
