@@ -9,10 +9,12 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import HttpResponseForbidden, JsonResponse
 
-def listfamilles(request, id):
+def listfamilles(request, id, mode=0):
    
     livres = Famille.objects.filter(communaute=id)
     lib = Communaute.objects.get(id=id) 
+    if not mode: 
+        return render(request, "archcore/listfamilles_tab.html", { "familles" : livres, "communaute" : lib } )
     return render(request, "archcore/listfamilles.html", { "familles" : livres, "communaute" : lib } )
 
 def show_famille(request,id):

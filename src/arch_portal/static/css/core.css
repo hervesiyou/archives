@@ -12,7 +12,9 @@ nav div, nav h3{
     font-weight: bolder;
     text-align: center;
 }
-
+.content{
+    min-height: 300px;
+}
 
 footer span{
     text-align: center;

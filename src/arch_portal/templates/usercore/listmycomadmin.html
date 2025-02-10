@@ -57,7 +57,7 @@
                             {% if not  com.publique %} <span class="badge bg-danger"> privée</span>{% endif %} 
                             </td>
                             <td>{{com.description}}</td> 
-                            <td><a href="{% url 'show_com_salle' com.id %}" class="btn btn-info"> Salle d'attente </a></td>
+                            <td><a href="{% url 'show_com_salle' com.id %}" class="badge bg-info"> Salle d'attente </a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

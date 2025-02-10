@@ -4,9 +4,11 @@ from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.evenement import Evenement
 
 
-def listevenements(request, id):
+def listevenements(request, id, mode=0):
     events = Evenement.objects.filter(communaute=id)
     com = Communaute.objects.get(id=id)
+    if not mode: 
+        return render(request, "archcore/listevenements_tab.html", {"evenements": events, "communaute": com})
     return render(request, "archcore/listevenements.html", {"evenements": events, "communaute": com})
 
 def show_evenement(request, id):

@@ -98,7 +98,7 @@
                                         <i class="fa fa-user mb-1 font-16"></i>
                                         <h5 class="mb-0 mt-1">{{communaute.get_familles|length }} Familles</h5>
                                         {% if appartient %}
-                                        <small class="font-light"><a href="{% url 'listfamilles' communaute.id %}"> Consulter </a></small>
+                                        <small class="font-light"><a href="{% url 'listfamilles' id=communaute.id mode=1  %}"> Consulter </a></small>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -108,7 +108,7 @@
                                         <h5 class="mb-0 mt-1">{{communaute.get_associations|length }} Associations</h5>
                                         {% if appartient %}
                                         <small class="font-light">
-                                            <a href="{% url 'listassociations' communaute.id %}"> Consulter </a>
+                                            <a href="{% url 'listassociations' id=communaute.id mode=1  %}"> Consulter </a>
                                         </small>
                                         {% endif %}
                                     </div>
@@ -121,7 +121,7 @@
                                          
                                         {% if appartient %}
                                         <small class="font-light">
-                                        <a href="{% url 'listevenements' communaute.id %}"> Consulter</a> 
+                                        <a href="{% url 'listevenements' id=communaute.id mode=1 %}"> Consulter</a> 
                                         </small>
                                         {% endif %}
                                     </div>

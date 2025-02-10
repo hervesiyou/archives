@@ -26,7 +26,18 @@
                     {% endif %}
                 </h5>
                 
-                
+                <div class="row">
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <input class="col-10" type="text" value="" name="rechLivre" />
+                            <button  class="  btn-success "> Rechercher </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <a href="{% url 'listevenements' id=communaute.id  mode=0 %}" class="text-info"> Afficher en liste</a>
+                    </div>
+                </div>
                     
                 <div class="row my-5">
                     {% for liv in evenements %}
@@ -58,9 +69,10 @@
         
         </div>
     </div>
+    
 
 
-    <div class="card-body">
+    {% comment %} <div class="card-body">
 
         <h5 class="card-title my-2">Liste des evenements  - {{communaute.nom}} </h5>
         <div class="table-responsive">
@@ -90,13 +102,13 @@
             </table>
         </div>
 
-    </div>
+    </div> {% endcomment %}
 
 {% endblock %}
 
 {% block js %}
-    <script src="{% static 'js/datatables.min.js' %}"></script>
+    {% comment %} <script src="{% static 'js/datatables.min.js' %}"></script>
     <script> 
         $('#zero_config').DataTable();
-    </script>
+    </script> {% endcomment %}
 {% endblock %}

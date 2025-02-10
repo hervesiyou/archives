@@ -25,13 +25,15 @@ def listlibs(request):
     libs = Librairie.objects.all()
     return render(request, "libcore/listlibrairies.html", { "librairies" : libs, } )
 
-def listbooks(request, id):
+def listbooks(request, id,mode=False):
     livres = Livre.objects.filter(librairies=id)
     lib = Librairie.objects.get(id=id)
     serializer = LibrairiesSerializer(lib,many=True) 
     request.session['librairie'] = lib.nom
     request.session['librairieid'] = lib.id
-    
+    if( not mode ):
+        return render(request, "libcore/listbooks_tab.html", { "livres":livres, "librairie" : lib } )
+
     return render(request, "libcore/listbooks.html", { "livres":livres, "librairie" : lib } )
 
 def show_book(request,id):

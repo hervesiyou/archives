@@ -17,7 +17,7 @@
                     {% for lib in librairies %}
                         <div class="col-md-6 col-lg-2 col-xlg-3">
                             <div class="card card-hover">
-                                <a href="{% url 'listbooks' lib.id %}">
+                                <a href="{% url 'listbooks' id=lib.id mode=1 %}">
                                     <div class="box bg-danger text-center">
                                         <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
                                         </h1>
@@ -38,7 +38,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="el-card-content">
-                                                    <a href="{% url 'listbooks' lib.id %}">
+                                                    <a href="{% url 'listbooks' id=lib.id mode=1 %}">
                                                         <h4 class="mb-0">{{ lib.nom}} </h4> <span class="text-muted">  {{ lib.description }} </span>
                                                     </a>
                                                 </div>

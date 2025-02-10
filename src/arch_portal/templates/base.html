@@ -131,17 +131,18 @@
                         {% endfor %}
                     </header>
                 {% endif %}
-
-                {% block content %}
-                <div class="error-box">
-                    <div class="error-body text-center">
-                        <h1 class="error-title text-danger">ARCHIVES</h1>
-                        <h3 class="text-uppercase error-subtitle">Savoir pour comprendre !</h3>
-                        <p class="text-muted mt-4 mb-4">Comprendre pour impacter</p>
-                        <a href="#" class="btn btn-danger btn-rounded waves-effect waves-light mb-5 text-white">Impacter pour illuminer</a> 
+                <div class="content">
+                    {% block content %}
+                    <div class="error-box">
+                        <div class="error-body text-center">
+                            <h1 class="error-title text-danger">ARCHIVES</h1>
+                            <h3 class="text-uppercase error-subtitle">Savoir pour comprendre !</h3>
+                            <p class="text-muted mt-4 mb-4">Comprendre pour impacter</p>
+                            <a href="#" class="btn btn-danger btn-rounded waves-effect waves-light mb-5 text-white">Impacter pour illuminer</a> 
+                        </div>
                     </div>
+                    {% endblock %}
                 </div>
-                {% endblock %}
             </div>
 
         </div>

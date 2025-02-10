@@ -7,7 +7,7 @@
     <style>
         th{
             text-transform: uppercase;
-            
+            color: white !important;
         }
     </style>
 {% endblock %}
@@ -17,13 +17,13 @@
         <div class="col-12">
             
             <div class="card-body">
-                <h5 class="card-title my-5">
+                <h5 class="card-title my-2">
                 Liste des administrateurs de 
                     <a href="{% url 'show_famille' famille.id %}" class="text-center"> {{ famille.nom }} </a>
                     &nbsp;
                     
                 </h5>
-                <div class="row">
+                {% comment %} <div class="row">
                     {% for liv in admins %}
                         <div class="col-md-6 col-lg-2 col-xlg-3">
                             <div class="card card-hover">
@@ -46,7 +46,7 @@
                         </div>
                     {% endfor %} 
                             
-                </div>
+                </div> {% endcomment %}
             </div>
             
         </div>
@@ -55,7 +55,7 @@
     
     <div class="card-body">
 
-        <h5 class="card-title">Liste des Administrateurs - {{famille.nom}} </h5>
+        {% comment %} <h5 class="card-title">Liste des Administrateurs - {{famille.nom}} </h5> {% endcomment %}
         <div class="table-responsive">
             <table id="zero_config" class="table table-striped table-bordered">
                 <thead class="bg-success">

@@ -1,15 +1,26 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %} {{membre.nomcomplet}} {% endblock %}
+{% block css %}
+    
+    <style>
+    .img-fluid{
+        max-height:200px;
+        max-width:200px;
+    }
+    </style>
+{% endblock %}
 {% block content %}
 
 <div class="card-body">
     <div class="row">
         <div class="col-lg-12 my-4">
             {% comment %} {{ membre.get_familles() }} {% endcomment %}
+            <p>
             {% for fam in membre.familles.all %}
-            <p> <a href="{% url 'show_famille' fam.id %}" class="badge bg-info"> {{fam.nom}} </a></p>
+            <a href="{% url 'show_famille' fam.id %}" class="badge bg-info"> {{fam.nom}} </a>
             {% endfor %} 
+            </p>
         </div>
     </div>
 

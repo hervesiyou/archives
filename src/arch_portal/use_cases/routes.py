@@ -9,12 +9,12 @@ import arch_portal.use_cases.core_controller as core
 import arch_portal.use_cases.evenement_controller as evenement
 
 urlpatterns = [ 
-    path('lfam/<int:id>', famille.listfamilles, name="listfamilles"),
+    path('lfam/<int:id>.<int:mode>', famille.listfamilles, name="listfamilles"),
     path('sf/<int:id>', famille.show_famille, name="show_famille"),
     path('nf/', famille.add_famille, name="add_famille"),
     path('sh_ad_fa/<int:id>', famille.show_admin_fam, name="show_admin_fam"),
     path('add_ad_fam', famille.add_admin_fam, name="add_admin_fam"),
-    path('levts/<int:id>', evenement.listevenements, name="listevenements"),
+    path('levts/<int:id>.<int:mode>', evenement.listevenements, name="listevenements"),
     path('sev/<int:id>', evenement.show_evenement, name="show_evenement"),
     path('nev/', evenement.add_evenement, name="add_evenement"),
 ]
@@ -32,15 +32,17 @@ urlpatterns += [
 urlpatterns += [ 
     path('lcom', communaute.listcom, name="listcom"),
     path('sh_ad_co/<int:id>', communaute.show_admin_com, name="show_admin_com"),
+    path('sh_ad_asso/<int:id>', communaute.show_admin_asso, name="show_admin_asso"),
     path('comab', communaute.abonement_archive, name="abonement_archive"),
     path('add_ad_com', communaute.add_admin_com, name="add_admin_com"),
+    path('add_ad_asso', communaute.add_admin_asso, name="add_admin_asso"),
     path('add_abonnement', communaute.add_abonnement, name="add_abonnement"),
     path('sa/<int:id>', communaute.show_association, name="show_association"),
     path('sma/<int:id>', communaute.listmembresassociation, name="listmembresassociation"),
     path('sc/<int:id>', communaute.show_communaute, name="show_communaute"),
     path('nc/', communaute.add_communaute, name="add_communaute"),
     path('na/', communaute.add_association, name="add_association"),
-    path('lass/<int:id>', communaute.listassociations, name="listassociations"),
+    path('lass/<int:id>.<int:mode>', communaute.listassociations, name="listassociations"),
     path('lassfam/<int:id>', communaute.listassociationsfam, name="listassociationsfam"),
     path('ngal/', communaute.add_galerie, name="add_galerie"),
     path('ga/<int:id>', communaute.show_galerie, name="show_galerie"),
@@ -63,7 +65,7 @@ urlpatterns += [
 urlpatterns += [ 
     path('libs', librairie.listlibs, name="listlibs"),
     path('libab', librairie.abonement_librairie, name="abonement_librairie"),
-    path('lbs/<int:id>', librairie.listbooks, name="listbooks"),
+    path('lbs/<int:id>.<int:mode>', librairie.listbooks,  name="listbooks"),
     path('sb/<int:id>', librairie.show_book, name="show_book"),
     path('ab/', librairie.add_book, name="addbook"),
     path('al/', librairie.add_librairie, name="add_librairie"),
