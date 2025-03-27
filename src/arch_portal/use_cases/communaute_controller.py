@@ -151,7 +151,7 @@ def listmembresassociation(request, id):
     return render(request, "archcore/listmembresassociation.html", { "association": com})
 
 
-def listassociations(request, id, mode=0):
+def listassociations(request, id, mode = 0):
     assos = Association.objects.filter(communaute=id)
     com = Communaute.objects.get(id=id)
     if not mode:
@@ -165,17 +165,21 @@ def add_association(request):
             com = form.save() 
             com.save()
             
-            return redirect("show_association",com.id )
+            return redirect("show_association", com.id )
     else:
         form = AssociationForm()
 
     return render(request, "archcore/new_association.html", { "form":form  })
  
 
-def show_communaute(request,id):
+def show_communaute(request, id):
     com = Communaute.objects.get(id=id)
     #  ce utilisateur ne peut voir les info detaillée de la famille que si il appartient à la famille ou a des droits
     userid = request.session.get("userid","")
+    if not userid :
+        # print(f" user id { userid } ")
+        return redirect("login" )
+
     user = Membre.objects.get(id=userid)
     appartient=False
     if ( user in com.membres_communaute.all()):

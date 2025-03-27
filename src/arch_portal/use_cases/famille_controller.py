@@ -11,11 +11,22 @@ from django.http import HttpResponseForbidden, JsonResponse
 
 def listfamilles(request, id, mode=0):
    
-    livres = Famille.objects.filter(communaute=id)
+    familles = Famille.objects.filter(communaute=id)
     lib = Communaute.objects.get(id=id) 
+
+    # userid = request.session.get("userid","")
+    # if not userid :
+    #     # print(f" user id { userid } ")
+    #     return redirect("login" )
+
+    # user = Membre.objects.get(id=userid)
+    # appartient=False
+    # if ( user in com.membres_communaute.all()):
+    #     appartient = True
+
     if not mode: 
-        return render(request, "archcore/listfamilles_tab.html", { "familles" : livres, "communaute" : lib } )
-    return render(request, "archcore/listfamilles.html", { "familles" : livres, "communaute" : lib } )
+        return render(request, "archcore/listfamilles_tab.html", { "familles" : familles, "communaute" : lib } )
+    return render(request, "archcore/listfamilles.html", { "familles" : familles, "communaute" : lib } )
 
 def show_famille(request,id):
     fam = Famille.objects.get(id=id)

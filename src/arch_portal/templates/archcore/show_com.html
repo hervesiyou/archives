@@ -80,6 +80,10 @@
                         <div>
                             <h4 class="card-title">{{communaute.nom}}</h4>
                             <h5 class="card-subtitle">{{communaute.description}}</h5>
+                             {% if not appartient %} 
+                                <a href="#" data-com="{{communaute.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partComID"> Je souhaite être {{ communaute.nom }}</a>
+                            
+                            {% endif %}
                         </div>
                     </div>
                     <div class="row">
@@ -109,7 +113,7 @@
                                         {% if appartient %}
                                         <small class="font-light">
                                             <a href="{% url 'listassociations' id=communaute.id mode=1  %}"> Consulter </a>
-                                        </small>
+                                        </small> 
                                         {% endif %}
                                     </div>
                                 </div> 

@@ -35,29 +35,34 @@
                         </div>
                     </div>
                     <div class="row">
-                        {% for liv in livres %}
-                            <div class="col-md-6 col-lg-2 col-xlg-3">
-                                <div class="card card-hover">
-                                    <div class="box bg-danger text-center">
-                                        <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
-                                        </h1>
-                                        <h6 class="text-white">{{ liv.prix}} XAF </h6>
-                                    </div>
-
-                                    <div class="card-body">
-                                        <h5 class="card-title"><a href="{% url 'show_book' liv.id %}" title="Cliquer pour consulter en détail"> {{liv.nom}} </a></h5>
-                                        <p> {{liv.description}} </p>
-                                    </div>
-                                    <div class="card-footer">
-                                        <div class="text-info">
-                                            {{ liv.auteur}}
+                        {% if livres %}
+                            {% for liv in livres %}
+                                <div class="col-md-6 col-lg-2 col-xlg-3">
+                                    <div class="card card-hover">
+                                        <div class="box bg-danger text-center">
+                                            <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
+                                            </h1>
+                                            <h6 class="text-white">{{ liv.prix}} XAF </h6>
                                         </div>
-                                    </div>
 
-                                    
-                                </div> 
-                            </div>
-                        {% endfor %} 
+                                        <div class="card-body">
+                                            <h5 class="card-title"><a href="{% url 'show_book' liv.id %}" title="Cliquer pour consulter en détail"> {{liv.nom}} </a></h5>
+                                            <p> {{liv.description}} </p>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="text-info">
+                                                {{ liv.auteur}}
+                                            </div>
+                                        </div>
+
+                                        
+                                    </div> 
+                                </div>
+                            
+                            {% endfor %} 
+                        {% else %}
+                            <div class="alert alert-warning"> Pas encore de livres  dans {{ librairie.nom }} </div>
+                        {% endif %}
                              
                     </div>
                 </div>

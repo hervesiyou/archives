@@ -32,6 +32,19 @@ class Famille(models.Model):
     def get_members(self):
         members = mod.Membre.objects.filter(familles=self.id)
         return members
-    
+
+    def get_membres(self):
+        return self.membres_famille.all()
+
+    def appartient(self, userid):
+        
+        member = mod.Membre.objects.get(id=userid)
+        if  member :
+            if( member in self.membres_famille.all() ):
+                return True 
+            else :
+                return False 
+        return False
+
     def get_sous_familles(self):
         return mod.Famille.objects.filter(famille_mere=self.id)

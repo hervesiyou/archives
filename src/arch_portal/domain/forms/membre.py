@@ -82,7 +82,7 @@ class UsersSubscribeForm(forms.ModelForm):
         nom = cleaned_data.get("nomcomplet")
         sexe = cleaned_data.get("type")
         pere = cleaned_data.get("pere")
-        if Membre.objects.filter(nom=nom, sexe=sexe, pere=pere).exists():
+        if Membre.objects.filter(nomcomplet=nom, sexe=sexe, pere=pere).exists():
             raise forms.ValidationError("Ce membre existe dejà ! ")
         return cleaned_data
 

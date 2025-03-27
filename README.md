@@ -6,7 +6,7 @@
         - gerer les livres numeriques et physiques
         - gerer l'abonnement et 
 - gerer le paiement
-- on doit consulter une famille, si on a pas le droit on est en salle d'attente et  un administrateur de la famille valide et donne le droit de consulter
+        - on doit consulter une famille, si on a pas le droit on est en salle d'attente et  un administrateur de la famille valide et donne le droit de consulter
 - possibilité de lire les livres en ligne
 - notification par mail des nouveaux livres
 - gestion des statistiques , livres  et bibliotheques les plus consultées, les plus commandés
@@ -17,10 +17,10 @@
 - Ajouter les captcha aux formulaires
 - ajouter les données de fixtures, familles, communautés, librairies, marchés, chef, emails , telephone par defaut
 - pour une famille afficher les generations, pour chaque generation afficher ses membres, afficher l'arbre de la famille
-- une communaute a ses administrateurs, une famille aussi, une librairie aussi seul apte a editer les informations
+        - une communaute a ses administrateurs, une famille aussi, une librairie aussi seul apte a editer les informations
 
 #FONCIONALITES pour les familles et les communautés
-
+- les communautés et les familles ont les NFT qui appartiennent aux membres
 - mediatheque
   - audiotheques
   - documents

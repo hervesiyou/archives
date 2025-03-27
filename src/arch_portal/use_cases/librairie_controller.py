@@ -17,8 +17,12 @@ from arch_portal.use_cases.services.core import send_email
 import threading
 
 def show_commandes(request):
-    coms = CommandeLivre.objects.all()
-    print(f"{coms} total")
+
+    userid = request.session.get("userid","")
+    if not userid:
+        return redirect("login")
+    coms = CommandeLivre.objects.filter(proprietaire=userid)
+    # print(f"{coms} total")
     return render(request, "usercore/home.html", { "commandes" : coms} )
 
 def listlibs(request):

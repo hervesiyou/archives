@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load custom_filters %}
 {% block title %} {{parent}} Liste des Familles {{ communaute.nom }} {% endblock %}
 {% block css %} 
 
@@ -20,7 +21,9 @@
                 <h5 class="card-title my-3">
                     <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a> 
                     &nbsp; 
-                    <a href="{% url 'add_famille' %}" class="btn btn-xs btn-success text-white"> Nouvelle famille</a>
+                    {% if  'ADD_FAMILLE' in request.session.userrights %}
+                        <a href="{% url 'add_famille' %}" class="btn btn-xs btn-success text-white"> Nouvelle famille</a>
+                    {% endif %}
                 </h5>
 
                 <div class="row">
@@ -48,14 +51,30 @@
 
                                 <div class="card-body">
                                 {% comment %} {% if  'VOIR_FAMILLE' in request.session.userrights or liv.publique %} {% endcomment %}
-                                {% if liv.publique %}
-                                    <h5 > 
-                                    <a href="{% url 'show_famille' liv.id %}" class="text-center"> Voir en détail </a>
-                                    </h5>
-                                {% else %}
-                                        <a href="#" data-fam="{{liv.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partFamID"> Je veux appartenir à {{ liv.nom }}</a>
+                                {% comment %} valeur: {{  liv.appartient 'request.session.userid' }} {% endcomment %}
+                               
+                    
+
+                                {% if  liv|appartient_a_famille:request.session.userid %}
+                                    {% comment %} <p>L'utilisateur {{ request.session.userid }} appartient à cette famille .</p>
+                                     {{ liv.membres_famille.all }} {% endcomment %}
                                     
+                                        <h5 > 
+                                        <a href="{% url 'show_famille' liv.id %}" class="text-center"> Voir en détail </a>
+                                        </h5>
+                                     
+                                {% else %} 
+                                    
+                                    {% if liv.publique %}
+                                        <h5 > 
+                                        <a href="{% url 'show_famille' liv.id %}" class="text-center"> Voir en détail </a>
+                                        </h5>
+                                    {% else %}
+                                            <a href="#" data-fam="{{liv.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partFamID"> Je veux appartenir à {{ liv.nom }}</a>
+                                        
+                                    {% endif %}
                                 {% endif %}
+
                                     <p> {{liv.description}} </p>
                                 </div>
                                 <div class="card-footer">
