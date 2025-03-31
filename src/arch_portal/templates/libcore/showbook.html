@@ -19,7 +19,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="  card-body printableArea">
-                <h3><b>{{livre.nom}}</b> <span class="pull-right">#XW</span> | <span class="  bg-default">{{ livre.type}} </span></h3>
+                <h3><b>{{livre.nom}}</b> <span class="pull-right">ISBN: {{ livre.isbn}}</span> | <span class="  bg-default">{{ livre.type}} </span></h3>
                 <hr>
                 <div class="row">
                     <div class="col-md-4">
@@ -70,12 +70,17 @@
                                         <span class="badge bg-secondary"> {{livre.stock}} exemplaires </span>
                                         </td>
                                         <td > 
-                                        <span class="text-end text-danger"> {{livre.prix}} XAF </span>
+                                        
                                         {% if achat and livre.file.url %}
-                                        <a href=" {{livre.file.url}}"  class="text-success" target="_blank">
-                                         Telecharger
-                                        </a>
+                                            <a href="{% url 'show_book_file' livre.id %}"  class=" btn btn-xs btn-outline-info text-success" target="_blank">
+                                             Voir +
+                                            </a>
+                                            <a href="{{livre.file.url}}"  class="text-success" target="_blank">
+                                            Telecharger
+                                            </a>
                                         {% endif %}
+
+                                        <span class="text-bold text-danger "> {{livre.prix}} XAF </span>
                                         </td>
                                         <td class="text-end"> {{livre.auteur}} </td>
                                     </tr>
@@ -148,8 +153,11 @@
                                             <input type="text" id="telephone" value="" placeholder="Votre numero de telephone" class="form-control" />
                                             <label class="form_label"> Message au Proprietaire</label>
                                             <textarea id="message" placeholder="Laissez un message au Proprietaire ..." class="form-control"></textarea> 
+                                            
                                             <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
                                         </div>
+
+                                         
 
                                         <div class="modal-footer">
 

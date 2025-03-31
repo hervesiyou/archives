@@ -12,11 +12,24 @@
         <form action="" method="post" validate >
             {% csrf_token %}
             {% crispy form %}
-            <input type="submit"  class="btn btn-info" value="M'inscrire" />
+
+            <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
+
+            <input 
+            type="submit" 
+             disabled  
+            class="btn btn-info" id="InsID" value="M'inscrire" />
         </form>
 
     </div>
     <div class="col-lg-3"></div>
 </div>
+
+<script>
+        function enableCommandeButton() {  
+       
+            document.getElementById('InsID').disabled = false;
+        }
+    </script>
 
 {% endblock %}

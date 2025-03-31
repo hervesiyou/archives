@@ -43,7 +43,7 @@ def listbooks(request, id,mode=False):
 def show_book(request,id):
     liv = Livre.objects.get(id=id)
     librairieid = request.session.get('librairieid',"")
-    abos=achat=connecte=False
+    abos = achat=connecte=False
     userid = request.session.get("userid","")
     if( isinstance(userid, int) and userid !="" ):
         user = Membre.objects.get(id=userid)
@@ -71,7 +71,8 @@ def add_book(request):
         form = LivreForm(request.POST, request.FILES)
         image_formset = ImageFormSet(request.POST, request.FILES) 
         if form.is_valid(): 
-            livre = form.save(commit=False)
+            livre = form.save(commit=True)
+            # livre = form.save(commit=False)
             if( livre.type == "Numerique"):
                 livre.stock = 1000
 
@@ -99,6 +100,16 @@ def add_book(request):
         image_formset = ImageFormSet(queryset=Image.objects.none())  
 
     return render(request, "libcore/addbook.html", {"librairie" : librairie, "form":form, 'image_formset': image_formset,} )
+
+def show_book_file(request,id):
+     
+    livre = Livre.objects.get(id=id)
+    if livre:
+        return render(request, "libcore/showbookfile.html", {"livre" : livre, } )
+    else:
+        print("erreur lors du chargement du livre ")
+    #    return redirect("show_book",livre.id ) 
+
 
 def show_librairie(request,id):
     lib = Librairie.objects.get(id=id)

@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    
     const BASEURL = $("body").data('url');
 
     $(".abClass").on('click', function(e){                         
