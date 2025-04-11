@@ -6,12 +6,12 @@
         - on doit consulter une famille, si on a pas le droit on est en salle d'attente et  un administrateur de la famille valide et donne le droit de consulter
         - generer les codes pour les livres
         - Ajouter les captcha aux formulaires
+        - possibilité de lire les livres en ligne (parametrer le lecteur pour desactiver le bouton de telechargement)
 
 - ajouter la recherche de livres
 - noter les livres
 - gerer le paiement
         
-- possibilité de lire les livres en ligne (parametrer le lecteur pour desactiver le bouton de telechargement)
 
 - notification par mail des nouveaux livres
 - gestion des statistiques , livres  et bibliotheques les plus consultées, les plus commandés
