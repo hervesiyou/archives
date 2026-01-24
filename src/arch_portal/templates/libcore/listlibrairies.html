@@ -13,6 +13,24 @@
                         <a href="{% url 'add_librairie' %}" class="btn btn-success btn-xs">Nouvelle librairie </a>
                     {% endif %}
                 </h5>
+
+                <div class="row">
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                        <form method="post" action="{% url 'search_book'  %}">
+                            {% csrf_token %}
+                            <input class="col-10" type="text" value="{{ name }}" name="rechLivre" />
+                            <button  class="  btn-success " type="submit"> Rechercher </button>
+                        </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        
+                    </div>
+                </div>
+
+
                 <div class="row el-element-overlay">
                     {% for lib in librairies %}
                         <div class="col-md-6 col-lg-2 col-xlg-3">

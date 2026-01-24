@@ -6,8 +6,11 @@
 <div class="row">
     <div class="col-lg-1"></div>
     <div class="col-lg-10">
-        <h3 class="bg-info text-center text-white">  {{ request.session.nomcomplet}} </h3>
+        <h3 class="bg-default text-center text-white">  {{ request.session.nomcomplet}} </h3>
+
         <p>  {{user}} </p>
+        {%  include 'usercore/partials/home.html'  with membre=user %}
+
         <a href="{% url 'commandes_livres' %}" class="btn btn-info"> Livres demandés (Commandes)</a>
         {% if  'ADD_COMMUNAUTE' in request.session.userrights %} 
             <a href="{% url 'home_comadmin' %}" class="btn btn-success"> Mes Communautés </a>
@@ -19,6 +22,7 @@
             <a href="{% url 'home_assoadmin' %}" class="btn btn-primary"> Mes Associations </a>
         {% endif %}
         <a href="{% url 'home_messageadmin' %}" class="btn btn-info"> Mes Messages </a>
+        <a href="{% url 'home_abonnement' %}" class="btn btn-success"> Recharger mon compte </a>
         {% block body %}
             {% if commandes %}
             <div class="card-body">

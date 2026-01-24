@@ -1,4 +1,5 @@
 from django.db import models
+# from .wallet import Wallet
 from arch_portal.domain.models.CONST_DATA import SEX_CHOICES, ETATCIVIL_CHOICES, TYPE_MEMBER_CHOICES
 from .famille import Famille
 from .association import Association
@@ -41,6 +42,7 @@ class Membre(models.Model):
     communautes = models.ManyToManyField(Communaute, related_name="membres_communaute", null=True, blank=True)
     galeries = models.ManyToManyField(Galerie, related_name="mes_galeries", null=True, blank=True)
     approbateurs = models.ManyToManyField("self", null=True, blank=True)
+    # wallet = models.OneToOneField(Wallet, on_delete=models.CASCADE, null=True, blank=True)
     
     pere = models.CharField(max_length=150,null=True, blank=True)
     mere = models.CharField(max_length=150,null=True, blank=True)

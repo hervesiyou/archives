@@ -3,6 +3,7 @@ import json
 from django.core.serializers import serialize
 from django.shortcuts import redirect, render
 from django.contrib import messages
+from arch_portal.domain.models.wallet import Wallet
 from arch_portal.domain.exceptions.membre_exception import MembreException
 from arch_portal.use_cases.services.core import compute_sha1
 from arch_portal.domain.forms.membre import MembreForm,UsersLoginForm,UsersSubscribeForm
@@ -48,7 +49,7 @@ def log_user(request):
                 messages.info(request,f"Bienvenue { user.nomcomplet }")
                 return redirect("home" )
             else:
-                messages.info(request,f" Desolé { form.cleaned_data["login"]}  nous est inconnu !")
+                messages.info(request,f" Desolé { form.cleaned_data['login']}  nous est inconnu !")
     else:
         request.session.get("username1","")
         request.session.get("userid1",0) 
@@ -63,17 +64,30 @@ def show_user_messages(request):
         if(user != None):
             return render(request, "usercore/listmessages.html", {"user":user, })
         else:
-            raise MembreException( f" Membre {request.session["userid"]} introuvable ")  
+            raise MembreException( f" Membre {request.session['userid']} introuvable ")  
+    else:
+        return redirect("login")
+
+def user_abonnement(request):
+    if(request.session["userid"] != None):
+        user=Membre.objects.get(id=request.session["userid"])
+        
+        if(user != None):
+            return render(request, "usercore/abonnement.html", {"user":user, })
+        else:
+            raise MembreException( f" Membre {request.session['userid']} introuvable ")  
     else:
         return redirect("login")
 
 def show_user_home(request):
     if(request.session["userid"]!=None):
-        user=Membre.objects.get(id=request.session["userid"])
+        user = Membre.objects.get(id=request.session["userid"])
         if(user != None):
-            return render(request, "usercore/home.html", {"user":user})
+            wallet = Wallet.objects.filter(membre_id=user.id ).first()
+            print( user.id , wallet)
+            return render(request, "usercore/home.html", {"user":user, "wallet":wallet})
         else:
-            raise MembreException( f" Membre {request.session["userid"]} introuvable ")  
+            raise MembreException( f" Membre {request.session['userid']} introuvable ")  
     else:
         return redirect("login")
 
@@ -85,7 +99,7 @@ def show_user_famadmin(request):
             fams = user.fam_admins.all()
             return render(request, "usercore/listmyfamadmin.html", {"user":user, "familles":fams, "adfamilles": adfamilles})
         else:
-            raise MembreException( f" Membre {request.session["userid"]} introuvable ")  
+            raise MembreException( f" Membre {request.session['userid']} introuvable ")  
     else:
         return redirect("login")
 
@@ -97,7 +111,7 @@ def show_user_comadmin(request):
             adcoms = user.communautes.all()
             return render(request, "usercore/listmycomadmin.html", {"user":user , "communautes": coms, "adcommunautes":adcoms})
         else:
-            raise MembreException( f" Membre {request.session["userid"]} introuvable ")  
+            raise MembreException( f" Membre {request.session['userid']} introuvable ")  
     else:
         return redirect("login")
 
@@ -109,7 +123,7 @@ def show_user_assoadmin(request):
             assos = user.associations.all()
             return render(request, "usercore/listmyassoadmin.html", {"user":user , "associations": assos, "adassos":adasso })
         else:
-            raise MembreException( f" Membre {request.session["userid"]} introuvable ")  
+            raise MembreException( f" Membre {request.session['userid']} introuvable ")  
     else:
         return redirect("login")
 

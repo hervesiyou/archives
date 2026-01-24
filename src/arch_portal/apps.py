@@ -48,3 +48,4 @@ class ArchPortalConfig(AppConfig):
 
     def ready(self):
         import arch_portal.domain.models  # noqa: F401 (required to disable because of Flake8)
+        import arch_portal.domain.signals.core  # noqa: F401 (required to disable because of Flake8)

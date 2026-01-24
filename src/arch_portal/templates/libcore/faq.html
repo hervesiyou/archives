@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+{% block title %} FAQ - Gestion des Librairies | Archives {% endblock %}
+    {% block css %} 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #4e73df;
+            --primary-dark: #224abe;
+            --success: #1cc88a;
+            --warning: #f6c23e;
+            --light: #f8f9fc;
+            --gray: #5a5c69;
+            --dark: #3a3b45;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7ff 0%, #e0e7ff 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-top: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        .question {
+            padding: 20px 30px;
+            cursor: pointer;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+            transition: background 0.3s;
+        }
+
+        .question:hover {
+            background: #edf2ff;
+        }
+
+        .answer {
+            padding: 0 30px 25px;
+            display: none;
+            background: white;
+        }
+
+        .answer.show {
+            display: block;
+        }
+
+        .answer p {
+            margin: 15px 0;
+            color: #444;
+        }
+
+        .answer ul, .answer ol {
+            margin: 15px 0 15px 25px;
+        }
+
+        .answer li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .icon {
+            font-size: 1.4rem;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .icon {
+            transform: rotate(180deg);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 12px 28px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.1rem; }
+            .question { font-size: 1rem; padding: 18px 20px; }
+            .answer { padding: 0 20px 20px; }
+        }
+    </style>
+    {% endblock %}
+{% block content %}
+    <div class="container">
+        <header>
+            <h1>Questions fréquentes</h1>
+            <p>Module Gestion des Librairies – Archives</p>
+        </header>
+
+        <div class="faq-list">
+            
+            <div class="faq-item">
+                <div class="question">
+                    <span>Qu'est-ce que le module Gestion des Librairies ?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="answer">
+                    <p>Ce module vous permet de :</p>
+                    <ul>
+                        <li>Créer et gérer votre propre librairie numérique ou physique</li>
+                        <li>Consulter le catalogue de livres disponibles</li>
+                        <li>Acheter des livres (numériques ou physiques selon disponibilité)</li>
+                        <li>S'abonner à des librairies pour accéder à des contenus exclusifs</li>
+                        <li>Contribuer (si autorisé) en ajoutant des livres ou métadonnées</li>
+                    </ul>
+                    <p>C'est un espace dédié à la diffusion, la préservation et la monétisation du savoir écrit.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">
+                    <span>Qui peut créer une librairie ?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="answer">
+                    <p>Tout utilisateur inscrit et connecté peut créer une librairie, sous réserve d'avoir le droit <code>ADD_LIBRAIRIE</code>.</p>
+                    <p>La création peut nécessiter un abonnement spécifique selon les règles du site.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">
+                    <span>Comment ajouter un livre dans ma librairie ?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="answer">
+                    <p>Si vous avez les droits <code>ADD_LIVRE</code> :</p>
+                    <ol>
+                        <li>Connectez-vous et accédez à votre tableau de bord librairie</li>
+                        <li>Cliquez sur « Ajouter un livre »</li>
+                        <li>Remplissez les informations : titre, auteur, année, ISBN, description, couverture</li>
+                        <li>Choisissez le format (PDF, ePub, physique, lien externe...)</li>
+                        <li>Définissez le prix (gratuit ou payant)</li>
+                        <li>Validez (modération possible selon les règles)</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">
+                    <span>Comment acheter un livre ?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="answer">
+                    <p>Pour les livres payants :</p>
+                    <ol>
+                        <li>Consultez le catalogue ou la page de la librairie</li>
+                        <li>Cliquez sur le livre souhaité</li>
+                        <li>Appuyez sur « Acheter » ou « Ajouter au panier »</li>
+                        <li>Procédez au paiement sécurisé (selon les moyens implémentés : mobile money, carte, etc.)</li>
+                        <li>Une fois payé, téléchargez le fichier numérique ou recevez les instructions pour le livre physique</li>
+                    </ol>
+                    <p>Les livres gratuits sont téléchargeables directement après connexion.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">
+                    <span>Qu'est-ce qu'un abonnement à une librairie ?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="answer">
+                    <p>Certaines librairies proposent des abonnements mensuels ou annuels qui donnent :</p>
+                    <ul>
+                        <li>Accès illimité à un certain nombre de livres</li>
+                        <li>Réductions sur les achats</li>
+                        <li>Contenus exclusifs (manuscrits rares, archives, etc.)</li>
+                    </ul>
+                    <p>Voir la page « Abonnements Librairies » pour les offres disponibles.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">
+                    <span>Les livres sont-ils gratuits ou payants ?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="answer">
+                    <p>Les deux :</p>
+                    <ul>
+                        <li>Beaucoup de livres sont gratuits (domaine public, dons, contributions ouvertes)</li>
+                        <li>D'autres sont payants (œuvres contemporaines, éditions spéciales, droits d'auteur)</li>
+                    </ul>
+                    <p>Le prix est fixé par le créateur de la librairie ou l'auteur.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">
+                    <span>Puis-je consulter les livres sans être inscrit ?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="answer">
+                    <p>La consultation des fiches livres (titre, auteur, résumé, couverture) est généralement publique.</p>
+                    <p>Le téléchargement ou la lecture complète nécessite presque toujours une connexion et parfois un achat ou abonnement.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">
+                    <span>Que faire si j'ai un problème avec un achat ?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="answer">
+                    <p>En cas de souci (livre non reçu, paiement échoué, contenu défectueux) :</p>
+                    <ol>
+                        <li>Contactez le vendeur directement via la messagerie de la librairie</li>
+                        <li>Si pas de réponse, utilisez la fonction « Signaler un problème »</li>
+                        <li>L'équipe du site peut intervenir pour les litiges graves</li>
+                    </ol>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="text-align: center; margin: 50px 0;">
+            <a href="{% url 'index' %}" class="back-btn">← Retour à l'accueil</a>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        document.querySelectorAll('.question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                const answer = question.nextElementSibling;
+                
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    if (item !== faqItem) {
+                        item.classList.remove('active');
+                        item.querySelector('.answer').classList.remove('show');
+                    }
+                });
+
+                faqItem.classList.toggle('active');
+                answer.classList.toggle('show');
+            });
+        });
+    </script>
+
+{% endblock %}

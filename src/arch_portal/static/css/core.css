@@ -1,4 +1,9 @@
-
+.richbook-box {
+    font-size:80px!important;
+    font-weight:900!important;
+    line-height:60px!important;
+    text-shadow: -4px -1px 0 #FED, -5px -4px 0 #343A33;
+}
 nav{
     background-color: aliceblue;
     padding:20px;

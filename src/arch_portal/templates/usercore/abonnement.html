@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Rechargement de compte - Mobile Money{% endblock %}
+
+{% block css %}
+<style>
+    .payment-card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        transition: transform 0.25s ease;
+        margin-bottom: 2rem;
+    }
+
+    .payment-card:hover {
+        transform: translateY(-8px);
+    }
+
+    .payment-header {
+        padding: 1.5rem 2rem;
+        color: white;
+        font-weight: 600;
+    }
+
+    .orange {
+       background: linear-gradient(135deg, #ff3800, #ee5253);
+         
+    }
+
+    .mtn {
+        background: linear-gradient(135deg, #fdcb6e, #f39c12);
+    }
+
+    .sara {
+        background: linear-gradient(135deg, #0984e3, #0652dd);
+    }
+
+    .payment-body {
+        padding: 2rem;
+        background: #fff;
+    }
+
+    .amount-btn {
+        min-width: 110px;
+        margin: 0.4rem;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .amount-btn.active {
+        background-color: #4e73df !important;
+        border-color: #4e73df !important;
+        color: white !important;
+    }
+
+    .instructions {
+        background-color: #f8f9fc;
+        border-left: 4px solid #4e73df;
+        padding: 1.25rem;
+        margin: 1.5rem 0;
+        border-radius: 0 6px 6px 0;
+    }
+
+    .qr-section {
+        text-align: center;
+        padding: 1.5rem;
+        background: #f8f9fc;
+        border-radius: 10px;
+    }
+
+    .code-copy {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 1.4rem;
+        letter-spacing: 2px;
+        background: #2c3e50;
+        color: #f1c40f;
+        padding: 0.9rem 1.3rem;
+        border-radius: 8px;
+        display: inline-block;
+        margin: 1rem 0;
+    }
+
+    .note-important {
+        color: #e74c3c;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-lg-9 col-xl-8">
+
+            <a href="{% url 'abonement_librairie' %}" class="btn btn-outline-primary amount-btn"> Abonements Librairies </a> 
+            <a href="{% url 'abonement_archive' %}" class="btn btn-outline-primary amount-btn"> Abonements Archives </a>
+
+            <div class="text-center mb-5">
+                <h2 class="fw-bold text-dark">Recharger votre compte - {{user.nomcomplet}} </h2>
+                <p class="text-muted">Ajoutez des crédits à votre compte via Mobile Money</p>
+            </div>
+
+            <!-- Sélection du montant -->
+            <div class="card payment-card mb-5">
+                <div class="payment-header bg-primary text-white">
+                    <h4 class="mb-0">Faite le dépot à notre numero et nous créditerons votre compte pour vous permettre de faire 
+                        vos differents achats sur notre plateforme.
+                    </h4>
+                </div>
+                <div class="payment-body text-center">
+                    <!-- <div class="btn-group flex-wrap justify-content-center" role="group">
+                        <button type="button" class="btn btn-outline-primary amount-btn" data-amount="1000">1 000 FCFA</button>
+                        <button type="button" class="btn btn-outline-primary amount-btn" data-amount="2500">2 500 FCFA</button>
+                        <button type="button" class="btn btn-outline-primary amount-btn" data-amount="5000">5 000 FCFA</button>
+                        <button type="button" class="btn btn-outline-primary amount-btn" data-amount="10000">10 000 FCFA</button>
+                        <button type="button" class="btn btn-outline-primary amount-btn" data-amount="20000">20 000 FCFA</button>
+                        <button type="button" class="btn btn-outline-primary amount-btn" data-amount="50000">50 000 FCFA</button>
+                    </div> -->
+
+                    <!-- <div class="mt-4">
+                        <label for="custom-amount" class="form-label fw-bold">Autre montant :</label>
+                        <div class="input-group input-group-lg w-50 mx-auto">
+                            <span class="input-group-text">FCFA</span>
+                            <input type="number" class="form-control text-center" id="custom-amount" min="500" placeholder="Montant">
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+
+            <!-- Choix de l'opérateur -->
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card payment-card h-100">
+                        <div class="payment-header mtn">
+                            <h4 class="mb-0 text-center">MTN Mobile Money</h4>
+                        </div>
+                        <div class="payment-body text-center">
+                            <h5>Numéro à envoyer</h5>
+                            <div class="code-copy">+{{MTN}}</div>
+                            <p class="mt-3 mb-1"><strong>Motif / Message :</strong></p>
+                            <div class="code-copy">ARCHIVES{{ user_id|default:"00MOMO" }}</div>
+
+                            <div class="instructions mt-4">
+                                <strong>Instructions :</strong><br>
+                                1. Ouvrez MTN MoMo<br>
+                                2. Faites « Payer une facture »<br>
+                                3. Mettez le montant choisi<br>
+                                4. Indiquez le motif ci-dessus
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card payment-card h-100">
+                        <div class="payment-header orange">
+                            <h4 class="mb-0 text-center">Orange Money</h4>
+                        </div>
+                        <div class="payment-body text-center">
+                            <h5>Numéro à envoyer</h5>
+                            <div class="code-copy">+{{ORANGE}}</div>
+                            <p class="mt-3 mb-1"><strong>Motif / Commentaire :</strong></p>
+                            <div class="code-copy">ARCHIVES{{ user_id|default:"00OM" }}</div>
+
+                            <div class="instructions mt-4">
+                                <strong>Instructions :</strong><br>
+                                1. Menu → Transfert d'argent<br>
+                                2. Vers un compte Orange Money<br>
+                                3. Entrez le montant<br>
+                                4. Ajoutez le motif obligatoire
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card payment-card h-100">
+                        <div class="payment-header sara">
+                            <h4 class="mb-0 text-center">SARA Money</h4>
+                        </div>
+                        <div class="payment-body text-center">
+                            <h5>Numéro à envoyer</h5>
+                            <div class="code-copy">+{{SARA}}</div>
+                            <p class="mt-3 mb-1"><strong>Référence :</strong></p>
+                            <div class="code-copy">ARCHIVES{{ user_id|default:"00SARA" }}</div>
+
+                            <div class="instructions mt-4">
+                                <strong>Instructions :</strong><br>
+                                1. → Transfert<br>
+                                2. Vers un autre compte SARA<br>
+                                3. Indiquez le montant<br>
+                                4. Motif = référence ci-dessus
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-warning mt-5 text-center">
+                <i class="mdi mdi-alert-outline me-2"></i>
+                <strong>Important :</strong> Indiquez <span class="note-important">OBLIGATOIREMENT</span> la référence 
+                <strong>ARCHIVES{{ user_id|default:"00000" }}</strong> dans le motif/commentaire/référence
+                pour que nous puissions créditer votre compte rapidement.
+            </div>
+
+            <div class="text-center mt-5 mb-5">
+                <p class="lead text-muted">Une fois le paiement effectué, votre compte sera crédité sous 5 à 30 minutes.</p>
+                <p class="text-muted">En cas de problème, contactez-nous via WhatsApp ou par email.</p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const amountButtons = document.querySelectorAll('.amount-btn');
+        const customInput = document.getElementById('custom-amount');
+
+        amountButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                amountButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                customInput.value = '';
+            });
+        });
+
+        customInput.addEventListener('input', function() {
+            amountButtons.forEach(b => b.classList.remove('active'));
+        });
+    });
+</script>
+{% endblock %}

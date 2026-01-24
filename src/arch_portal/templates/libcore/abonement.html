@@ -29,6 +29,7 @@
     <div class="col-lg-6">
         <h3 class="bg-danger text-center text-white">  Abonnement libraire  </h3>
         <p  id="payMessage"> ... </p> 
+        <a href="{% url 'home_abonnement' %}" class="btn btn-outline-success"> Recharger mon compte </a>
 
     </div>
     <div class="col-lg-3"></div>
@@ -49,10 +50,10 @@
                 <option value="2"> 2 Ans</option>
                 <option value="3"> 3 Ans</option>
               </select>
-              <ul class="mx-3">
+              {% comment %} <ul class="mx-3">
                 <li>Fonctionnalité 1</li>
                 <li>Fonctionnalité 2</li>
-              </ul>
+              </ul> {% endcomment %}
               <button data-code="{{plan.code}}" class="btn btn-primary abClass">S'abonner</button>
             </div>
           </div>

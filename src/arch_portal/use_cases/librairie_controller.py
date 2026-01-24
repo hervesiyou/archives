@@ -1,5 +1,5 @@
 import json
-import datetime
+# import datetime
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from arch_portal.domain.forms.librairie import LibrairieForm
@@ -11,10 +11,11 @@ from arch_portal.domain.models.plantarifaire import Plan
 from arch_portal.domain.models.membre import Membre
 from arch_portal.domain.models.commandelivre import CommandeLivre
 from arch_portal.domain.models.serializers import *
+from django.db.models import Q
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from arch_portal.use_cases.services.core import send_email
-import threading
+# import threading
 
 def show_commandes(request):
 
@@ -25,6 +26,8 @@ def show_commandes(request):
     # print(f"{coms} total")
     return render(request, "usercore/home.html", { "commandes" : coms} )
 
+def faq(request):
+    return render(request, "libcore/faq.html", {} )
 def listlibs(request):
     libs = Librairie.objects.all()
     return render(request, "libcore/listlibrairies.html", { "librairies" : libs, } )
@@ -110,6 +113,20 @@ def show_book_file(request,id):
         print("erreur lors du chargement du livre ")
     #    return redirect("show_book",livre.id ) 
 
+def search_book(request):
+    name = request.POST.get("rechLivre","")
+    print(name) 
+    livres = Livre.objects.filter(
+        Q(nom__icontains=name) |
+        Q(auteur__icontains=name) | 
+        Q(description__icontains=name)|
+        Q(domaine__icontains=name)
+    )
+    # if livres.exists():
+    return render(request, "libcore/listsearchedbooks.html", { "livres":livres , "name": name} )
+    # else:
+        # print("erreur lors de la recherche du livre ")
+        #  return redirect("show_book",livre.id ) 
 
 def show_librairie(request,id):
     lib = Librairie.objects.get(id=id)

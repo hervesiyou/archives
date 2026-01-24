@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect 
+from django.conf import settings
+from arch_portal.domain.exceptions.membre_exception import MembreException
 from arch_portal.domain.models.salleattentefamille import SalleAttenteFamille
 from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.famille import Famille
@@ -15,6 +17,24 @@ from datetime import date
 def index(request): 
     return render(request, "base.html" )
 
+def contact(request): 
+    if request.method == "POST":
+        # traitement du formulaire
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        message = request.POST.get("message")
+        # ici tu peux sauvegarder le message ou l'envoyer par email
+        return redirect("contact")  # page de succès
+
+    return render(request, "includes/contact.html", {
+        # "HCAPTCHA": getattr(settings, "APP_HCAPTCHA", None),
+        # "ORANGE": getattr(settings, "NO_ORANGE", None),
+        # "MTN": getattr(settings, "NO_MTN", None),
+        # "SARA": getattr(settings, "NO_SARA", None),
+        # "VERSION": "1.0.1"
+    })
+    # return render(request, "includes/contact.html" )
+
 def show_com_salle(request,id):
     if(request.session["userid"]!=None):
         user = Membre.objects.get(id=request.session["userid"])
@@ -24,7 +44,7 @@ def show_com_salle(request,id):
             users = SalleAttenteCommunaute.objects.filter(communaute=com)
             return render(request, "usercore/salleattentecom.html", { "communaute": com, "users":users})
         else:
-            raise MembreException( f" Membre {request.session["userid"]} introuvable ")  
+            raise MembreException( f" Membre {request.session['userid']} introuvable ")  
     else:
         return redirect("login")
 
@@ -37,7 +57,7 @@ def show_fam_salle(request,id):
             users = SalleAttenteFamille.objects.filter(famille=com)
             return render(request, "usercore/salleattentefam.html", { "famille": com, "users":users})
         else:
-            raise MembreException( f" Membre {request.session["userid"]} introuvable ")  
+            raise MembreException( f" Membre {request.session['userid']} introuvable ")  
     else:
         return redirect("login")
 
@@ -50,7 +70,7 @@ def show_asso_salle(request,id):
             users = SalleAttenteAssociation.objects.filter(association=com)
             return render(request, "usercore/salleattenteasso.html", { "association": com, "users":users})
         else:
-            raise MembreException( f" Membre {request.session["userid"]} introuvable ")  
+            raise MembreException( f" Membre {request.session['userid']} introuvable ")  
     else:
         return redirect("login")
 
@@ -191,6 +211,13 @@ def add_user_salleattcom(request):
                         return JsonResponse({'status': True ,"message": message})
                     else:
                         return JsonResponse({'status': False ,"message": "Desolé, vous avez etes deja dans la salle d'attente !"})
+
+def faq(request):
+    return render(request, "archcore/faq.html", {} )
+
+def faqindex(request):
+    return render(request, "includes/faqindex.html", {} )
+
 
 @csrf_exempt
 def add_user_salleattasso(request):

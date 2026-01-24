@@ -35,88 +35,89 @@
             <div class="row fixed-top" style="background-color:white;">
                 <div class="col-12">
                     
-                        <div class="card-body">
-                            <div class="row"> 
-                                <div class="col-8 pull-left">
-                                    <a href="{% url 'index' %}"> Accueil </a> |
-                                    {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
-                                        {% comment %} {{ request.session.userrights}} {% endcomment %}
-                                        <a href="{% url 'add_communaute' %}"> + Communauté </a> |
-                                    {% endif %}
-                                    {% if  'ADD_FAMILLE' in request.session.userrights %}
-                                    <a href="{% url 'add_famille' %}"> + Famille </a> |
-                                    {% endif %}
-                                    {% if  'ADD_MEMBRE' in request.session.userrights %}
-                                    <a href="{% url 'add_user' %}"> + Membre </a> |
-                                    {% endif %}
-                                    {% if  'ADD_LIBRAIRIE' in request.session.userrights %}
-                                    <a href="{% url 'add_librairie' %}"> + Librairie </a> |
-                                    {% endif %}
-                                    {% if  'ADD_LIVRE' in request.session.userrights %}
-                                    <a href="{% url 'addbook' %}"> + Livre  </a> |
-                                    {% endif %}
-                                    {% if  'ADD_ASSOCIATION' in request.session.userrights %}
-                                    <a href="{% url 'add_association' %}"> + Association </a> |
-                                    {% endif %}
-                                    {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
-                                    <a href="{% url 'add_galerie' %}"> + Galerie  </a> |
-                                    {% endif %}
-                                    {% if  'ADD_EVENEMENT' in request.session.userrights %}
-                                    <a href="{% url 'add_evenement' %}"> + Evenement  </a>
-                                    {% endif %}
+                    <div class="card-body">
+                        <div class="row"> 
+                            <div class="col-8 pull-left">
+                                <a href="{% url 'index' %}"> Accueil </a> |
+                                {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                                    {% comment %} {{ request.session.userrights}} {% endcomment %}
+                                    <a href="{% url 'add_communaute' %}"> + Communauté </a> |
+                                {% endif %}
+                                {% if  'ADD_FAMILLE' in request.session.userrights %}
+                                <a href="{% url 'add_famille' %}"> + Famille </a> |
+                                {% endif %}
+                                {% if  'ADD_MEMBRE' in request.session.userrights %}
+                                <a href="{% url 'add_user' %}"> + Membre </a> |
+                                {% endif %}
+                                {% if  'ADD_LIBRAIRIE' in request.session.userrights %}
+                                <a href="{% url 'add_librairie' %}"> + Librairie </a> |
+                                {% endif %}
+                                {% if  'ADD_LIVRE' in request.session.userrights %}
+                                <a href="{% url 'addbook' %}"> + Livre  </a> |
+                                {% endif %}
+                                {% if  'ADD_ASSOCIATION' in request.session.userrights %}
+                                <a href="{% url 'add_association' %}"> + Association </a> |
+                                {% endif %}
+                                {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                                <a href="{% url 'add_galerie' %}"> + Galerie  </a> |
+                                {% endif %}
+                                {% if  'ADD_EVENEMENT' in request.session.userrights %}
+                                <a href="{% url 'add_evenement' %}"> + Evenement  </a>
+                                {% endif %}
 
-                                </div>
-                                <div class="col-4 pull-right">
-                                    {% if not request.session.username %}
-                                        <a href="{% url 'login' %}"> Login </a> |  
-                                    {% else %}
-                                     
-                                        <a href="{% url 'home' %}" class="text-success text-uppercase"> {{ request.session.username}} </a> | 
-                                        <a href="{% url 'logout' %}" class="text-danger text-uppercase"> X </a> | 
-                                    {% endif %}
-                                    <a href="{% url 'abonement_librairie' %}"> Abonements Librairies </a> | 
-                                    <a href="{% url 'abonement_archive' %}"> Abonements Archives </a> 
+                            </div>
+                            <div class="col-4 pull-right">
+                                {% if not request.session.username %}
+                                    <a href="{% url 'login' %}"> Login </a> |  
+                                {% else %}
                                     
-                                </div>
-                            </div> 
-                            
-                            <div class="row"> 
-                                <div class="col-md-6 col-lg-4 col-xlg-4">
-                                    <div class="card card-hover">
-                                        <div class="box bg-success text-center">
-                                            <a href="{% url 'listcom' %}">
-                                                <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
-                                                </h1>
-                                                <h6 class=" text-uppercase text-white">Archives Communautaires</h6>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Column -->
-                                <div class="col-md-6 col-lg-4 col-xlg-4">
-                                    <div class="card card-hover">
-                                        <div class="box bg-danger text-center">
-                                            <a href="{% url 'listlibs' %}">
-                                            <h1 class="font-light text-white"><i class="mdi mdi-chart-areaspline"></i></h1>
-                                            <h6 class="text-white text-uppercase">Librairies</h6>
-                                            </a> 
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-6 col-lg-4 col-xlg-4">
-                                    <div class="card card-hover">
-                                        <div class="box bg-warning text-center">
-                                            <a href="{% url 'listmarches' %}">
-                                            <h1 class="font-light text-white"><i class="mdi mdi-arrow-all"></i></h1>
-                                            <h6 class="text-white text-uppercase"> Nos Marchés </h6>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                                    <a href="{% url 'home' %}" class="text-success text-uppercase"> {{ request.session.username}} </a> | 
+                                    <a href="{% url 'logout' %}" class="text-danger text-uppercase"> X </a> | 
+                                {% endif %}
+                                <a href="{% url 'home_abonnement' %}" > Recharger mon compte </a>
+                                {% comment %} <a href="{% url 'abonement_librairie' %}"> Abonements Librairies </a> | 
+                                <a href="{% url 'abonement_archive' %}"> Abonements Archives </a>  {% endcomment %}
                                 
                             </div>
+                        </div> 
+                        
+                        <div class="row"> 
+                            <div class="col-md-6 col-lg-4 col-xlg-4">
+                                <div class="card card-hover">
+                                    <div class="box bg-success text-center">
+                                        <a href="{% url 'listcom' %}">
+                                            <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
+                                            </h1>
+                                            <h6 class=" text-uppercase text-white">Archives Communautaires</h6>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Column -->
+                            <div class="col-md-6 col-lg-4 col-xlg-4">
+                                <div class="card card-hover">
+                                    <div class="box bg-danger text-center">
+                                        <a href="{% url 'listlibs' %}">
+                                        <h1 class="font-light text-white"><i class="mdi mdi-chart-areaspline"></i></h1>
+                                        <h6 class="text-white text-uppercase">Librairies</h6>
+                                        </a> 
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 col-lg-4 col-xlg-4">
+                                <div class="card card-hover">
+                                    <div class="box bg-warning text-center">
+                                        <a href="{% url 'listmarches' %}">
+                                        <h1 class="font-light text-white"><i class="mdi mdi-arrow-all"></i></h1>
+                                        <h6 class="text-white text-uppercase"> Nos Marchés </h6>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </div>
+                    </div>
                      
                 </div>
             </div>
@@ -135,10 +136,11 @@
                     {% block content %}
                     <div class="error-box">
                         <div class="error-body text-center">
+                            <h3 class="richbook-box text-success">RICHBOOK</h3>
                             <h1 class="error-title text-danger">ARCHIVES</h1>
                             <h3 class="text-uppercase error-subtitle">Savoir pour comprendre !</h3>
                             <p class="text-muted mt-4 mb-4">Comprendre pour impacter</p>
-                            <a href="#" class="btn btn-danger btn-rounded waves-effect waves-light mb-5 text-white">Impacter pour illuminer</a> 
+                            <a href="{% url 'login' %}" class="btn  btn btn-outline-success btn-rounded waves-effect waves-light mb-5 text-success">Impacter pour illuminer</a> 
                         </div>
                     </div>
                     {% endblock %}
@@ -150,7 +152,10 @@
             <div class="col-md-6 col-lg-4 col-xlg-4"></div>
             <div class="col-md-6 col-lg-4 col-xlg-4">
                 <a href="{% url 'index' %}"> A propos  </a> | 
-                <span class="card-title text-success"> Contactez-Nous</span>
+                <a href="{% url 'faq_index' %}" title="Comment ca marche ?" > F.A.Q - Aide</a> | 
+                {% comment %} <a href="{% url 'faq_communaute' %}" title="Comment ca marche ?" > F.A.Q Communautés  </a> |  {% endcomment %}
+                {% comment %} <a href="{% url 'faq_librairie' %}" title="Comment ca marche ?" > F.A.Q  Librairie </a> | {% endcomment %}
+                <a href="{% url 'contact' %}" class="card-title text-success"> Contactez-Nous</a>|<span class="badge bg-success text-white mx-2">{{VERSION}}</span>
 
             </div>
         </div>

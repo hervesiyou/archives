@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+{% block title %}FAQ - Gestion des Communautés | Archives {% endblock %}
+{% block css %} 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #4e73df;
+            --primary-dark: #224abe;
+            --success: #1cc88a;
+            --light: #f8f9fc;
+            --gray: #5a5c69;
+            --dark: #3a3b45;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7ff 0%, #e0e7ff 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-top: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        .question {
+            padding: 20px 30px;
+            cursor: pointer;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+            transition: background 0.3s;
+        }
+        .question:hover {
+            background: #edf2ff;
+        }
+
+        .answer {
+            padding: 0 30px 25px;
+            display: none;
+            background: white;
+        }
+
+        .answer.show {
+            display: block;
+        }
+
+        .answer p {
+            margin: 15px 0;
+            color: #444;
+        }
+
+        .answer ul {
+            margin: 15px 0 15px 25px;
+        }
+
+        .answer li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .icon {
+            font-size: 1.4rem;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .icon {
+            transform: rotate(180deg);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 12px 28px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.1rem; }
+            .question { font-size: 1rem; padding: 18px 20px; }
+            .answer { padding: 0 20px 20px; }
+        }
+    </style>
+ {% endblock %}
+{% block content %}
+
+    <div class="container">
+        <header>
+            <h1>Questions fréquentes</h1>
+            <p>Module Gestion des Communautés – Archives</p>
+        </header>
+
+        <div class="faq-list">
+            
+            <div class="faq-item">
+                <div class="question">
+                    <span>Qu'est-ce que le module Gestion des Communautés ?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="answer">
+                    <p>Le module Gestion des Communautés permet aux utilisateurs inscrits de :</p>
+                    <ul>
+                        <li>Créer et gérer leurs propres communautés</li>
+                        <li>Créer et organiser des familles au sein des communautés</li>
+                        <li>Consulter et enrichir les informations historiques, géographiques et culturelles</li>
+                        <li>Découvrir et suivre les événements périodiques liés aux communautés</li>
+                    </ul>
+                    <p>C'est un espace de mémoire collective, d'échange et de préservation du patrimoine communautaire.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">
+                    <span>Qui peut créer une communauté ?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="answer">
+                    <p>Tout utilisateur inscrit et connecté peut créer une communauté.</p>
+                    <p>Cependant, selon les droits attribués par l'administrateur (via la session <code>userrights</code>), certaines fonctionnalités avancées peuvent être réservées.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">
+                    <span>Quelle est la différence entre une Communauté et une Famille ?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="answer">
+                    <p><strong>Communauté</strong> : groupe plus large, souvent géographique, culturel ou historique (village, ethnie, quartier, diaspora, etc.)</p>
+                    <p><strong>Famille</strong> : sous-groupe au sein d'une communauté, généralement basé sur les liens familiaux, patronymiques ou lignagers.</p>
+                    <p>Une même personne peut appartenir à plusieurs familles au sein d'une même communauté.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">
+                    <span>Que puis-je consulter dans une communauté ?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="answer">
+                    <p>Pour chaque communauté, vous pouvez consulter :</p>
+                    <ul>
+                        <li>Histoire et origines</li>
+                        <li>Localisation géographique (carte, coordonnées)</li>
+                        <li>Photos et documents d'archive</li>
+                        <li>Liste des familles rattachées</li>
+                        <li>Événements périodiques (fêtes traditionnelles, cérémonies, rassemblements...)</li>
+                        <li>Membres et contributeurs</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">
+                    <span>Comment ajouter des informations historiques ou géographiques ?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="answer">
+                    <p>Si vous avez les droits appropriés :</p>
+                    <ol>
+                        <li>Connectez-vous à votre compte</li>
+                        <li>Accédez à la communauté concernée</li>
+                        <li>Cliquez sur "Modifier les informations" ou "Ajouter une contribution"</li>
+                        <li>Renseignez les champs (histoire, origine, géographie, sources...)</li>
+                        <li>Joignez éventuellement des photos ou documents</li>
+                        <li>Validez votre contribution (elle peut être modérée)</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">
+                    <span>Les événements périodiques, c'est quoi ?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="answer">
+                    <p>Il s'agit des manifestations récurrentes liées à une communauté :</p>
+                    <ul>
+                        <li>Fêtes traditionnelles annuelles</li>
+                        <li>Cérémonies de funérailles ou de naissances</li>
+                        <li>Rassemblements culturels saisonniers</li>
+                        <li>Journées commémoratives</li>
+                    </ul>
+                    <p>Vous pouvez consulter le calendrier et, selon vos droits, ajouter ou modifier ces événements.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">
+                    <span>Faut-il payer pour utiliser ce module ?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="answer">
+                    <p>La consultation des communautés publiques est gratuite.</p>
+                    <p>La création et la gestion active de communautés/familles peut nécessiter un abonnement selon les règles définies par les administrateurs du site.</p>
+                    <p>Voir la page "Abonnements Archives" pour plus d'informations.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="question">
+                    <span>Comment rejoindre une communauté existante ?</span>
+                    <span class="icon">▼</span>
+                </div>
+                <div class="answer">
+                    <p>La plupart des communautés sont ouvertes à la consultation.</p>
+                    <p>Pour devenir membre actif ou contributeur :</p>
+                    <ul>
+                        <li>Cherchez la communauté</li>
+                        <li>Cliquez sur "Rejoindre" ou "Demander à rejoindre"</li>
+                        <li>Attendez la validation (par l'administrateur de la communauté ou du site)</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="text-align: center; margin: 50px 0;">
+            <a href="{% url 'index' %}" class="back-btn">← Retour à l'accueil</a>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        document.querySelectorAll('.question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                const answer = question.nextElementSibling;
+                
+                // Fermer tous les autres
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    if (item !== faqItem) {
+                        item.classList.remove('active');
+                        item.querySelector('.answer').classList.remove('show');
+                    }
+                });
+
+                // Toggle actuel
+                faqItem.classList.toggle('active');
+                answer.classList.toggle('show');
+            });
+        });
+    </script>
+
+{% endblock %}

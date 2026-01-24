@@ -1,0 +1,91 @@
+<div class="card mb-4 shadow-sm">
+<div class="card-header bg-success text-white">Informations personnelles {{membre}}</div>
+<div class="card-body">
+<div class="row">
+    <div class="col-md-4">
+          
+        {% if wallet %}
+            <div><strong>Portefeuille :</strong> {{ wallet.solde }} {{ wallet.devise }}</div>
+            <div><strong>COMPTE :</strong> {{ wallet.bankno }}</div>
+        {% else %}
+            Aucun portefeuille associé.
+        {% endif %}
+       
+        
+    </div>
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-6"><strong>Sexe :</strong> {{ membre.sexe }}</div>
+            <div class="col-md-6"><strong>État civil :</strong> {{ membre.etatcivil }}</div>
+            <div class="col-md-6"><strong>Date de naissance :</strong> {{ membre.datenaissance }}</div>
+            <div class="col-md-6"><strong>Lieu de naissance :</strong> {{ membre.lieunaissance }}</div>
+            <div class="col-md-6"><strong>Résidence :</strong> {{ membre.residence }}</div>
+            <div class="col-md-6"><strong>Nombre d’enfants :</strong> {{ membre.nbenfant }}</div>
+        </div>
+    </div>
+</div>
+
+</div>
+</div>
+
+
+<!-- Situation socio-professionnelle -->
+<div class="card mb-4 shadow-sm">
+<div class="card-header bg-secondary text-white">Situation socio-professionnelle</div>
+<div class="card-body">
+<p><strong>Profession :</strong> {{ membre.profession }}</p>
+<p><strong>Niveau d’éducation :</strong> {{ membre.education }}</p>
+<p><strong>Diplômes :</strong> {{ membre.diplomes }}</p>
+<p><strong>Notabilité :</strong> {{ membre.notabilite }}</p>
+</div>
+</div>
+
+
+<!-- Filiation -->
+<div class="card mb-4 shadow-sm">
+<div class="card-header bg-warning">Filiation</div>
+<div class="card-body">
+<p><strong>Père :</strong> {{ membre.pere  }}</p>
+<p><strong>Mère :</strong> {{ membre.mere  }}</p>
+<p><strong>Statut :</strong> {% if membre.vivant %}Vivant{% else %}Décédé{% endif %}</p>
+{% if not membre.vivant %}
+<p><strong>Date de décès :</strong> {{ membre.datedeces }}</p>
+{% endif %}
+</div>
+</div>
+
+
+<!-- Appartenances -->
+<div class="card mb-4 shadow-sm">
+<div class="card-header bg-success text-white">Appartenances</div>
+<div class="card-body">
+<p><strong>Familles :</strong></p>
+<ul>
+{% for fam in membre.familles.all %}
+<li>{{ fam.nom }}</li>
+{% empty %}
+<li>Aucune famille associée</li>
+{% endfor %}
+</ul>
+
+
+<p><strong>Associations :</strong></p>
+<ul>
+{% for asso in membre.associations.all %}
+<li>{{ asso.nom }}</li>
+{% empty %}
+<li>Aucune association</li>
+{% endfor %}
+</ul>
+
+
+<p><strong>Communautés :</strong></p>
+<ul>
+{% for com in membre.communautes.all %}
+<li>{{ com.nom }}</li>
+{% empty %}
+<li>Aucune communauté</li>
+{% endfor %}
+</ul>
+</div>
+</div>

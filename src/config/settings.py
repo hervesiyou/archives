@@ -24,6 +24,11 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'mfrelyon@gmail.com'
 EMAIL_HOST_PASSWORD = 'eloumden'
+EMAIL = 'contact@richbook.net'
+
+NO_ORANGE=237687329239
+NO_MTN=237687329239
+NO_SARA=237687329239
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -153,7 +158,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = "src/arch_portal/templates/static/"
-STATICFILES_DIRS = [   # Dossier statique principal
+STATICFILES_DIRS = [   
     os.path.join(BASE_DIR, 'arch_portal/static'),   # Autre dossier statique
 ]
 # Default primary key field type

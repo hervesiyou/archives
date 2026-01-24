@@ -28,6 +28,9 @@ urlpatterns += [
     path('shfasal/<int:id>', core.show_fam_salle, name="show_fam_salle"),
     path('shcosal/<int:id>', core.show_com_salle, name="show_com_salle"),
     path('shassosal/<int:id>', core.show_asso_salle, name="show_asso_salle"),
+     path('a/faq', core.faq, name="faq_archcore"),
+     path('faqi', core.faqindex, name="faq_index"),
+     path('cont', core.contact, name="contact"),
 ]
 urlpatterns += [ 
     path('lcom', communaute.listcom, name="listcom"),
@@ -46,6 +49,7 @@ urlpatterns += [
     path('lassfam/<int:id>', communaute.listassociationsfam, name="listassociationsfam"),
     path('ngal/', communaute.add_galerie, name="add_galerie"),
     path('ga/<int:id>', communaute.show_galerie, name="show_galerie"),
+    path('c/faq', communaute.faq, name="faq_communaute"),
 ]
 
 urlpatterns += [ 
@@ -59,6 +63,7 @@ urlpatterns += [
     path('u/adcom', membre.show_user_comadmin, name="home_comadmin"),
     path('u/adasso', membre.show_user_assoadmin, name="home_assoadmin"),
     path('u/seemes', membre.show_user_messages, name="home_messageadmin"),
+    path('u/abo', membre.user_abonnement, name="home_abonnement"),
     
 ]
 
@@ -67,11 +72,13 @@ urlpatterns += [
     path('libab', librairie.abonement_librairie, name="abonement_librairie"),
     path('lbs/<int:id>.<int:mode>', librairie.listbooks,  name="listbooks"),
     path('sb/<int:id>', librairie.show_book, name="show_book"),
+    path('searb', librairie.search_book, name="search_book"),
     path('sbf/<int:id>', librairie.show_book_file, name="show_book_file"),
     path('ab/', librairie.add_book, name="addbook"),
     path('al/', librairie.add_librairie, name="add_librairie"),
     path('sl/<int:id>', librairie.show_librairie, name="show_librairie"),
     path('booked/', librairie.show_commandes, name="commandes_livres"),
+    path('faq', librairie.faq, name="faq_librairie"),
     
     path('add_order/', librairie.api_add_order, name="api_add_order"),
 ]

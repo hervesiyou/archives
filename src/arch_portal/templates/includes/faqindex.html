@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% block title %} FAQ - Gestion des Librairies | Archives {% endblock %}
+    {% block css %} 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #4e73df;
+            --primary-dark: #224abe;
+            --success: #1cc88a;
+            --warning: #f6c23e;
+            --light: #f8f9fc;
+            --gray: #5a5c69;
+            --dark: #3a3b45;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7ff 0%, #e0e7ff 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-top: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        .question {
+            padding: 20px 30px;
+            cursor: pointer;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+            transition: background 0.3s;
+        }
+
+        .question:hover {
+            background: #edf2ff;
+        }
+
+        .answer {
+            padding: 0 30px 25px;
+            display: none;
+            background: white;
+        }
+
+        .answer.show {
+            display: block;
+        }
+
+        .answer p {
+            margin: 15px 0;
+            color: #444;
+        }
+
+        .answer ul, .answer ol {
+            margin: 15px 0 15px 25px;
+        }
+
+        .answer li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .icon {
+            font-size: 1.4rem;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .icon {
+            transform: rotate(180deg);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 12px 28px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.1rem; }
+            .question { font-size: 1rem; padding: 18px 20px; }
+            .answer { padding: 0 20px 20px; }
+        }
+    </style>
+    {% endblock %}
+{% block content %}
+    <div class="container">
+        <header>
+            <h1>Questions fréquentes</h1>
+            <p>Module Gestion des Librairies – Archives</p>
+        </header>
+
+        <div class="faq-list">
+             
+
+        </div>
+
+        <div style="text-align: center; margin: 50px 0;">
+            <a href="{% url 'index' %}" class="back-btn">← Retour à l'accueil</a>
+             <a href="{% url 'faq_archcore' %}" title="Comment ca marche ?" class="back-btn"> F.A.Q  Archives </a> | 
+            <a href="{% url 'faq_communaute' %}" title="Comment ca marche ?" class="back-btn"> F.A.Q Communautés  </a> | 
+            <a href="{% url 'faq_librairie' %}" title="Comment ca marche ?" class="back-btn"> F.A.Q  Librairie </a> 
+                
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        document.querySelectorAll('.question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                const answer = question.nextElementSibling;
+                
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    if (item !== faqItem) {
+                        item.classList.remove('active');
+                        item.querySelector('.answer').classList.remove('show');
+                    }
+                });
+
+                faqItem.classList.toggle('active');
+                answer.classList.toggle('show');
+            });
+        });
+    </script>
+
+{% endblock %}

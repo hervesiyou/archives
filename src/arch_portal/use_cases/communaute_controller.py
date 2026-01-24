@@ -1,4 +1,5 @@
 from django.shortcuts import redirect, render
+from django.conf import settings
 from arch_portal.domain.forms.galerie import GalerieForm
 from arch_portal.domain.forms.association import AssociationForm
 from arch_portal.domain.forms.communaute import CommunauteForm 
@@ -61,8 +62,7 @@ def add_abonnement(request):
                             )
                             ab.save()
                             user.save()
-                            message = '''
-                            Merci de faire le depot au numero 690000000 pour OM et  677777777 pour MOMO pour l'activation de votre compte !
+                            message = f'''Merci de faire le depot au numero {settings.NO_ORANGE} pour OM et  {settings.NO_MTN} pour MOMO pour l'activation de votre compte !
                             '''
                             return JsonResponse({'status': True ,"message": message})
                         else:
@@ -133,6 +133,10 @@ def add_admin_asso(request):
 def abonement_archive(request): 
     plans = Plan.objects.filter(appli="COM")
     return render(request, "archcore/abonement.html", {"plans" : plans} )
+
+def faq(request): 
+    # plans = Plan.objects.filter(appli="COM")
+    return render(request, "archcore/faqcom.html", {} )
 
 def listcom(request):
     communautes = Communaute.objects.all()
