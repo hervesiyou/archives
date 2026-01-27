@@ -3,6 +3,8 @@ import time
 import hashlib
 from django.core.mail import send_mail
 
+ 
+
 def send_email(subject, message, recipient_list):
     send_mail(
         subject,
@@ -11,6 +13,21 @@ def send_email(subject, message, recipient_list):
         recipient_list,
         fail_silently=False,
     )
+    try:
+        send_mail(
+            subject=subject,
+            message=message, 
+            from_email="service@richbook.net",
+            recipient_list=recipient_list, 
+            fail_silently=False,
+        )
+        return True
+    except Exception as e:
+        # Optionnel : logger l'erreur
+        print(f"Erreur envoi email : {e}")
+       
+        raise
+        # return False
 
 
 def generate_code(string):

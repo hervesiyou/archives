@@ -140,7 +140,7 @@
             .answer { padding: 0 20px 20px; }
         }
     </style>
- {% endblock %}
+{% endblock %}
 {% block content %}
 
     <div class="container">
@@ -175,7 +175,7 @@
                 </div>
                 <div class="answer">
                     <p>Tout utilisateur inscrit et connecté peut créer une communauté.</p>
-                    <p>Cependant, selon les droits attribués par l'administrateur (via la session <code>userrights</code>), certaines fonctionnalités avancées peuvent être réservées.</p>
+                    <p>Cependant, selon les droits attribués par l'administrateur , certaines fonctionnalités avancées peuvent être réservées.</p>
                 </div>
             </div>
 
@@ -185,9 +185,9 @@
                     <span class="icon">▼</span>
                 </div>
                 <div class="answer">
-                    <p><strong>Communauté</strong> : groupe plus large, souvent géographique, culturel ou historique (village, ethnie, quartier, diaspora, etc.)</p>
+                    <p><strong>Communauté</strong> : groupe plus large, souvent géographique, culturel ou historique (village, groupement , quartier, diaspora, etc.)</p>
                     <p><strong>Famille</strong> : sous-groupe au sein d'une communauté, généralement basé sur les liens familiaux, patronymiques ou lignagers.</p>
-                    <p>Une même personne peut appartenir à plusieurs familles au sein d'une même communauté.</p>
+                    <p>Une même personne peut appartenir à plusieurs familles au sein d'une même communauté ou même appartenir à plusieurs communautés.</p>
                 </div>
             </div>
 
@@ -223,6 +223,7 @@
                         <li>Renseignez les champs (histoire, origine, géographie, sources...)</li>
                         <li>Joignez éventuellement des photos ou documents</li>
                         <li>Validez votre contribution (elle peut être modérée)</li>
+                        <li><code> Sinon contactez un administrateur de ladite communauté pour qu'il vous donnes les accès pour le faire </code> </li>
                     </ol>
                 </div>
             </div>
@@ -252,7 +253,7 @@
                 <div class="answer">
                     <p>La consultation des communautés publiques est gratuite.</p>
                     <p>La création et la gestion active de communautés/familles peut nécessiter un abonnement selon les règles définies par les administrateurs du site.</p>
-                    <p>Voir la page "Abonnements Archives" pour plus d'informations.</p>
+                    <p>Voir la page <a href="{% url 'home_abonnement' %}" > Recharger mon compte </a> pour plus d'informations.</p>
                 </div>
             </div>
 

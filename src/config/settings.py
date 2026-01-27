@@ -19,12 +19,15 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'mail.richbook.net'
+# EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'mfrelyon@gmail.com'
-EMAIL_HOST_PASSWORD = 'eloumden'
+EMAIL_HOST_USER = 'service@richbook.net'
+# EMAIL_HOST_USER = 'mfrelyon@gmail.com'
+EMAIL_HOST_PASSWORD = 'oHPZJaGbFI9iLgGr'
 EMAIL = 'contact@richbook.net'
+# EMAIL = 'contact@richbook.net'
 
 NO_ORANGE=237687329239
 NO_MTN=237687329239
@@ -76,6 +79,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+
+    "arch_portal.use_cases.middleware.coremiddleware.CoreMiddleware",
     
 ]
 

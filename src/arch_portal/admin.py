@@ -10,6 +10,7 @@ from arch_portal.domain.models.livre import Livre
 from arch_portal.domain.models.membre import Membre
 from arch_portal.domain.models.galerie import Galerie
 from arch_portal.domain.models.image import Image
+from arch_portal.domain.models.contact import Contact
 from arch_portal.domain.models.marche import Marche
 from arch_portal.domain.models.commandelivre import CommandeLivre
 from arch_portal.domain.models import Role,Permission
@@ -22,6 +23,7 @@ from arch_portal.domain.models.salleattentecommunaute import SalleAttenteCommuna
 from arch_portal.domain.models.salleattenteassociation import SalleAttenteAssociation
 
 admin.site.register(Communaute)
+admin.site.register(Contact)
 admin.site.register(Famille)
 admin.site.register(Membre)
 admin.site.register(Association)

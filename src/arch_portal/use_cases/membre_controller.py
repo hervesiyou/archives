@@ -69,8 +69,9 @@ def show_user_messages(request):
         return redirect("login")
 
 def user_abonnement(request):
-    if(request.session["userid"] != None):
-        user=Membre.objects.get(id=request.session["userid"])
+    userid = request.session.get("userid", None)
+    if(userid is not  None):
+        user = Membre.objects.get(id=request.session["userid"])
         
         if(user != None):
             return render(request, "usercore/abonnement.html", {"user":user, })
@@ -80,7 +81,8 @@ def user_abonnement(request):
         return redirect("login")
 
 def show_user_home(request):
-    if(request.session["userid"]!=None):
+    userid = request.session.get("userid", None)
+    if(userid is not  None):
         user = Membre.objects.get(id=request.session["userid"])
         if(user != None):
             wallet = Wallet.objects.filter(membre_id=user.id ).first()

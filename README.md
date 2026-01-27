@@ -1,18 +1,24 @@
 ## A Verifier
 
 
-  - gerer le paiement 
-  - faire la faq des communautés, les librairies, des  marchés
-- faire les marchés internes aux librairies, communautés et marchés 
+- gerer le paiement d un livre      
+- faire les marchés internes aux communautés
 - gerer l'achat d'un service selon le prix ou selon l'abonnement
-- faire la page de contact, avec le numero telegram et email
-- gerer l'insertion d'un contact
+- gerer la notation d'un livre
+- gerer la messagerie d'une bibliotheque et d'une communauté
+
+- noter les livres
 - notification par mail des nouveaux livres
-- ajouter l'ajout et la gestion des categories de livres
 - envoyer le mail au proprietaire de la librairie et à moi lors des commandes
+- ajouter l'ajout et la gestion des categories de livres
 - ajouter les données de fixtures, familles, communautés, librairies, marchés, chef, emails , telephone par defaut
 - pour une famille afficher les generations, pour chaque generation afficher ses membres, afficher l'arbre de la famille
 
+
+        
+        - faire la faq des communautés, les librairies, des  marchés
+        - faire la page de contact, avec le numero telegram et email
+        - gerer l'insertion d'un contact
         - ajouter les images
         - gerer les livres numeriques et physiques
         - gerer l'abonnement et 
@@ -41,6 +47,8 @@
   - nb enfants par genertion
   
 - Arbre genealogique
-- noter les livres
+
+- livres les plus vendus et les plus notés
 - gestion des statistiques , livres  et bibliotheques les plus consultées, les plus commandés
 - gerer les recommandations de livres
+- ajouter la commande pour l'ajout de la librairie, on paie richbook cree la librairie,et le proprietaire parametre la librairie

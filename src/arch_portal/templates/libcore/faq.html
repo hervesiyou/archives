@@ -142,7 +142,7 @@
             .answer { padding: 0 20px 20px; }
         }
     </style>
-    {% endblock %}
+{% endblock %}
 {% block content %}
     <div class="container">
         <header>
@@ -176,7 +176,7 @@
                     <span class="icon">▼</span>
                 </div>
                 <div class="answer">
-                    <p>Tout utilisateur inscrit et connecté peut créer une librairie, sous réserve d'avoir le droit <code>ADD_LIBRAIRIE</code>.</p>
+                    <p>Tout utilisateur inscrit et connecté peut créer une librairie, sous réserve d'avoir l'abonnement permettant  <code>d'ajouter sa propre librairie</code>.</p>
                     <p>La création peut nécessiter un abonnement spécifique selon les règles du site.</p>
                 </div>
             </div>
@@ -187,12 +187,12 @@
                     <span class="icon">▼</span>
                 </div>
                 <div class="answer">
-                    <p>Si vous avez les droits <code>ADD_LIVRE</code> :</p>
+                    <p>Si vous avez les droits <code>d'ajouter un livre</code> :</p>
                     <ol>
                         <li>Connectez-vous et accédez à votre tableau de bord librairie</li>
                         <li>Cliquez sur « Ajouter un livre »</li>
                         <li>Remplissez les informations : titre, auteur, année, ISBN, description, couverture</li>
-                        <li>Choisissez le format (PDF, ePub, physique, lien externe...)</li>
+                        <li>Choisissez le format (PDF, ePub, physique, etc)</li>
                         <li>Définissez le prix (gratuit ou payant)</li>
                         <li>Validez (modération possible selon les règles)</li>
                     </ol>
@@ -209,9 +209,11 @@
                     <ol>
                         <li>Consultez le catalogue ou la page de la librairie</li>
                         <li>Cliquez sur le livre souhaité</li>
-                        <li>Appuyez sur « Acheter » ou « Ajouter au panier »</li>
-                        <li>Procédez au paiement sécurisé (selon les moyens implémentés : mobile money, carte, etc.)</li>
+                        <li>Appuyez sur « Acheter » </li>
+                        <li>Procédez au paiement sécurisé (au préalable votre compte doit être crédité d'une somme supérieure au cout du livre)</li>
                         <li>Une fois payé, téléchargez le fichier numérique ou recevez les instructions pour le livre physique</li>
+                        <li>Voir la page <a href="{% url 'home_abonnement' %}" > Recharger mon compte </a> pour plus d'informations.</li>
+
                     </ol>
                     <p>Les livres gratuits sont téléchargeables directement après connexion.</p>
                 </div>
@@ -223,13 +225,13 @@
                     <span class="icon">▼</span>
                 </div>
                 <div class="answer">
-                    <p>Certaines librairies proposent des abonnements mensuels ou annuels qui donnent :</p>
+                    <p>Certaines librairies proposent des abonnements  annuels qui donnent :</p>
                     <ul>
                         <li>Accès illimité à un certain nombre de livres</li>
                         <li>Réductions sur les achats</li>
                         <li>Contenus exclusifs (manuscrits rares, archives, etc.)</li>
                     </ul>
-                    <p>Voir la page « Abonnements Librairies » pour les offres disponibles.</p>
+                    <p>Voir la page <a href="{% url 'home_abonnement' %}" > Recharger mon compte </a> pour les offres disponibles.</p>
                 </div>
             </div>
 
@@ -242,7 +244,7 @@
                     <p>Les deux :</p>
                     <ul>
                         <li>Beaucoup de livres sont gratuits (domaine public, dons, contributions ouvertes)</li>
-                        <li>D'autres sont payants (œuvres contemporaines, éditions spéciales, droits d'auteur)</li>
+                        <li>D'autres sont payants (œuvres contemporaines, éditions spéciales, droits d'auteur etc)</li>
                     </ul>
                     <p>Le prix est fixé par le créateur de la librairie ou l'auteur.</p>
                 </div>
@@ -268,8 +270,8 @@
                     <p>En cas de souci (livre non reçu, paiement échoué, contenu défectueux) :</p>
                     <ol>
                         <li>Contactez le vendeur directement via la messagerie de la librairie</li>
-                        <li>Si pas de réponse, utilisez la fonction « Signaler un problème »</li>
-                        <li>L'équipe du site peut intervenir pour les litiges graves</li>
+                        <li>Si pas de réponse, <a href="{% url 'contact' %}"> contactez-nous</a></li>
+                        <li>L'équipe RichBook - Archives peut intervenir pour les litiges graves</li>
                     </ol>
                 </div>
             </div>

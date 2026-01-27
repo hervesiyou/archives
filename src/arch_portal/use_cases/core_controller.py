@@ -4,6 +4,7 @@ from arch_portal.domain.exceptions.membre_exception import MembreException
 from arch_portal.domain.models.salleattentefamille import SalleAttenteFamille
 from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.famille import Famille
+from arch_portal.domain.models.contact import Contact
 from arch_portal.domain.models.membre import Membre
 from arch_portal.domain.models.message import Message
 from arch_portal.domain.models.association import Association
@@ -11,20 +12,34 @@ from arch_portal.domain.models.salleattentecommunaute import SalleAttenteCommuna
 from arch_portal.domain.models.salleattenteassociation import SalleAttenteAssociation
 from django.views.decorators.csrf import csrf_exempt
 import json
+from arch_portal.use_cases.services.core import send_email
 from django.http import HttpResponseForbidden, JsonResponse
 from datetime import date
+from django.contrib import messages
 
 def index(request): 
     return render(request, "base.html" )
 
 def contact(request): 
+
     if request.method == "POST":
         # traitement du formulaire
         name = request.POST.get("name")
-        email = request.POST.get("email")
+        email = request.POST.get("email") 
         message = request.POST.get("message")
-        # ici tu peux sauvegarder le message ou l'envoyer par email
-        return redirect("contact")  # page de succès
+        
+        if (name and  email and  message) :
+            contact = Contact.objects.filter(email=email, sender=name, message=message).first()
+            if contact is not None:
+                messages.info(request, "Vous avez déjà envoyé ce message. Merci de votre compréhension.")
+                return redirect("index")
+            
+            contact = Contact(sender=name, email=email, message=message)
+            contact.save()
+            messages.success(request, "Votre message a bien été envoyé. Merci !")
+            send_email("Contact par " + email+ " - " + name + " :", message, [email, settings.EMAIL_HOST_USER,"mfrelyon@gmail.com"])
+            # ici tu peux sauvegarder le message ou l'envoyer par email
+            return redirect("index")  
 
     return render(request, "includes/contact.html", {
         # "HCAPTCHA": getattr(settings, "APP_HCAPTCHA", None),
