@@ -10,7 +10,7 @@
     <meta name="description" content="Matrix Admin Lite Free Version is powerful and clean admin dashboard template, inpired from Bootstrap Framework">
     <meta name="robots" content="noindex,nofollow">
     <title>  {% block title %} Archives {% endblock %} </title> 
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon.png' %}"> 
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/logo.png' %}"> 
    
     {% block css %} {% endblock %}
     <link rel="stylesheet" href="{% static 'css/style.min.css' %}" />
@@ -136,6 +136,8 @@
                     {% block content %}
                     <div class="error-box">
                         <div class="error-body text-center">
+
+                            <img src="{% static 'images/logo.png' %}" alt="logo" class="img-fluid" style="width:150px; height:150px;" />
                             <h3 class="richbook-box text-success">RICHBOOK</h3>
                             <h1 class="error-title text-danger">ARCHIVES</h1>
                             <h3 class="text-uppercase error-subtitle">Savoir pour comprendre !</h3>
