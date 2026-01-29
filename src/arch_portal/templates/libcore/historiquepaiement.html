@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %} {{parent}} Historique - {{ user.nomcomplet }} {% endblock %}
+{% block css %}  
+    <style>
+        table th, table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+    </style>
+    <script>
+       
+    </script>
+{% endblock %}
+{% block content %}
+
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-lg-12 text-center">
+                <a href="{% url 'home' %}" class="btn btn-secondary"> Retour à mon espace </a>
+            </div>
+        </div>
+
+        <h3>Mon historique de paiements</h3>
+
+        <table class="table table-bordered">
+            <tr class="table-dark bg-dark text-white">
+                <th>Livre</th>
+                <th>Montant</th>
+                <th>Date</th>
+                <th>Facture</th>
+            </tr>
+
+            {% for p in paiements %}
+            <tr>
+                <td>{{ p.livre.nom }}</td>
+                <td>{{ p.montant }} XAF</td>
+                <td>{{ p.date_paiement|date:"d/m/Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'facture_pdf' p.id %}" class="btn btn-sm btn-outline-info">
+                        Télécharger PDF
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Aucun paiement</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+{% endblock %}

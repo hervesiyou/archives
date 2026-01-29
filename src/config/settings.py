@@ -24,10 +24,11 @@ EMAIL_HOST = 'mail.richbook.net'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'service@richbook.net'
-# EMAIL_HOST_USER = 'mfrelyon@gmail.com'
+EMAIL_HOST_SERVICE = 'mfrelyon@gmail.com'
 EMAIL_HOST_PASSWORD = 'oHPZJaGbFI9iLgGr'
 EMAIL = 'contact@richbook.net'
 # EMAIL = 'contact@richbook.net'
+URL_SITE = 'https://richbook.net'
 
 NO_ORANGE=237687329239
 NO_MTN=237687329239
@@ -48,8 +49,8 @@ APP_HCAPTCHA = os.getenv("APP_HCAPTCHA")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
-
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = ['richbook.net', 'www.richbook.net', '127.0.0.1']
+# ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
@@ -72,6 +73,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -161,11 +163,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = "src/arch_portal/templates/static/"
 STATICFILES_DIRS = [   
     os.path.join(BASE_DIR, 'arch_portal/static'),   # Autre dossier statique
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

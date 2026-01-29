@@ -23,6 +23,7 @@
         {% endif %}
         <a href="{% url 'home_messageadmin' %}" class="btn btn-info"> Mes Messages </a>
         <a href="{% url 'home_abonnement' %}" class="btn btn-success"> Recharger mon compte </a>
+        <a href="{% url 'historique_paiements' %}" class="btn btn-info"> Historique des paiements </a>
         {% block body %}
             {% if commandes %}
             <div class="card-body">

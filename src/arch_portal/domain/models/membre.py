@@ -51,9 +51,7 @@ class Membre(models.Model):
     vivant = models.BooleanField(default=True)
     datedeces = models.CharField(max_length=50, null=True, blank=True)
 
-    role = models.ManyToManyField(
-        Role
-    )
+    role = models.ManyToManyField(  Role )
 
     def save(self, *args, **kwargs):
         if self.pere != None and self.mere != None:

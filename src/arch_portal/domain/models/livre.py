@@ -1,9 +1,11 @@
 from django.db import models
 from .image import Image
 import random
+ 
 
 from arch_portal.domain.models.CONST_DATA import LIV_CHOICES
 class Livre(models.Model):
+    
     class Meta:
         verbose_name = "  Livre de bibliotheque "
         verbose_name_plural = " Les  Livres"
@@ -27,6 +29,16 @@ class Livre(models.Model):
 
     def __str__(self):
         return f"{self.nom}, {self.auteur}  (ISBN: {self.isbn})"
+    
+    # models.py (dans Livre)
+
+
+    def moyenne_notes(self):
+        return self.notations.aggregate(avg=models.Avg("note"))["avg"] or 0
+
+    def total_notes(self):
+        return self.notations.count()
+
 
     def generer_isbn(self):
         """Génère un code ISBN-13 aléatoire valide."""

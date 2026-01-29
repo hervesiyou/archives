@@ -81,6 +81,14 @@ urlpatterns += [
     path('faq', librairie.faq, name="faq_librairie"),
     
     path('add_order/', librairie.api_add_order, name="api_add_order"),
+    path("liv/<int:livre_id>/pay/", librairie.payer_livre, name="payer_livre"),
+    path("liv/his/", librairie.historique_paiements, name="historique_paiements"),
+    path("liv/<int:paiement_id>/pdf/", librairie.facture_pdf, name="facture_pdf"),
+    path("fac/verif/<int:reference>", librairie.verifier_facture, name="verifier_facture"),
+    
+    path("liv/<int:livre_id>/note/", librairie.noter_livre, name="noter_livre"),
+
+
 ]
 
 urlpatterns += [ 

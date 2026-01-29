@@ -9,8 +9,7 @@
       }
     </style>
     <script>
-        function enableCommandeButton() {  
-       
+        function enableCommandeButton() {        
             document.getElementById('addOrderID').disabled = false;
         }
     </script>
@@ -67,7 +66,20 @@
                                          </td>
                                         <td><span class="text-info text-bold"> {{livre.description}} </span></td>
                                         <td class="text-end">
-                                        <span class="badge bg-secondary"> {{livre.stock}} exemplaires </span>
+                                            <span class="badge bg-secondary"> {{livre.stock}} exemplaires </span>
+                                            <div class="mb-2">
+                                                {% with livre.moyenne_notes as moyenne %}
+                                                    {% for i in "12345" %}
+                                                        {% if forloop.counter <= moyenne|floatformat:0 %}
+                                                            ⭐
+                                                        {% else %}
+                                                            ☆
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    <small>({{ livre.total_notes }} avis)</small>
+                                                {% endwith %}
+                                            </div>
+
                                         </td>
                                         <td > 
                                         
@@ -107,16 +119,24 @@
                             {% if livre.type == "Numerique" %}
                                 {% if connecte %}
                                     
-                                        <button class="btn btn-success text-white">Acheter directement</button>
+                                        <a class="btn btn-success text-white"  data-bs-toggle="modal"  data-bs-target="#paiementModal">Acheter directement</a>
+                                        <button class="btn btn-warning"  data-bs-toggle="modal"    data-bs-target="#notationModal">
+                                            Noter ce livre ⭐
+                                        </button>
                                         {% if achat %}
                                             <div class="text-success"> Votre abonnement vous permet de directement telecharger ce livre </div>
                                         {% else %}
                                             <span class="text-danger"> Merci de recharger votre compte ou  vous abonner pour obtenir ce livre</span>
                                         {% endif %}
+
+                                        
+
+                                        
                                     
                                 {% else %}
                                     <a href="{% url 'login' %}" class="div-error"> Merci de vous connecter pour commander directement ce livre </a> 
                                 {% endif %}
+ 
                             {% endif %}
                         </div>
                     </div>
@@ -180,6 +200,86 @@
             </div>
         </div>
     </div>
+
+
+
+
+    <div class="modal fade" id="paiementModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Paiement du livre</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form method="post" action="{% url 'payer_livre' livre.id %}">
+                {% csrf_token %}
+
+                <div class="modal-body">
+                    <p><b>Livre :</b> {{ livre.nom }}</p>
+                    <p><b>Description :</b> {{ livre.description }}</p>
+                    <p><b>Prix :</b> <span class="text-danger">{{ livre.prix }} XAF</span></p>
+                    <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
+                </div>
+
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">
+                        Confirmer le paiement
+                    </button>
+                </div>
+            </form>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="notationModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">Noter {{ livre.nom }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form method="post" action="{% url 'noter_livre' livre.id %}">
+                {% csrf_token %}
+
+                <div class="modal-body">
+
+                    <label>Votre note</label>
+                    <select name="note" class="form-select" required>
+                        <option value="">Choisir</option>
+                        <option value="5">★★★★★ Excellent</option>
+                        <option value="4">★★★★☆ Très bon</option>
+                        <option value="3">★★★☆☆ Moyen</option>
+                        <option value="2">★★☆☆☆ Faible</option>
+                        <option value="1">★☆☆☆☆ Mauvais</option>
+                    </select>
+
+                    <label class="mt-2">Commentaire</label>
+                    <textarea name="commentaire"
+                                class="form-control"
+                                placeholder="Votre avis (optionnel)"></textarea>
+
+                    <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-warning">
+                        Envoyer ma note
+                    </button>
+                </div>
+
+            </form>
+
+            </div>
+        </div>
+    </div>
+
 
    
 {% endblock content %}

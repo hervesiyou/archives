@@ -21,6 +21,8 @@ from arch_portal.domain.models.message import Message
 from arch_portal.domain.models.salleattentefamille import SalleAttenteFamille
 from arch_portal.domain.models.salleattentecommunaute import SalleAttenteCommunaute
 from arch_portal.domain.models.salleattenteassociation import SalleAttenteAssociation
+from arch_portal.domain.models.paiementlivre import PaiementLivre
+from arch_portal.domain.models.notationlivre import NotationLivre
 
 admin.site.register(Communaute)
 admin.site.register(Contact)
@@ -43,3 +45,5 @@ admin.site.register(SalleAttenteAssociation)
 admin.site.register(SalleAttenteFamille)
 admin.site.register(Message)
 admin.site.register(Wallet)
+admin.site.register(PaiementLivre)
+admin.site.register(NotationLivre)
