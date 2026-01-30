@@ -40,6 +40,11 @@
                     <a href="{% url 'facture_pdf' p.id %}" class="btn btn-sm btn-outline-info">
                         Télécharger PDF
                     </a>
+                    {% if  'MAKE_REM' in request.session.userrights %}
+                     <a href="{% url 'rembourser_paiement' p.id %}" class="btn btn-sm btn-outline-danger">
+                        Rembourser
+                    </a>
+                    {% endif %}
                 </td>
             </tr>
             {% empty %}

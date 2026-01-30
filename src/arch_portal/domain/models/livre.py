@@ -1,5 +1,8 @@
 from django.db import models
+
+from arch_portal.domain.models.categorielivre import Categorie
 from .image import Image
+from .membre import Membre
 import random
  
 
@@ -26,6 +29,10 @@ class Livre(models.Model):
     prix = models.IntegerField(default=0)
     type = models.CharField(max_length=50, choices=LIV_CHOICES,blank=True)
     librairies = models.ManyToManyField("Librairie",related_name="mes_librairies", null=True)
+
+    proprietaire = models.ForeignKey( Membre,  on_delete=models.SET_NULL,  null=True,  blank=True,  related_name="livres_possedes"  )
+    anciens_proprietaires = models.ManyToManyField(  Membre, blank=True,  related_name="livres_deja_possedes" )
+    categorie = models.ForeignKey( Categorie,   on_delete=models.SET_NULL,  null=True,  blank=True,  related_name="livres")
 
     def __str__(self):
         return f"{self.nom}, {self.auteur}  (ISBN: {self.isbn})"

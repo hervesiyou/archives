@@ -4,6 +4,12 @@ SEX_CHOICES =(
     ("M","Male")
 )
 
+STATUTS = [
+    ("PAYE", "Payé"),
+    ("EN_ATTENTE", "En attente"),
+    ("REMBOURSE", "Remboursé"),
+]
+
 TYPE_MEMBER_CHOICES =(
     ("Chef","CHEF"),
     ("Admin","ADMINISTRATEUR"),

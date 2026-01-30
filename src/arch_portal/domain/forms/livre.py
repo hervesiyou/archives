@@ -34,11 +34,14 @@ class LivreForm(ModelForm):
         self.helper.form_tag = False
         self.helper.layout = Layout(
             Row(
-                Column('nom', css_class='col-md-6'),
-                Column('auteur', css_class='col-md-6'),
+                Column('nom', css_class='col-md-4'),
+                Column('auteur', css_class='col-md-4'),
+                Column('categorie', css_class='col-md-4'),
                 Column('description', css_class='col-md-12'),
+                # Column('librairies', css_class='col-md-12'),
                 css_class='row'
             ),
+            
             Row(
                 Column('type', css_class='col-md-2 typeClass'),
                 Column('file', css_class='col-md-2 fichierClass'),

@@ -1,18 +1,17 @@
 ## A Verifier
 
-
-- faire le debit et le credit du compte apres le paiement  
 - faire les marchés internes aux communautés
 - gerer l'achat d'un service selon le prix ou selon l'abonnement
 - gerer la messagerie d'une bibliotheque et d'une communauté
 
 - notification par mail des nouveaux livres
-- envoyer le mail au proprietaire de la librairie et à moi lors des commandes
-- ajouter l'ajout et la gestion des categories de livres
-- ajouter les données de fixtures, familles, communautés, librairies, marchés, chef, emails , telephone par defaut
 - pour une famille afficher les generations, pour chaque generation afficher ses membres, afficher l'arbre de la famille
+- ajouter les données de fixtures, familles, communautés, librairies, marchés, chef, emails , telephone par defaut
 
         - gerer la notation d'un livre
+        - ajouter l'ajout et la gestion des categories de livres
+        - envoyer le mail au proprietaire de la librairie et à moi lors des commandes
+        - faire le debit et le credit du compte apres le paiement  
         - gerer le paiement d un livre  
         - gerer l'historique des paiement de livre
         - gerer la facture pdf, qrcode

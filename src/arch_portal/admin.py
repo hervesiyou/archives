@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
+from arch_portal.domain.models.categorielivre import Categorie
 from arch_portal.domain.models.wallet import Wallet
 from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.famille import Famille
@@ -26,6 +27,7 @@ from arch_portal.domain.models.notationlivre import NotationLivre
 
 admin.site.register(Communaute)
 admin.site.register(Contact)
+admin.site.register(Categorie)
 admin.site.register(Famille)
 admin.site.register(Membre)
 admin.site.register(Association)

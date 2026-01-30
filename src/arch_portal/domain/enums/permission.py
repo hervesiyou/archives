@@ -21,6 +21,7 @@ class PermissionEnum(Enum):
     ADD_LIV = "ADD_LIVRE"
     COM_LIV = "COMMANDER_LIVRE"
     ADD_MEM = "ADD_MEMBRE"
+    MAKE_REM = "MAKE_REM"
 
     @classmethod
     def choices(cls):

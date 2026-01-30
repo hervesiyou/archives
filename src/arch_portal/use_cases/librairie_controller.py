@@ -1,11 +1,12 @@
 import json
 # import datetime
 from django.http import JsonResponse, HttpResponseForbidden, FileResponse, HttpResponse
-from django.shortcuts import redirect, render
+# from django.shortcuts import redirect, render
 from arch_portal.domain.forms.librairie import LibrairieForm
 from arch_portal.domain.forms.livre import LivreForm, ImageFormSet
 from arch_portal.domain.models.librairie import Librairie
 from arch_portal.domain.models.image import Image
+from arch_portal.domain.models.wallet import Wallet
 from arch_portal.domain.models.livre import Livre
 from arch_portal.domain.models.plantarifaire import Plan
 from arch_portal.domain.models.membre import Membre
@@ -13,12 +14,16 @@ from arch_portal.domain.models.commandelivre import CommandeLivre
 from arch_portal.domain.models.paiementlivre import PaiementLivre
 from arch_portal.domain.models.notationlivre import NotationLivre
 from arch_portal.domain.models.serializers import *
+
+from django.utils import timezone
+from django.utils.crypto import get_random_string
+
 from django.db.models import Q
+from django.db import transaction
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from arch_portal.use_cases.services.core import send_email
 import threading
-
 import uuid
 import os
 from django.conf import settings
@@ -31,7 +36,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader  
 
-
+COMMISSION_LIBRAIRIE = 0.10  # 10% de commission sur chaque vente de livre
 def show_commandes(request):
 
     userid = request.session.get("userid","")
@@ -58,16 +63,16 @@ def listbooks(request, id,mode=False):
 
     return render(request, "libcore/listbooks.html", { "livres":livres, "librairie" : lib } )
 
+@transaction.atomic
 def payer_livre(request, livre_id):
 
     if not request.session.get("userid"):
         messages.error(request, "Vous devez être connecté pour effectuer un paiement.")
         return redirect("login")
 
+    # Vérifier si le livre a déjà été payé
     user = get_object_or_404(Membre, id=request.session["userid"])
     livre = get_object_or_404(Livre, id=livre_id)
-
-    # Vérifier si le livre a déjà été payé
     paiement_existant = PaiementLivre.objects.filter(  acheteur=user, livre=livre ).first()
 
     if paiement_existant:
@@ -79,37 +84,131 @@ def payer_livre(request, livre_id):
         ici je dois reconcevoir le paiement pour debiter le portefeuille de l'utilisateur et crediter le portefeuille du proprietaire du livre
         ou celui de richbook si le proprietaire n'a pas de portefeuille, en coupant les frais de service de richbook
         """
-        montant_paye = float(request.POST.get("montant", "0"))
-        
-        if montant_paye < livre.prix:
-            messages.error( request, f"Le montant payé est insuffisant. Le prix du livre est de {livre.prix} XAF." )
-            return redirect("show_book", id=livre.id)
+        wallet_acheteur = user.wallet
+        ancien_proprietaire = livre.proprietaire
+        wallet_vendeur = None
+
+        if livre.proprietaire and hasattr(livre.proprietaire, 'wallet'):
+            wallet_vendeur = livre.proprietaire.wallet
         else:
-            if montant_paye == livre.prix:
-                debit = user.wallet.solde - livre.prix
-                if debit < 0:
-                    messages.error( request, "Solde insuffisant dans votre portefeuille. Veuillez recharger votre compte." )
-                    return redirect("show_book", id=livre.id)
+            wallet_vendeur = Wallet.objects.get(code="WALL-RICHBOOK")  
+        
+        if  livre.prix <= 1:
+            messages.error( request, f"Ce document n'est pas en vente. Le prix du livre est de {livre.prix} XAF." )
+            return redirect("show_book", id=livre.id)
+        
+        if wallet_acheteur.solde < (livre.prix + livre.prix * COMMISSION_LIBRAIRIE) :
+            messages.error( request, f"Le montant de votre compte est insuffisant. Le prix du livre est de {livre.prix} XAF." )
+            return redirect("show_book", id=livre.id) 
+       
+        else:
+            # print("Paiement en cours...")
+            # Wallet plateforme
+            wallet_plateforme = Wallet.objects.get(code="WALL-RICHBOOK")
+            if  wallet_plateforme is None:
+                messages.error( request, f"Le portefeuille de la plateforme est introuvable." )
+                return redirect("show_book", id=livre.id)
+            # Crédit plateforme
+            commission = livre.prix * COMMISSION_LIBRAIRIE
+            wallet_plateforme.solde += int( commission ) 
+            wallet_plateforme.save()
+            # Crédit proprietaire
+            montant_net = livre.prix - commission
+            # Débit acheteur
+            wallet_acheteur.solde -= int(montant_net + commission)
+            wallet_acheteur.save()
+
+            wallet_vendeur.solde += int(montant_net)
+            wallet_vendeur.save()
                 
-                user.wallet.solde -= debit
-                user.wallet.save()
-        
-        
-        PaiementLivre.objects.create(  acheteur=user,livre=livre,  montant=livre.prix,reference=str(uuid.uuid4()) )
-        messages.success( request, "Paiement effectué avec succès. Vous pouvez accéder au livre dès que le gestionnaire de la librairie finalisera votre achat .")
+            # Transfert de propriété du livre
+            livre.proprietaire = user
+            livre.save()
 
-        sujet = f'Commande de {livre.nom} par {user.nomcomplet} '
-        message = f' {user.nomcomplet} à commandé le livre <b>{livre.nom}</b> par le prix de {livre.prix} XAF.<br> Veuillez contacter le proprietaire {livre.nom}'
-        destinataires = [user.email, settings.EMAIL_HOST_SERVICE, "hervesiyou@gmail.com"]
-        # recuperation des mails des administrateurs de la librairie
-        for admin in livre.librairies.all():
-            destinataires.append( admin.possesseur.email )
+            if ancien_proprietaire:
+                livre.anciens_proprietaires.add(ancien_proprietaire)
+                livre.save()
+            
+            PaiementLivre.objects.create(  acheteur=user,livre=livre, recepteur=ancien_proprietaire, montant=livre.prix, reference=f"Pay-{livre.id}-{str(uuid.uuid4())}", commission=commission, statut ="PAYE" )
+            messages.success( request, "Paiement effectué avec succès. Vous pouvez accéder au livre dès que le gestionnaire de la librairie finalisera votre achat .")
 
-        t = threading.Thread(target=send_email, args=(sujet, message,  destinataires))
-        t.start()
-        return redirect("show_book", id=livre.id)
+            sujet = f'Commande de {livre.nom} par {user.nomcomplet} '
+            message = f' {user.nomcomplet} à commandé le livre <b>{livre.nom}</b> par le prix de {livre.prix} XAF.<br> Veuillez contacter le proprietaire {livre.nom}'
+            destinataires = [user.email, settings.EMAIL_HOST_SERVICE, "hervesiyou@gmail.com"]
+            # recuperation des mails des administrateurs de la librairie
+            for admin in livre.librairies.all():
+                destinataires.append( admin.possesseur.email )
+
+            t = threading.Thread(target=send_email, args=(sujet, message,  destinataires))
+            t.start()
+            return redirect("show_book", id=livre.id)
+            
+                      
 
     return render(request, "paiement/payer_livre.html", { "livre": livre })
+
+@transaction.atomic
+def rembourser_paiement(request, paiement_id):
+
+    paiement = get_object_or_404(PaiementLivre, id=paiement_id)
+    if paiement.statut != "PAYE":
+        messages.error(request, "Ce paiement ne peut pas être remboursé.")
+        return redirect("historique_paiements")
+
+    acheteur = paiement.acheteur
+    vendeur = paiement.recepteur
+    livre = paiement.livre
+
+    montant = paiement.montant
+    commission = paiement.commission
+    montant_net = montant - commission
+    wallet_plateforme = Wallet.objects.get(code="WALL-RICHBOOK")
+
+    # 🔻 Vérifications de sécurité
+    if vendeur and vendeur.wallet.solde < montant_net:
+        # raise Exception("Solde vendeur insuffisant pour remboursement")
+        messages.error(request, "Solde vendeur insuffisant pour remboursement.")
+        return redirect("historique_paiements")
+
+    if wallet_plateforme.solde < commission:
+        # raise Exception("Solde plateforme insuffisant")
+        messages.error(request, "Solde plateforme insuffisant pour remboursement.")
+        return redirect("historique_paiements")
+
+    # 🔻 Débit vendeur
+    if vendeur:
+        wallet_vendeur = vendeur.wallet
+        wallet_vendeur.solde -= montant_net
+        wallet_vendeur.save()
+
+    # 🔻 Débit plateforme
+    wallet_plateforme.solde -= commission
+    wallet_plateforme.save()
+
+    # 🔺 Crédit acheteur
+    wallet_acheteur = acheteur.wallet
+    wallet_acheteur.solde += montant
+    wallet_acheteur.save()
+
+    # 🔁 Restaurer la propriété du livre
+    anciens = livre.anciens_proprietaires.all()
+    ancien_proprio = anciens.last() if anciens.exists() else None
+
+    if ancien_proprio:
+        livre.proprietaire = ancien_proprio
+        livre.anciens_proprietaires.remove(ancien_proprio)
+    else:
+        livre.proprietaire = None
+
+    livre.save()
+
+    # 🧾 Mise à jour paiement
+    paiement.statut = "REMBOURSE"
+    paiement.date_remboursement = timezone.now()
+    paiement.reference_remboursement = f"REF-{get_random_string(12)}"
+    paiement.save()
+
+    return paiement
 
 def historique_paiements(request):
     if not request.session.get("userid"):
@@ -248,8 +347,16 @@ def add_book(request):
                 livre.stock = 1000
 
             # print(form, livre)
-            livre.librairies.add(Librairie.objects.get(id=librairieid)) 
-            livre.save()
+            # livre.librairies.add(Librairie.objects.get(id=librairieid)) 
+            # livre.save()
+            try:
+                librairie = Librairie.objects.filter(id=librairieid).first()
+                if librairie:
+                    livre.librairies.add(librairie)
+                    livre.save()
+            
+            except Librairie.DoesNotExist:
+                print("Librairie introuvable")
 
             if image_formset.is_valid():
                 
