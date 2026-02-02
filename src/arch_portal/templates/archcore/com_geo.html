@@ -1,0 +1,314 @@
+ 
+ 
+ {% extends "base.html" %}
+{% load static %}
+{% block title %} {{parent}}Géographie - {{ community_name }} {% endblock %}
+{% block css %}  
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a5f5f 0%, #2d8f8f 100%);
+            color: white;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .breadcrumb {
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .breadcrumb a {
+            color: #1a5f5f;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .geography-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .map-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 500px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .info-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-section h2 {
+            color: #1a5f5f;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 4px solid #2d8f8f;
+            padding-left: 15px;
+        }
+
+        .geo-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .geo-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #2d8f8f;
+        }
+
+        .geo-item label {
+            display: block;
+            font-weight: bold;
+            color: #1a5f5f;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .geo-item value {
+            display: block;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        .coordinates {
+            background: #f0f7f7;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border-left: 4px solid #2d8f8f;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #1a5f5f;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .btn:hover {
+            background: #2d8f8f;
+        }
+
+        .btn-secondary {
+            background: #888;
+        }
+
+        .btn-secondary:hover {
+            background: #666;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .geography-content {
+                grid-template-columns: 1fr;
+            }
+
+            .map-container {
+                height: 400px;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+{% endblock %}
+{% block content %}
+ 
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">Accueil</a> >
+            <a href="{% url 'show_communaute' community_id %}" >{{ community_name }}</a> >
+            <span>Géographie</span>
+        </div>
+
+        <header>
+            <h1>Géographie de {{ community_name }}</h1>
+            {% comment %} <p>Localisation et caractéristiques géographiques</p> {% endcomment %}
+            <p>{{ geographie }}
+        </header>
+
+        <div class="geography-content">
+            <div class="map-section">
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2>Informations Géographiques</h2>
+
+                <div class="geo-grid">
+                    <div class="geo-item">
+                        <label>Région</label>
+                        <value>{{ geography.region }}</value>
+                    </div>
+                    <div class="geo-item">
+                        <label>Pays</label>
+                        <value>{{ geography.country }}</value>
+                    </div>
+                    <div class="geo-item">
+                        <label>Superficie</label>
+                        <value>{{ geography.area_km2 }} km²</value>
+                    </div>
+                    <div class="geo-item">
+                        <label>Population</label>
+                        <value>{{ geography.population }} habitants</value>
+                    </div>
+                    <div class="geo-item">
+                        <label>Climat</label>
+                        <value>{{ geography.climate }}</value>
+                    </div>
+                    <div class="geo-item">
+                        <label>Terrain</label>
+                        <value>{{ geography.terrain }}</value>
+                    </div>
+                </div>
+
+                <div class="coordinates">
+                    <strong>Coordonnées GPS:</strong><br>
+                    Latitude: {{ latitude }}<br>
+                    Longitude: {{ longitude }}
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="{% url 'com_histoire' community_id %}" class="btn">Voir l'Histoire</a>
+            <a href="{% url 'kings_list' community_id %}" class="btn">Les Rois de {{community_name}}</a>
+            <a href="{% url 'show_communaute' community_id %}" class="btn btn-secondary">Retour</a>
+        </div>
+    </div>
+
+    <script>
+        function initMap() {
+            const communityCoords = {
+                lat: {{ latitude }},
+                lng: {{ longitude }}
+            };
+
+            const map = new google.maps.Map(document.getElementById('map'), {
+                zoom: {{ map_zoom }},
+                center: communityCoords,
+                styles: [
+                    {
+                        featureType: 'water',
+                        elementType: 'geometry',
+                        stylers: [
+                            {color: '#e9e9e9'},
+                            {lightness: 17}
+                        ]
+                    },
+                    {
+                        featureType: 'landscape',
+                        elementType: 'geometry',
+                        stylers: [
+                            {color: '#f3f3f3'},
+                            {lightness: 20}
+                        ]
+                    }
+                ]
+            });
+
+            const marker = new google.maps.Marker({
+                position: communityCoords,
+                map: map,
+                title: '{{ community_name }}',
+                icon: 'http://maps.google.com/mapfiles/ms/icons/1a5f5f-marker.png'
+            });
+
+            const infoWindow = new google.maps.InfoWindow({
+                content: '<div style="padding: 10px;"><strong>{{ community_name }}</strong><br>Latitude: {{ latitude }}<br>Longitude: {{ longitude }}</div>'
+            });
+
+            marker.addListener('click', function() {
+                infoWindow.open(map, marker);
+            });
+        }
+
+        window.addEventListener('load', initMap);
+    </script>
+{% endblock %}

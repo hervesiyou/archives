@@ -43,5 +43,11 @@
 
     <footer class="bg-light text-center p-4">
         <p>Proprietaire : <strong>{{librairie.possesseur.nomcomplet}} </strong> </p> 
+         <a href="{% url 'create_library_message' librairie.id %}" title="" class="btn btn-sm btn-info">
+            <span> Laisser une message  </span>
+        </a> - 
+        <a href="{% url 'library_messages' librairie.id %}" title="" class="btn btn-sm btn-success" >
+            <span> Voir les messages  </span>
+        </a>
     </footer>
 {% endblock %}

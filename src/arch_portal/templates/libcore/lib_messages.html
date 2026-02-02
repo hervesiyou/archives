@@ -1,0 +1,447 @@
+ 
+ 
+ {% extends "base.html" %}
+{% load static %}
+{% block title %} {{parent}} Messages - {{ library_name }} {% endblock %}
+{% block css %}  
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c5f5f 0%, #3d9090 100%);
+            color: white;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .breadcrumb {
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .breadcrumb a {
+            color: #2c5f5f;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .messages-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .messages-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .messages-section h2 {
+            color: #2c5f5f;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+            border-left: 4px solid #3d9090;
+            padding-left: 15px;
+        }
+
+        .messages-count {
+            background: #f0f7f7;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            color: #2c5f5f;
+            font-weight: bold;
+        }
+
+        .message-item {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3d9090;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .message-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #2c5f5f 0%, #3d9090 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .message-meta {
+            flex: 1;
+        }
+
+        .message-username {
+            font-weight: bold;
+            color: #2c5f5f;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .message-date {
+            font-size: 0.85em;
+            color: #888;
+        }
+
+        .message-text {
+            color: #333;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+
+        .form-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 20px;
+        }
+
+        .form-section h3 {
+            color: #2c5f5f;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            border-left: 4px solid #3d9090;
+            padding-left: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c5f5f;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.95em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3d9090;
+            box-shadow: 0 0 0 2px rgba(61, 144, 144, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+            max-height: 200px;
+        }
+
+        .char-count {
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 3px;
+            text-align: right;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #2c5f5f;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 1em;
+        }
+
+        .submit-btn:hover {
+            background: #3d9090;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 4px solid #27ae60;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 4px solid #e74c3c;
+            display: none;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #2c5f5f;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .btn:hover {
+            background: #3d9090;
+        }
+
+        .btn-secondary {
+            background: #888;
+        }
+
+        .btn-secondary:hover {
+            background: #666;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .messages-container {
+                grid-template-columns: 1fr;
+            }
+
+            .form-section {
+                position: static;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+{% endblock %}
+{% block content %}
+ 
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">Accueil</a> >
+            <a href="{% url 'show_librairie' library_id %}">{{ library_name }}</a> >
+            <span>Messages</span>
+        </div>
+
+        <header>
+            <h1>Messages de {{ library_name }}</h1>
+            <p>Partagez vos suggestions et vos expériences avec la communauté</p>
+        </header>
+
+        <div class="messages-container">
+            <div class="messages-section">
+                <h2>Discussion Librairie</h2>
+                <div class="messages-count">
+                    {{ total_messages }} message{{ total_messages|pluralize }}
+                </div>
+
+                {% if lesmessages %}
+                    {% for message in lesmessages %}
+                    <div class="message-item">
+                        <div class="message-header">
+                            <div class="message-avatar">{{ message.avatar }}</div>
+                            <div class="message-meta">
+                                <span class="message-username">{{ message.username }}</span>
+                                <span class="message-date">{{ message.created_at }}</span>
+                            </div>
+                        </div>
+                        <div class="message-text">{{ message.message }}</div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="empty-state">
+                    <p>Aucun message pour le moment. Partagez vos impressions!</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="form-section">
+                <h3>Poster un Message</h3>
+
+                <div class="success-message" id="successMessage">
+                    Message envoyé avec succès!
+                </div>
+
+                <div class="error-message" id="errorMessage"></div>
+
+                <form id="messageForm">
+                    <div class="form-group">
+                        <label for="username">Votre Nom *</label>
+                        <input type="text" id="username" name="username" required placeholder="Entrez votre nom">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Votre Message *</label>
+                        <textarea id="message" name="message" required placeholder="Écrivez votre message ici..."></textarea>
+                        <div class="char-count">
+                            <span id="charCount">0</span>/5000
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Envoyer le Message</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="{% url 'show_librairie' library_id %}" class="btn">Retour à la Librairie</a>
+            <a href="/" class="btn btn-secondary">Accueil</a>
+        </div>
+    </div>
+
+    <script>
+        const messageTextarea = document.getElementById('message');
+        const charCount = document.getElementById('charCount');
+        const form = document.getElementById('messageForm');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        messageTextarea.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            if (!username || !message) {
+                errorMessage.textContent = 'Tous les champs sont requis.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            if (message.length > 5000) {
+                errorMessage.textContent = 'Le message est trop long (maximum 5000 caractères).';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            const formData = new FormData(form);
+
+            fetch('/lib/{{ library_id }}/mess/create', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    successMessage.style.display = 'block';
+                    form.reset();
+                    charCount.textContent = '0';
+
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                        location.reload();
+                    }, 2000);
+                } else {
+                    errorMessage.textContent = data.error || 'Une erreur est survenue.';
+                    errorMessage.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                errorMessage.textContent = 'Erreur réseau. Veuillez réessayer.';
+                errorMessage.style.display = 'block';
+            });
+        });
+    </script>
+{% endblock %}

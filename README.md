@@ -1,12 +1,18 @@
 ## A Verifier
 
-- faire les marchés internes aux communautés
-- gerer l'achat d'un service selon le prix ou selon l'abonnement
-- gerer la messagerie d'une bibliotheque et d'une communauté
+ 
+    - details des rois, detail histoire, details geographie par carte googlemap
+- perfectionner l'ajout des histoire, les gps et les rois d'une communauté
+- ajouter fontawesome
+- ajouter l'affichage dans une librairie des livres 
 
+  - gerer la messagerie d'une bibliotheque et d'une communauté
+  - gerer la creation et mettre la creation dans les modals , gerer l'affichage selon les droits
 - notification par mail des nouveaux livres
+- en creant un membre on choisi sa generation
 - pour une famille afficher les generations, pour chaque generation afficher ses membres, afficher l'arbre de la famille
-- ajouter les données de fixtures, familles, communautés, librairies, marchés, chef, emails , telephone par defaut
+- pour le moment l'arbre genealogique est un fichier lié à la famille
+- inserer la famille nkouonchichoue et la famille takoukam
 
         - gerer la notation d'un livre
         - ajouter l'ajout et la gestion des categories de livres
@@ -27,9 +33,13 @@
         - possibilité de lire les livres en ligne (parametrer le lecteur pour desactiver le bouton de telechargement)
         - ajouter la recherche de livres
         - une communaute a ses administrateurs, une famille aussi, une librairie aussi seul apte a editer les informations
+        - ajouter les données de fixtures, familles, communautés, librairies, marchés, chef, emails , telephone par defaut
+
 
 #FONCIONALITES pour les familles et les communautés
 - les communautés et les familles ont les NFT qui appartiennent aux membres
+- le marché communautaire est redirigé dans kondashop dans la boutique de la communaute
+- gerer l'achat d'un service selon le prix ou selon l'abonnement
 - mediatheque
   - audiotheques
   - documents

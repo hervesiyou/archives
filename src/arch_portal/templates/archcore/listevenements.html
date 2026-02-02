@@ -46,16 +46,24 @@
                                 <div class="box bg-success text-center">
                                     <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
                                     </h1>
-                                    <h6 class="text-white">{{ liv.titre}} </h6>
+                                    {% comment %} <h6 class="text-white">{{ liv.titre}} </h6> {% endcomment %}
+                                    <i class="fa fa-2x"></i>
+                                    <a href="{% url 'show_evenement' liv.id %}" class="text-white" title=" cliquer pour le détail de {{liv.titre}}"> {{liv.titre}} </a>
                                 </div>
 
                                 <div class="card-body">
                                     <h5 class="card-title"><a href="{% url 'show_famille' liv.id %}"> {{liv.nom}} </a></h5>
                                     <p> {{liv.description}} </p>
+                                    <p>
+                                    <a href="{% url 'show_evenement' liv.id %}" 
+                                        class="text-sm" title=" cliquer pour le détail de {{liv.titre}}"> Détail </a>
+                                    </p>
                                 </div>
                                 <div class="card-footer">
                                     <div class="text-info">
-                                        {{ liv.date}}
+                                        {{ liv.date}} 
+                                        
+
                                     </div>
                                 </div>
 

@@ -11,10 +11,11 @@ from arch_portal.domain.models.association import Association
 from arch_portal.domain.models.salleattentecommunaute import SalleAttenteCommunaute
 from arch_portal.domain.models.salleattenteassociation import SalleAttenteAssociation
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 import json
 from arch_portal.use_cases.services.core import send_email
 from django.http import HttpResponseForbidden, JsonResponse
-from datetime import date
+from datetime import date, datetime
 from django.contrib import messages
 
 def index(request): 
@@ -266,4 +267,125 @@ def add_user_salleattasso(request):
                         return JsonResponse({'status': False ,"message": "Desolé, vous avez etes deja dans la salle d'attente !"})
 
 
+# Afficher les messages d'une communauté
+@require_http_methods(["GET"])
+def community_messages(request, community_id):
+    messages_data = [
+        {
+            'id': '1',
+            'username': 'Jean Dupont',
+            'message': 'C\'est une magnifique communauté avec beaucoup d\'histoire!',
+            'created_at': '2024-01-15 10:30',
+            'avatar': 'JD'
+        },
+        {
+            'id': '2',
+            'username': 'Marie Lefebvre',
+            'message': 'J\'aimerai en savoir plus sur les traditions de cette région.',
+            'created_at': '2024-01-14 14:20',
+            'avatar': 'ML'
+        },
+        {
+            'id': '3',
+            'username': 'Pierre Martin',
+            'message': 'Le patrimoine de cette communauté devrait être mieux préservé.',
+            'created_at': '2024-01-13 09:15',
+            'avatar': 'PM'
+        },
+    ]
+
+    context = {
+        'community_id': community_id,
+        'community_name': 'Communauté Exemple',
+        'lesmessages': messages_data,
+        'total_messages': len(messages_data)
+    }
+    return render(request, 'archcore/com_messages.html', context)
+
+# Créer un message dans une communauté
+@require_http_methods(["POST"])
+def create_community_message(request, community_id):
+    username = request.POST.get('username')
+    message = request.POST.get('message')
+
+    if not username or not message:
+        return JsonResponse({'error': 'Tous les champs sont requis'}, status=400)
+
+    if len(message) > 5000:
+        return JsonResponse({'error': 'Le message est trop long (max 5000 caractères)'}, status=400)
+
+    message_data = {
+        'username': username,
+        'message': message,
+        'created_at': datetime.now().strftime('%Y-%m-%d %H:%M'),
+        'avatar': username[:2].upper() if username else 'AA'
+    }
+
+    return JsonResponse({
+        'success': True,
+        'message': 'Message créé avec succès',
+        'data': message_data
+    })
+
+
+# Afficher les messages d'une librairie
+@require_http_methods(["GET"])
+def library_messages(request, library_id):
+    messages_data = [
+        {
+            'id': '1',
+            'username': 'Sophie Bernard',
+            'message': 'Excellente collection de livres sur l\'histoire locale!',
+            'created_at': '2024-01-16 11:45',
+            'avatar': 'SB'
+        },
+        {
+            'id': '2',
+            'username': 'Luc Moreau',
+            'message': 'Les ressources numériques sont très utiles pour ma recherche.',
+            'created_at': '2024-01-15 16:30',
+            'avatar': 'LM'
+        },
+        {
+            'id': '3',
+            'username': 'Anne Leclerc',
+            'message': 'Pourriez-vous ajouter plus de livres en français?',
+            'created_at': '2024-01-14 13:20',
+            'avatar': 'AL'
+        },
+    ]
+
+    context = {
+        'library_id': library_id,
+        'library_name': 'Librairie Exemple',
+        'lesmessages': messages_data,
+        'total_messages': len(messages_data)
+    }
+    return render(request, 'libcore/lib_messages.html', context)
+
+
+# Créer un message dans une librairie
+@require_http_methods(["POST"])
+def create_library_message(request, library_id):
+    username = request.POST.get('username')
+    message = request.POST.get('message')
+
+    if not username or not message:
+        return JsonResponse({'error': 'Tous les champs sont requis'}, status=400)
+
+    if len(message) > 5000:
+        return JsonResponse({'error': 'Le message est trop long (max 5000 caractères)'}, status=400)
+
+    message_data = {
+        'username': username,
+        'message': message,
+        'created_at': datetime.now().strftime('%Y-%m-%d %H:%M'),
+        'avatar': username[:2].upper() if username else 'AA'
+    }
+
+    return JsonResponse({
+        'success': True,
+        'message': 'Message créé avec succès',
+        'data': message_data
+    })
 

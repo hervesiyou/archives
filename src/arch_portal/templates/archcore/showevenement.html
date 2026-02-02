@@ -15,7 +15,7 @@
                         <div class="text-info text-center mt-2"> 
                             <h3 class="mb-2 fw-bold">{{evenement.communaute}}</h3>
                             <span class="text-muted">
-                                <a href="{% url 'listevenements' evenement.communaute.id %} ">Autres evenements</a>
+                                <a href="{% url 'listevenements' id=evenement.communaute.id mode=1 %} ">Autres evenements</a>
                             </span>
                         </div>
                     </div>

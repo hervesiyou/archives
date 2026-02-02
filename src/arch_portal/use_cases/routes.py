@@ -28,9 +28,14 @@ urlpatterns += [
     path('shfasal/<int:id>', core.show_fam_salle, name="show_fam_salle"),
     path('shcosal/<int:id>', core.show_com_salle, name="show_com_salle"),
     path('shassosal/<int:id>', core.show_asso_salle, name="show_asso_salle"),
-     path('a/faq', core.faq, name="faq_archcore"),
-     path('faqi', core.faqindex, name="faq_index"),
-     path('cont', core.contact, name="contact"),
+    path('a/faq', core.faq, name="faq_archcore"),
+    path('faqi', core.faqindex, name="faq_index"),
+    path('cont', core.contact, name="contact"),
+
+    path('com/<int:community_id>/messages', core.community_messages, name='community_messages'),
+    path('com/<int:community_id>/mess/create', core.create_community_message, name='create_community_message'),
+    path('lib/<int:library_id>/messages/', core.library_messages, name='library_messages'),
+    path('lib/<int:library_id>/mess/create', core.create_library_message, name='create_library_message'),
 ]
 urlpatterns += [ 
     path('lcom', communaute.listcom, name="listcom"),
@@ -50,6 +55,11 @@ urlpatterns += [
     path('ngal/', communaute.add_galerie, name="add_galerie"),
     path('ga/<int:id>', communaute.show_galerie, name="show_galerie"),
     path('c/faq', communaute.faq, name="faq_communaute"),
+
+    path('com/<int:community_id>/his', communaute.community_history, name='com_histoire'),
+    path('com/<int:community_id>/geo', communaute.community_geography, name='com_geographie'),
+    path('com/<int:community_id>/king/<int:king_id>/', communaute.king_detail, name='king_detail'),
+    path('com/<int:community_id>/kings', communaute.kings_list, name='kings_list'),
 ]
 
 urlpatterns += [ 

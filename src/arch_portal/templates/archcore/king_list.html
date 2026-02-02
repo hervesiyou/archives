@@ -1,0 +1,387 @@
+ 
+ 
+ {% extends "base.html" %}
+{% load static %}
+{% block title %} {{parent}}Les Rois - {{ community_name }} {% endblock %}
+{% block css %}   
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a5f5f 0%, #2d8f8f 100%);
+            color: white;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .breadcrumb {
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .breadcrumb a {
+            color: #1a5f5f;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .kings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .king-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .king-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .king-photo-container {
+            width: 100%;
+            height: 300px;
+            background: #f0f0f0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .king-photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .king-photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .status-alive {
+            background: #27ae60;
+        }
+
+        .status-deceased {
+            background: #7f8c8d;
+        }
+
+        .king-info {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .king-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #1a5f5f;
+            margin-bottom: 10px;
+        }
+
+        .king-reign {
+            background: #f0f7f7;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 3px solid #2d8f8f;
+            font-size: 0.95em;
+        }
+
+        .king-reign label {
+            display: block;
+            font-weight: bold;
+            color: #1a5f5f;
+            margin-bottom: 3px;
+            font-size: 0.85em;
+        }
+
+        .king-reign value {
+            display: block;
+            color: #333;
+        }
+
+        .view-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #1a5f5f;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            text-align: center;
+            transition: background 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95em;
+            margin-top: auto;
+        }
+
+        .view-button:hover {
+            background: #2d8f8f;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .empty-state p {
+            color: #888;
+            font-size: 1.1em;
+        }
+
+        .filter-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .filter-section h3 {
+            color: #1a5f5f;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #1a5f5f;
+            background: white;
+            color: #1a5f5f;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #1a5f5f;
+            color: white;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #1a5f5f;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .btn:hover {
+            background: #2d8f8f;
+        }
+
+        .btn-secondary {
+            background: #888;
+        }
+
+        .btn-secondary:hover {
+            background: #666;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .kings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-buttons {
+                flex-direction: column;
+            }
+
+            .filter-btn {
+                width: 100%;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+{% endblock %}
+{% block content %}
+ 
+     <div class="container">
+        
+        <div class="breadcrumb">
+            <a href="/">Accueil</a> >
+            <a href="{% url 'show_communaute' community_id %}">{{ community_name }}</a> >
+            <span>Les Rois</span>
+        </div>
+
+        <header>
+            <h1>Les Rois de {{ community_name }}</h1>
+            <p>Découvrez l'histoire de nos souverains</p>
+        </header>
+
+        <div class="filter-section">
+            <h3>Filtrer par statut</h3>
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterKings('all')">Tous les Rois</button>
+                <button class="filter-btn" onclick="filterKings('alive')">En Vie</button>
+                <button class="filter-btn" onclick="filterKings('deceased')">Décédés</button>
+            </div>
+        </div>
+
+        {% if kings %}
+        <div class="kings-grid">
+            {% for king in kings %}
+            <div class="king-card" data-status="{{ king.status|lower }}">
+            {% comment %} <div class="king-card" data-status="{{ king.status|lower|replace(' ', '') }}"> {% endcomment %}
+                <div class="king-photo-container">
+                    <img src="{{ king.photo }}" alt="{{ king.name }}" onerror="this.style.display='none'">
+                    <div class="king-photo-placeholder" style="{% if king.photo and king.photo != '/static/images/king1.jpg' %}display:none;{% endif %}">
+                        Photo indisponible
+                    </div>
+                    <div class="status-badge {% if king.status == 'En vie' %}status-alive{% else %}status-deceased{% endif %}">
+                        {{ king.status }}
+                    </div>
+                </div>
+
+                <div class="king-info">
+                    <div class="king-name">{{ king.name }}</div>
+
+                    <div class="king-reign">
+                        <label>Période de règne</label>
+                        <value>{{ king.reign_period }}</value>
+                    </div>
+
+                    <a href="{% url 'king_detail' communaute.id king.id %}" class="view-button">
+                        Voir les Détails
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>Aucun roi enregistré pour cette communauté.</p>
+        </div>
+        {% endif %}
+
+        <div class="nav-buttons">
+             
+            <a href="{% url 'com_geographie' community_id %}" class="btn">Voir la Géographie</a>
+             <a href="{% url 'com_histoire' community_id %}" class="btn">Voir l'Histoire</a>
+           
+            {% comment %} <a href="{% url 'kings_list' community_id %}" class="btn">Les Rois de {{community_name}}</a> {% endcomment %}
+            <a href="{% url 'show_communaute' community_id %}" class="btn btn-secondary">Retour</a>
+        </div>
+    </div>
+
+    <script>
+        function filterKings(status) {
+            const cards = document.querySelectorAll('.king-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            cards.forEach(card => {
+                const cardStatus = card.getAttribute('data-status');
+
+                if (status === 'all') {
+                    card.style.display = 'flex';
+                } else if (status === 'alive' && cardStatus === 'envie') {
+                    card.style.display = 'flex';
+                } else if (status === 'deceased' && cardStatus === 'décédés') {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+    
+{% endblock %}

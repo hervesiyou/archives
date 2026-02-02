@@ -134,7 +134,7 @@
                                     {% for  membre in famille.get_members %}
                                     <tr>
                                         <td class="text-center"> {{forloop.counter}} </td>
-                                        <td>{{membre.nomcomplet}} </td>
+                                        <td> <a href="{% url 'show_user' membre.id %}" title="Détail de {{membre.nomcomplet}} "> {{membre.nomcomplet}} </a> </td>
                                         <td class="text-end"> . </td>
                                         <td class="text-end"> . </td>
                                         <td class="text-end"> 

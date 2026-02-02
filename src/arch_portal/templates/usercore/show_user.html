@@ -26,7 +26,14 @@
 
     <div class="row">
         <div class="col-lg-12 my-4">
-            <p> <span class="text-bold"> {{ membre.nomcomplet}} </span> fils de <span class="text-info"> {{membre.pere}}</span> et de <span class="text-info">{{membre.mere}} </span></p>
+            <p> <span class="text-bold"> {{ membre.nomcomplet}} </span> 
+             <span class="text-success"> {{membre.pere}} - {{ membre.mere}}</span>, 
+            {% if membre.nompere %}
+                fils de <span class="text-info"> <a href="{% url 'show_user' membre.nompere.id %}" title="Détail de {{membre.nompere.nomcomplet}} "> {{membre.nompere}}</a>  </span>
+            {% endif %}
+            {% if membre.nommere %}
+                et de <span class="text-info"> <a href="{% url 'show_user' membre.nommere.id %}" title="Détail de {{membre.nommere.nomcomplet}} "> {{membre.nommere}} </a> </span></p>
+            {% endif %}
         </div>
     </div>
     <ul class="nav nav-tabs" role="tablist">

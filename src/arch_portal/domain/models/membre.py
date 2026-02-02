@@ -35,7 +35,7 @@ class Membre(models.Model):
     diplomes = models.CharField(max_length=250, null=True, blank=True)
     profession = models.CharField(max_length=150, null=True, blank=True)
     
-    messages = models.ManyToManyField(Message,related_name="membres_message", null=True)
+    messages = models.ManyToManyField(Message,related_name="membres_message", null=True, blank=True)
     familles = models.ManyToManyField(Famille,related_name="membres_famille", null=True)
     associations = models.ManyToManyField(Association, related_name="membres_association", null=True, blank=True)
     images = models.ManyToManyField(Image, null=True, blank=True)
@@ -46,6 +46,7 @@ class Membre(models.Model):
     
     pere = models.CharField(max_length=150,null=True, blank=True)
     mere = models.CharField(max_length=150,null=True, blank=True)
+
     nompere = models.ForeignKey('self',on_delete=models.SET_NULL, related_name="papa",null=True, blank=True)
     nommere = models.ForeignKey('self',on_delete=models.SET_NULL,related_name="mama",null=True, blank=True)
     vivant = models.BooleanField(default=True)

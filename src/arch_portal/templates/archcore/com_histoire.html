@@ -1,0 +1,277 @@
+ 
+ 
+ {% extends "base.html" %}
+{% load static %}
+{% block title %} {{parent}}  {{ community_name }} {% endblock %}
+{% block css %}   
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a5f5f 0%, #2d8f8f 100%);
+            color: white;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .breadcrumb {
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .breadcrumb a {
+            color: #1a5f5f;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .history-section {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-section h2 {
+            color: #1a5f5f;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 4px solid #2d8f8f;
+            padding-left: 15px;
+        }
+
+        .history-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .meta-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #2d8f8f;
+        }
+
+        .meta-item label {
+            display: block;
+            font-weight: bold;
+            color: #1a5f5f;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .meta-item value {
+            display: block;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .description {
+            background: #f0f7f7;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+            border-left: 4px solid #2d8f8f;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #2d8f8f;
+        }
+
+        .timeline-item {
+            margin-left: 80px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -50px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #2d8f8f;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #2d8f8f;
+        }
+
+        .timeline-item-year {
+            font-weight: bold;
+            color: #1a5f5f;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .timeline-item-event {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-left: 3px solid #2d8f8f;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #1a5f5f;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .btn:hover {
+            background: #2d8f8f;
+        }
+
+        .btn-secondary {
+            background: #888;
+        }
+
+        .btn-secondary:hover {
+            background: #666;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .history-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline {
+                padding-left: 0;
+            }
+
+            .timeline::before {
+                left: 0;
+            }
+
+            .timeline-item {
+                margin-left: 30px;
+            }
+
+            .timeline-item::before {
+                left: -24px;
+            }
+        }
+    </style>
+{% endblock %}
+{% block content %}
+ 
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/">Accueil</a> >
+            <a href="{% url 'show_communaute' community_id %}">{{ community_name }}</a> >
+            <span>Histoire</span>
+        </div>
+
+        <header>
+            <h1>Histoire de {{ community_name }}</h1>
+            <p>Découvrez le passé riche et les moments clés de notre communauté</p>
+        </header>
+
+        <div class="history-section">
+            <h2>Informations Générales</h2>
+
+            <div class="history-meta">
+                <div class="meta-item">
+                    <label>Année de fondation</label>
+                    <value>{{ history.founded_year }}</value>
+                </div>
+                <div class="meta-item">
+                    <label>Fondateur</label>
+                    <value>{{ history.founder }}</value>
+                </div>
+            </div>
+
+            <div class="description">
+                <p>{{ history.description }}</p>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <h2>Chronologie des Événements Clés</h2>
+
+            <div class="timeline">
+                {% for event in history.key_events %}
+                <div class="timeline-item">
+                    <div class="timeline-item-year">{{ event.year }}</div>
+                    <div class="timeline-item-event">
+                        {{ event.event }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="nav-buttons"> 
+            <a href="{% url 'com_geographie' community_id %}" class="btn"> Voir la Géographie</a>
+            <a href="{% url 'kings_list' community_id %}" class="btn">Les Rois de {{community_name}}</a>
+            <a href="{% url 'show_communaute' community_id %}" class="btn btn-secondary">Retour</a>
+        </div>
+    </div>
+{% endblock %}
