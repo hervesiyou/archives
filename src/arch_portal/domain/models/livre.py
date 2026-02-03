@@ -28,7 +28,7 @@ class Livre(models.Model):
     domaine = models.CharField(max_length=250, null=True, blank=True)
     prix = models.IntegerField(default=0)
     type = models.CharField(max_length=50, choices=LIV_CHOICES,blank=True)
-    librairies = models.ManyToManyField("Librairie",related_name="mes_librairies", null=True)
+    librairies = models.ManyToManyField("Librairie",related_name="livres", null=True)
 
     proprietaire = models.ForeignKey( Membre,  on_delete=models.SET_NULL,  null=True,  blank=True,  related_name="livres_possedes"  )
     anciens_proprietaires = models.ManyToManyField(  Membre, blank=True,  related_name="livres_deja_possedes" )

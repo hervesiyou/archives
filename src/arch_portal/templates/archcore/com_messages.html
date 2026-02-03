@@ -322,7 +322,7 @@
 
         <header>
             <h1>Messages de {{ community_name }}</h1>
-            <p>Partagez vos pensées et vos idées avec la communauté</p>
+            <p>{{description}}</p>
         </header>
 
         <div class="messages-container">
@@ -353,37 +353,19 @@
             </div>
 
             <div class="form-section">
-                <h3>Poster un Message</h3>
+                <h3>..</h3>
 
                 <div class="success-message" id="successMessage">
-                    Message envoyé avec succès!
+                    ...
                 </div>
 
                 <div class="error-message" id="errorMessage"></div>
 
-                <form id="messageForm">
-                    <div class="form-group">
-                        <label for="username">Votre Nom *</label>
-                        <input type="text" id="username" name="username" required placeholder="Entrez votre nom">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="message">Votre Message *</label>
-                        <textarea id="message" name="message" required placeholder="Écrivez votre message ici..."></textarea>
-                        <div class="char-count">
-                            <span id="charCount">0</span>/5000
-                        </div>
-                    </div>
-
-                    <button type="submit" class="submit-btn">Envoyer le Message</button>
-                </form>
+                 
             </div>
         </div>
 
-        <div class="nav-buttons">
-            {% comment %} <a href="/community/{{ community_id }}/history" class="btn">Histoire</a> {% endcomment %}
-            {% comment %} <a href="/community/{{ community_id }}/geography" class="btn">Géographie</a> {% endcomment %}
-            {% comment %} <a href="/community/{{ community_id }}/kings" class="btn">Les Rois</a> {% endcomment %}
+        <div class="nav-buttons"> 
             <a href="{% url 'show_communaute' community_id %}" class="btn btn-secondary">Retour</a>
         </div>
     </div>

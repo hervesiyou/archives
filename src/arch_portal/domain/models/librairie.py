@@ -14,7 +14,7 @@ class Librairie(models.Model):
     lieu = models.CharField(max_length=250, null=True)
     
     possesseur = models.ForeignKey("Membre", on_delete=models.CASCADE, null=True)
-    livres = models.ManyToManyField("Livre",related_name="mes_livres", null=True, blank=True)
+    # livres = models.ManyToManyField("Livre",related_name="mes_livres",  blank=True)
     
     def __str__(self): 
         return "{} ".format(str(self.nom).capitalize())

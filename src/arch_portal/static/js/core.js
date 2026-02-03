@@ -1,4 +1,22 @@
 $(document).ready(function(){
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
+
     
     const BASEURL = $("body").data('url');
 
@@ -642,6 +660,155 @@ $(document).ready(function(){
                 console.table( data )
 			}
 
+    });
+
+    $("#addMessageLibID").on('click', function(e){                         
+        e.preventDefault();
+			var data = {                      
+				"nom": $("#username").val(), 
+				"id": $("#idlib").val(), 
+				"message": $("#message").val(),
+			};
+            let url =  BASEURL+"/lib/mess/create";
+            const csrftoken = getCookie('csrftoken');
+            
+			if( data.nom.length > 2  && data.message.length > 5 ){
+
+                $.ajax({
+                    method      : "POST",
+                    data        : JSON.stringify(data),
+                    url         : url,  
+                    dataType    : "JSON",
+                    contentType: "application/json", 
+                
+                    headers: {                         
+                        "X-CSRFToken": csrftoken
+                    },
+                    beforeSend      : function(){
+                        // alert(JSON.stringify(data) + ", " + url)
+                    },
+                    error: function(error) {
+                        console.error(error);
+                        // alert(JSON.stringify(error))
+                    },
+                    success  : function(returnedData){
+                            // console.log(returnedData);
+                            // alert(JSON.stringify(returnedData))
+                    
+                            if (returnedData.success) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: " Merci !" ,
+                                    text:   " Ajout Reussi de Votre Message, Le proprietaire vous contactera pour la suite " ,
+                                    timer: 4000,
+                                    showConfirmButton: false
+        
+                                });
+                                $(".btn-close").click();
+
+                            }else{
+                                Swal.fire({
+                    
+                                    icon: "error",
+                                    title: " Oupps !" ,
+                                    text:   "  " + returnedData.message ,
+                                    timer: 4000,
+                                    showConfirmButton: false
+        
+                                }).then((result) => {
+                                    window.location.reload() 
+                                });
+                                
+                            }   
+                    }, 
+
+                });
+			}else{
+
+                Swal.fire({
+                    icon: "error",
+                    title: " Oupps !" ,
+                    text:   " Merci de fournir toutes les informations requises!!!" ,
+                    timer: 4000,
+                    showConfirmButton: false
+                });
+                console.table( data )
+			}
+    });
+
+    $("#addMessageComID").on('click', function(e){   
+                              
+        e.preventDefault();
+			var data = {                      
+				"nom": $("#username").val(), 
+				"id": $("#idcom").val(), 
+				"message": $("#message").val(),
+			};
+            let url =  BASEURL+"/com/mess/create";
+            const csrftoken = getCookie('csrftoken');
+            
+			if( data.nom.length > 2  && data.message.length > 5 ){
+
+                $.ajax({
+                    method      : "POST",
+                    data        : JSON.stringify(data),
+                    url         : url,  
+                    dataType    : "JSON",
+                    contentType: "application/json", 
+                
+                    headers: {                         
+                        "X-CSRFToken": csrftoken
+                    },
+                    beforeSend      : function(){
+                        // alert(JSON.stringify(data) + ", " + url)
+                    },
+                    error: function(error) {
+                        console.error(error);
+                        // alert(JSON.stringify(error))
+                    },
+                    success  : function(returnedData){
+                            // console.log(returnedData);
+                            // alert(JSON.stringify(returnedData))
+                    
+                            if (returnedData.success) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: " Merci !" ,
+                                    text:   " Ajout Reussi de Votre Message, Le gestionnaire vous contactera pour la suite " ,
+                                    timer: 4000,
+                                    showConfirmButton: false
+        
+                                });
+                                $(".btn-close").click();
+
+                            }else{
+                                Swal.fire({
+                    
+                                    icon: "error",
+                                    title: " Oupps !" ,
+                                    text:   "  " + returnedData.message ,
+                                    timer: 4000,
+                                    showConfirmButton: false
+        
+                                }).then((result) => {
+                                    window.location.reload() 
+                                });
+                                
+                            }   
+                    }, 
+
+                });
+			}else{
+
+                Swal.fire({
+                    icon: "error",
+                    title: " Oupps !" ,
+                    text:   " Merci de fournir toutes les informations requises!!!" ,
+                    timer: 4000,
+                    showConfirmButton: false
+                });
+                console.table( data )
+			}
     });
 
     

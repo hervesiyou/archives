@@ -23,6 +23,9 @@ class PermissionEnum(Enum):
     ADD_MEM = "ADD_MEMBRE"
     MAKE_REM = "MAKE_REM"
 
+    SEE_LIB_MESS = "VOIR_MESSAGES_LIBRAIRIES"
+    SEE_COM_MESS = "VOIR_MESSAGES_COMMUNAUTES"
+
     @classmethod
     def choices(cls):
         return tuple((i.value, i.name) for i in cls)

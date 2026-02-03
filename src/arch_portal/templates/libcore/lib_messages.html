@@ -323,7 +323,7 @@
 
         <header>
             <h1>Messages de {{ library_name }}</h1>
-            <p>Partagez vos suggestions et vos expériences avec la communauté</p>
+            <p>{{ description }} </p>
         </header>
 
         <div class="messages-container">
@@ -354,9 +354,9 @@
             </div>
 
             <div class="form-section">
-                <h3>Poster un Message</h3>
+                <h3> ---- </h3>
 
-                <div class="success-message" id="successMessage">
+                {% comment %} <div class="success-message" id="successMessage">
                     Message envoyé avec succès!
                 </div>
 
@@ -377,7 +377,7 @@
                     </div>
 
                     <button type="submit" class="submit-btn">Envoyer le Message</button>
-                </form>
+                </form> {% endcomment %}
             </div>
         </div>
 

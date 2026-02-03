@@ -33,9 +33,10 @@ urlpatterns += [
     path('cont', core.contact, name="contact"),
 
     path('com/<int:community_id>/messages', core.community_messages, name='community_messages'),
-    path('com/<int:community_id>/mess/create', core.create_community_message, name='create_community_message'),
+    path('com/mess/create', core.create_community_message, name='create_community_message'),
     path('lib/<int:library_id>/messages/', core.library_messages, name='library_messages'),
-    path('lib/<int:library_id>/mess/create', core.create_library_message, name='create_library_message'),
+    path('lib/mess/create', core.create_library_message, name='create_library_message'),
+    # path('lib/<int:library_id>/mess/create', core.create_library_message, name='create_library_message'),
 ]
 urlpatterns += [ 
     path('lcom', communaute.listcom, name="listcom"),
