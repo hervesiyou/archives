@@ -72,17 +72,20 @@
                         <h6> <span class="text-muted">{{ famille.administrateurs.all|length }} Administrateurs</span></h6>
                         <div >
                             {% if  'ADD_FAMILLE_ADMIN' in request.session.userrights %}
-                                <a href="{% url 'show_admin_fam' famille.id %}" class="text-success py-3" >Voir les Administrateurs </a> 
+                                <a href="{% url 'show_admin_fam' famille.id %}" class=" btn btn-sm btn-outline-success my-2 text-success " >
+                                <i class="fas fa-user-check"></i> Voir les Administrateurs </a>
+                                
                                  
                             {% endif %}
                         </div>
                         <small class="font-light"> 
                             {% if  'ADD_FAMILLE_ADMIN' in request.session.userrights %}
-                            <div class=" text-end pull-right">
-                                <button class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#adminModal"type="button"> Ajouter un Administrateur </button>
-                            </div>
-                            
-                        {% endif %}
+                                <div class=" text-end pull-right">
+                                     <button class="btn btn-sm btn-outline-danger text-danger" data-bs-toggle="modal" data-bs-target="#adminModal"type="button">
+                                      <i class="fas fa-user-plus"></i> Ajouter un Administrateur </button>
+                                </div>
+                                
+                            {% endif %}
                         </small>
                     </div>
                 </div>

@@ -8,5 +8,6 @@ class GalerieForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["description"].widget.attrs.update({"class":"bg-info","title":"Une description"}   )
+        self.fields["nom"].widget.attrs.update({"class":" form-control","title":"Nom de la galerie"}   )
+        self.fields["description"].widget.attrs.update({"class":" form-control","title":"Description de la galerie"}   )
         
