@@ -22,32 +22,45 @@
         </div>
         
     </div> {% endcomment %}
+    <h3 class="p-5">
+    <b>{{famille.nom}}</b> 
+    <span class="pull-right">
+    <button class="btn btn-xs btn-success text-white"> Inscrire un membre</button>
+    </span>
+    </h3>
+   {% if famille %}
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-body printableArea">
-                <h3><b>{{famille.nom}}</b> <span class="pull-right"><button class="btn btn-xs btn-success text-white"> Inscrire un membre</button></span></h3>
-                <hr>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="pull-left">
-                            <address>
-                                <h3> &nbsp;<b class="text-danger text-capitalize">{{famille.description}} </b></h3>
-                                <p class="text-muted ms-1">{{famille.chef.nomcomplet}}
-                                    <br> {{famille.description}} 
-                            </address>
-                        </div> 
-                    </div>
-                    <div class="col-md-12">
-                        <div class="table-responsive mt-5" style="clear: both;">
-                            <form method="post">
-                                {% csrf_token %}
-                                {% crispy form %}
-                                <input type="submit" class="btn btn-success" value="Ajouter ce membre" />
-                            </form>
-                        </div>
-                    </div> 
-                </div>
+            <div class="card p-5 printableArea">
+                    {% comment %} <div class="pull-left"> {% endcomment %}
+                        {% comment %} <address> {% endcomment %}
+                            <h3> &nbsp;<b class="text-danger text-capitalize">{{famille.description}} </b></h3>
+                            <p class="text-muted ms-1">{{famille.chef.nomcomplet}}
+                                <br> {{famille.description}} 
+                        {% comment %} </address> {% endcomment %}
+                    {% comment %} </div>  {% endcomment %}
+               
             </div>
         </div>
+    </div>
+    {% endif %}
+   
+    <div class="row">
+        <div class="col-md-12 p-5">
+            <h1 class="text-success"> Inscription d'un nouveau membre </h1>
+            {% comment %} 
+            
+                {% endcomment %}
+        {% comment %} </div> {% endcomment %}
+
+        {% comment %} <div class="col-md-12 p-5"> {% endcomment %}
+            <div class="table-responsive mt-5" >
+                <form method="post">
+                    {% csrf_token %}
+                    {% crispy form %}
+                    <input type="submit" class="btn btn-success" value="Ajouter ce membre" />
+                </form>
+            </div>
+        </div> 
     </div>
 {% endblock content %}

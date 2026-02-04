@@ -2,16 +2,16 @@
 
  
     - details des rois, detail histoire, details geographie par carte googlemap
-- perfectionner l'ajout des histoire, les gps et les rois d'une communauté
-- ajouter fontawesome
-        
+- perfectionner l'ajout des histoire, les gps et les rois d'une communauté        
 - notification par mail des nouveaux livres
-- en creant un membre on choisi sa generation
-- pour une famille afficher les generations, pour chaque generation afficher ses membres, afficher l'arbre de la famille
 - pour le moment l'arbre genealogique est un fichier lié à la famille
 - inserer la famille nkouonchichoue et la famille takoukam
 
         - gerer la notation d'un livre
+        - ajouter fontawesome
+        - en creant un membre on choisi sa generation
+        - pour une famille afficher les generations, pour chaque generation afficher ses membres, afficher l'arbre de la famille
+        
         - ajouter l'affichage dans une librairie des livres 
         - gerer la messagerie d'une bibliotheque et d'une communauté
         - gerer la creation et mettre la creation dans les modals , gerer l'affichage selon les droits

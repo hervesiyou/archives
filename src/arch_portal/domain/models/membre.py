@@ -1,6 +1,6 @@
 from django.db import models
 # from .wallet import Wallet
-from arch_portal.domain.models.CONST_DATA import SEX_CHOICES, ETATCIVIL_CHOICES, TYPE_MEMBER_CHOICES
+from arch_portal.domain.models.CONST_DATA import SEX_CHOICES, ETATCIVIL_CHOICES, TYPE_MEMBER_CHOICES, GENERATIONS
 from .famille import Famille
 from .association import Association
 from .image import Image
@@ -22,6 +22,7 @@ class Membre(models.Model):
     etatvalidation = models.BooleanField(default=0,null=True)
     dateinscription = models.DateTimeField(null=True)
     
+    generation =  models.CharField(max_length=50, choices=GENERATIONS,blank=True,null=1)
     type =  models.CharField(max_length=50, choices=TYPE_MEMBER_CHOICES,blank=True,null=1)
     sexe =  models.CharField(max_length=50, choices=SEX_CHOICES,blank=True,null=1)
      
@@ -52,7 +53,7 @@ class Membre(models.Model):
     vivant = models.BooleanField(default=True)
     datedeces = models.CharField(max_length=50, null=True, blank=True)
 
-    role = models.ManyToManyField(  Role )
+    role = models.ManyToManyField(  Role, null=True, blank=True )
 
     def save(self, *args, **kwargs):
         if self.pere != None and self.mere != None:

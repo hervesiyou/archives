@@ -1,0 +1,33 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Arbre généalogique – {{ famille.nom }}  {% endblock %}
+
+{% block css %} 
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        const treeData = {{ tree_data|safe }};
+    </script>
+    
+    <script src="{% static 'js/arbre_graphique.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/arbre.css' %}">
+
+{% endblock %}
+
+{% block content %}     
+ 
+    <div class="container mb-4">
+        <h2>Arbre généalogique – Famille <a href="{% url 'show_famille' famille.id %}">{{ famille.nom }}</a> </h2>
+        <button onclick="exportPDF()">📄 Exporter en PDF</button>
+
+        <div id="tree-container"></div>
+    </div>
+
+    
+
+    
+{% endblock %}

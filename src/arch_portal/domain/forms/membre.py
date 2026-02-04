@@ -16,9 +16,15 @@ class MembreForm(forms.ModelForm):
         self.helper.form_tag = False 
         self.helper.layout = Layout(
             Row(
-                Column('nomcomplet', css_class='col-md-12'),
+                Column('nomcomplet', css_class='col-md-8'),
+                Column('generation', css_class='col-md-4'),
                 Column('login', css_class='col-md-6'),
-                Column('pwd', css_class='col-md-6'),
+                Column(
+                    Field('pwd', type='password', css_class='form-control'),
+                    css_class='col-md-6',
+                ),
+                # Column('pwd', css_class='col-md-6'),
+
                 Column('email', css_class='col-md-6'),
                 Column('telephone', css_class='col-md-6'),
                 Column('type', css_class='col-md-2'), 
@@ -63,19 +69,31 @@ class UsersLoginForm(forms.ModelForm):
         self.helper.form_tag = False
         self.helper.layout = Layout(
             Field('login', css_class='form-control'),
-            Field('pwd', css_class='form-control'),
+            Field('pwd',type='password', css_class='form-control'),
         )
 
 
 class UsersSubscribeForm(forms.ModelForm):
+    
+    # pwd = forms.CharField(
+    #     widget=forms.PasswordInput(render_value=False),
+    #     label="Mot de passe"
+    # )
+    
     class Meta:
         model = Membre
-        fields = ["nomcomplet","login","pwd","email","telephone","sexe","datenaissance","lieunaissance","residence"]
+        fields = ["nomcomplet", "login","pwd","email","telephone","sexe","datenaissance","lieunaissance","residence"]
+        
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # self.fields['pwd'].widget = forms.PasswordInput(render_value=False)
         self.helper = FormHelper()
         self.helper.form_tag = False
+        # self.helper.layout = Layout(
+        #     Field('pwd', type='password', css_class='form-control')
+        # )
+
 
     def clean(self):
         cleaned_data = super().clean()

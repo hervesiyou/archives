@@ -18,6 +18,15 @@
     <link rel="stylesheet" href="{% static 'css/core.css' %}" />
     <link rel="stylesheet" href="{% static 'css/sweetalert.css' %}" />
     <link rel="stylesheet" href="{% static 'css/toastr.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'fa/css/all.min.css' %}" />
+
+    {% comment %} <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-..."
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    > {% endcomment %}
 
   
 </head>
@@ -38,7 +47,7 @@
                     <div class="card-body">
                         <div class="row"> 
                             <div class="col-8 pull-left">
-                                <a href="{% url 'index' %}"> Accueil </a> |
+                                <a href="{% url 'index' %}"> <i class="fa-solid fa-home"></i> Accueil </a> |
                                 {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
                                     {% comment %} {{ request.session.userrights}} {% endcomment %}
                                     <a href="{% url 'add_communaute' %}"> + Communauté </a> |
@@ -71,10 +80,15 @@
                                     <a href="{% url 'login' %}"> Login </a> |  
                                 {% else %}
                                     
-                                    <a href="{% url 'home' %}" class="text-success text-uppercase"> {{ request.session.username}} </a> | 
+                                    <a href="{% url 'home' %}" class="text-success text-uppercase"> 
+                                        <i class="fa-solid fa-gauge"></i>
+                                        {{ request.session.username}} 
+                                    </a> | 
                                     <a href="{% url 'logout' %}" class="text-danger text-uppercase"> X </a> | 
                                 {% endif %}
-                                <a href="{% url 'home_abonnement' %}" > Recharger mon compte </a>
+                                <a href="{% url 'home_abonnement' %}" > 
+                                <i class="fa-solid fa-money-bill"></i> 
+                                 Recharger mon compte </a>
                                 {% comment %} <a href="{% url 'abonement_librairie' %}"> Abonements Librairies </a> | 
                                 <a href="{% url 'abonement_archive' %}"> Abonements Archives </a>  {% endcomment %}
                                 

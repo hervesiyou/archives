@@ -14,6 +14,11 @@ urlpatterns = [
     path('nf/', famille.add_famille, name="add_famille"),
     path('sh_ad_fa/<int:id>', famille.show_admin_fam, name="show_admin_fam"),
     path('add_ad_fam', famille.add_admin_fam, name="add_admin_fam"),
+    path("fam/<int:famille_id>", famille.famille_generations, name="famille_generations"),
+    path("fam/<int:famille_id>/arbre", famille.famille_arbre, name="famille_arbre"),
+    path("fam/<int:famille_id>/ag", famille.famille_arbre_graphique, name="famille_arbre_graphique"),
+
+
     path('levts/<int:id>.<int:mode>', evenement.listevenements, name="listevenements"),
     path('sev/<int:id>', evenement.show_evenement, name="show_evenement"),
     path('nev/', evenement.add_evenement, name="add_evenement"),

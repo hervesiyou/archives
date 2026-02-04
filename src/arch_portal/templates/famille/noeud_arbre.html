@@ -1,0 +1,15 @@
+<li>
+     <span class=" "> <strong>{{ node.nom }}</strong></span>
+    <ul>
+        {% if node.pere %}
+            <li>Père:
+                {% include "famille/noeud_arbre.html" with node=node.pere %}
+            </li>
+        {% endif %}
+        {% if node.mere %}
+            <li>Mère:
+                {% include "famille/noeud_arbre.html" with node=node.mere %}
+            </li>
+        {% endif %}
+    </ul>
+</li>

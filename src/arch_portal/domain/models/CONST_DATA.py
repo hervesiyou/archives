@@ -4,6 +4,15 @@ SEX_CHOICES =(
     ("M","Male")
 )
 
+GENERATIONS = [
+    ("G1", "Generation 1"),
+    ("G2", "Generation 2"),
+    ("G3", "Generation 3"),
+    ("G4", "Generation 4"),
+    ("G5", "Generation 5"),
+    ("FONDATEUR", "FONDATEUR(TRICE)"),
+]
+
 STATUTS = [
     ("PAYE", "Payé"),
     ("EN_ATTENTE", "En attente"),

@@ -1,5 +1,5 @@
 
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from arch_portal.domain.forms.famille import FamilleForm
 from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.famille import Famille
@@ -7,7 +7,92 @@ from arch_portal.domain.models.role import Role
 from arch_portal.domain.models.membre import Membre
 from django.views.decorators.csrf import csrf_exempt
 import json
-from django.http import HttpResponseForbidden, JsonResponse
+from django.http import HttpResponseForbidden, JsonResponse 
+from collections import defaultdict
+
+
+def famille_generations(request, famille_id):
+
+    famille = get_object_or_404(Famille, id=famille_id)
+    membres = Membre.objects.filter( familles=famille ).select_related('nompere', 'nommere')
+
+    generations = defaultdict(list)
+    for membre in membres:
+        gen = membre.generation
+        # On met None dans une clé spéciale (ex: 0 ou -1 ou une string)
+        key = gen if gen is not None else 0   # ← ou -1, ou "Inconnu"
+        generations[key].append(membre)
+        generations[membre.generation].append(membre)
+
+    generations = dict(sorted(
+        generations.items(),  
+        key=lambda item: item[0] if isinstance(item[0], int) else -999
+        )
+    )
+
+    context = {
+        "famille": famille,
+        "generations": generations,
+        "has_unknown_generation": 0 in generations
+    }
+    return render(request, "famille/famille_generations.html", context)
+
+def build_family_tree(membre):
+    return {
+        "id": membre.id,
+        "nom": membre.nomcomplet,
+        "pere": build_family_tree(membre.nompere) if membre.nompere else None,
+        "mere": build_family_tree(membre.nommere) if membre.nommere else None,
+    }
+
+def build_tree(membre):
+
+    children = []
+
+    if membre.nompere:
+        children.append(build_tree(membre.nompere))
+
+    if membre.nommere:
+        children.append(build_tree(membre.nommere))
+
+    return {
+        "name": membre.nomcomplet,
+        "id": membre.id,
+        "children": children
+    }
+
+    # return {
+    #     "name": membre.nomcomplet,
+    #     "id": membre.id,
+    #     "children": [
+    #         build_tree(membre.nompere) if membre.nompere else None,
+    #         build_tree(membre.nommere) if membre.nommere else None
+    #     ]
+    # }
+
+def famille_arbre(request, famille_id):
+
+    famille = get_object_or_404(Famille, id=famille_id)
+    racines = Membre.objects.filter( familles=famille,  nompere__isnull=True,  nommere__isnull=True  )
+    arbres = [build_family_tree(m) for m in racines]
+
+    context = {
+        "famille": famille,
+        "arbres": arbres
+    }
+    return render(request, "famille/famille_arbre.html", context)
+
+def famille_arbre_graphique(request, famille_id):
+
+    famille = get_object_or_404(Famille, id=famille_id)
+    racines = Membre.objects.filter( familles=famille,  nompere__isnull=True,  nommere__isnull=True  )
+    arbres = [build_tree(m) for m in racines]
+
+    context = {
+        "famille": famille,
+        "tree_data": json.dumps(arbres)
+    }
+    return render(request, "famille/arbre_graphique.html", context)
 
 def listfamilles(request, id, mode=0):
    
@@ -36,13 +121,13 @@ def show_famille(request,id):
     appartient=False
     if ( user in fam.membres_famille.all()):
         appartient = True
-    # print( "membres: {}".format(liv.get_members()) )
+    
     return render(request, "archcore/showfamille.html", {"famille" : fam, "appartient" : appartient} )
 
 
 def show_admin_fam(request,id):
-    com = Famille.objects.get(id=id)
-    # print(com.administrateurs.all())
+    
+    com = Famille.objects.get(id=id) 
     return render(request, "archcore/listadminfam.html", {"admins": com.administrateurs.all(), "famille": com})
 
 

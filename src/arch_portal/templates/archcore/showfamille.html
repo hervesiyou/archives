@@ -39,7 +39,7 @@
                 <div class="row"> 
                     <div class="col-md-6 border-left text-center pt-2">
                         <h3 class="mb-0 ">5672</h3>
-                        <span class="text-muted">Arriere petit fils</span>
+                        <span class="text-muted">Arrière petit fils</span>
                     </div>
                 </div>
             </div>
@@ -95,7 +95,7 @@
             <div class=" card-body printableArea">
                 <h3><b>{{famille.nom}}</b> <span class="pull-right">
                 {% if  'ADD_MEMBRE' in request.session.userrights %}
-                    <a class="btn btn-xs btn-success text-white" href="{% url 'add_user' %}"> Ajouter un membre</a></span>
+                    <a class="btn btn-xs btn-outline-success text-success" href="{% url 'add_user' %}"> Ajouter un membre</a></span>
                 {% endif %}
                 </h3>
                 <hr>
@@ -103,8 +103,14 @@
                     <div class="col-md-10">
                         <div class="pull-left">
                             <address>
-                                <h3> &nbsp;<b class="text-danger text-capitalize">{{famille.description}} </b></h3>
-                                <p class="text-muted ms-1">{{famille.chef.nomcomplet}}
+                                <h3> &nbsp;<b class="text-danger text-capitalize">{{famille.description}}</b></h3>
+                                <h5 class="text-info ms-1">{{famille.chef.nomcomplet}}</h5>
+                                <h6 class="ms-1"> 
+                                    <a href="{% url 'famille_arbre' famille.id %}" class="btn btn-outline-primary"> Voir l'arbre généalogique </a>
+                                    <a href="{% url 'famille_arbre_graphique' famille.id %}" class="btn btn-outline-info"> Voir l'arbre généalogique visuel </a>
+                                    <a href="{% url 'famille_generations' famille.id %}" class="btn btn-outline-warning"> Voir les générations </a>
+                                </h6>
+                                <p class="text-success ms-1">{{famille.chef.nomcomplet}}
                                     <br> {{famille.description}}
                                     <br> 
                                     {% comment %} <br> Bhavnagar - 364002</p> {% endcomment %}
