@@ -4,11 +4,9 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        {% comment %} <div class="col-lg-1"></div> {% endcomment %}
         <div class="col-lg-12">
             <h3 class="bg-default text-center text-white">  {{ request.session.nomcomplet}} </h3>
-
-            {% comment %} <p>  {{user}} 55 </p> {% endcomment %}
+ 
             {%  include 'usercore/partials/home.html'  with membre=user %}
         </div>
     </div>
@@ -53,6 +51,5 @@
             {% endif %}
         {% endblock %}
     </div>
-    {% comment %} <div class="col-lg-1"></div> {% endcomment %}
 </div>
 {% endblock %}

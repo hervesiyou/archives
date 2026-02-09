@@ -4,16 +4,14 @@
 
     <div class="container ">
         <div class="breadcrumb">
-        <a href="{% url 'home' %}" class="my-2"> <i class="fa fa-home"></i> Accueil </a> > 
-        <a href="{% url 'show_communaute' famille.communaute.id %}" class="mb-5"> <i class="fas fa-users"></i> {{famille.communaute.nom}} </a> >
+        <a href="{% url 'home' %}" class=""> <i class="fa fa-home"></i> Accueil </a> > 
+        <a href="{% url 'show_communaute' famille.communaute.id %}" class=""> <i class="fas fa-users"></i> {{famille.communaute.nom}} </a> >
         {{ famille.nom }}
         </div>
         <div class="card-body p-5">
             <h1 class="mb-2" >Famille  <a href="{% url 'show_famille' famille.id %}" class="text-success">{{ famille.nom }}</a>    </h1>
-            {% comment %} <h1>Famille  <a href="{% url 'show_famille' famille.id %}" class="text-success">{{ famille.nom }}</a>    </h1> {% endcomment %}
-
+ 
             {% for generation, membres in generations.items %}
-                {% comment %} <h2 class="text-primary py-2">Génération {{ generation }}</h2> {% endcomment %}
                 {% if generation == 0 %} <h3 class="text-success"> <i class="fas fa-tree"></i> Génération  Racine</h3>
                 {% else %} <h3 class="text-primary py-2"> <i class="fas fa-people-group"></i> Génération {{ generation }} </h3> {% endif %}
                 <ul>

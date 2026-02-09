@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Rechargement de compte - Mobile Money{% endblock %}
+{% block title %} Rechargement de compte - Mobile Money{% endblock %}
 
 {% block css %}
 <style>
@@ -93,7 +93,7 @@
 
 <div class="container">
     <div class="row justify-content-center mt-5">
-        <div class="col-lg-9 col-xl-8">
+        <div class="col-lg-10 col-xl-12">
 
             <a href="{% url 'abonement_librairie' %}" class="btn btn-outline-primary amount-btn"> Abonements Librairies </a> 
             <a href="{% url 'abonement_archive' %}" class="btn btn-outline-primary amount-btn"> Abonements Archives </a>
@@ -138,7 +138,7 @@
                             <h4 class="mb-0 text-center">MTN Mobile Money</h4>
                         </div>
                         <div class="payment-body text-center">
-                            <h5>Numéro à envoyer</h5>
+                            <h5>Numéro où envoyer</h5>
                             <div class="code-copy">+{{MTN}}</div>
                             <p class="mt-3 mb-1"><strong>Motif / Message :</strong></p>
                             <div class="code-copy">ARCHIVES{{ user_id|default:"00MOMO" }}</div>
@@ -160,7 +160,7 @@
                             <h4 class="mb-0 text-center">Orange Money</h4>
                         </div>
                         <div class="payment-body text-center">
-                            <h5>Numéro à envoyer</h5>
+                            <h5>Numéro où envoyer</h5>
                             <div class="code-copy">+{{ORANGE}}</div>
                             <p class="mt-3 mb-1"><strong>Motif / Commentaire :</strong></p>
                             <div class="code-copy">ARCHIVES{{ user_id|default:"00OM" }}</div>
@@ -182,7 +182,7 @@
                             <h4 class="mb-0 text-center">SARA Money</h4>
                         </div>
                         <div class="payment-body text-center">
-                            <h5>Numéro à envoyer</h5>
+                            <h5>Numéro où envoyer</h5>
                             <div class="code-copy">+{{SARA}}</div>
                             <p class="mt-3 mb-1"><strong>Référence :</strong></p>
                             <div class="code-copy">ARCHIVES{{ user_id|default:"00SARA" }}</div>

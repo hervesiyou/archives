@@ -8,6 +8,7 @@
 - mettre les videos dans youtube et les images dans googlephotos privé
 - ajouter les interessés à un evenements, et afficher mes evenements dont je suis interessés
 - gerer la recherche des livres et la recherche dans la page de la librairie
+
         - ajouter le fil d'ariane sur toutes les pages
         - gerer la duplication des generation
         - pour chaque bibliotheque montrer le nombre de livres
