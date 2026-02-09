@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %} {{parent}} Detail - {{ livre.nom }} {% endblock %}
+{% block title %} {{parent}} Détail - {{ livre.nom }} {% endblock %}
 {% block css %}  
     <style>
       .book-image img{
@@ -18,11 +18,25 @@
     <div class="row">
         <div class="col-md-12">
             <div class="  card-body printableArea">
-                <h3><b>{{livre.nom}}</b> <span class="pull-right">ISBN: {{ livre.isbn}}</span> | <span class="  bg-default">{{ livre.type}} </span></h3>
+                <div class="breadcrumb">
+                    <a href="{% url 'home' %}"> <i class="fa fa-home"></i> Accueil </a> >
+                    <a href="{% url 'show_librairie' librairie.id %}"> <i class="fa fa-book"></i> {{ librairie.nom }} </a> > {{livre.nom}} 
+                </div>
+
+                <h3><b>{{livre.nom}}</b> <span class="pull-right">ISBN: {{ livre.isbn}}</span> - <span class="  bg-default">{{ livre.type}} </span></h3>
                 <hr>
                 <div class="row">
                     <div class="col-md-4">
-                        <img src="{% static 'images/big/img2.jpg' %} " alt="{{livre.description}}" style="max-width: 200px; max-height: 200px;">
+                        {%  if livre.images.all|length > 0 %}
+                            {% with first_image=livre.images.first %}
+                                <div class="book-image">
+                                    <img src="{{ first_image.fichier.url }}" alt="{{ livre.description|default:'Couverture du livre' }}">
+                                </div>
+                            {% endwith %}
+                        {% else %}
+                            <img src="{% static 'images/big/img2.jpg' %} " alt="{{livre.description}}" style="max-width: 200px; max-height: 200px;">
+                        {% endif %}
+                        {% comment %} <img src="{% static 'images/big/img2.jpg' %} " alt="{{livre.description}}" style="max-width: 200px; max-height: 200px;"> {% endcomment %}
                     </div>
                     <div class="col-md-8">
                         <div class="pull-left">
@@ -55,8 +69,7 @@
                                             {%  if livre.images.all|length > 0 %}
                                                 {% for image in livre.images.all %}
                                                     <div class="book-image">
-                                                        <img src="{{ image.fichier.url }}" alt="{{livre.description}}">
-                                                        
+                                                        <img src="{{ image.fichier.url }}" alt="{{livre.description}}">                                                        
                                                     </div>
                                                 {% endfor %}
                                             {% else %}
@@ -115,11 +128,13 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
-                        <div class="mt-4 text-start">
+                        <div class="my-4 text-start">
+                            {% comment %} {{connectee }} {{ achat }} {% endcomment %}
                             {% if livre.type == "Numerique" %}
                                 {% if connecte %}
-                                    
-                                        <a class="btn btn-success text-white"  data-bs-toggle="modal"  data-bs-target="#paiementModal">Acheter directement</a>
+                                        {% if achat %}
+                                            <a class="btn btn-success text-white"  data-bs-toggle="modal"  data-bs-target="#paiementModal">Acheter directement</a>
+                                        {% endif %}
                                         <button class="btn btn-warning"  data-bs-toggle="modal"    data-bs-target="#notationModal">
                                             Noter ce livre ⭐
                                         </button>
@@ -132,7 +147,8 @@
                                 {% else %}
                                     <a href="{% url 'login' %}" class="div-error"> Merci de vous connecter pour commander directement ce livre </a> 
                                 {% endif %}
- 
+                            {% else %}
+                                <span class="text-info"> Ce livre est disponible en format physique. Merci de contacter le propriétaire pour plus de details </span>
                             {% endif %}
                         </div>
                     </div>
@@ -141,7 +157,6 @@
                             <div class=" text-end pull-right">
                                 <button class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#orderModal"type="button"> Me le procurer chez le propriétaire</button>
                             </div>
-
 
                             <div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog">
@@ -188,7 +203,7 @@
                             </div> 
 
                         {% else %}
-                            <div class="div-info"> Merci de vous connecter pour commander ce livre </div>
+                             <a href="{% url 'login' %}"> <div class="div-info"> Merci de vous connecter pour commander ce livre </div></a>
                         {% endif %}
                     </div>
                      
@@ -199,7 +214,7 @@
 
 
 
-
+{% if achat  %}
     <div class="modal fade" id="paiementModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -230,6 +245,7 @@
             </div>
         </div>
     </div>
+{% endif %}
 
 
     <div class="modal fade" id="notationModal" tabindex="-1">

@@ -231,7 +231,7 @@
 
         <header>
             <h1>Histoire de {{ community_name }}</h1>
-            <p>Découvrez le passé riche et les moments clés de notre communauté</p>
+            <p>{{ history.description }}</p>
         </header>
 
         <div class="history-section">
@@ -239,12 +239,12 @@
 
             <div class="history-meta">
                 <div class="meta-item">
-                    <label>Année de fondation</label>
-                    <value>{{ history.founded_year }}</value>
+                    <label>Origine</label>
+                    <value>{{ history.origin }}</value>
                 </div>
                 <div class="meta-item">
-                    <label>Fondateur</label>
-                    <value>{{ history.founder }}</value>
+                    <label>Souverain</label>
+                    <value>{{ history.chief }}</value>
                 </div>
             </div>
 

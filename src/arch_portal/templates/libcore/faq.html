@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block title %} FAQ - Gestion des Librairies | Archives {% endblock %}
     {% block css %} 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    {% comment %} <link rel="preconnect" href="https://fonts.googleapis.com"> {% endcomment %}
+    {% comment %} <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> {% endcomment %}
+    {% comment %} <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"> {% endcomment %}
     
     <style>
         :root {
@@ -279,7 +279,7 @@
         </div>
 
         <div style="text-align: center; margin: 50px 0;">
-            <a href="{% url 'index' %}" class="back-btn">← Retour à l'accueil</a>
+            <a href="{% url 'faq_index' %}" class="back-btn">← Retour à l'accueil</a>
         </div>
     </div>
 {% endblock %}

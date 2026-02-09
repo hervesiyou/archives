@@ -17,7 +17,7 @@
              
                 <div class="card-body">
                     <h5 class="card-title">
-                        {{ librairie.nom }} - Nos livres  <br>
+                        <a href="{% url 'home' %}"> Accueil </a> > <a href="{% url 'show_librairie' librairie.id %}">{{ librairie.nom }}</a> - Nos livres  <br>
                         {% if  'ADD_LIVRE' in request.session.userrights %}
                             <a href="{% url 'addbook' %}" class="btn btn-sm btn-info"> Ajouter un livre</a>
                         {% endif %}
@@ -37,7 +37,7 @@
                     <div class="row">
                         {% if livres %}
                             {% for liv in livres %}
-                                <div class="col-md-6 col-lg-2 col-xlg-3">
+                                <div class="col-md-4 col-lg-2 col-xlg-3">
                                     <div class="card card-hover">
                                         <div class="box bg-danger text-center">
                                             <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
@@ -50,7 +50,7 @@
                                             <p> {{liv.description}} </p>
                                         </div>
                                         <div class="card-footer">
-                                            <div class="text-info">
+                                            <div class="text-capitalize text-info">
                                                 {{ liv.auteur}}
                                             </div>
                                         </div>

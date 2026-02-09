@@ -12,6 +12,17 @@
     </style>
 {% endblock %}
 {% block content %}
+   <div class="my-3">
+            
+        <div class="card-body">
+        <div class="breadcrumb">
+        <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a> >
+        <a href="{% url 'listcom' %}" class=" "> Communautés </a> >  
+        <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a> >
+            Associations
+        </div>
+        </div>
+    </div> 
    
     <div class="row">
         <div class="col-12">

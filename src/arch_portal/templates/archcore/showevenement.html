@@ -7,15 +7,29 @@
     </style>
 {% endblock %}
 {% block content %}
-    <div-- class="row bg">
-        <div class="col-md-3">
+<div class="container">
+    <div class="my-2">
+            
+        <div class="card-body">
+        <div class="breadcrumb">
+        <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a> >
+        <a href="{% url 'listcom' %}" class=" "> Communautés </a> >  
+        <a href="{% url 'show_communaute' evenement.communaute.id %}" class="text-center"> {{ evenement.communaute.nom }} </a> >
+            {{evenement.titre}}
+
+        </div>  
+        </div>
+    </div>
+
+    {% comment %} <div class="row bg">
+        <div class="col-md-3"> {% endcomment %}
             <div class="  mt-0">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="text-info text-center mt-2"> 
                             <h3 class="mb-2 fw-bold">{{evenement.communaute}}</h3>
                             <span class="text-muted">
-                                <a href="{% url 'listevenements' id=evenement.communaute.id mode=1 %} ">Autres evenements</a>
+                                <a href="{% url 'listevenements' id=evenement.communaute.id mode=1 %} "> Autres evenements</a>
                             </span>
                         </div>
                     </div>
@@ -24,8 +38,8 @@
                         <span class="text-muted">Interessés</span>
                     </div>
                 </div>
-            </div>
-        </div>
+            {% comment %} </div>
+        </div> {% endcomment %}
 
         <!-- div class="col-md-3">
             <div class="  mt-0"> 
@@ -37,7 +51,7 @@
             </div>
         </div-->
 
-    </div>
+    {% comment %} </div> {% endcomment %}
     <div class="row">
         <div class="col-md-12">
             <div class="  card-body printableArea">
@@ -59,6 +73,8 @@
             </div>
         </div>
     </div>
+
+</div>
 {% endblock content %}
 {% block js %}
 {% endblock %}

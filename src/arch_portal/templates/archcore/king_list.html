@@ -1,6 +1,4 @@
- 
- 
- {% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 {% block title %} {{parent}}Les Rois - {{ community_name }} {% endblock %}
 {% block css %}   
@@ -301,8 +299,8 @@
         </div>
 
         <header>
-            <h1>Les Rois de {{ community_name }}</h1>
-            <p>Découvrez l'histoire de nos souverains</p>
+            <h1>Les Rois - {{ community_name }}</h1>
+            <p>{{ description }}</p>
         </header>
 
         <div class="filter-section">
@@ -320,8 +318,9 @@
             <div class="king-card" data-status="{{ king.status|lower }}">
             {% comment %} <div class="king-card" data-status="{{ king.status|lower|replace(' ', '') }}"> {% endcomment %}
                 <div class="king-photo-container">
-                    <img src="{{ king.photo }}" alt="{{ king.name }}" onerror="this.style.display='none'">
-                    <div class="king-photo-placeholder" style="{% if king.photo and king.photo != '/static/images/king1.jpg' %}display:none;{% endif %}">
+                    <img src="{% static 'images/rois.jpg' %}" alt="{{ king.name }}" onerror=" ">
+                    {% comment %} <img src="{{ king.photo }}" alt="{{ king.name }}" onerror="this.style.display='none'"> {% endcomment %}
+                    <div class="king-photo-placeholder" style="{% if king.photo and king.photo != '/static/images/rois.jpg' %} display:none; {% endif %}">
                         Photo indisponible
                     </div>
                     <div class="status-badge {% if king.status == 'En vie' %}status-alive{% else %}status-deceased{% endif %}">
@@ -338,7 +337,7 @@
                     </div>
 
                     <a href="{% url 'king_detail' communaute.id king.id %}" class="view-button">
-                        Voir les Détails
+                        <i class="fas fa-eye"></i> Voir les Détails
                     </a>
                 </div>
             </div>

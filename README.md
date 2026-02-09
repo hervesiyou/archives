@@ -3,10 +3,23 @@
  
     - details des rois, detail histoire, details geographie par carte googlemap
 - perfectionner l'ajout des histoire, les gps et les rois d'une communauté        
-- notification par mail des nouveaux livres
 - pour le moment l'arbre genealogique est un fichier lié à la famille
 - inserer la famille nkouonchichoue et la famille takoukam
+- mettre les videos dans youtube et les images dans googlephotos privé
+- ajouter les interessés à un evenements, et afficher mes evenements dont je suis interessés
+- gerer la recherche des livres et la recherche dans la page de la librairie
+        - ajouter le fil d'ariane sur toutes les pages
+        - gerer la duplication des generation
+        - pour chaque bibliotheque montrer le nombre de livres
+        - voir un livre en detail avec sa couverture et des informations
+        - si un livre est gratuit on ne met plus acheter directement ou contacter le proprietaire
+        - mettre le fil d'ariane dans les livres
+        - mieux afficher la page mon profil
+        - ne pas mettre nos librairies archivées, et enjoliver la page
+        - pourquoi dans karate il ya pas les elements pour noter et acheter le livre?
 
+
+        - notification par mail des nouveaux livres
         - gerer la notation d'un livre
         - ajouter fontawesome
         - en creant un membre on choisi sa generation
@@ -37,6 +50,7 @@
 
 
 #FONCIONALITES pour les familles et les communautés
+- - enjoliver toutes les pages
 - les communautés et les familles ont les NFT qui appartiennent aux membres
 - le marché communautaire est redirigé dans kondashop dans la boutique de la communaute
 - gerer l'achat d'un service selon le prix ou selon l'abonnement

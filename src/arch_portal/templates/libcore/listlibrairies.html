@@ -8,12 +8,12 @@
         <div class="col-12">
             
             <div class="card-body">
-                <h5 class="card-title">
-                    Nos Librairies archivées
-                    {% if  'ADD_LIBRAIRIE' in request.session.userrights %}
+                <h3 class="card-title text-danger text-bold">
+                    Nos Librairies                    
+                </h3>
+                 {% if  'ADD_LIBRAIRIE' in request.session.userrights %}
                         <a href="{% url 'add_librairie' %}" class="btn btn-success btn-xs">Nouvelle librairie </a>
                     {% endif %}
-                </h5>
 
                 <div class="row">
                     <div class="col-lg-3"></div>
@@ -38,38 +38,39 @@
                             <div class="card card-hover">
                                 <a href="{% url 'listbooks' id=lib.id mode=1 %}">
                                     <div class="box bg-danger text-center">
-                                        <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
-                                        </h1>
+                                        <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i> </h1>
                                         <h6 class="text-white">{{ lib.nom}} </h6>
                                     </div>
                                 </a>
-
-                                
+                  
+                                <div class="el-card-item">
+                                 
                                     
-                                        <div class="el-card-item">
-                                            
-                                                <div class="el-card-avatar el-overlay-1"> <img src="{% static 'images/big/img2.jpg' %} " alt="user" style="width:100%;">
-                                                    <div class="el-overlay">
-                                                        <ul class="list-style-none el-info">
-                                                            <li class="el-item"><a class="btn default btn-outline image-popup-vertical-fit el-link" href="{% static 'images/big/img1.jpg'%}  "><i class="mdi mdi-magnify-plus"></i></a></li>
-                                                            
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="el-card-content">
-                                                    <a href="{% url 'listbooks' id=lib.id mode=1 %}">
-                                                        <h4 class="mb-0">{{ lib.nom}} </h4> <span class="text-muted">  {{ lib.description }} </span>
-                                                    </a>
-                                                </div>
+                                        <div class="el-card-avatar el-overlay-1"> <img src="{% static 'images/richbooklib.png' %} " alt="user" style="width:100%;">
+                                            <div class="el-overlay">
+                                                <ul class="list-style-none el-info">
+                                                    <li class="el-item"><a class="btn default btn-outline image-popup-vertical-fit el-link" href="{% static 'images/richbooklib.png' %}  "><i class="mdi mdi-magnify-plus"></i></a></li>
+                                                    
+                                                </ul>
+                                            </div>
                                         </div>
+                                        <div class="el-card-content">
+                                            <a href="{% url 'listbooks' id=lib.id mode=1 %}">
+                                                <h4 class="mb-0">{{ lib.nom}} </h4> <span class="text-muted">  {{ lib.description }} </span>
+                                            </a>
+                                        </div>
+                                </div>
                                 
                                 
 
                                 <a href="{% url 'show_librairie' lib.id %}">
                                     <div class="card-footer">
-                                        <div class="text-info">
-                                            {{ lib.type}}
-                                        </div>
+                                        <span class="badge text-info bg-light">
+                                            {{ lib.type}} 
+                                        </span>
+                                        <span class="badge text-white bg-success">
+                                            {{ lib.nombre_livres }} livres
+                                        </span>
                                     </div>
                                 </a>
                             </div> 

@@ -15,6 +15,8 @@ class  Communaute(models.Model):
     description = models.TextField( default="")
     superficie = models.CharField(max_length=50, default=0)
     histoire = models.TextField(default="", blank=True)
+    longitude = models.TextField(default="", blank=True)
+    latitude = models.TextField(default="", blank=True)
     geographie = models.TextField(default="", blank=True)
     origine = models.CharField(max_length=150, default="")
     listerois = models.CharField(max_length=150, default="")

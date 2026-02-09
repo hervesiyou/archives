@@ -3,16 +3,22 @@
 {% block title %} {{librairie.nom}} {% endblock %}
 {% block content %}
 
-    <header class="bg-info text-white text-center p-4">
-        <h1>  {{librairie.nom}} :  ( {{ librairie.livres.count }} ) livres
-</h1></h1>
-    </header>
+   
 
     <div class="container mt-4">
+        <div class="breadcrumb">
+            <a href="{% url 'home' %}"> <i class="fa fa-home"></i> Accueil </a> >
+            <a href="{% url 'listlibs' %}"> <i class="fa fa-book"></i> Librairies </a>
+        </div>
+        <header class="bg-info text-white text-center p-4">
+            <h1>  {{librairie.nom}} :  ( {{ librairie.nombre_livres }} ) livres </h1>
+        </header>
+
         <div class="row">
             <div class="col-md-3">
                 <h4>Filtres</h4>
                 <input type="text" class="form-control" placeholder="Rechercher un livre">
+                <button class="btn btn-primary mt-2">Rechercher</button>
                 {% comment %} <h5>Genres</h5>
                 <ul class="list-group">
                     <li class="list-group-item">Fiction</li>
@@ -24,14 +30,14 @@
             <div class="col-md-9">
                 <div class="row">
                         {% for livre in librairie.livres.all %}
-                            <div class="col-md-3">
+                            <div class="col-md-4 col-lg-3">
                                 <div class="card mb-4">
                                     <img src="{% static 'images/richbook.png' %}" class="card-img-top" alt="Livre 1">
                                     <div class="card-body">
                                         <h5 class="card-title">{{livre.nom}}</h5>
                                         <p class="card-text">{{livre.auteur}} - {{ livre.domaine}} </p>
                                         <p class="card-text">{{livre.description}}</p>
-                                        <a href="{% url 'show_book' livre.id %}" class="btn btn-primary">Détails</a>
+                                        <a href="{% url 'show_book' livre.id %}" class="btn btn-outline-primary">Détails</a>
                                     </div>
                                 </div>
                             </div>

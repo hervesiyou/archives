@@ -201,12 +201,12 @@
     <div class="container">
         <div class="breadcrumb">
             <a href="/">Accueil</a> >
-            <a href="{% url 'show_communaute' community_id %}" >{{ community_name }}</a> >
+            <a href="{% url 'show_communaute' community_id %}" > {{ community_name }}</a> >
             <span>Géographie</span>
         </div>
 
         <header>
-            <h1>Géographie de {{ community_name }}</h1>
+            <h1> <i class="fas fa-map-marked-alt"></i> Géographie - {{ community_name }}</h1>
             {% comment %} <p>Localisation et caractéristiques géographiques</p> {% endcomment %}
             <p>{{ geographie }}
         </header>

@@ -16,11 +16,16 @@
     <div class="row">
         <div class="col-12">
             
+
             <div class="card-body">
+            <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a> >
+            <a href="{% url 'listcom' %}" class=" "> Communautés </a> > {{ communaute.nom }} > Familles
                 <h5 class="card-title my-3">
                     <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a> 
                     &nbsp; 
-                    <a href="{% url 'add_famille' %}" class="btn btn-xs btn-success text-white"> Nouvelle famille</a>
+                    {% if  'ADD_FAMILLE' in request.session.userrights %}
+                        <a href="{% url 'add_famille' %}" class="btn btn-xs btn-success text-white"> Nouvelle famille</a>
+                    {% endif %}
                 </h5>
                <div class="row">
                     <div class="col-lg-3"></div>
@@ -31,7 +36,7 @@
                         </div> {% endcomment %}
                     </div>
                     <div class="col-lg-3">
-                        <a href="{% url 'listfamilles' id=communaute.id  mode=1 %}" class="text-info"> Afficher en liste</a>
+                        <a href="{% url 'listfamilles' id=communaute.id  mode=1 %}" class="btn btn-xs btn-outline-info text-info"> Afficher en liste</a>
                     </div>
                 </div>
             </div>

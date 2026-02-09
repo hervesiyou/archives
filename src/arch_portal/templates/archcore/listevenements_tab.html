@@ -12,17 +12,29 @@
     </style>
 {% endblock %}
 {% block content %}
+
+<div class="container">
+    <div class="my-2">
+            
+        <div class="card-body">
+        <div class="breadcrumb">
+        <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a> >
+        <a href="{% url 'listcom' %}" class=" "> Communautés </a> >  
+        <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a> >
+            Evenements
+        </div>
+        </div>
+    </div>
    
     <div class="row">
-        <div class="col-12">
-            
-            <div class="card-body">
+        <div class="col-12">            
+            {% comment %} <div class="card-body"> {% endcomment %}
                 <h5 class="card-title my-3">
                     
                     <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a>
                     &nbsp;
                     {% if  'ADD_EVENEMENT' in request.session.userrights %}
-                    <a href="{% url 'add_evenement' %}" class="btn btn-xs btn-success text-white"> Nouvel evenement</a>
+                        <a href="{% url 'add_evenement' %}" class="btn btn-xs btn-success text-white"> Nouvel evenement</a>
                     {% endif %}
                 </h5>
                   
@@ -52,25 +64,25 @@
                     {% endfor %} 
                             
                 </div> {% endcomment %}
-            </div>
+            {% comment %} </div> {% endcomment %}
         
         </div>
     </div>
-     <div class="row">
-        <div class="col-lg-3"></div>
-        <div class="col-lg-6">
+    {% comment %} <div class="row"> {% endcomment %}
+        {% comment %} <div class="col-lg-3"></div> {% endcomment %}
+        {% comment %} <div class="col-lg-6"> {% endcomment %}
             {% comment %} <div class="form-group">
                 <input class="col-10" type="text" value="" name="rechLivre" />
                 <button  class="  btn-success "> Rechercher </button>
             </div> {% endcomment %}
-        </div>
-        <div class="col-lg-3">
-            <a href="{% url 'listevenements' id=communaute.id  mode=1 %}" class="text-info"> Afficher en liste</a>
-        </div>
-    </div>
+        {% comment %} </div> {% endcomment %}
+        {% comment %} <div class="col-lg-3"> {% endcomment %}
+            <a href="{% url 'listevenements' id=communaute.id  mode=1 %}" class="btn btn-outline-info"> Afficher en liste </a>
+        {% comment %} </div> {% endcomment %}
+    {% comment %} </div> {% endcomment %}
 
 
-    <div class="card-body">
+    {% comment %} <div class="card-body"> {% endcomment %}
 
         <h5 class="card-title my-2">Liste des evenements  - {{communaute.nom}} </h5>
         <div class="table-responsive">
@@ -100,8 +112,8 @@
             </table>
         </div>
 
-    </div>
-
+    {% comment %} </div> {% endcomment %}
+</div>
 {% endblock %}
 
 {% block js %}

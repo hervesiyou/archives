@@ -1,29 +1,38 @@
 {% extends "base.html" %}
-{% block title %}Accueil {% endblock %}
+{% block title %}{{ famille.nom }} {% endblock %}
 {% block content %}
 
-    <div class="container mt-4">
-        <h1>Famille  <a href="{% url 'show_famille' famille.id %}" class="text-success">{{ famille.nom }}</a>    </h1>
+    <div class="container ">
+        <div class="breadcrumb">
+        <a href="{% url 'home' %}" class="my-2"> <i class="fa fa-home"></i> Accueil </a> > 
+        <a href="{% url 'show_communaute' famille.communaute.id %}" class="mb-5"> <i class="fas fa-users"></i> {{famille.communaute.nom}} </a> >
+        {{ famille.nom }}
+        </div>
+        <div class="card-body p-5">
+            <h1 class="mb-2" >Famille  <a href="{% url 'show_famille' famille.id %}" class="text-success">{{ famille.nom }}</a>    </h1>
+            {% comment %} <h1>Famille  <a href="{% url 'show_famille' famille.id %}" class="text-success">{{ famille.nom }}</a>    </h1> {% endcomment %}
 
-        {% for generation, membres in generations.items %}
-            <h2 class="text-primary py-2">Génération {{ generation }}</h2>
-            {% if generation == 0 %} <h3>Génération inconnue / Racine</h3>{% else %} <h3 class="text-secondary "> Génération {{ generation }} </h3> {% endif %}
-            <ul>
-                {% for membre in membres %}
-                    <li>
-                        {{ membre.nomcomplet }}
-                        {% if membre.nompere %}
-                            | Père : {{ membre.nompere.nomcomplet }}
-                        {% endif %}
-                        {% if membre.nommere %}
-                            | Mère : {{ membre.nommere.nomcomplet }}
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endfor %}
+            {% for generation, membres in generations.items %}
+                {% comment %} <h2 class="text-primary py-2">Génération {{ generation }}</h2> {% endcomment %}
+                {% if generation == 0 %} <h3 class="text-success"> <i class="fas fa-tree"></i> Génération  Racine</h3>
+                {% else %} <h3 class="text-primary py-2"> <i class="fas fa-people-group"></i> Génération {{ generation }} </h3> {% endif %}
+                <ul>
+                    {% for membre in membres %}
+                        <li>
+                            {{ membre.nomcomplet }}
+                            {% if membre.nompere %}
+                                | Père : {{ membre.nompere.nomcomplet }}
+                            {% endif %}
+                            {% if membre.nommere %}
+                                | Mère : {{ membre.nommere.nomcomplet }}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
 
-        <a href="{% url 'famille_arbre' famille.id %}" class="btn btn-outline-primary mt-3">Voir l’arbre généalogique</a>
+            <a href="{% url 'famille_arbre' famille.id %}" class="btn btn-outline-primary mt-3">Voir l’arbre généalogique</a>
+        </div>
     </div>
 
 {% endblock %}

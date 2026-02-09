@@ -2,9 +2,9 @@
   
     {% block title %} FAQ   - Archives   {% endblock %}
     {% block css %} 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    {% comment %} <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"> {% endcomment %}
     
     <style>
         :root {
@@ -164,8 +164,7 @@
                         <li>Gérer des communautés et familles (histoire, géographie, arbres généalogiques, statistiques démographiques)</li>
                         <li>Créer et consulter des librairies de livres (numériques/physiques, achats, notations, recommandations)</li>
                         <li>Gérer des marchés internes (ventes au sein de communautés/librairies)</li>
-                        <li>Accéder à une médiathèque (audios, documents, albums photos)</li>
-                        {% comment %} <li>Maintenir un blog (articles avec images)</li> {% endcomment %}
+                        <li>Accéder à une médiathèque (audios, documents, albums photos)</li> 
                         <li>Intégrer des NFT pour les membres de communautés/familles</li>
                     </ul>
                     <p>Elle facilite la préservation du patrimoine culturel, l'échange de savoirs et les interactions communautaires.</p>
@@ -247,15 +246,10 @@
                     <p>La médiathèque inclut :</p>
                     <ul>
                         <li>Audiothèque (fichiers audio)</li>
-                        <li>Documents (PDF, etc.)</li>
-                        {% comment %} <li>Chaînes YouTube intégrées</li> {% endcomment %}
+                        <li>Documents (PDF, etc.)</li> 
                         <li>Photothèque (albums avec titres, descriptions, images)</li>
                     </ul>
-                    {% comment %} <p>Le blog permet :</p>
-                    <ul>
-                        <li>Création d'articles (titres, contenu, images)</li>
-                        <li>Publication par admins des communautés/librairies</li>
-                    </ul> {% endcomment %}
+                    
                 </div>
             </div>
 
@@ -271,10 +265,7 @@
                         <li>Gérés via paiements sécurisés</li>
                     </ul>
                     <p>Paiements pour achats (livres, etc.) :</p>
-                    {% comment %} <ul>
-                        <li>Notifications mails automatiques</li>
-                        <li>Intégration de statistiques pour tracking</li>
-                    </ul> {% endcomment %}
+                     
                 </div>
             </div>
 
@@ -287,8 +278,7 @@
                     <p>Oui, avec :</p>
                     <ul>
                         <li>Les controles sur formulaires</li>
-                        <li>Accès contrôlés par administrateurs</li>
-                        {% comment %} <li>Données fixtures pour tests/init</li> {% endcomment %}
+                        <li>Accès contrôlés par administrateurs</li> 
                         <li>Gestion des droits et validations</li>
                     </ul>
                 </div>
@@ -314,7 +304,7 @@
         </div>
 
         <div style="text-align: center; margin: 50px 0;">
-            <a href="{% url 'index' %}" class="back-btn">← Retour à l'accueil</a>
+            <a href="{% url 'faq_index' %}" class="back-btn">← Retour à l'accueil</a>
         </div>
     </div>
 {% endblock %}
@@ -338,4 +328,4 @@
         });
     </script>
 
-{% endblock %}
+{% endblock %}  

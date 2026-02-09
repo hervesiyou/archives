@@ -11,10 +11,13 @@ class Librairie(models.Model):
     description = models.TextField()
    
     type = models.CharField(max_length=50, choices=LIB_CHOICES,blank=True)
-    lieu = models.CharField(max_length=250, null=True)
-    
+    lieu = models.CharField(max_length=250, null=True)    
     possesseur = models.ForeignKey("Membre", on_delete=models.CASCADE, null=True)
     # livres = models.ManyToManyField("Livre",related_name="mes_livres",  blank=True)
     
     def __str__(self): 
         return "{} ".format(str(self.nom).capitalize())
+    
+    @property
+    def nombre_livres(self):
+        return self.livres.count()

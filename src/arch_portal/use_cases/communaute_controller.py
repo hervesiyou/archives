@@ -236,13 +236,14 @@ def add_galerie(request):
 # Afficher l'histoire d'une communauté
 @require_http_methods(["GET"])
 def community_history(request, community_id):
+    com = Communaute.objects.get(id=community_id)
     context = {
         'community_id': community_id,
-        'community_name': 'Communauté Exemple',
+        'community_name': com.nom,
         'history': {
-            'founded_year': 1950,
-            'founder': 'Fondateur Exemple',
-            'description': 'Ceci est l\'histoire détaillée de la communauté...',
+            'origin': com.origine,
+            'chief': com.chef.nomcomplet if com.chef else "Inconnu",
+            'description': com.histoire,
             'key_events': [
                 {'year': 1950, 'event': 'Fondation de la communauté'},
                 {'year': 1975, 'event': 'Premier grand rassemblement'},
@@ -262,7 +263,7 @@ def community_geography(request, community_id):
         'community_id': community_id,
         'community_name': f"{community.nom}",
         'geographie': f"{community.geographie}",
-        'latitude': 6.8276,  # Exemple: Accra, Ghana
+        'latitude': 6.8276, 
         'longitude': -0.7893,
         'map_zoom': 12,
         'geography': {
@@ -276,7 +277,6 @@ def community_geography(request, community_id):
     }
     return render(request, 'archcore/com_geo.html', context)
 
-
 # Afficher les informations détaillées sur un roi
 @require_http_methods(["GET"])
 def king_detail(request, community_id, king_id):
@@ -286,7 +286,7 @@ def king_detail(request, community_id, king_id):
         'community_name': f"{community.nom}",
         'king': {
             'id': king_id,
-            'name': 'Roi Exemple',
+            'name': 'Roi ',
             'reign_start': 1985,
             'reign_end': 2010,
             'biography': 'Biographie détaillée du roi...',
@@ -296,14 +296,13 @@ def king_detail(request, community_id, king_id):
                 'Développement des arts',
             ],
             'family': {
-                'father': 'Père Exemple',
-                'mother': 'Mère Exemple',
-                'successors': 'Successeur Exemple'
+                'father': 'Père  ',
+                'mother': 'Mère  ',
+                'successors': 'Successeur  '
             }
         }
     }
     return render(request, 'archcore/king_detail.html', context)
-
 
 # Afficher la liste des rois d'une communauté
 @require_http_methods(["GET"])
@@ -313,24 +312,25 @@ def kings_list(request, community_id):
         'community_id': community_id,
         'communaute': community,
         'community_name': f'{community.nom}',
+        'description': f'{community.description}',
         'kings': [
             {
                 'id': 1,
-                'name': 'Roi Exemple 1',
+                'name': 'Roi   1',
                 'reign_period': '1950-1975',
-                'photo': '/static/images/king1.jpg',
+                'photo': '/static/images/rois.jpg',
                 'status': 'Décédé'
             },
             {
                 'id': 2,
-                'name': 'Roi Exemple 2',
+                'name': 'Roi   2',
                 'reign_period': '1975-2000',
                 'photo': '/static/images/king2.jpg',
                 'status': 'Décédé'
             },
             {
                 'id': 3,
-                'name': 'Roi Exemple 3',
+                'name': 'Roi   3',
                 'reign_period': '2000-Présent',
                 'photo': '/static/images/king3.jpg',
                 'status': 'En vie'

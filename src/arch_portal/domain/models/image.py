@@ -1,7 +1,6 @@
 from django.db import models
 from PIL import Image as PILImage 
-
-import os
+# import os
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
 

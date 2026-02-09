@@ -21,7 +21,7 @@
 {% block content %}     
  
     <div class="container mb-4">
-        <h2>Arbre généalogique – Famille <a href="{% url 'show_famille' famille.id %}">{{ famille.nom }}</a> </h2>
+        <h2>Arbre généalogique –  <a href="{% url 'show_famille' famille.id %}">{{ famille.nom }}</a> </h2>
         <button onclick="exportPDF()">📄 Exporter en PDF</button>
 
         <div id="tree-container"></div>

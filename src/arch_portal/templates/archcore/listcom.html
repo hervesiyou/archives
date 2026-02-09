@@ -6,24 +6,23 @@
             <div class="col-12">
 
                 <div class="card-body">
-                    <h5 class="card-title my-4">
-                        Nos Communautés archivées
-                        {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                    <h3 class="card-title my-4">  Nos Communautés   </h3>
+                    {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
                             <a href="{% url 'add_communaute' %}" class="btn btn-success btn-xs"> Nouvelle Communaté </a>
-                        {% endif %}
-                    </h5>
+                    {% endif %}
                     <div class="row">
                         {% for com in communautes %}
                             <div class="col-md-6 col-lg-2 col-xlg-3">
                                 <div class="card card-hover">
                                     <a href="{% url 'listfamilles' id=com.id mode=1 %}">
                                         <div class="box bg-success text-center">
-                                            <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i> </h1>
-                                            <h6 class="text-white">{{ com.nom}} </h6>
+                                            {% comment %} <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i> </h1> {% endcomment %}
                                             {% if  com.publique %}
-                                            {% comment %} {% if  'VOIR_COMMUNAUTE' in request.session.userrights or com.publique %} {% endcomment %}
+                                                <h6 class="text-white"><i class="fa-solid fa-person-shelter"></i> {{ com.nom}} </h6>
+                                                {% comment %} {% if  'VOIR_COMMUNAUTE' in request.session.userrights or com.publique %} {% endcomment %}
                                             <a href="{% url 'show_communaute' com.id %}" class="text-center badge bg-secondary"> Voir en détail</a>
                                             {% else %}
+                                                <h6 class="text-white"><i class="fa-solid fa-person-shelter"></i> {{ com.nom}} </h6>
                                                 <a href="#" data-com="{{com.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partComID"> Je souhaite être {{ com.nom }}</a>
                                             {% endif %}
                                         </div>

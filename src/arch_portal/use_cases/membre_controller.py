@@ -86,7 +86,7 @@ def show_user_home(request):
         user = Membre.objects.get(id=request.session["userid"])
         if(user != None):
             wallet = Wallet.objects.filter(membre_id=user.id ).first()
-            print( user.id , wallet)
+            # print( user.id , wallet)
             return render(request, "usercore/home.html", {"user":user, "wallet":wallet})
         else:
             raise MembreException( f" Membre {request.session['userid']} introuvable ")  

@@ -3,7 +3,6 @@ from django.db import models
 from arch_portal.domain.models.galerie import Galerie
 from arch_portal.domain.models.association import Association
 from arch_portal.domain import models as mod
- 
 
 
 class Famille(models.Model):
@@ -28,6 +27,10 @@ class Famille(models.Model):
 
     def __str__(self):
         return self.nom
+    
+    @property
+    def membres(self):
+        return self.membres_famille.all()
     
     def get_members(self):
         members = mod.Membre.objects.filter(familles=self.id)

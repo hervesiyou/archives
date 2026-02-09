@@ -7,8 +7,7 @@
     <link href="{% static 'css/dataTables.bootstrap4.css' %} " rel="stylesheet">
     <style>
         th{
-            text-transform: uppercase;
-            
+            text-transform: uppercase;            
         }
     </style>
 {% endblock %}
@@ -18,13 +17,16 @@
         <div class="col-12">
             
             <div class="card-body">
-                <h5 class="card-title my-3">
-                    <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a> 
-                    &nbsp; 
+                <div class="breadcrumb">
+
+                <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a> >
+                <a href="{% url 'listcom' %}" class=" "> Communautés </a> > 
+                <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a>  > Familles 
+                </div>
                     {% if  'ADD_FAMILLE' in request.session.userrights %}
                         <a href="{% url 'add_famille' %}" class="btn btn-xs btn-success text-white"> Nouvelle famille</a>
                     {% endif %}
-                </h5>
+                
 
                 <div class="row">
                     <div class="col-lg-3"></div>
@@ -35,7 +37,7 @@
                         </div>
                     </div>
                     <div class="col-lg-3">
-                        <a href="{% url 'listfamilles' id=communaute.id  mode=0 %}" class="text-info"> Afficher en liste</a>
+                        <a href="{% url 'listfamilles' id=communaute.id  mode=0 %}" class=" btn btn-xs btn-outline-info text-info"> Afficher en liste</a>
                     </div>
                 </div>
 
@@ -44,34 +46,34 @@
                         <div class="col-md-6 col-lg-2 col-xlg-3">
                             <div class="card card-hover">
                                 <div class="box bg-success text-center">
-                                    <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
-                                    </h1>
-                                    <h6 class="text-white">{{ liv.nom}} </h6>
+                                    {% comment %} <h1 class="font-light text-white"> </h1> {% endcomment %}
+                                    {% if  liv|appartient_a_famille:request.session.userid %}
+                                    {% comment %} <h6 class="text-white"> {% endcomment %} 
+                                        <a href="{% url 'show_famille' liv.id %}" class="text-white h4 text-center"><i class="fa fa-dashboard"></i>  {{ liv.nom}} </a>
+                                    {% comment %} </h6> {% endcomment %}
+                                    {% else %}
+                                        <h6 class="text-white"><i class="fa fa-dashboard"></i>  {{ liv.nom}} </h6>
+                                    {% endif %}
                                 </div>
 
                                 <div class="card-body">
                                 {% comment %} {% if  'VOIR_FAMILLE' in request.session.userrights or liv.publique %} {% endcomment %}
-                                {% comment %} valeur: {{  liv.appartient 'request.session.userid' }} {% endcomment %}
-                               
-                    
+                                {% comment %} valeur: {{  liv.appartient 'request.session.userid' }} {% endcomment %}               
 
                                 {% if  liv|appartient_a_famille:request.session.userid %}
                                     {% comment %} <p>L'utilisateur {{ request.session.userid }} appartient à cette famille .</p>
                                      {{ liv.membres_famille.all }} {% endcomment %}
                                     
-                                        <h5 > 
-                                        <a href="{% url 'show_famille' liv.id %}" class="text-center"> Voir en détail </a>
-                                        </h5>
+                                        <h5 > <a href="{% url 'show_famille' liv.id %}" class="text-center"> <i class="fa fa-eye"></i> Voir en détail </a>  </h5>
                                      
                                 {% else %} 
                                     
                                     {% if liv.publique %}
                                         <h5 > 
-                                        <a href="{% url 'show_famille' liv.id %}" class="text-center"> Voir en détail </a>
+                                        <a href="{% url 'show_famille' liv.id %}" class="btn btn-xs btn-outline-info text-info"> <i class="fa fa-eye"></i> Voir en détail </a>
                                         </h5>
                                     {% else %}
-                                            <a href="#" data-fam="{{liv.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partFamID"> Je veux appartenir à {{ liv.nom }}</a>
-                                        
+                                        <a href="#" data-fam="{{liv.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partFamID"> Je veux appartenir à {{ liv.nom }}</a>
                                     {% endif %}
                                 {% endif %}
 
@@ -79,8 +81,11 @@
                                 </div>
                                 <div class="card-footer">
                                     <div class="text-info">
-                                        Chef: <span class="badge bg-info"> {{ liv.chef.nomcomplet}}</span>
+                                    <i class="fa-solid fa-person-military-pointing"></i>
+                                        <span class="badge bg-info" title="Chef de la famille"> {{ liv.chef.nomcomplet}}</span>
+                                        {% comment %} <span class="float-right"> {{ liv.origine}} </span> {% endcomment %}
                                     </div>
+                                    <div class="float-right"> <span class="badge bg-secondary"> <i class="fa fa-users"></i> {{ liv.membres.count }} membres &nbsp; </span>   </div>  
                                 </div>
 
                                 

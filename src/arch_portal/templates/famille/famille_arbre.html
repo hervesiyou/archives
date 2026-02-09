@@ -3,13 +3,15 @@
 {% block content %} 
     <div class="container mt-4">
 
-   <h1 class="mb-2" >Arbre généalogique – Famille <a href="{% url 'show_famille' famille.id %}" class="text-center text-primary"> {{ famille.nom }} </a> </h1>
+        <h1 class="mb-2" >Arbre généalogique –   <a href="{% url 'show_famille' famille.id %}" class="text-center text-primary"> {{ famille.nom }} </a> </h1>
 
-    <ul class="mt-5">
-        {% for arbre in arbres %}
-            {% include "famille/noeud_arbre.html" with node=arbre %}
-        {% endfor %}
-    </ul>
+        <div class="div-info">
+            <ul class="mt-5">
+                {% for arbre in arbres %}
+                    {% include "famille/noeud_arbre.html" with node=arbre %}
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 
  

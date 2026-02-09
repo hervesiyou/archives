@@ -7,31 +7,43 @@
     </style>
 {% endblock %}
 {% block content %}
-    <div class="row bg">
-        <div class="col-md-3">
-            <div class="  mt-0">
+<div class="container">
+    <div class="my-3">
+            
+        <div class="card-body">
+        <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a> >
+        <a href="{% url 'listcom' %}" class=" "> Communautés </a> >  
+        <a href="{% url 'show_communaute' association.communaute.id %}" class="text-center"> {{ association.communaute.nom }} </a> >
+            Associations
+        </div>
+    </div>
+
+    {% comment %} <div class="row bg"> {% endcomment %}
+        {% comment %} <div class="col-md-3"> {% endcomment %}
+            {% comment %} <div class="  mt-0"> {% endcomment %}
                 <div class="row">
                     <div class="col-md-6">
                         <div class="text-info text-center mt-3"> 
                             <h3 class="mb-0 fw-bold">
-                                {{association.communaute}}</h3>
+                                {{association.communaute}}
+                            </h3>
                             <span class="text-muted">
-                                <a href="{% url 'listassociations' id=association.communaute.id mode=1 %}">Autres associations</a>
+                                <a href="{% url 'listassociations' id=association.communaute.id mode=1 %}"> Autres associations</a>
                             </span>
                         </div>
                     </div>
                     <div class="col-md-6 border-left text-center pt-2">
-                    <a href="{% url 'listmembresassociation' association.id %}">
-                        <h3 class="mb-0 fw-bold">{{association.membres_association.all|length}}</h3>
-                        <span class="text-muted">Membres</span>
-                    </a>
+                        <a href="{% url 'listmembresassociation' association.id %}">
+                            <h3 class="mb-0 fw-bold">{{association.membres_association.all|length}}</h3>
+                            <span class="text-muted"> Membres </span>
+                        </a>
                     </div>
                 </div>
-            </div>
-        </div>
+            {% comment %} </div> {% endcomment %}
+        {% comment %} </div> {% endcomment %}
 
 
-    </div>
+    {% comment %} </div> {% endcomment %}
     <div class="row">
         <div class="col-md-12">
             <div class="  card-body printableArea">
@@ -52,11 +64,11 @@
                     </div>
                     <div class="col-4 mt-3">
                         <div class="bg-dark p-10 text-white text-center">
-                            <i class="fa fa-globe mb-1 font-16"></i>
-                            <h5 class="mb-0 mt-1"> 
-                                    {{ association.administrateurs.all|length }} Administrateurs
-                                    <br/>
-                            </h5>
+                            
+                            <h6 class="mb-0 mt-1"> 
+                                    {% comment %} <i class="fa fa-globe mb-1 font-16"></i>  {% endcomment %}
+                                    <span class="badge bg-white text-dark">{{ association.administrateurs.all|length }}</span> Administrateurs
+                            </h6>
                             <div >
                                 {% if  'ADD_ASSOCIATION_ADMIN' in request.session.userrights %}
                                     <a href="{% url 'show_admin_asso' association.id %}" class="text-success py-3" >Voir les Administrateurs  de {{association.nom}}</a> 
@@ -78,6 +90,7 @@
             </div>
         </div>
     </div>
+</div>
 
     {% if  'ADD_ASSOCIATION_ADMIN' in request.session.userrights %} 
 

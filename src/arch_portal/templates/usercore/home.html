@@ -2,28 +2,30 @@
 {% load crispy_forms_tags %}
 {% block title %} {{ request.session.nomcomplet }} {% endblock %}
 {% block content %}
+<div class="container">
+    <div class="row">
+        {% comment %} <div class="col-lg-1"></div> {% endcomment %}
+        <div class="col-lg-12">
+            <h3 class="bg-default text-center text-white">  {{ request.session.nomcomplet}} </h3>
 
-<div class="row">
-    <div class="col-lg-1"></div>
-    <div class="col-lg-10">
-        <h3 class="bg-default text-center text-white">  {{ request.session.nomcomplet}} </h3>
-
-        <p>  {{user}} </p>
-        {%  include 'usercore/partials/home.html'  with membre=user %}
-
-        <a href="{% url 'commandes_livres' %}" class="btn btn-info"> Livres demandés (Commandes)</a>
+            {% comment %} <p>  {{user}} 55 </p> {% endcomment %}
+            {%  include 'usercore/partials/home.html'  with membre=user %}
+        </div>
+    </div>
+    <div class="row">
+        <a href="{% url 'commandes_livres' %}" class="btn btn-info col-2 m-3"> <i class="fas fa-book"></i> Livres demandés (Commandes)</a>
         {% if  'ADD_COMMUNAUTE' in request.session.userrights %} 
-            <a href="{% url 'home_comadmin' %}" class="btn btn-success"> Mes Communautés </a>
+            <a href="{% url 'home_comadmin' %}" class="btn btn-success col-2 m-3"> <i class="fas fa-users"></i> Mes Communautés </a>
         {% endif %}
          {% if  'ADD_FAMILLE' in request.session.userrights %} 
-            <a href="{% url 'home_famadmin' %}" class="btn btn-warning"> Mes Familles </a>
+            <a href="{% url 'home_famadmin' %}" class="btn btn-warning col-2 m-3"> <i class="fas fa-home"></i>   Mes Familles </a>
         {% endif %}
          {% if  'ADD_ASSOCIATION' in request.session.userrights %} 
-            <a href="{% url 'home_assoadmin' %}" class="btn btn-primary"> Mes Associations </a>
+            <a href="{% url 'home_assoadmin' %}" class="btn btn-primary col-2 m-3"> <i class="fas fa-building"></i> Mes Associations </a>
         {% endif %}
-        <a href="{% url 'home_messageadmin' %}" class="btn btn-info"> Mes Messages </a>
-        <a href="{% url 'home_abonnement' %}" class="btn btn-success"> Recharger mon compte </a>
-        <a href="{% url 'historique_paiements' %}" class="btn btn-info"> Historique des paiements </a>
+        <a href="{% url 'home_messageadmin' %}" class="btn btn-info col-2 m-3"> <i class="fas fa-envelope"></i> Mes Messages </a>
+        <a href="{% url 'home_abonnement' %}" class="btn btn-success col-2 m-3"> <i class="fas fa-receipt"></i> Recharger mon compte </a>
+        <a href="{% url 'historique_paiements' %}" class="btn btn-info col-2 m-3"> <i class="fas fa-history"></i> Historique des paiements </a>
         {% block body %}
             {% if commandes %}
             <div class="card-body">
@@ -51,6 +53,6 @@
             {% endif %}
         {% endblock %}
     </div>
-    <div class="col-lg-1"></div>
+    {% comment %} <div class="col-lg-1"></div> {% endcomment %}
 </div>
 {% endblock %}

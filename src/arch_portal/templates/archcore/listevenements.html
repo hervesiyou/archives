@@ -6,78 +6,82 @@
     <link href="{% static 'css/dataTables.bootstrap4.css' %} " rel="stylesheet">
     <style>
         th{
-            text-transform: uppercase;
-            
+            text-transform: uppercase;            
         }
     </style>
 {% endblock %}
 {% block content %}
-   
-    <div class="row">
-        <div class="col-12">
+
+<div class="container">
+    <div class="my-2">
             
-            <div class="card-body">
-                <h5 class="card-title my-3">
-                    
-                    <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a>
-                    &nbsp;
-                    {% if  'ADD_EVENEMENT' in request.session.userrights %}
-                    <a href="{% url 'add_evenement' %}" class="btn btn-xs btn-success text-white"> Nouvel evenement</a>
-                    {% endif %}
-                </h5>
-                
-                <div class="row">
-                    <div class="col-lg-3"></div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <input class="col-10" type="text" value="" name="rechLivre" />
-                            <button  class="  btn-success "> Rechercher </button>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <a href="{% url 'listevenements' id=communaute.id  mode=0 %}" class="text-info"> Afficher en liste</a>
-                    </div>
-                </div>
-                    
-                <div class="row my-5">
-                    {% for liv in evenements %}
-                        <div class="col-md-6 col-lg-2 col-xlg-3">
-                            <div class="card card-hover">
-                                <div class="box bg-success text-center">
-                                    <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
-                                    </h1>
-                                    {% comment %} <h6 class="text-white">{{ liv.titre}} </h6> {% endcomment %}
-                                    <i class="fa fa-2x"></i>
-                                    <a href="{% url 'show_evenement' liv.id %}" class="text-white" title=" cliquer pour le détail de {{liv.titre}}"> {{liv.titre}} </a>
-                                </div>
-
-                                <div class="card-body">
-                                    <h5 class="card-title"><a href="{% url 'show_famille' liv.id %}"> {{liv.nom}} </a></h5>
-                                    <p> {{liv.description}} </p>
-                                    <p>
-                                    <a href="{% url 'show_evenement' liv.id %}" 
-                                        class="text-sm" title=" cliquer pour le détail de {{liv.titre}}"> Détail </a>
-                                    </p>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="text-info">
-                                        {{ liv.date}} 
-                                        
-
-                                    </div>
-                                </div>
-
-                                
-                            </div> 
-                        </div>
-                    {% endfor %} 
-                            
-                </div>
+        <div class="card-body">
+            <div class="breadcrumb">
+            <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a> >
+            <a href="{% url 'listcom' %}" class=" "> Communautés </a> >  
+            <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a> >
+                Evenements
             </div>
-        
         </div>
     </div>
     
+    <h5 class="card-title my-3">
+        
+        <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a>
+        &nbsp;
+        {% if  'ADD_EVENEMENT' in request.session.userrights %}
+        <a href="{% url 'add_evenement' %}" class="btn btn-xs btn-success text-white"> Nouvel evenement</a>
+        {% endif %}
+    </h5>
+    
+    <div class="row">
+        <div class="col-lg-3"></div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <input class="col-10" type="text" value="" name="rechLivre" />
+                <button  class="  btn-success "> Rechercher </button>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <a href="{% url 'listevenements' id=communaute.id  mode=0 %}" class="btn btn-outline-info"> Afficher en liste</a>
+        </div>
+    </div>
+        
+    <div class="row my-5">
+        {% for liv in evenements %}
+            <div class="col-md-6 col-lg-2 col-xlg-3">
+                <div class="card card-hover">
+                    <div class="box bg-success text-center">
+                        <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
+                        </h1>
+                        
+                        <i class="fa  fa-calendar"></i>
+                        <a href="{% url 'show_evenement' liv.id %}" class="text-white" title=" cliquer pour le détail de {{liv.titre}}"> {{liv.titre}} </a>
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'show_famille' liv.id %}"> {{liv.nom}} </a></h5>
+                        <p> {{liv.description}} </p>
+                        <p>
+                            <a href="{% url 'show_evenement' liv.id %}" class="text-sm" title=" cliquer pour le détail de {{liv.titre}}"> <i class="fa fa-info-circle"></i> Détail </a>
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="text-info">
+                            {{ liv.date}} 
+                            
+
+                        </div>
+                    </div>
+
+                    
+                </div> 
+            </div>
+        {% endfor %} 
+                
+    </div>
+          
+</div>   
 
 
     {% comment %} <div class="card-body">

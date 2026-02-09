@@ -7,18 +7,32 @@
     <link href="{% static 'css/dataTables.bootstrap4.css' %} " rel="stylesheet">
     <style>
         th{
-            text-transform: uppercase;
-            
+            text-transform: uppercase;            
         }
     </style>
 {% endblock %}
 {% block content %}
+
+    <div class="my-3">
+        {% comment %} <div class="col-12"> {% endcomment %}
+            
+            <div class="card-body">
+                <div class="breadcrumb">
+                <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a> >
+                <a href="{% url 'listcom' %}" class=" "> Communautés </a> >  
+                <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a> >
+                Associations
+                </div>
+            </div>
+            
+        {% comment %} </div> {% endcomment %}
+    </div>
    
     <div class="row">
         <div class="col-12">
             
             <div class="card-body">
-                <h5 class="card-title my-5">
+                <h5 class="card-title my-2">
                     <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a>
                     &nbsp;
                     {% if  'ADD_ASSOCIATION' in request.session.userrights or liv.publique %}
@@ -35,7 +49,7 @@
                         </div>
                     </div>
                     <div class="col-lg-3">
-                        <a href="{% url 'listassociations' id=communaute.id  mode=0 %}" class="text-info"> Afficher en liste</a>
+                        <a href="{% url 'listassociations' id=communaute.id  mode=0 %}" class=" btn btn-sm btn-outline-info my-2"> Afficher en liste</a>
                     </div>
                 </div>
 
@@ -44,18 +58,20 @@
                         <div class="col-md-6 col-lg-2 col-xlg-3">
                             <div class="card card-hover">
                                 <div class="box bg-success text-center">
-                                    <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
-                                    </h1>
-                                    <h6 class="text-white">{{ liv.nom}} </h6>
+                                    {% comment %} <h1 class="font-light text-white">  </h1> {% endcomment %}
+                                    {% if liv.publique  or liv|appartient:request.session.userid  or 'VOIR_ASSOCIATION' in request.session.userrights %}
+                                        <a href="{% url 'show_association' liv.id %}" class="text-center h5  text-white"><i class="fa-solid fa-users-line"></i> {{ liv.nom}} </a>
+                                    {% else %}
+                                        <h6 class="text-white"><i class="fa-solid fa-ranking-star"></i> {{ liv.nom}} </h6>
+                                    {% endif %}
                                 </div>
 
                                 <div class="card-body">
-                                    <h5 class="card-title">
-                                    
+                                    <h5 class="card-title">                                    
                                          
                                         {% if liv.publique  or liv|appartient:request.session.userid  or 'VOIR_ASSOCIATION' in request.session.userrights %}
    
-                                           <a href="{% url 'show_association' liv.id %}" class="text-center badge bg-secondary"> Voir en détail</a>
+                                           <a href="{% url 'show_association' liv.id %}" class="text-center badge bg-secondary"> <i class="fa fa-eye"></i> Voir en détail</a>
                                         {% else %}
                                             <a href="#" data-asso="{{liv.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partAssoID"> Je souhaite participer à  {{ liv.nom }}</a>
                                         {% endif %}

@@ -115,6 +115,10 @@ def listfamilles(request, id, mode=0):
 
 def show_famille(request,id):
     fam = Famille.objects.get(id=id)
+
+    if not request.session.get("userid","") :
+        return redirect("login" )
+    
     #  ce utilisateur ne peut voir les info detaillée de la famille que si il appartient à la famille ou a des droits
     userid = request.session.get("userid","")
     user = Membre.objects.get(id=userid)
@@ -137,6 +141,9 @@ def add_admin_fam(request):
     if is_ajax :
         if request.method == "POST" :
             data = json.loads(request.body.decode('utf-8'))
+            if not request.session.get("userid","") :
+                return redirect("login" )
+    
             userid = request.session.get("userid","")
             # user = f' un: {request.session.get("username","")} ,id: {request.session.get("userid","")},n: {request.session.get("nomocomplet","")}'
              

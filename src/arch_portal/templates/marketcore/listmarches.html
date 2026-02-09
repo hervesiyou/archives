@@ -12,11 +12,13 @@
                             {% for mar in marches %}
                                 <div class="col-md-6 col-lg-2 col-xlg-3">
                                     <div class="card card-hover">
+                                    <a href="{{mar.lien}}"  target="__blank" title="{{mar.description}}">
                                         <div class="box bg-warning text-center">
                                             <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
                                             </h1>
                                             <h6 class="text-white">{{ mar.nom}} </h6>
                                         </div>
+                                    </a>
 
                                         <div class="card-body">
                                             <p> {{mar.description}} </p>
