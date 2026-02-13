@@ -4,9 +4,8 @@ from arch_portal.domain.models.categorielivre import Categorie
 from .image import Image
 from .membre import Membre
 import random
- 
-
 from arch_portal.domain.models.CONST_DATA import LIV_CHOICES
+
 class Livre(models.Model):
     
     class Meta:
@@ -37,9 +36,6 @@ class Livre(models.Model):
     def __str__(self):
         return f"{self.nom}, {self.auteur}  (ISBN: {self.isbn})"
     
-    # models.py (dans Livre)
-
-
     def moyenne_notes(self):
         return self.notations.aggregate(avg=models.Avg("note"))["avg"] or 0
 

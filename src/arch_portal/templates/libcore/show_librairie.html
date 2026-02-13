@@ -16,9 +16,12 @@
 
         <div class="row">
             <div class="col-md-3">
-                <h4>Filtres</h4>
-                <input type="text" class="form-control" placeholder="Rechercher un livre">
-                <button class="btn btn-primary mt-2">Rechercher</button>
+                <h4>Rechercher</h4>
+                <form method="post" action="{% url 'search_book_lib' librairie.id  %}">
+                    {% csrf_token %}
+                    <input type="text" class="form-control" name="rechLivre" placeholder="Rechercher un livre">
+                    <button type="submit" class="btn btn-primary mt-2">Rechercher</button>
+                </form>
                 {% comment %} <h5>Genres</h5>
                 <ul class="list-group">
                     <li class="list-group-item">Fiction</li>

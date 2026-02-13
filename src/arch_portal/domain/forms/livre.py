@@ -4,7 +4,6 @@ from django.forms import ModelForm,ValidationError, modelformset_factory
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column,Fieldset, HTML
   
-
 class ImageInlineForm(ModelForm):
     class Meta:
         model = Image
@@ -14,7 +13,6 @@ ImageFormSet = modelformset_factory(Image, form=ImageInlineForm, extra=3)
 
 class LivreForm(ModelForm):
     # images = forms.ModelMultipleChoiceField(queryset=Image.objects.all(), widget=forms.CheckboxSelectMultiple)
-
     class Meta:
         model = Livre
         exclude = ["librairies"]

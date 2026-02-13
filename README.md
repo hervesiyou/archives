@@ -4,8 +4,8 @@
                
 
 - inserer la famille nkouonchichoue et la famille takoukam
-- ajouter les interessés à un evenements, et afficher mes evenements dont je suis interessés
 - gerer la recherche des livres et la recherche dans la page de la librairie
+        - ajouter les interessés à un evenements, et afficher mes evenements dont je suis interessés
 
         - details des rois, detail histoire, details geographie par carte googlemap
         - perfectionner l'ajout des histoire, les gps et les rois d'une communauté

@@ -312,7 +312,12 @@ def facture_pdf(request, paiement_id):
 
 def show_book(request,id):
     liv = Livre.objects.get(id=id)
-    librairieid = request.session.get('librairieid',"")
+    librairieid = request.session.get('librairieid',None)
+    if librairieid == None :
+        librairie = liv.librairies.first()
+    else:
+        librairie = Librairie.objects.get(id=librairieid)
+
     abos = achat=connecte=False
     userid = request.session.get("userid","")
     if( isinstance(userid, int) and userid !="" ):
@@ -324,11 +329,11 @@ def show_book(request,id):
         
         connecte = True
     
-    if librairieid is None:
-        messages.error(request, "La librairie de ce livre n'existe pas , merci de choisir la librairie de ce livre .")
+    if librairieid is None and liv.librairies.count() < 1:
+        messages.error(request, "La librairie de ce livre n'existe pas , merci de choisir un autre  livre .")
         return  redirect("listlibs")
     
-    return render(request, "libcore/showbook.html", {"livre" : liv,"librairie" : Librairie.objects.get(id=librairieid), "connecte":connecte, "abonnements":abos , "achat":achat} )
+    return render(request, "libcore/showbook.html", {"livre" : liv,"librairie" : librairie, "connecte":connecte, "abonnements":abos , "achat":achat} )
 
 def add_book(request):
     librairie = request.session.get('librairie',"")
@@ -402,20 +407,33 @@ def show_book_file(request,id):
             print("Erreur lors du chargement du livre ")
         #    return redirect("show_book",livre.id ) 
 
+def search_book_lib(request,id):
+    name = request.POST.get("rechLivre","")
+    
+    lib = Librairie.objects.get(id=id)
+
+    livres = lib.livres.filter(
+        Q(nom__icontains=name) |
+        Q(auteur__icontains=name) | 
+        Q(description__icontains=name)|
+        Q(domaine__icontains=name)
+    )
+    
+    return render(request, "libcore/listsearchedbooks.html", { "livres":livres , "name": name, "librairie": lib} )
+   
+
 def search_book(request):
     name = request.POST.get("rechLivre","")
-    print(name) 
+    # print(name) 
     livres = Livre.objects.filter(
         Q(nom__icontains=name) |
         Q(auteur__icontains=name) | 
         Q(description__icontains=name)|
         Q(domaine__icontains=name)
     )
-    # if livres.exists():
+    
     return render(request, "libcore/listsearchedbooks.html", { "livres":livres , "name": name} )
-    # else:
-        # print("erreur lors de la recherche du livre ")
-        #  return redirect("show_book",livre.id ) 
+    
 
 def show_librairie(request,id):
     lib = Librairie.objects.get(id=id)

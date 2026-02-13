@@ -91,6 +91,7 @@ urlpatterns += [
     path('lbs/<int:id>.<int:mode>', librairie.listbooks,  name="listbooks"),
     path('sb/<int:id>', librairie.show_book, name="show_book"),
     path('searb', librairie.search_book, name="search_book"),
+    path('searbl/<int:id>', librairie.search_book_lib, name="search_book_lib"),
     path('sbf/<int:id>', librairie.show_book_file, name="show_book_file"),
     path('ab/', librairie.add_book, name="addbook"),
     path('al/', librairie.add_librairie, name="add_librairie"),

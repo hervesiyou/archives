@@ -11,59 +11,67 @@
     </style>
 {% endblock %}
 {% block content %}
-   
-    <div class="row">
-        <div class="col-12">
-             
-                <div class="card-body">
-                    <h5 class="card-title">
-                        {{ librairie.nom }} - Nos livres 
-                        {% if  'ADD_LIVRE' in request.session.userrights %}
-                            <a href="{% url 'addbook' %}" class="btn btn-sm btn-info"> Ajouter un livre</a>
-                        {% endif %}
-                    </h5>
-                    <div class="row">
-                        <div class="col-lg-3"></div>
-                        <div class="col-lg-6">
-                            <div class="form-group">
-                                <input class="col-10" type="text" value="" name="rechLivre" />
-                                <button  class="  btn-success "> Rechercher </button>
+    <div class="container">
+            <div class="breadcrumb">
+                <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil </a> > 
+                <a href="{% url 'show_librairie' librairie.id %}"> <i class="fa fa-book"></i> {{ librairie.nom }}</a>
+            </div>
+        <div class="row">
+            <div class="col-12">
+                
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {{ librairie.nom }} 
+                            {% if  'ADD_LIVRE' in request.session.userrights %}
+                                <a href="{% url 'addbook' %}" class="btn btn-sm btn-info"> Ajouter un livre</a>
+                            {% endif %}
+                        </h5>
+                        <div class="row">
+                            <div class="col-lg-3"></div>
+                            <div class="col-lg-6">
+                            <form method="post" action="{% url 'search_book_lib' librairie.id  %}">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <input class="col-10" type="text" value="" name="rechLivre" />
+                                    <button type="submit" class="  btn-success "> Rechercher </button>
+                                </div>
+                            </form>
+
+                            </div>
+                            <div class="col-lg-3">
+                                <a href="{% url 'listbooks' id=librairie.id  mode=1 %}" class="text-info" title="Afficher en liste" > <i class="fa fa-list"></i> </a>
                             </div>
                         </div>
-                        <div class="col-lg-3">
-                            <a href="{% url 'listbooks' id=librairie.id  mode=1 %}" class="text-info"> Afficher en liste</a>
-                        </div>
-                    </div>
-                    {% comment %} <div class="row">
-                        {% for liv in livres %}
-                            <div class="col-md-6 col-lg-2 col-xlg-3">
-                                <div class="card card-hover">
-                                    <div class="box bg-danger text-center">
-                                        <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
-                                        </h1>
-                                        <h6 class="text-white">{{ liv.prix}} XAF </h6>
-                                    </div>
-
-                                    <div class="card-body">
-                                        <h5 class="card-title"><a href="{% url 'show_book' liv.id %}" title="Cliquer pour consulter en détail"> {{liv.nom}} </a></h5>
-                                        <p> {{liv.description}} </p>
-                                    </div>
-                                    <div class="card-footer">
-                                        <div class="text-info">
-                                            {{ liv.auteur}}
+                        {% comment %} <div class="row">
+                            {% for liv in livres %}
+                                <div class="col-md-6 col-lg-2 col-xlg-3">
+                                    <div class="card card-hover">
+                                        <div class="box bg-danger text-center">
+                                            <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i>
+                                            </h1>
+                                            <h6 class="text-white">{{ liv.prix}} XAF </h6>
                                         </div>
-                                    </div>
 
-                                    
-                                </div> 
-                            </div>
-                        {% endfor %} 
-                             
-                    </div> {% endcomment %}
-                </div>
-            
+                                        <div class="card-body">
+                                            <h5 class="card-title"><a href="{% url 'show_book' liv.id %}" title="Cliquer pour consulter en détail"> {{liv.nom}} </a></h5>
+                                            <p> {{liv.description}} </p>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="text-info">
+                                                {{ liv.auteur}}
+                                            </div>
+                                        </div>
+
+                                        
+                                    </div> 
+                                </div>
+                            {% endfor %} 
+                                
+                        </div> {% endcomment %}
+                    </div>
+                
+            </div>
         </div>
-    </div>
 
     
         <div class="card-body">
@@ -104,7 +112,7 @@
             {% endif %}
 
         </div>
-    
+    </div>
 
 {% endblock %}
 

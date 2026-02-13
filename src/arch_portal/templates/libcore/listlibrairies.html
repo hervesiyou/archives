@@ -4,6 +4,11 @@
 {% block content %}
    
     <div class="container">
+
+        <div class="breadcrumb">
+            <a href="{% url 'home' %}"> <i class="fa fa-home"></i> Accueil </a> >
+            <a href="{% url 'listlibs' %}"> <i class="fa fa-book"></i> Librairies </a>
+        </div>
     <div class="row">
         <div class="col-12">
             
@@ -59,8 +64,7 @@
                                                 <h4 class="mb-0">{{ lib.nom}} </h4> <span class="text-muted">  {{ lib.description }} </span>
                                             </a>
                                         </div>
-                                </div>
-                                
+                                </div>                               
                                 
 
                                 <a href="{% url 'show_librairie' lib.id %}">

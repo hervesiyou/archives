@@ -11,31 +11,40 @@
     </style>
 {% endblock %}
 {% block content %}
-   
-    <div class="row">
-        <div class="col-12">
-             
-                <div class="card-body">
-                    <h5 class="card-title">
-                        {{name}} - Nos livres 
-                        
-                    </h5>
-                    <div class="row">
-                        <div class="col-lg-3"></div>
-                        <div class="col-lg-6">
-                           <form method="post" action="{% url 'search_book'  %}">
-                                {% csrf_token %}
-                                <input class="col-10" type="text" value="" name="rechLivre" />
-                                <button  class="  btn-success " type="submit"> Rechercher </button>
-                            </form>
-                        </div>
-                        <div class="col-lg-3">
-                         </div>
-                    </div> 
-                </div>
-            
+    <div class="container">
+
+        <div class="breadcrumb">
+            <a href="{% url 'home' %}"> <i class="fa fa-home"></i> Accueil </a> >
+            <a href="{% url 'listlibs' %}"> <i class="fa fa-book"></i> Librairies </a>
         </div>
-    </div>
+
+        <div class="row">
+            <div class="col-12">
+                
+                    <div class="card-body">
+                        <h5 class="card-title">
+                          {% if librairie.exists %} 
+                            <span class=""> {{librairie}}</div> 
+                            {% endif %} 
+                             Occurences - <span class="text-info"> {{name}} </span>
+                            
+                        </h5>
+                        <div class="row">
+                            <div class="col-lg-3"></div>
+                            <div class="col-lg-6">
+                            <form method="post" action="{% url 'search_book'  %}">
+                                    {% csrf_token %}
+                                    <input class="col-10" type="text" value="" name="rechLivre" />
+                                    <button  class="  btn-success " type="submit"> Rechercher </button>
+                                </form>
+                            </div>
+                            <div class="col-lg-3">
+                            </div>
+                        </div> 
+                    </div>
+                
+            </div>
+        </div>
 
     
         <div class="card-body">
@@ -76,7 +85,7 @@
             {% endif %}
 
         </div>
-    
+    </div>
 
 {% endblock %}
 

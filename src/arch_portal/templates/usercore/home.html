@@ -24,6 +24,8 @@
         <a href="{% url 'home_messageadmin' %}" class="btn btn-info col-2 m-3"> <i class="fas fa-envelope"></i> Mes Messages </a>
         <a href="{% url 'home_abonnement' %}" class="btn btn-success col-2 m-3"> <i class="fas fa-receipt"></i> Recharger mon compte </a>
         <a href="{% url 'historique_paiements' %}" class="btn btn-info col-2 m-3"> <i class="fas fa-history"></i> Historique des paiements </a>
+        <a href="{% url 'mes_evenements_likes' %}" class="btn btn-info col-2 m-3"> Mes evenements interéssants</a>
+                    
         {% block body %}
             {% if commandes %}
             <div class="card-body">

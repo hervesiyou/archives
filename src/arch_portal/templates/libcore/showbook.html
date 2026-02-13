@@ -15,237 +15,237 @@
     </script>
 {% endblock %}
 {% block content %}
-    <div class="row">
-        <div class="col-md-12">
-            <div class="  card-body printableArea">
-                <div class="breadcrumb">
-                    <a href="{% url 'home' %}"> <i class="fa fa-home"></i> Accueil </a> >
-                    <a href="{% url 'show_librairie' librairie.id %}"> <i class="fa fa-book"></i> {{ librairie.nom }} </a> > {{livre.nom}} 
-                </div>
-
-                <h3><b>{{livre.nom}}</b> <span class="pull-right">ISBN: {{ livre.isbn}}</span> - <span class="  bg-default">{{ livre.type}} </span></h3>
-                <hr>
-                <div class="row">
-                    <div class="col-md-4">
-                        {%  if livre.images.all|length > 0 %}
-                            {% with first_image=livre.images.first %}
-                                <div class="book-image">
-                                    <img src="{{ first_image.fichier.url }}" alt="{{ livre.description|default:'Couverture du livre' }}">
-                                </div>
-                            {% endwith %}
-                        {% else %}
-                            <img src="{% static 'images/big/img2.jpg' %} " alt="{{livre.description}}" style="max-width: 200px; max-height: 200px;">
-                        {% endif %}
-                        {% comment %} <img src="{% static 'images/big/img2.jpg' %} " alt="{{livre.description}}" style="max-width: 200px; max-height: 200px;"> {% endcomment %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="  card-body printableArea">
+                    <div class="breadcrumb">
+                        <a href="{% url 'home' %}"> <i class="fa fa-home"></i> Accueil </a> >
+                        <a href="{% url 'show_librairie' librairie.id %}"> <i class="fa fa-book"></i> {{ librairie.nom }} </a> > {{livre.nom}} 
                     </div>
-                    <div class="col-md-8">
-                        <div class="pull-left">
-                            <address>
-                                <h3> &nbsp;<b class="text-danger text-capitalize">{{livre.description}} </b></h3>
-                                <p class="text-muted ms-1">{{livre.auteur}}
-                                    <br> {{livre.domaine}} 
-                            </address>
-                        </div>
 
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="table-responsive mt-5" style="clear: both;">
-                            <table class="table table-hover">
-                                <thead class="bg-default">
-                                    <tr>
-                                        <th class="text-center">#</th>
-                                        <th>Description</th>
-                                        <th class="text-end">Stock</th>
-                                        <th class="text-end">Cout</th>
-                                        <th class="text-end">Auteur</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="text-center"> 
-                                            <div class="book-images">
-                                            {%  if livre.images.all|length > 0 %}
-                                                {% for image in livre.images.all %}
-                                                    <div class="book-image">
-                                                        <img src="{{ image.fichier.url }}" alt="{{livre.description}}">                                                        
-                                                    </div>
-                                                {% endfor %}
-                                            {% else %}
-                                               <img src="{% static 'images/big/img2.jpg' %} " alt="{{livre.description}}" style="max-width: 100px; max-height: 100px;">
-                                            {% endif %}
-                                            </div>
-                                         </td>
-                                        <td><span class="text-info text-bold"> {{livre.description}} </span></td>
-                                        <td class="text-end">
-                                            <span class="badge bg-secondary"> {{livre.stock}} exemplaires </span>
-                                            <div class="mb-2">
-                                                {% with livre.moyenne_notes as moyenne %}
-                                                    {% for i in "12345" %}
-                                                        {% if forloop.counter <= moyenne|floatformat:0 %}
-                                                            ⭐
-                                                        {% else %}
-                                                            ☆
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                    <small>({{ livre.total_notes }} avis)</small>
-                                                {% endwith %}
-                                            </div>
-
-                                        </td>
-                                        <td > 
-                                        
-                                        {% if achat and livre.file.url %}
-                                            <a href="{% url 'show_book_file' livre.id %}"  class=" btn btn-xs btn-outline-info text-success" target="_blank">
-                                             Voir +
-                                            </a>
-                                            <a href="{{livre.file.url}}"  class="text-success" target="_blank">
-                                            Telecharger
-                                            </a>
-                                        {% endif %}
-
-                                        <span class="text-bold text-danger "> {{livre.prix}} XAF </span>
-                                        </td>
-                                        <td class="text-end"> {{livre.auteur}} </td>
-                                    </tr>
-                                      
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                       
-                        <div class="pull-right mt-4 text-end">
-                            <h3>Cout :<b> {{livre.prix}} XAF</b></h3>
-                        </div>
-                         
-                        <hr>                   
-                       
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="my-4 text-start">
-                            {% comment %} {{connectee }} {{ achat }} {% endcomment %}
-                            {% if livre.type == "Numerique" %}
-                                {% if connecte %}
-                                        {% if achat %}
-                                            <a class="btn btn-success text-white"  data-bs-toggle="modal"  data-bs-target="#paiementModal">Acheter directement</a>
-                                        {% endif %}
-                                        <button class="btn btn-warning"  data-bs-toggle="modal"    data-bs-target="#notationModal">
-                                            Noter ce livre ⭐
-                                        </button>
-                                        {% if achat %}
-                                            <div class="text-success"> Votre abonnement vous permet de directement telecharger ce livre </div>
-                                        {% else %}
-                                            <span class="text-danger"> Merci de recharger votre compte ou  vous abonner pour obtenir ce livre</span>
-                                        {% endif %}
-                              
-                                {% else %}
-                                    <a href="{% url 'login' %}" class="div-error"> Merci de vous connecter pour commander directement ce livre </a> 
-                                {% endif %}
+                    <h3><b>{{livre.nom}}</b> <span class="pull-right">ISBN: {{ livre.isbn}}</span> - <span class="  bg-default">{{ livre.type}} </span></h3>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-4">
+                            {%  if livre.images.all|length > 0 %}
+                                {% with first_image=livre.images.first %}
+                                    <div class="book-image">
+                                        <img src="{{ first_image.fichier.url }}" alt="{{ livre.description|default:'Couverture du livre' }}">
+                                    </div>
+                                {% endwith %}
                             {% else %}
-                                <span class="text-info"> Ce livre est disponible en format physique. Merci de contacter le propriétaire pour plus de details </span>
+                                <img src="{% static 'images/big/img2.jpg' %} " alt="{{livre.description}}" style="max-width: 200px; max-height: 200px;">
                             {% endif %}
+                            {% comment %} <img src="{% static 'images/big/img2.jpg' %} " alt="{{livre.description}}" style="max-width: 200px; max-height: 200px;"> {% endcomment %}
                         </div>
-                    </div>
-                    <div class="col-lg-6">
-                        {% if  'COMMANDER_LIVRE' in request.session.userrights %}
-                            <div class=" text-end pull-right">
-                                <button class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#orderModal"type="button"> Me le procurer chez le propriétaire</button>
+                        <div class="col-md-8">
+                            <div class="pull-left">
+                                <address>
+                                    <h3> &nbsp;<b class="text-danger text-capitalize">{{livre.description}} </b></h3>
+                                    <p class="text-muted ms-1">{{livre.auteur}}
+                                        <br> {{livre.domaine}} 
+                                </address>
                             </div>
 
-                            <div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger text-white ">
-                                    <h5 class="modal-title " id="exampleModalLabel"> Commande de {{ livre.nom}} </h5>
-                                    <button type="button" class="btn-close clos" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                        
-                                    <form    method="post" >
-                                        <div class="modal-body"> 
-                                            {% csrf_token %}
-                                            <label class="form_label"> Proprietaire</label>
-                                            <input type="text" id="possesseur" readonly value="{{ librairie.possesseur.nomcomplet }}" data-id="{{librairie.possesseur.id }}" class="form-control" />
-                                            <label class="form_label"> Son contact</label>
-                                            <input type="text" id="email"  disabled value="{{ librairie.possesseur.email }}" class="form-control"/>
-                                            <input type="text" id="livre"disabled value="{{ livre.nom }} / {{ livre.description}}" data-id="{{livre.id}}" class="form-control" />
-                                            <label class="form_label"> Mon nom</label>
-                                            {% if not request.session.username %}
-                                                <input type="text" id="nom" value="" placeholder="Votre nom complet"  class="form-control" />
-                                            {% else %}
-                                                <input type="text" id="nom" value="{{request.session.nomcomplet}}" class="form-control" />
-                                            {% endif %}
-                                            <label class="form_label"> Mon Telephone</label>
-                                            <input type="text" id="telephone" value="" placeholder="Votre numero de telephone" class="form-control" />
-                                            <label class="form_label"> Message au Proprietaire</label>
-                                            <textarea id="message" placeholder="Laissez un message au Proprietaire ..." class="form-control"></textarea> 
-                                            
-                                            <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
-                                        </div>
-
-                                         
-
-                                        <div class="modal-footer">
-
-                                        <input type="button" class="btn btn-primary" id="addOrderID" 
-                                        disabled 
-                                        value="Enregistrer" />
-                                        </div>
-                        
-                                    </form>
-                                </div>
-                                </div>
-                            </div> 
-
-                        {% else %}
-                             <a href="{% url 'login' %}"> <div class="div-info"> Merci de vous connecter pour commander ce livre </div></a>
-                        {% endif %}
+                        </div>
                     </div>
-                     
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive mt-5" style="clear: both;">
+                                <table class="table table-hover">
+                                    <thead class="bg-default">
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th>Description</th>
+                                            <th class="text-end">Stock</th>
+                                            <th class="text-end">Cout</th>
+                                            <th class="text-end">Auteur</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-center"> 
+                                                <div class="book-images">
+                                                {%  if livre.images.all|length > 0 %}
+                                                    {% for image in livre.images.all %}
+                                                        <div class="book-image">
+                                                            <img src="{{ image.fichier.url }}" alt="{{livre.description}}">                                                        
+                                                        </div>
+                                                    {% endfor %}
+                                                {% else %}
+                                                <img src="{% static 'images/big/img2.jpg' %} " alt="{{livre.description}}" style="max-width: 100px; max-height: 100px;">
+                                                {% endif %}
+                                                </div>
+                                            </td>
+                                            <td><span class="text-info text-bold"> {{livre.description}} </span></td>
+                                            <td class="text-end">
+                                                <span class="badge bg-secondary"> {{livre.stock}} exemplaires </span>
+                                                <div class="mb-2">
+                                                    {% with livre.moyenne_notes as moyenne %}
+                                                        {% for i in "12345" %}
+                                                            {% if forloop.counter <= moyenne|floatformat:0 %}
+                                                                ⭐
+                                                            {% else %}
+                                                                ☆
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        <small>({{ livre.total_notes }} avis)</small>
+                                                    {% endwith %}
+                                                </div>
+
+                                            </td>
+                                            <td > 
+                                            
+                                            {% if achat and livre.file.url %}
+                                                <a href="{% url 'show_book_file' livre.id %}"  class=" btn btn-xs btn-outline-info text-success" target="_blank">
+                                                Voir +
+                                                </a>
+                                                <a href="{{livre.file.url}}"  class="text-success" target="_blank">
+                                                Telecharger
+                                                </a>
+                                            {% endif %}
+
+                                            <span class="text-bold text-danger "> {{livre.prix}} XAF </span>
+                                            </td>
+                                            <td class="text-end"> {{livre.auteur}} </td>
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                        
+                            <div class="pull-right mt-4 text-end">
+                                <h3>Cout :<b> {{livre.prix}} XAF</b></h3>
+                            </div>
+                            
+                            <hr>                   
+                        
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="my-4 text-start">
+                                {% comment %} {{connectee }} {{ achat }} {% endcomment %}
+                                {% if livre.type == "Numerique" %}
+                                    {% if connecte %}
+                                            {% if achat %}
+                                                <a class="btn btn-success text-white"  data-bs-toggle="modal"  data-bs-target="#paiementModal">Acheter directement</a>
+                                            {% endif %}
+                                            <button class="btn btn-warning"  data-bs-toggle="modal"    data-bs-target="#notationModal">
+                                                Noter ce livre ⭐
+                                            </button>
+                                            {% if achat %}
+                                                <div class="text-success"> Votre abonnement vous permet de directement telecharger ce livre </div>
+                                            {% else %}
+                                                <span class="text-danger"> Merci de recharger votre compte ou  vous abonner pour obtenir ce livre</span>
+                                            {% endif %}
+                                
+                                    {% else %}
+                                        <a href="{% url 'login' %}" class="div-error"> Merci de vous connecter pour commander directement ce livre </a> 
+                                    {% endif %}
+                                {% else %}
+                                    <span class="text-info"> Ce livre est disponible en format physique. Merci de contacter le propriétaire pour plus de details </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            {% if  'COMMANDER_LIVRE' in request.session.userrights %}
+                                <div class=" text-end pull-right">
+                                    <button class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#orderModal"type="button"> Me le procurer chez le propriétaire</button>
+                                </div>
+
+                                <div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-danger text-white ">
+                                        <h5 class="modal-title " id="exampleModalLabel"> Commande de {{ livre.nom}} </h5>
+                                        <button type="button" class="btn-close clos" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                            
+                                        <form    method="post" >
+                                            <div class="modal-body"> 
+                                                {% csrf_token %}
+                                                <label class="form_label"> Proprietaire</label>
+                                                <input type="text" id="possesseur" readonly value="{{ librairie.possesseur.nomcomplet }}" data-id="{{librairie.possesseur.id }}" class="form-control" />
+                                                <label class="form_label"> Son contact</label>
+                                                <input type="text" id="email"  disabled value="{{ librairie.possesseur.email }}" class="form-control"/>
+                                                <input type="text" id="livre"disabled value="{{ livre.nom }} / {{ livre.description}}" data-id="{{livre.id}}" class="form-control" />
+                                                <label class="form_label"> Mon nom</label>
+                                                {% if not request.session.username %}
+                                                    <input type="text" id="nom" value="" placeholder="Votre nom complet"  class="form-control" />
+                                                {% else %}
+                                                    <input type="text" id="nom" value="{{request.session.nomcomplet}}" class="form-control" />
+                                                {% endif %}
+                                                <label class="form_label"> Mon Telephone</label>
+                                                <input type="text" id="telephone" value="" placeholder="Votre numero de telephone" class="form-control" />
+                                                <label class="form_label"> Message au Proprietaire</label>
+                                                <textarea id="message" placeholder="Laissez un message au Proprietaire ..." class="form-control"></textarea> 
+                                                
+                                                <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
+                                            </div>
+
+                                            
+
+                                            <div class="modal-footer">
+
+                                            <input type="button" class="btn btn-primary" id="addOrderID" 
+                                            disabled 
+                                            value="Enregistrer" />
+                                            </div>
+                            
+                                        </form>
+                                    </div>
+                                    </div>
+                                </div> 
+
+                            {% else %}
+                                <a href="{% url 'login' %}"> <div class="div-info"> Merci de vous connecter pour commander ce livre </div></a>
+                            {% endif %}
+                        </div>
+                        
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    {% if achat  %}
+        <div class="modal fade" id="paiementModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
 
-
-{% if achat  %}
-    <div class="modal fade" id="paiementModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title">Paiement du livre</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <form method="post" action="{% url 'payer_livre' livre.id %}">
-                {% csrf_token %}
-
-                <div class="modal-body">
-                    <p><b>Livre :</b> {{ livre.nom }}</p>
-                    <p><b>Description :</b> {{ livre.description }}</p>
-                    <p><b>Prix :</b> <span class="text-danger">{{ livre.prix }} XAF</span></p>
-                    <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Paiement du livre</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
+                <form method="post" action="{% url 'payer_livre' livre.id %}">
+                    {% csrf_token %}
 
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">
-                        Confirmer le paiement
-                    </button>
+                    <div class="modal-body">
+                        <p><b>Livre :</b> {{ livre.nom }}</p>
+                        <p><b>Description :</b> {{ livre.description }}</p>
+                        <p><b>Prix :</b> <span class="text-danger">{{ livre.prix }} XAF</span></p>
+                        <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">
+                            Confirmer le paiement
+                        </button>
+                    </div>
+                </form>
+
                 </div>
-            </form>
-
             </div>
         </div>
-    </div>
-{% endif %}
+    {% endif %}
 
 
     <div class="modal fade" id="notationModal" tabindex="-1">

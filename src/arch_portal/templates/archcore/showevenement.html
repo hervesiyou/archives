@@ -37,6 +37,7 @@
                     <div class="col-md-6 border-left text-center pt-2">
                         <h3 class="mb-0 fw-bold">150</h3>
                         <span class="text-muted">Interessés</span>
+                        <div>
 
                         {% if request.session.username %}
                             <a href="{% url 'toggle_like_evenement' evenement.id %}" class="btn btn-light">
@@ -54,6 +55,7 @@
                         {% else %}
                             <i class="fa-regular fa-heart"></i> Connectez-vous pour liker
                         {% endif %}
+                        </div>
 
                     </div>
                 </div>
