@@ -26,8 +26,16 @@ from arch_portal.domain.models.paiementlivre import PaiementLivre
 from arch_portal.domain.models.notationlivre import NotationLivre
 from arch_portal.domain.models.communitymessage import CommunauteMessage
 from arch_portal.domain.models.librairiemessage import LibrairieMessage
+from arch_portal.domain.models.roi import Rois
+from arch_portal.domain.models.histoire import MiniHistoire
+from arch_portal.domain.models.geographie import LieuGeographique
+
 
 admin.site.register(Communaute)
+admin.site.register(Rois)
+admin.site.register(LieuGeographique)
+admin.site.register(MiniHistoire)
+
 admin.site.register(CommunauteMessage)
 admin.site.register(LibrairieMessage)
 admin.site.register(Contact)
