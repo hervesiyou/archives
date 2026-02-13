@@ -11,9 +11,11 @@ class Contact(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
     def __str__(self):
         return f"Contact de {self.email} à propose de {self.sender} "
+        
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.created_at = datetime.now()
+
     class Meta:
         verbose_name = "Contact des Utilisateurs"
         verbose_name_plural = "Les Contacts - Utilisateurs"

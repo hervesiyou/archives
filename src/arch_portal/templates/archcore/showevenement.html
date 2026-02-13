@@ -11,13 +11,12 @@
     <div class="my-2">
             
         <div class="card-body">
-        <div class="breadcrumb">
-        <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a> >
-        <a href="{% url 'listcom' %}" class=" "> Communautés </a> >  
-        <a href="{% url 'show_communaute' evenement.communaute.id %}" class="text-center"> {{ evenement.communaute.nom }} </a> >
-            {{evenement.titre}}
-
-        </div>  
+            <div class="breadcrumb">
+            <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a> >
+            <a href="{% url 'listcom' %}" class=" "> Communautés </a> >  
+            <a href="{% url 'show_communaute' evenement.communaute.id %}" class="text-center"> {{ evenement.communaute.nom }} </a> >
+                {{evenement.titre}}
+            </div>  
         </div>
     </div>
 
@@ -31,11 +30,31 @@
                             <span class="text-muted">
                                 <a href="{% url 'listevenements' id=evenement.communaute.id mode=1 %} "> Autres evenements</a>
                             </span>
+
+                            <a href="{% url 'mes_evenements_likes' %}" class="btn btn-outline-info"> Mes evenements interessants</a>
                         </div>
                     </div>
                     <div class="col-md-6 border-left text-center pt-2">
                         <h3 class="mb-0 fw-bold">150</h3>
                         <span class="text-muted">Interessés</span>
+
+                        {% if request.session.username %}
+                            <a href="{% url 'toggle_like_evenement' evenement.id %}" class="btn btn-light">
+
+                                {% if deja_like %}
+                                    <i class="fa-solid fa-heart text-danger"></i>
+                                    Déjà liké
+                                {% else %}
+                                    <i class="fa-regular fa-heart"></i>
+                                    Liker
+                                {% endif %}
+
+                                <small>({{ evenement.likes.count }})</small>
+                            </a>
+                        {% else %}
+                            <i class="fa-regular fa-heart"></i> Connectez-vous pour liker
+                        {% endif %}
+
                     </div>
                 </div>
             {% comment %} </div>

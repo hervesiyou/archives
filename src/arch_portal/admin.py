@@ -29,9 +29,11 @@ from arch_portal.domain.models.librairiemessage import LibrairieMessage
 from arch_portal.domain.models.roi import Rois
 from arch_portal.domain.models.histoire import MiniHistoire
 from arch_portal.domain.models.geographie import LieuGeographique
+from arch_portal.domain.models.evenementlike import EvenementLike
 
 
 admin.site.register(Communaute)
+admin.site.register(EvenementLike)
 admin.site.register(Rois)
 admin.site.register(LieuGeographique)
 admin.site.register(MiniHistoire)

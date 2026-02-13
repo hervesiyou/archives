@@ -1,14 +1,14 @@
 ## A Verifier
 
  
-    - details des rois, detail histoire, details geographie par carte googlemap
-- perfectionner l'ajout des histoire, les gps et les rois d'une communauté        
-- pour le moment l'arbre genealogique est un fichier lié à la famille
+               
+
 - inserer la famille nkouonchichoue et la famille takoukam
-- mettre les videos dans youtube et les images dans googlephotos privé
 - ajouter les interessés à un evenements, et afficher mes evenements dont je suis interessés
 - gerer la recherche des livres et la recherche dans la page de la librairie
 
+        - details des rois, detail histoire, details geographie par carte googlemap
+        - perfectionner l'ajout des histoire, les gps et les rois d'une communauté
         - ajouter le fil d'ariane sur toutes les pages
         - gerer la duplication des generation
         - pour chaque bibliotheque montrer le nombre de livres
@@ -52,6 +52,8 @@
 
 #FONCIONALITES pour les familles et les communautés
 - - enjoliver toutes les pages
+- pour le moment l'arbre genealogique est un fichier lié à la famille
+- mettre les videos dans youtube et les images dans googlephotos privé
 - les communautés et les familles ont les NFT qui appartiennent aux membres
 - le marché communautaire est redirigé dans kondashop dans la boutique de la communaute
 - gerer l'achat d'un service selon le prix ou selon l'abonnement

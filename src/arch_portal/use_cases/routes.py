@@ -18,7 +18,8 @@ urlpatterns = [
     path("fam/<int:famille_id>/arbre", famille.famille_arbre, name="famille_arbre"),
     path("fam/<int:famille_id>/ag", famille.famille_arbre_graphique, name="famille_arbre_graphique"),
 
-
+    path("ev/<int:id>/like", evenement.toggle_like_evenement, name="toggle_like_evenement"),
+    path("ev/likes", evenement.mes_evenements_likes, name="mes_evenements_likes"),
     path('levts/<int:id>.<int:mode>', evenement.listevenements, name="listevenements"),
     path('sev/<int:id>', evenement.show_evenement, name="show_evenement"),
     path('nev/', evenement.add_evenement, name="add_evenement"),
