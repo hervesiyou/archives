@@ -312,9 +312,9 @@
             </div>
         </div>
 
-        {% if kings %}
+        {% if rois %}
         <div class="kings-grid">
-            {% for king in kings %}
+            {% for king in rois %}
             <div class="king-card" data-status="{{ king.status|lower }}">
             {% comment %} <div class="king-card" data-status="{{ king.status|lower|replace(' ', '') }}"> {% endcomment %}
                 <div class="king-photo-container">
@@ -329,11 +329,11 @@
                 </div>
 
                 <div class="king-info">
-                    <div class="king-name">{{ king.name }}</div>
+                    <div class="king-name">{{ king.nom }}</div>
 
                     <div class="king-reign">
                         <label>Période de règne</label>
-                        <value>{{ king.reign_period }}</value>
+                        <vablue>{{ king.annee_debut }}</b>-  <b>{{ king.annee_fin }}</b>
                     </div>
 
                     <a href="{% url 'king_detail' communaute.id king.id %}" class="view-button">

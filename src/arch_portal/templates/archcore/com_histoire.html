@@ -253,21 +253,79 @@
             </div>
         </div>
 
+        {% if legende_fondatrice %}
+        <div class="card mb-4 border-warning">
+            <div class="card-header bg-warning text-dark">
+                <h5>Danté / Légende de fondation</h5>
+            </div>
+            <div class="card-body">
+                {{ legende_fondatrice|linebreaks }}
+            </div>
+        </div>
+        {% endif %}
+
+    <!-- Histoire détaillée -->
+    {% if histoire_detaillee %}
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5>Histoire détaillée</h5>
+        </div>
+        <div class="card-body">
+            {{ histoire_detaillee|linebreaks }}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Mini-histoires multiples -->
+    {% comment %} {% if histoires %}
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h5>Histoires et récits associés</h5>
+        </div>
+        <div class="card-body">
+            {% for hist in histoires %}
+                <div class="border-bottom pb-3 mb-3">
+                    <h6>{{ hist.nom|default:"Sans titre" }}</h6>
+                    {% if hist.date %}
+                        <small class="text-muted">({{ hist.date|date:"d F Y" }})</small>
+                    {% endif %}
+                    <p class="mt-2">{{ hist.description|linebreaks|truncatewords:80 }}</p>
+                </div>
+            {% empty %}
+            <p class="text-muted">Aucune histoire supplémentaire enregistrée.</p>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %} {% endcomment %}
+         {% if histoires %}
         <div class="history-section">
-            <h2>Chronologie des Événements Clés</h2>
+            <h2>Chronologie des Événements historiques Clés</h2>
 
             <div class="timeline">
-                {% for event in history.key_events %}
+                {{ histoire.count}}
+                {% for event in histoires %}
+
+                    <div class="timeline-item">
+                        <div class="timeline-item-year">{{ event.date}}</div>
+                        <div class="timeline-item-event">
+                            <span class="text-bold w-5"><b> {{ event.nom}}</b> </span> - {{ event.description }}
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">Aucune histoire supplémentaire enregistrée.</p>
+                {% endfor %}
+
+                {% comment %} {% for event in history.key_events %}
                 <div class="timeline-item">
                     <div class="timeline-item-year">{{ event.year }}</div>
                     <div class="timeline-item-event">
                         {{ event.event }}
                     </div>
                 </div>
-                {% endfor %}
+                {% endfor %} {% endcomment %}
             </div>
         </div>
-
+        {% endif %}
         <div class="nav-buttons"> 
             <a href="{% url 'com_geographie' community_id %}" class="btn"> Voir la Géographie</a>
             <a href="{% url 'kings_list' community_id %}" class="btn">Les Rois de {{community_name}}</a>

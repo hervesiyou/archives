@@ -7,10 +7,12 @@
     <div class="my-4">
         <a href="{% url 'home' %}" class="my-2"> <i class="fa fa-home"></i> Accueil </a>  >
         <a href="{% url 'listcom' %}" class="my-2"> <i class="fas fa-users"></i> Communautés </a> > {{ communaute.nom }}
+
+        {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+             <a href="{% url 'edit_communaute' communaute.id %}" title="Editer"><i class="fa fa-edit"></i>  </a> 
+        {% endif %}
     </div>
     <div class="row">
-         
-        
 
         <div class="col-md-3 col-lg-4 col-xlg-3">
             <div class="card card-hover">

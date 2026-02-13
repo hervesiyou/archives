@@ -224,34 +224,34 @@
                 <div class="geo-grid">
                     <div class="geo-item">
                         <label>Région</label>
-                        <value>{{ geography.region }}</value>
+                        <value>{{ geographie.region }}</value>
                     </div>
                     <div class="geo-item">
                         <label>Pays</label>
-                        <value>{{ geography.country }}</value>
+                        <value>{{ geography.pays }}</value>
                     </div>
                     <div class="geo-item">
                         <label>Superficie</label>
-                        <value>{{ geography.area_km2 }} km²</value>
+                        <value>{{ geographie.superficie }} km²</value>
                     </div>
                     <div class="geo-item">
                         <label>Population</label>
-                        <value>{{ geography.population }} habitants</value>
+                        <value>{{ geographie.population }} habitants</value>
                     </div>
                     <div class="geo-item">
                         <label>Climat</label>
-                        <value>{{ geography.climate }}</value>
+                        <value>{{ geographie.climat }}</value>
                     </div>
                     <div class="geo-item">
                         <label>Terrain</label>
-                        <value>{{ geography.terrain }}</value>
+                        <value>{{ geographie }}</value>
                     </div>
                 </div>
 
                 <div class="coordinates">
                     <strong>Coordonnées GPS:</strong><br>
-                    Latitude: {{ latitude }}<br>
-                    Longitude: {{ longitude }}
+                    Latitude: {{ geographie.latitude }}<br>
+                    Longitude: {{ geographie.longitude }}
                 </div>
             </div>
         </div>
@@ -266,8 +266,8 @@
     <script>
         function initMap() {
             const communityCoords = {
-                lat: {{ latitude }},
-                lng: {{ longitude }}
+                lat: {{ geographie.latitude }},
+                lng: {{ geographie.longitude }}
             };
 
             const map = new google.maps.Map(document.getElementById('map'), {

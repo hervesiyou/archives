@@ -7,22 +7,134 @@
         margin: 37px 0 31px 0; 
         height: 5px;
     }
+ 
+    .form-row { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #ddd; }
+    .delete-form-btn { color: red; font-weight: bold; cursor: pointer; }
 </style>
 {% endblock %}
 {% block content %}
+    
     <div class="container card-body">
-        <h3> Nouvelle Communauté</h3>
+        
         <div class="row">
             
             <div class="col-lg-12">
+            <h2> {{ titre }}</h1>
+            {% comment %} <h3> Nouvelle Communauté</h3> {% endcomment %}
                 <h5 class="bg-info text-center">.{{id}}</h5>
                 <form method="post">
                     {% csrf_token %}
                     {% crispy form %}
-                    <input type="submit" class="btn btn-success" value="Ajouter cette Communauté" />
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="card mt-4 mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5>Histoires associées</h5>
+                                    <button type="button" class="btn btn-success btn-sm" id="btn-add-histoire">
+                                        + Ajouter une histoire
+                                    </button>
+                                </div>
+                                <div class="card-body" id="histoires-forms">
+                                    {% comment %} {% crispy histoires_formset %} {% endcomment %}
+                                    {{ histoires_formset.management_form }}
+                                    {% for form in histoires_formset %}
+                                        <div class="form-row">
+                                            {% crispy form %}
+                                        </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card mt-4 mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5>Rois / Chefs traditionnels</h5>
+                                    <button type="button" class="btn btn-success btn-sm" id="btn-add-roi">
+                                        + Ajouter un roi
+                                    </button>
+                                </div>
+                                <div class="card-body" id="rois-forms">
+                                    {% comment %} {% crispy rois_formset %} {% endcomment %}
+                                    {{ rois_formset.management_form }}
+
+                                    {% for form in rois_formset %}
+                                        <div class="form-row">
+                                            {% crispy form %}
+                                        </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                    
+                    <input type="submit" class="btn btn-success" value=" {{ action }} la communauté" />
                 </form>
             </div> 
         </div>
+
+        
     </div>
         <br/>
  {% endblock %}
+
+ {% block js %}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            // Ajouter une histoire
+            $('#btn-add-histoire').click(function() {
+                let totalForms = $('#id_mini_histoire-TOTAL_FORMS');
+                let formCount = parseInt(totalForms.val());
+                let newForm = $('#histoires-forms .form-row:visible:last').clone(true, true);
+                
+                newForm.find(':input').each(function() {
+                    let oldName = $(this).attr('name');
+                    if (oldName) {
+                        let newName = oldName.replace('-' + (formCount - 1) + '-', '-' + formCount + '-');
+                        let newId = 'id_' + newName;
+                        $(this).attr({ 'name': newName, 'id': newId }).val('').prop('checked', false);
+                    }
+                });
+                
+                newForm.find('input[id$="-DELETE"]').prop('checked', false);
+                $('#histoires-forms').append(newForm);
+                totalForms.val(formCount + 1);
+            });
+
+            // Même logique pour les rois
+            $('#btn-add-roi').click(function() {
+                let totalForms = $('#id_rois_communaute-TOTAL_FORMS');
+                let formCount = parseInt(totalForms.val());
+               
+                let newForm = $('#rois-forms .form-row:visible:last').clone(true, true);
+                
+                newForm.find(':input').each(function() {
+                    let oldName = $(this).attr('name');
+                    if (oldName) {
+                        let newName = oldName.replace('-' + (formCount - 1) + '-', '-' + formCount + '-');
+                        let newId = 'id_' + newName;
+                        $(this).attr({ 'name': newName, 'id': newId }).val('').prop('checked', false);
+                    }
+                });
+                
+                newForm.find('input[id$="-DELETE"]').prop('checked', false);
+                $('#rois-forms').append(newForm);
+                totalForms.val(formCount + 1);
+            });
+
+            // Gestion suppression (marquer DELETE)
+            $(document).on('click', '.delete-form-btn', function(e) {
+                e.preventDefault();
+                let row = $(this).closest('.form-row');
+                row.find('input[id$="-DELETE"]').prop('checked', true);
+                row.hide();
+            });
+        });
+    </script>
+
+{% endblock %}

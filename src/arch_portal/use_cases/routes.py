@@ -55,6 +55,7 @@ urlpatterns += [
     path('sma/<int:id>', communaute.listmembresassociation, name="listmembresassociation"),
     path('sc/<int:id>', communaute.show_communaute, name="show_communaute"),
     path('nc/', communaute.add_communaute, name="add_communaute"),
+    path('ec/<int:id>', communaute.edit_communaute, name="edit_communaute"),
     path('na/', communaute.add_association, name="add_association"),
     path('lass/<int:id>.<int:mode>', communaute.listassociations, name="listassociations"),
     path('lassfam/<int:id>', communaute.listassociationsfam, name="listassociationsfam"),

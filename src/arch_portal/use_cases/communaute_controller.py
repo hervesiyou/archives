@@ -1,5 +1,7 @@
-from django.shortcuts import redirect, render
+from django.contrib  import messages
+from django.shortcuts import redirect, render, get_object_or_404
 from django.conf import settings
+from arch_portal.domain.models import communaute
 from arch_portal.domain.forms.galerie import GalerieForm
 from arch_portal.domain.forms.association import AssociationForm
 from arch_portal.domain.forms.communaute import CommunauteForm 
@@ -7,12 +9,16 @@ from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.famille import Famille
 from arch_portal.domain.models.abonnement import Abonnement
 from arch_portal.domain.models.plantarifaire import Plan
+from arch_portal.domain.models.roi import Rois
 from arch_portal.domain.models import *
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseForbidden, JsonResponse
 from arch_portal.domain.models import Association
 from django.views.decorators.http import require_http_methods
+from django.db import models
+
+from arch_portal.domain.forms.sets import MiniHistoireFormSet, RoiFormSet   
 
 import json
 from datetime import date
@@ -203,18 +209,73 @@ def show_admin_asso(request,id):
     # print(com.administrateurs.all())
     return render(request, "archcore/listadminasso.html", {"admins": com.administrateurs.all(), "association": com})
 
+def edit_communaute(request, id):
+    com = get_object_or_404(Communaute, id=id)
+    if request.method == "POST":
+        form = CommunauteForm(request.POST, instance=com) 
+        histoires_formset = MiniHistoireFormSet(request.POST, instance=com, prefix='mini_histoire')
+        rois_formset = RoiFormSet(request.POST, instance=com, prefix='rois_communaute')
+
+        if form.is_valid() and histoires_formset.is_valid() and rois_formset.is_valid():  
+            com = form.save() 
+            com.save()
+            histoires_formset.save()
+            rois_formset.save()
+            messages.success(request, "Communauté modifiée avec succès.")
+            return redirect("show_communaute",com.id )
+    else:
+        form = CommunauteForm(instance=com)
+        histoires_formset =MiniHistoireFormSet(instance=com, prefix='mini_histoire')
+        rois_formset = RoiFormSet(instance=com, prefix='rois_communaute')
+
+    context ={
+        "form": form,
+        "histoires_formset": histoires_formset,
+        "rois_formset": rois_formset,
+        "titre": f"Modification - {com.nom}",
+        "action": "Modifier",
+        "communaute": com
+    }
+
+    return render(request, "archcore/new_communaute.html",  context )
+
 def add_communaute(request):
     
     if request.method == "POST":
         form = CommunauteForm(request.POST)
-        if form.is_valid():  
+
+        histoires_formset = MiniHistoireFormSet(request.POST, instance=Communaute())
+        rois_formset = RoiFormSet(request.POST, instance=Communaute())
+        
+        if form.is_valid() and histoires_formset.is_valid() and rois_formset.is_valid():  
             com = form.save() 
             com.save()
+
+            histoires_formset.instance = com
+            histoires_formset.save()
+
+            rois_formset.instance = com
+            rois_formset.save()
+            messages.success(request, "Communauté créée avec succès.")
+            
             return redirect("show_communaute",com.id )
+        else:
+            messages.error(request, "Erreur lors de la création de la communauté. Veuillez vérifier les informations saisies.")
     else:
         form = CommunauteForm()
+        form = CommunauteForm()
+        histoires_formset = MiniHistoireFormSet(instance=Communaute())
+        rois_formset = RoiFormSet(instance=Communaute())
 
-    return render(request, "archcore/new_communaute.html", { "form":form })
+    context = {
+        'form': form,
+        'histoires_formset': histoires_formset,
+        'rois_formset': rois_formset,
+        'titre': "Créer une nouvelle communauté",
+        'action': "Créer",
+    }
+
+    return render(request, "archcore/new_communaute.html", context)
 
 def show_galerie(request, id):
     pass
@@ -237,19 +298,27 @@ def add_galerie(request):
 @require_http_methods(["GET"])
 def community_history(request, community_id):
     com = Communaute.objects.get(id=community_id)
+    # histoires = com.histoires.all().order_by('-date', 'nom')
+    
+    histoires = com.histoires.filter(
+        models.Q(nom__isnull=False) & ~models.Q(nom="") |
+        models.Q(description__isnull=False) & ~models.Q(description="")
+    ).order_by('-date', 'nom')
+
     context = {
         'community_id': community_id,
         'community_name': com.nom,
+        "histoires":  histoires,
         'history': {
             'origin': com.origine,
             'chief': com.chef.nomcomplet if com.chef else "Inconnu",
             'description': com.histoire,
-            'key_events': [
-                {'year': 1950, 'event': 'Fondation de la communauté'},
-                {'year': 1975, 'event': 'Premier grand rassemblement'},
-                {'year': 2000, 'event': 'Modernisation des structures'},
-                {'year': 2020, 'event': 'Intégration numérique'},
-            ]
+            # 'key_events': [
+            #     {'year': 1950, 'event': 'Fondation de la communauté'},
+            #     {'year': 1975, 'event': 'Premier grand rassemblement'},
+            #     {'year': 2000, 'event': 'Modernisation des structures'},
+            #     {'year': 2020, 'event': 'Intégration numérique'},
+            # ]
         }
     }
     return render(request, 'archcore/com_histoire.html', context)
@@ -262,18 +331,18 @@ def community_geography(request, community_id):
     context = {
         'community_id': community_id,
         'community_name': f"{community.nom}",
-        'geographie': f"{community.geographie}",
-        'latitude': 6.8276, 
-        'longitude': -0.7893,
+        'geographie': community.geographie,
+        # 'latitude': 6.8276, 
+        # 'longitude': -0.7893,
         'map_zoom': 12,
-        'geography': {
-            'region': 'Région --',
-            'country': 'Pays --',
-            'area_km2': 1500,
-            'population': 250000,
-            'climate': 'Tropical',
-            'terrain': 'Accidenté avec vallées'
-        }
+        # 'geography': {
+        #     'region': 'Région --',
+        #     'country': 'Pays --',
+        #     'area_km2': 1500,
+        #     'population': 250000,
+        #     'climate': 'Tropical',
+        #     'terrain': 'Accidenté avec vallées'
+        # }
     }
     return render(request, 'archcore/com_geo.html', context)
 
@@ -281,26 +350,30 @@ def community_geography(request, community_id):
 @require_http_methods(["GET"])
 def king_detail(request, community_id, king_id):
     community = Communaute.objects.get(id=community_id)
+    roi = Rois.objects.get(id=king_id)
+
     context = {
         'community_id': community_id,
         'community_name': f"{community.nom}",
-        'king': {
-            'id': king_id,
-            'name': 'Roi ',
-            'reign_start': 1985,
-            'reign_end': 2010,
-            'biography': 'Biographie détaillée du roi...',
-            'achievements': [
-                'Réforme administrative',
-                'Expansion territoriale',
-                'Développement des arts',
-            ],
-            'family': {
-                'father': 'Père  ',
-                'mother': 'Mère  ',
-                'successors': 'Successeur  '
-            }
-        }
+        "roi": roi ,
+
+        # 'king': {
+        #     'id': king_id,
+        #     'name': 'Roi ',
+        #     'reign_start': 1985,
+        #     'reign_end': 2010,
+        #     'biography': 'Biographie détaillée du roi...',
+        #     'achievements': [
+        #         'Réforme administrative',
+        #         'Expansion territoriale',
+        #         'Développement des arts',
+        #     ],
+        #     'family': {
+        #         'father': 'Père  ',
+        #         'mother': 'Mère  ',
+        #         'successors': 'Successeur  '
+        #     }
+        # }
     }
     return render(request, 'archcore/king_detail.html', context)
 
@@ -311,30 +384,31 @@ def kings_list(request, community_id):
     context = {
         'community_id': community_id,
         'communaute': community,
+        'rois': community.rois.all(),
         'community_name': f'{community.nom}',
         'description': f'{community.description}',
-        'kings': [
-            {
-                'id': 1,
-                'name': 'Roi   1',
-                'reign_period': '1950-1975',
-                'photo': '/static/images/rois.jpg',
-                'status': 'Décédé'
-            },
-            {
-                'id': 2,
-                'name': 'Roi   2',
-                'reign_period': '1975-2000',
-                'photo': '/static/images/king2.jpg',
-                'status': 'Décédé'
-            },
-            {
-                'id': 3,
-                'name': 'Roi   3',
-                'reign_period': '2000-Présent',
-                'photo': '/static/images/king3.jpg',
-                'status': 'En vie'
-            },
-        ]
+        # 'kings': [
+        #     {
+        #         'id': 1,
+        #         'name': 'Roi   1',
+        #         'reign_period': '1950-1975',
+        #         'photo': '/static/images/rois.jpg',
+        #         'status': 'Décédé'
+        #     },
+        #     {
+        #         'id': 2,
+        #         'name': 'Roi   2',
+        #         'reign_period': '1975-2000',
+        #         'photo': '/static/images/king2.jpg',
+        #         'status': 'Décédé'
+        #     },
+        #     {
+        #         'id': 3,
+        #         'name': 'Roi   3',
+        #         'reign_period': '2000-Présent',
+        #         'photo': '/static/images/king3.jpg',
+        #         'status': 'En vie'
+        #     },
+        # ]
     }
     return render(request, 'archcore/king_list.html', context)

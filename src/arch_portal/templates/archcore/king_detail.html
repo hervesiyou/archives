@@ -270,37 +270,37 @@
             <a href="/">Accueil</a> >
             <a href="{% url 'show_communaute' community_id %}" >{{ community_name }}</a> >
             <a href="{% url 'kings_list' community_id %}" >Les Rois</a> >
-            <span>{{ king.name }}</span>
+            <span>{{ roi.nom }}</span>
         </div>
 
         <header>
-            <h1>{{ king.name }}</h1>
-            <p>Règne: {{ king.reign_start }} - {{ king.reign_end }}</p>
+            <h1>{{ roi.nom }}</h1>
+            <p>Règne: {{ roi.annee_debut }} - {{ roi.annee_fin }}</p>
         </header>
 
         <div class="king-profile">
             <div class="profile-header">
                 <div class="king-photo">
-                    <img src="{{ king.photo }}" alt="{{ king.name }}" onerror="this.parentElement.textContent='Photo indisponible'">
+                    <img src="{% static 'images/roi.png' %}" alt="{{ roi.nom }}" onerror="this.parentElement.textContent='Photo indisponible'">
                 </div>
 
                 <div class="profile-info">
                     <div class="info-grid">
                         <div class="info-item">
                             <label>Début du règne</label>
-                            <value>{{ king.reign_start }}</value>
+                            <value>{{ roi.annee_debut }}</value>
                         </div>
                         <div class="info-item">
                             <label>Fin du règne</label>
-                            <value>{{ king.reign_end }}</value>
+                            <value>{{ roi.annee_fin }}</value>
                         </div>
                         <div class="info-item">
-                            <label>Père</label>
-                            <value>{{ king.family.father }}</value>
+                            <label>Parents:</label>
+                            <value>{{ roi.parents }}</value>
                         </div>
                         <div class="info-item">
-                            <label>Mère</label>
-                            <value>{{ king.family.mother }}</value>
+                            <label>Histoire</label>
+                            <value>{{ roi.histoire }}</value>
                         </div>
                     </div>
                 </div>
@@ -309,7 +309,7 @@
             <div class="section">
                 <h2>Biographie</h2>
                 <div class="biography">
-                    <p>{{ king.biography }}</p>
+                    <p>{{ roi.histoire }}</p>
                 </div>
             </div>
 
@@ -318,7 +318,7 @@
                 <div class="achievements">
                     {% for achievement in king.achievements %}
                     <div class="achievement-item">
-                        {{ achievement }}
+                        {{ roi.realisations }}
                     </div>
                     {% endfor %}
                 </div>
@@ -329,7 +329,7 @@
                 <div class="family">
                     <div class="family-member">
                         <label>Successeur</label>
-                        <value>{{ king.family.successors }}</value>
+                        <value>{{ roi.successeur }}</value>
                     </div>
                 </div>
             </div>

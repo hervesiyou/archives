@@ -20,7 +20,7 @@ class  Communaute(models.Model):
     histoire = models.TextField(default="", blank=True)
     histoires = models.ManyToManyField(MiniHistoire, null=True, blank=True, related_name="communaute_histoires")
 
-    legende_fondatrice = models.TextField( blank=True,  verbose_name=_("Danté / Légende de fondation"), help_text=_("Récit mythique ou traditionnel de l'origine") )
+    legende_fondatrice = models.TextField( blank=True,  verbose_name=_(" Légende de fondation"), help_text=_("Récit mythique ou traditionnel de l'origine") )
     histoire_detaillee = models.TextField( blank=True, verbose_name=_("Histoire détaillée"), help_text=_("Événements historiques, évolutions, dates clés") )
     # longitude = models.TextField(default="", blank=True)
     # latitude = models.TextField(default="", blank=True)

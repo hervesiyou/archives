@@ -14,7 +14,7 @@ class CommunauteForm(forms.ModelForm):
         type = cleaned_data.get("type")
         origine = cleaned_data.get("origine")
         region = cleaned_data.get("region")
-        if Communaute.objects.filter(nom=nom, type=type, origine=origine,region=region).exists():
+        if Communaute.objects.filter(nom=nom, type=type, origine=origine,region=region).exclude(id=self.instance.id).exists():
             raise forms.ValidationError("Cette communauté existe dejà !")
         return cleaned_data
 
@@ -30,7 +30,8 @@ class CommunauteForm(forms.ModelForm):
             ),
             Row(
                 Column('histoire', css_class='col-md-6'),
-                Column('geographie', css_class='col-md-6'),
+                Column('histoires', css_class='col-md-3'),
+                Column('geographie', css_class='col-md-3'),
                 css_class='row'
             ),
             Row(
@@ -38,6 +39,13 @@ class CommunauteForm(forms.ModelForm):
                 Column('region', css_class='col-md-3'),
                 Column('superficie', css_class='col-md-3'),
                 Column('type', css_class='col-md-3'),
+                css_class='row'
+            ),
+            Row(
+                Column('legende_fondatrice', css_class='col-md-6'),
+                Column('histoire_detaillee', css_class='col-md-6'),
+                # Column('superficie', css_class='col-md-3'),
+                # Column('type', css_class='col-md-3'),
                 css_class='row'
             ),
         )
