@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='paiementlivre',
             name='recepteur',
-            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, related_name='paiements_recus', to='arch_portal.membre'),
+            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, related_name='paiements_recus', to='arch_portal.membre'),
             preserve_default=False,
         ),
         migrations.AddField(

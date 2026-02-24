@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('nom', models.CharField(max_length=150)),
                 ('description', models.TextField(default='')),
-                ('superficie', models.CharField(default=0, max_length=50)),
+                ('superficie', models.CharField(default=1, max_length=50)),
                 ('histoire', models.TextField(blank=True, default='')),
                 ('geographie', models.TextField(blank=True, default='')),
                 ('origine', models.CharField(default='', max_length=150)),

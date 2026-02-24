@@ -68,6 +68,14 @@ urlpatterns += [
     path('com/<int:community_id>/geo', communaute.community_geography, name='com_geographie'),
     path('com/<int:community_id>/king/<int:king_id>/', communaute.king_detail, name='king_detail'),
     path('com/<int:community_id>/kings', communaute.kings_list, name='kings_list'),
+
+    # Liste des dons d'une communauté
+    path('com/<int:communaute_id>/dons',  communaute.don_list, name='don_list'),    
+    path('com/<int:communaute_id>/dons/no',  communaute.don_create, name='don_create'),    
+    path('com/<int:communaute_id>/dons/<int:don_id>', communaute.don_detail,  name='don_detail'), 
+    path('com/<int:communaute_id>/dons/<int:don_id>/mod', communaute.don_update,  name='don_update'),    
+    path('com/<int:communaute_id>/dons/<int:don_id>/sup', communaute.don_delete,   name='don_delete'),
+
 ]
 
 urlpatterns += [ 

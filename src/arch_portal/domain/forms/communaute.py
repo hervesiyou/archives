@@ -3,17 +3,20 @@ from django import forms
 from arch_portal.domain.models.communaute import Communaute 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column
+
 class CommunauteForm(forms.ModelForm):
     class Meta:
         model = Communaute
         exclude  = ["chef"]
 
     def clean(self):
+
         cleaned_data = super().clean()
         nom = cleaned_data.get("nom")
         type = cleaned_data.get("type")
         origine = cleaned_data.get("origine")
         region = cleaned_data.get("region")
+
         if Communaute.objects.filter(nom=nom, type=type, origine=origine,region=region).exclude(id=self.instance.id).exists():
             raise forms.ValidationError("Cette communauté existe dejà !")
         return cleaned_data

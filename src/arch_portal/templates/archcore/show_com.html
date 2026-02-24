@@ -71,13 +71,20 @@
                 </ul>
             {% endif %}
         </div>
-        <div class=" col-md-6 col-lg-8">
+        <div class=" col-md-6 col-lg-4">
              {% if communaute.histoire %}
                 <h5 class="text-success text-bold"> <a href="{% url 'com_histoire' communaute.id %}"> Histoire</a> </h5>
                 <div class=" ">
                     {{ communaute.histoire }}
                 </div>
             {% endif %}
+        </div>
+
+        <div class=" col-md-6 col-lg-4">
+            <h5 class="text-success text-bold"> <a href="{% url 'don_list' communaute.id %}"> Liste des Dons</a> </h5>
+            <div class=" ">
+            ..
+            </div>
         </div>
      </div>
 
@@ -102,6 +109,10 @@
                             </a>
                             <a class="btn btn-sm btn-outline-success text-success"  data-bs-toggle="modal"  data-bs-target="#messageModal">  
                                 <span> Laisser une message </span>
+                            </a>
+
+                            <a class="btn btn-sm btn-outline-info text-success"  data-bs-toggle="modal"  data-bs-target="#donModal">  
+                                <span> Faire un Don </span>
                             </a>
                             {% if  'VOIR_MESSAGES_COMMUNAUTES' in request.session.userrights %}  - 
                                 <a href="{% url 'community_messages' communaute.id %}" title="" class="btn btn-sm btn-success" >
@@ -276,6 +287,24 @@
                         <input type="button" id="addMessageComID"  class="submit-btn btn btn-success" value="Envoyer le Message"/>
                     </div>
                 </form>
+            </div> 
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="donModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Faire un don <span class=""> {{communaute.nom}} </span> </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+             <div class="form-section">
+                <h3>Partager pour un developpement commun </h3> 
+                {% include "archcore/don_form.html" %}                 
             </div> 
 
             </div>

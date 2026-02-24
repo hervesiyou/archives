@@ -1,10 +1,12 @@
 ## A Verifier
 
- 
-               
-
 - inserer la famille nkouonchichoue et la famille takoukam
-- gerer la recherche des livres et la recherche dans la page de la librairie
+- lors de l'inscription cacher les pwd, 
+- verifier que els mail sont ok
+
+        - on peut faire des dons dans une communautés
+
+        - gerer la recherche des livres et la recherche dans la page de la librairie
         - ajouter les interessés à un evenements, et afficher mes evenements dont je suis interessés
 
         - details des rois, detail histoire, details geographie par carte googlemap

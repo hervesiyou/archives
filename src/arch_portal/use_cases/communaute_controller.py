@@ -1,7 +1,8 @@
 from django.contrib  import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from django.conf import settings
-from arch_portal.domain.models import communaute
+# from arch_portal.domain.models import communaute
+from arch_portal.domain.forms.don import DonForm
 from arch_portal.domain.forms.galerie import GalerieForm
 from arch_portal.domain.forms.association import AssociationForm
 from arch_portal.domain.forms.communaute import CommunauteForm 
@@ -22,6 +23,124 @@ from arch_portal.domain.forms.sets import MiniHistoireFormSet, RoiFormSet
 
 import json
 from datetime import date
+
+from arch_portal.domain.models.don import Don
+from arch_portal.domain.models.communaute import Communaute
+
+# @login_required
+def don_list(request, communaute_id):
+    
+    communaute = get_object_or_404(Communaute, id=communaute_id)
+    dons = Don.objects.filter(communaute=communaute).order_by('-date_don')
+    
+    context = {
+        'communaute': communaute,
+        'dons': dons,
+    }
+    return render(request, 'archcore/don_list.html', context)
+
+
+# @login_required
+def don_create(request, communaute_id):
+    communaute = get_object_or_404(Communaute, id=communaute_id)
+    
+    if request.method == 'POST':
+
+        userid = request.session.get("userid","")
+        user = Membre.objects.get(id=userid)
+        if user != None:
+
+            form = DonForm(request.POST)
+            if form.is_valid():
+                don = form.save(commit=False)
+                don.communaute = communaute
+                don.donateur = user 
+                don.save()
+                messages.success(request, "Votre don a été enregistré. Merci beaucoup ! 🙏")
+                return redirect('don_list', communaute_id=communaute.id)
+        else:
+            return redirect("login")
+        
+    else:
+        form = DonForm()
+    
+    context = {
+        'form': form,
+        'communaute': communaute,
+        'titre': f"Faire un don à {communaute.nom}"
+    }
+    return render(request, 'archcore/don_form.html', context)
+
+
+# @login_required
+def don_detail(request, communaute_id, don_id):
+    communaute = get_object_or_404(Communaute, id=communaute_id)
+    don = get_object_or_404(Don, id=don_id, communaute=communaute)
+    
+    context = {
+        'don': don,
+        'communaute': communaute,
+    }
+    return render(request, 'archcore/don_detail.html', context)
+
+
+# @login_required
+def don_update(request, communaute_id, don_id):
+    communaute = get_object_or_404(Communaute, id=communaute_id)
+    don = get_object_or_404(Don, id=don_id, communaute=communaute)
+    
+    userid = request.session.get("userid","")
+    user = Membre.objects.get(id=userid)
+    if user != None:
+        # Autorisation : donateur ou admin de la communauté
+        if don.donateur != user and user not in communaute.administrateurs.all():
+            return HttpResponseForbidden("Vous n'êtes pas autorisé à modifier ce don.")
+    else:
+            return redirect("login")
+    
+    if request.method == 'POST':
+        form = DonForm(request.POST, instance=don)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Le don a été modifié avec succès.")
+            return redirect('don_detail', communaute_id=communaute.id, don_id=don.id)
+    else:
+        form = DonForm(instance=don)
+    
+    context = {
+        'form': form,
+        'communaute': communaute,
+        'don': don,
+        'titre': "Modifier le don"
+    }
+    return render(request, 'archcore/don_form.html', context)
+
+
+# @login_required
+def don_delete(request, communaute_id, don_id):
+    communaute = get_object_or_404(Communaute, id=communaute_id)
+    don = get_object_or_404(Don, id=don_id, communaute=communaute)
+    
+    userid = request.session.get("userid","")
+    user = Membre.objects.get(id=userid)
+    if user != None:
+        # Même règle d'autorisation
+        if don.donateur != user and user not in communaute.administrateurs.all():
+            return HttpResponseForbidden("Vous n'êtes pas autorisé à supprimer ce don.")
+    else:
+            return redirect("login")
+    
+    if request.method == 'POST':
+        don.delete()
+        messages.warning(request, "Le don a été supprimé.")
+        return redirect('don_list', communaute_id=communaute.id)
+    
+    context = {
+        'don': don,
+        'communaute': communaute,
+    }
+    return render(request, 'archcore/don_delete.html', context)
+
 
 @login_required
 def premium_content(request):
@@ -75,7 +194,6 @@ def add_abonnement(request):
                             return JsonResponse({'status': True ,"message": message})
                         else:
                             return JsonResponse({'status': False ,"message": "Desolé, vous avez dejà souscris à cet abonnement !"})
-
 
 @csrf_exempt
 def add_admin_com(request):
@@ -136,8 +254,7 @@ def add_admin_asso(request):
 
                         
                         return JsonResponse({'status': True ,"message": f"{user.nomcomplet} a été ajouté comme administrateur à l'association {asso.nom}"})
-                      
-
+ 
 def abonement_archive(request): 
     plans = Plan.objects.filter(appli="COM")
     return render(request, "archcore/abonement.html", {"plans" : plans} )
@@ -183,7 +300,6 @@ def add_association(request):
 
     return render(request, "archcore/new_association.html", { "form":form  })
  
-
 def show_communaute(request, id):
     com = Communaute.objects.get(id=id)
     #  ce utilisateur ne peut voir les info detaillée de la famille que si il appartient à la famille ou a des droits
