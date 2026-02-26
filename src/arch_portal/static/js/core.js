@@ -1,3 +1,7 @@
+(function($) {
+    // ton code core.js
+
+
 $(document).ready(function(){
 
     function getCookie(name) {
@@ -15,9 +19,6 @@ $(document).ready(function(){
         return cookieValue;
     }
 
-
-
-    
     const BASEURL = $("body").data('url');
 
     $(".abClass").on('click', function(e){                         
@@ -813,3 +814,6 @@ $(document).ready(function(){
 
     
 })
+
+
+})(jQuery);

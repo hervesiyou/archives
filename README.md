@@ -1,6 +1,7 @@
 ## A Verifier
 
 - inserer la famille nkouonchichoue et la famille takoukam
+
 - ajouter les lieux clés et personnes clés d'une famille et d'une communauté
 - ajouter la geographie lors de la creation et l'update d'une communauté
         - lors de l'inscription cacher les pwd,

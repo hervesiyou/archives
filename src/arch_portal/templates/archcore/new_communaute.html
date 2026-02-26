@@ -71,6 +71,7 @@
                     </div> 
 
                     <div class="row">
+                        <!-- Personnes Clés -->
                         <div class="col-lg-6">
                             <div class="section-card">
                                 <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
@@ -81,17 +82,25 @@
                                 </div>
                                 <div class="card-body" id="personnes-forms">
                                     {{ personnes_formset.management_form }}
+
+                                    <!-- Formulaire modèle caché (sera cloné) -->
+                                    <div class="form-row d-none" id="personne-template">
+                                        {% crispy personnes_formset.empty_form %}
+                                        <span class="delete-form-btn float-end" title="Supprimer cette personne">×</span>
+                                    </div>
+
+                                    <!-- Formulaires existants -->
                                     {% for form in personnes_formset %}
                                         <div class="form-row">
                                             {% crispy form %}
-                                            <span class="delete-form-btn float-end" title="Supprimer cette personne">×</span>
+                                            <span class="delete-form-btn btn-outline-danger float-end" title="Supprimer cette personne">×</span>
                                         </div>
                                     {% endfor %}
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Lieux Clés (NOUVEAU) -->
+                        <!-- Lieux Clés -->
                         <div class="col-lg-6">
                             <div class="section-card">
                                 <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
@@ -102,10 +111,17 @@
                                 </div>
                                 <div class="card-body" id="lieux-forms">
                                     {{ lieux_formset.management_form }}
+
+                                    <!-- Formulaire modèle caché -->
+                                    <div class="form-row d-none" id="lieu-template">
+                                        {% crispy lieux_formset.empty_form %}
+                                        <span class="delete-form-btn float-end" title="Supprimer ce lieu">×</span>
+                                    </div>
+
                                     {% for form in lieux_formset %}
                                         <div class="form-row">
                                             {% crispy form %}
-                                            <span class="delete-form-btn float-end" title="Supprimer ce lieu">×</span>
+                                            <span class="delete-form-btn btn btn-outline-danger float-end" title="Supprimer ce lieu">×</span>
                                         </div>
                                     {% endfor %}
                                 </div>
@@ -125,7 +141,6 @@
 
  {% block js %}
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
 
@@ -177,20 +192,19 @@
                 row.find('input[id$="-DELETE"]').prop('checked', true);
                 row.hide();
             });
-        });
-    </script>
+        
 
-    <script>
-        $(document).ready(function() {
-
-            // Fonction générique pour ajouter un formset
-            function addFormset(btnId, formsContainerId, prefix) {
-                $(btnId).click(function() {
+            function addFormset(btnId, containerId, templateId, prefix) {
+                $(btnId).on('click', function() {
                     let totalForms = $(`#id_${prefix}-TOTAL_FORMS`);
                     let formCount = parseInt(totalForms.val());
-                    let newForm = $(`#${formsContainerId} .form-row:visible:last`).clone(true, true);
 
-                    newForm.find(':input').each(function() {
+                    // Cloner le modèle caché
+                    let newForm = $(`#${templateId}`).clone();
+                    newForm.removeClass('d-none').addClass('form-row');
+
+                    // Mettre à jour les names et ids
+                    newForm.find(':input, select, textarea').each(function() {
                         let oldName = $(this).attr('name');
                         if (oldName) {
                             let newName = oldName.replace('-' + (formCount - 1) + '-', '-' + formCount + '-');
@@ -199,8 +213,11 @@
                         }
                     });
 
+                    // Réinitialiser DELETE
                     newForm.find('input[id$="-DELETE"]').prop('checked', false);
-                    $(`#${formsContainerId}`).append(newForm);
+
+                    // Ajouter au container
+                    $(`#${containerId}`).append(newForm);
                     totalForms.val(formCount + 1);
                 });
             }
@@ -210,14 +227,14 @@
                 e.preventDefault();
                 let row = $(this).closest('.form-row');
                 row.find('input[id$="-DELETE"]').prop('checked', true);
-                row.hide();
+                row.slideUp(300, function() { $(this).remove(); });
             });
 
-            // Ajout pour chaque formset
-            addFormset('#btn-add-histoire', 'histoires-forms', 'mini_histoire');
-            addFormset('#btn-add-roi', 'rois-forms', 'rois_communaute');
-            addFormset('#btn-add-personne', 'personnes-forms', 'personnes');
-            addFormset('#btn-add-lieu', 'lieux-forms', 'lieux');
+            // Initialisation pour chaque section
+            addFormset('#btn-add-histoire',   'histoires-forms',   'histoire-template',   'mini_histoire');
+            addFormset('#btn-add-roi',        'rois-forms',        'roi-template',        'rois_communaute');
+            addFormset('#btn-add-personne',   'personnes-forms',   'personne-template',   'personnes');
+            addFormset('#btn-add-lieu',       'lieux-forms',       'lieu-template',       'lieux');
 
         });
     </script>

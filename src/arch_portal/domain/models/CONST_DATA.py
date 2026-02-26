@@ -32,7 +32,11 @@ ETATCIVIL_CHOICES =(
 COM_CHOICES = (
     ("Village","Village"),
     ("Diapora","Communauté Diaspora"),
-    ("Groupe","Groupement")
+    ("Groupe","Groupement"),
+    ("Ville","Ville"),
+    ("Region","Region"),
+    ("Tribu","Tribu"),
+    ("Autre","Autre")
 )
 REGIONS_CHOICES =(
     ("North","North"),

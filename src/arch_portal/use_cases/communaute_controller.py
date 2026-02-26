@@ -11,6 +11,7 @@ from arch_portal.domain.models.famille import Famille
 from arch_portal.domain.models.abonnement import Abonnement
 from arch_portal.domain.models.plantarifaire import Plan
 from arch_portal.domain.models.roi import Rois
+from arch_portal.domain.models.histoire import MiniHistoire
 from arch_portal.domain.models import *
 from django.contrib.auth.decorators import login_required , permission_required
 from django.views.decorators.csrf import csrf_exempt
@@ -20,7 +21,7 @@ from django.views.decorators.http import require_http_methods
 from django.db import models
 from django.forms import inlineformset_factory
 
-from arch_portal.domain.forms.sets import MiniHistoireFormSet, RoiFormSet   
+from arch_portal.domain.forms.sets import MiniHistoireFormSet, RoiFormSet   , RoiForm, MiniHistoireForm
 
 import json
 from datetime import date
@@ -468,8 +469,8 @@ def show_communaute(request, id):
         {
             "communaute":com, 
             "appartient" : appartient,
-            'personnes_cles': com.personnes_cles.all().order_by('nom'),
-            'lieux_cles': com.lieux_cles.all().order_by('nom'),
+            'personnes_cles': com.personnescles_communaute.all().order_by('nom'),
+            'lieux_cles': com.lieucles_communaute.all().order_by('nom'),
         }
     )
 
@@ -485,27 +486,56 @@ def show_admin_asso(request,id):
 
 def edit_communaute(request, id):
     com = get_object_or_404(Communaute, id=id)
+
+    PersonneFormSet = inlineformset_factory(
+        Communaute, PersonneCle, form=PersonneCleForm,
+        fields='__all__', extra=1, can_delete=True
+    )
+    LieuFormSet = inlineformset_factory(
+        Communaute, LieuCle, form=LieuCleForm,
+        fields='__all__', extra=1, can_delete=True
+    )
+
+    personnes_formset = PersonneFormSet(request.POST, instance=com, prefix='personnes')
+    lieux_formset     = LieuFormSet(request.POST, instance=com, prefix='lieux')
+
+
     if request.method == "POST":
         form = CommunauteForm(request.POST, instance=com) 
+
         histoires_formset = MiniHistoireFormSet(request.POST, instance=com, prefix='mini_histoire')
         rois_formset = RoiFormSet(request.POST, instance=com, prefix='rois_communaute')
+
+        
 
         if form.is_valid() and histoires_formset.is_valid() and rois_formset.is_valid():  
             com = form.save() 
             com.save()
             histoires_formset.save()
             rois_formset.save()
+
+            personnes_formset.instance = com
+            lieux_formset.instance     = com
+
+            personnes_formset.save()
+            lieux_formset.save()
+
             messages.success(request, "Communauté modifiée avec succès.")
             return redirect("show_communaute",com.id )
     else:
         form = CommunauteForm(instance=com)
         histoires_formset =MiniHistoireFormSet(instance=com, prefix='mini_histoire')
         rois_formset = RoiFormSet(instance=com, prefix='rois_communaute')
+        
 
     context ={
         "form": form,
         "histoires_formset": histoires_formset,
         "rois_formset": rois_formset,
+
+        'personnes_formset': personnes_formset,
+        'lieux_formset': lieux_formset,
+
         "titre": f"Modification - {com.nom}",
         "action": "Modifier",
         "communaute": com
@@ -514,6 +544,89 @@ def edit_communaute(request, id):
     return render(request, "archcore/new_communaute.html",  context )
 
 def add_communaute(request):
+    # Définir les formsets inline (on les crée une seule fois)
+    MiniHistoireFormSet = inlineformset_factory(
+        Communaute, MiniHistoire, form=MiniHistoireForm,
+        fields='__all__', extra=1, can_delete=True
+    )
+    RoiFormSet = inlineformset_factory(
+        Communaute, Rois, form=RoiForm,
+        fields='__all__', extra=1, can_delete=True
+    )
+    PersonneFormSet = inlineformset_factory(
+        Communaute, PersonneCle, form=PersonneCleForm,
+        fields='__all__', extra=1, can_delete=True
+    )
+    LieuFormSet = inlineformset_factory(
+        Communaute, LieuCle, form=LieuCleForm,
+        fields='__all__', extra=1, can_delete=True
+    )
+
+    if request.method == "POST":
+        form = CommunauteForm(request.POST)
+
+        # Créer les formsets avec une instance temporaire vide au début
+        histoires_formset = MiniHistoireFormSet(request.POST, instance=Communaute(), prefix='mini_histoire')
+        rois_formset      = RoiFormSet(request.POST, instance=Communaute(), prefix='rois_communaute')
+        personnes_formset = PersonneFormSet(request.POST, instance=Communaute(), prefix='personnes')
+        lieux_formset     = LieuFormSet(request.POST, instance=Communaute(), prefix='lieux')
+
+        # Validation complète
+        if (form.is_valid() and 
+            histoires_formset.is_valid() and 
+            rois_formset.is_valid() and 
+            personnes_formset.is_valid() and 
+            lieux_formset.is_valid()):
+
+            # Sauvegarde principale d'abord → on obtient un ID !
+            com = form.save()  # ← ici com a un .pk valide
+
+            # Ré-associer les formsets à l’objet réel sauvegardé
+            histoires_formset.instance = com
+            rois_formset.instance      = com
+
+            personnes_formset.instance = com
+            lieux_formset.instance     = com
+
+            # Sauvegarde des inline maintenant que l’instance parent existe
+            histoires_formset.save()
+            rois_formset.save()
+
+            personnes_formset.save()
+            lieux_formset.save()
+
+            messages.success(request, "Communauté créée avec succès.")
+            return redirect("show_communaute", com.id)
+
+        else:
+            # Debug : affiche les erreurs pour comprendre
+            # print("Form errors:", form.errors)
+            # print("Histoires errors:", histoires_formset.errors)
+            # print("Rois errors:", rois_formset.errors)
+            # print("Personnes errors:", personnes_formset.errors)
+            # print("Lieux errors:", lieux_formset.errors)
+            messages.error(request, "Erreur lors de la création. Vérifiez les champs.")
+
+    else:
+        # GET : formulaires vides
+        form = CommunauteForm()
+        histoires_formset = MiniHistoireFormSet(instance=Communaute(), prefix='mini_histoire')
+        rois_formset      = RoiFormSet(instance=Communaute(), prefix='rois_communaute')
+        personnes_formset = PersonneFormSet(instance=Communaute(), prefix='personnes')
+        lieux_formset     = LieuFormSet(instance=Communaute(), prefix='lieux')
+
+    context = {
+        'form': form,
+        'histoires_formset': histoires_formset,
+        'rois_formset': rois_formset,
+        'personnes_formset': personnes_formset,
+        'lieux_formset': lieux_formset,
+        'titre': "Créer une nouvelle communauté",
+        'action': "Créer",
+    }
+
+    return render(request, "archcore/new_communaute.html", context)
+def add_communaute0(request):
 
     PersonneFormSet = inlineformset_factory(
         Communaute, PersonneCle, form=PersonneCleForm,
@@ -571,7 +684,7 @@ def add_communaute(request):
 
         'personnes_formset': personnes_formset,
         'lieux_formset': lieux_formset,
-        
+
         'titre': "Créer une nouvelle communauté",
         'action': "Créer",
     }

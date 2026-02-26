@@ -198,7 +198,10 @@
                                         <small class="font-light"> 
                                          {% if  'ADD_COMMUNAUTE_ADMIN' in request.session.userrights %}
                                             <div class=" text-end pull-right">
-                                                <button class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#adminModal"type="button"> Ajouter un Administrateur à cette communauté </button>
+                                                <button class="  btn-danger text-white" 
+                                                      data-bs-toggle="modal" 
+                                                      data-bs-target="#adminModal" 
+                                                      type="button"> <i class="fa fa-plus"></i> Ajouter un Administrateur à cette communauté </button>
                                             </div>
                                             
                                         {% endif %}
@@ -459,8 +462,10 @@
 
 {% endblock %}
 
+ 
+
 {% block js %}
-{{parent()}}
+
     <script>
         function enableCommandeButton() {         
             document.getElementById('addAdminComID').disabled = false;
