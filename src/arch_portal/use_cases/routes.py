@@ -76,6 +76,19 @@ urlpatterns += [
     path('com/<int:communaute_id>/dons/<int:don_id>/mod', communaute.don_update,  name='don_update'),    
     path('com/<int:communaute_id>/dons/<int:don_id>/sup', communaute.don_delete,   name='don_delete'),
 
+    path('com/<int:communaute_id>/pc/ad', communaute.personnecle_create, name='personnecle_create_com'),
+    path('fam/<int:famille_id>/pc/ad', communaute.personnecle_create, name='personnecle_create_fam'),
+
+    path('com/<int:communaute_id>/lc/ad', communaute.lieucles_create, name='lieucles_create_com'),
+    path('fam/<int:famille_id>/lc/ad', communaute.lieucles_create, name='lieucles_create_fam'),
+    path('pe/<int:pk>/sh', communaute.personnecle_detail, name='personnecle_detail'),
+    path('pe/<int:pk>/ed', communaute.personnecle_edit, name='personnecle_edit'),
+
+    path('lc/<int:pk>/sh', communaute.lieucle_detail, name='lieucle_detail'),
+    path('lc/<int:pk>/ed', communaute.lieucle_edit, name='lieucle_edit'),
+    path('lc/<int:pk>/', communaute.lieucle_delete, name='lieucle_delete'),
+    path('pc/<int:pk>/de', communaute.personnecle_delete, name='personnecle_delete'),
+
 ]
 
 urlpatterns += [ 

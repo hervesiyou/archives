@@ -69,6 +69,49 @@
                             </div>
                         </div>
                     </div> 
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="section-card">
+                                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Personnes Clés</h5>
+                                    <button type="button" class="btn btn-light btn-sm add-btn" id="btn-add-personne">
+                                        <i class="fa-solid fa-plus me-1"></i>Ajouter
+                                    </button>
+                                </div>
+                                <div class="card-body" id="personnes-forms">
+                                    {{ personnes_formset.management_form }}
+                                    {% for form in personnes_formset %}
+                                        <div class="form-row">
+                                            {% crispy form %}
+                                            <span class="delete-form-btn float-end" title="Supprimer cette personne">×</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lieux Clés (NOUVEAU) -->
+                        <div class="col-lg-6">
+                            <div class="section-card">
+                                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Lieux Clés</h5>
+                                    <button type="button" class="btn btn-light btn-sm add-btn" id="btn-add-lieu">
+                                        <i class="fa-solid fa-plus me-1"></i>Ajouter
+                                    </button>
+                                </div>
+                                <div class="card-body" id="lieux-forms">
+                                    {{ lieux_formset.management_form }}
+                                    {% for form in lieux_formset %}
+                                        <div class="form-row">
+                                            {% crispy form %}
+                                            <span class="delete-form-btn float-end" title="Supprimer ce lieu">×</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     
                     <input type="submit" class="btn btn-success" value=" {{ action }} la communauté" />
                 </form>
@@ -134,6 +177,48 @@
                 row.find('input[id$="-DELETE"]').prop('checked', true);
                 row.hide();
             });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+
+            // Fonction générique pour ajouter un formset
+            function addFormset(btnId, formsContainerId, prefix) {
+                $(btnId).click(function() {
+                    let totalForms = $(`#id_${prefix}-TOTAL_FORMS`);
+                    let formCount = parseInt(totalForms.val());
+                    let newForm = $(`#${formsContainerId} .form-row:visible:last`).clone(true, true);
+
+                    newForm.find(':input').each(function() {
+                        let oldName = $(this).attr('name');
+                        if (oldName) {
+                            let newName = oldName.replace('-' + (formCount - 1) + '-', '-' + formCount + '-');
+                            let newId = 'id_' + newName;
+                            $(this).attr({ 'name': newName, 'id': newId }).val('').prop('checked', false);
+                        }
+                    });
+
+                    newForm.find('input[id$="-DELETE"]').prop('checked', false);
+                    $(`#${formsContainerId}`).append(newForm);
+                    totalForms.val(formCount + 1);
+                });
+            }
+
+            // Suppression
+            $(document).on('click', '.delete-form-btn', function(e) {
+                e.preventDefault();
+                let row = $(this).closest('.form-row');
+                row.find('input[id$="-DELETE"]').prop('checked', true);
+                row.hide();
+            });
+
+            // Ajout pour chaque formset
+            addFormset('#btn-add-histoire', 'histoires-forms', 'mini_histoire');
+            addFormset('#btn-add-roi', 'rois-forms', 'rois_communaute');
+            addFormset('#btn-add-personne', 'personnes-forms', 'personnes');
+            addFormset('#btn-add-lieu', 'lieux-forms', 'lieux');
+
         });
     </script>
 

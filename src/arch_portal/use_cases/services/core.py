@@ -1,9 +1,54 @@
 import random
 import time
 import hashlib
-from django.core.mail import send_mail
+from django.core.mail import send_mail 
+import re
+import unicodedata
 
- 
+
+def nettoyer_caracteres_speciaux(texte: str, mode: str = "remplacer") -> str:
+    """
+    Nettoie une chaîne de caractères pour éviter les problèmes d'insertion en base
+    
+    Modes disponibles:
+    - "supprimer"    → enlève tout ce qui n'est pas alphanumérique + espaces
+    - "remplacer"    → remplace accents et caractères spéciaux par leur version ASCII proche
+    - "minimal"      → garde accents mais enlève caractères très exotiques / contrôles
+    """
+    if not texte:
+        return ""
+
+    # Étape 1 : normalisation Unicode (très important pour les accents)
+    texte = unicodedata.normalize('NFD', texte)
+
+    if mode == "supprimer":
+        # Ne garde que lettres, chiffres, espaces et tirets
+        texte = re.sub(r'[^a-zA-Z0-9\s-]', '', texte)
+    
+    elif mode == "remplacer":
+        # Remplace les accents par leur lettre de base (é → e, ç → c, ñ → n, etc.)
+        texte = ''.join(
+            c for c in texte
+            if unicodedata.category(c) != 'Mn'  # enlève les diacritiques
+        )
+        # Optionnel : remplacer quelques caractères spéciaux courants
+        remplacements = {
+            'æ': 'ae', 'œ': 'oe', 'ß': 'ss',
+            'ø': 'o', 'å': 'a', 'ł': 'l',
+            'đ': 'd', 'ħ': 'h', 'ŧ': 't',
+        }
+        for ancien, nouveau in remplacements.items():
+            texte = texte.replace(ancien, nouveau)
+    
+    elif mode == "minimal":
+        # Garde les accents mais supprime les caractères de contrôle et très exotiques
+        texte = re.sub(r'[\x00-\x1F\x7F-\x9F]', '', texte)  # contrôle
+        texte = re.sub(r'[^\w\sÀ-ž\-\'’]', '', texte)       # garde lettres latines étendues
+
+    # Nettoyage final : espaces multiples → un seul
+    texte = re.sub(r'\s+', ' ', texte).strip()
+
+    return texte
 
 def send_email(subject, message, recipient_list):
     send_mail(

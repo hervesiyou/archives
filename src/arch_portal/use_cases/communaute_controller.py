@@ -12,12 +12,13 @@ from arch_portal.domain.models.abonnement import Abonnement
 from arch_portal.domain.models.plantarifaire import Plan
 from arch_portal.domain.models.roi import Rois
 from arch_portal.domain.models import *
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required , permission_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseForbidden, JsonResponse
 from arch_portal.domain.models import Association
 from django.views.decorators.http import require_http_methods
 from django.db import models
+from django.forms import inlineformset_factory
 
 from arch_portal.domain.forms.sets import MiniHistoireFormSet, RoiFormSet   
 
@@ -25,7 +26,157 @@ import json
 from datetime import date
 
 from arch_portal.domain.models.don import Don
-from arch_portal.domain.models.communaute import Communaute
+from arch_portal.domain.models.communaute import Communaute   
+from arch_portal.domain.models.personnecle import PersonneCle   
+from arch_portal.domain.models.lieucle   import LieuCle  
+from arch_portal.domain.forms.lieucle   import LieuCleForm  
+from arch_portal.domain.forms.personnecle   import PersonneCleForm 
+
+
+# ────────────── PERSONNES CLÉS ──────────────
+
+ 
+def personnecle_create(request, type_entite, entite_id):
+    """Créer une personne clé pour une Communauté ou une Famille"""
+
+    if type_entite == 'communaute':
+        entite = get_object_or_404(Communaute, pk=entite_id)
+        redirect_url = entite.get_absolute_url()
+
+    elif type_entite == 'famille':
+        entite = get_object_or_404(Famille, pk=entite_id)
+        redirect_url = entite.get_absolute_url()
+    else:
+        messages.error(request, "Type d'entité invalide.")
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = PersonneCleForm(request.POST, request.FILES)
+        if form.is_valid():
+            personne = form.save()
+            if type_entite == 'communaute':
+                personne.communautes.add(entite)
+            else:
+                personne.familles.add(entite)
+
+            messages.success(request, f"{personne.nom} ajouté(e) comme personne clé.")
+            return redirect(redirect_url)
+    else:
+        form = PersonneCleForm()
+
+    return render(request, 'archcore/creepersonnecle.html', {
+        'form': form,
+        'titre': f"Ajouter une personne clé à {entite}",
+        'soustitre': entite.nom,
+        'bouton': "Ajouter",
+        'back_url': redirect_url,
+    })
+
+def lieucles_create(request, type_entite, entite_id):
+
+    if type_entite == 'communaute':
+        entite = get_object_or_404(Communaute, pk=entite_id)
+        redirect_url = entite.get_absolute_url()
+    elif type_entite == 'famille':
+        entite = get_object_or_404(Famille, pk=entite_id)
+        redirect_url = entite.get_absolute_url()
+    else:
+        messages.error(request, "Type d'entité invalide.")
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = LieuCleForm(request.POST, request.FILES)
+        if form.is_valid():
+            lieu = form.save()
+            if type_entite == 'communaute':
+                lieu.communautes.add(entite)
+            else:
+                lieu.familles.add(entite)
+
+            messages.success(request, f"{lieu.nom} ajouté comme lieu clé.")
+            return redirect(redirect_url)
+    else:
+        form = LieuCleForm()
+
+    return render(request, 'archcore/creelieucle.html', {
+        'form': form,
+        'titre': f"Ajouter un lieu clé à {entite}",
+        'soustitre': entite.nom,
+        'bouton': "Ajouter",
+        'back_url': redirect_url,
+    })
+
+
+def personnecle_detail(request, pk):
+    personne = get_object_or_404(PersonneCle, pk=pk)
+    # Vérifier droits d'accès si besoin (ex: si liée à communauté/famille privée)
+    return render(request, 'archcore/personnecle_detail.html', {
+        'personne': personne,
+        'titre': f"Détails de {personne.nom}",
+    })
+ 
+def personnecle_edit(request, pk):
+    personne = get_object_or_404(PersonneCle, pk=pk)
+    
+    if request.method == 'POST':
+        form = PersonneCleForm(request.POST, request.FILES, instance=personne)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"{personne.nom} a été modifié avec succès.")
+            return redirect('personnecle_detail', pk=personne.pk)
+    else:
+        form = PersonneCleForm(instance=personne)
+
+    return render(request, 'archore/creepersonnecle.html', {
+        'form': form,
+        'titre': f"Modifier {personne.nom}",
+        'bouton': "Mettre à jour",
+        'back_url': personne.get_absolute_url(),
+    })
+
+
+# ────────────── LIEU CLÉ ──────────────
+ 
+def lieucle_detail(request, pk):
+    lieu = get_object_or_404(LieuCle, pk=pk)
+    return render(request, 'archcore/lieucle_detail.html', {
+        'lieu': lieu,
+        'titre': f"Détails de {lieu.nom}",
+    })
+
+ 
+def lieucle_edit(request, pk):
+    lieu = get_object_or_404(LieuCle, pk=pk)
+    
+    if request.method == 'POST':
+        form = LieuCleForm(request.POST, request.FILES, instance=lieu)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"{lieu.nom} a été modifié avec succès.")
+            return redirect('lieucle_detail', pk=lieu.pk)
+    else:
+        form = LieuCleForm(instance=lieu)
+
+    return render(request, 'archcore/creelieucle.html', {
+        'form': form,
+        'titre': f"Modifier {lieu.nom}",
+        'bouton': "Mettre à jour",
+        'back_url': lieu.get_absolute_url(),
+    })
+
+ 
+def personnecle_delete(request, pk):
+    personne = get_object_or_404(PersonneCle, pk=pk)
+    personne.delete()
+    messages.success(request, "Personne clé supprimée.")
+    return redirect('home')  # ou vers la liste
+
+ 
+def lieucle_delete(request, pk):
+    lieu = get_object_or_404(LieuCle, pk=pk)
+    lieu.delete()
+    messages.success(request, "Lieu clé supprimée.")
+    return redirect('home')  # ou vers la liste
 
 # @login_required
 def don_list(request, communaute_id):
@@ -313,7 +464,14 @@ def show_communaute(request, id):
     if ( user in com.membres_communaute.all()):
         appartient = True
 
-    return render(request, "archcore/show_com.html", {"communaute":com, "appartient" : appartient})
+    return render(request, "archcore/show_com.html", 
+        {
+            "communaute":com, 
+            "appartient" : appartient,
+            'personnes_cles': com.personnes_cles.all().order_by('nom'),
+            'lieux_cles': com.lieux_cles.all().order_by('nom'),
+        }
+    )
 
 def show_admin_com(request,id):
     com = Communaute.objects.get(id=id)
@@ -356,12 +514,24 @@ def edit_communaute(request, id):
     return render(request, "archcore/new_communaute.html",  context )
 
 def add_communaute(request):
+
+    PersonneFormSet = inlineformset_factory(
+        Communaute, PersonneCle, form=PersonneCleForm,
+        fields='__all__', extra=1, can_delete=True
+    )
+    LieuFormSet = inlineformset_factory(
+        Communaute, LieuCle, form=LieuCleForm,
+        fields='__all__', extra=1, can_delete=True
+    )
     
     if request.method == "POST":
         form = CommunauteForm(request.POST)
 
         histoires_formset = MiniHistoireFormSet(request.POST, instance=Communaute())
         rois_formset = RoiFormSet(request.POST, instance=Communaute())
+
+        personnes_formset = PersonneFormSet(request.POST, instance=Communaute(), prefix='personnes')
+        lieux_formset = LieuFormSet(request.POST, instance=Communaute(), prefix='lieux')
         
         if form.is_valid() and histoires_formset.is_valid() and rois_formset.is_valid():  
             com = form.save() 
@@ -372,6 +542,13 @@ def add_communaute(request):
 
             rois_formset.instance = com
             rois_formset.save()
+
+            personnes_formset.instance = com
+            personnes_formset.save()
+
+            lieux_formset.instance = com
+            lieux_formset.save()
+
             messages.success(request, "Communauté créée avec succès.")
             
             return redirect("show_communaute",com.id )
@@ -382,11 +559,19 @@ def add_communaute(request):
         form = CommunauteForm()
         histoires_formset = MiniHistoireFormSet(instance=Communaute())
         rois_formset = RoiFormSet(instance=Communaute())
+        
+
+        personnes_formset = PersonneFormSet(instance=Communaute(), prefix='personnes')
+        lieux_formset = LieuFormSet(instance=Communaute(), prefix='lieux')
 
     context = {
         'form': form,
         'histoires_formset': histoires_formset,
         'rois_formset': rois_formset,
+
+        'personnes_formset': personnes_formset,
+        'lieux_formset': lieux_formset,
+        
         'titre': "Créer une nouvelle communauté",
         'action': "Créer",
     }
