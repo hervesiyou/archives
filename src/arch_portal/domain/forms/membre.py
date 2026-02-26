@@ -6,9 +6,13 @@ from crispy_forms.layout import Layout, Row, Column,Field
 from arch_portal.domain.models.membre import Membre 
 
 class MembreForm(forms.ModelForm):
+    pwd = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Mot de passe'}),
+        label="Mot de passe"
+    )
     class Meta:
         model = Membre
-        exclude = ["etatvalidation","dateinscription","approbateurs","galeries"]
+        exclude = ["etatvalidation","dateinscription","approbateurs","galeries" ]
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -79,6 +83,10 @@ class UsersSubscribeForm(forms.ModelForm):
     #     widget=forms.PasswordInput(render_value=False),
     #     label="Mot de passe"
     # )
+    pwd = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Mot de passe'}),
+        label="Mot de passe"
+    )
     
     class Meta:
         model = Membre

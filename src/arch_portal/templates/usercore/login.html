@@ -1,23 +1,139 @@
 {% extends "base.html" %}
+{% load static %}
 {% load crispy_forms_tags %}
-{% block title %} Connexion {% endblock %}
+
+{% block title %}Connexion – RICHBOOK{% endblock %}
+
+{% block css %}
+    <style>
+        :root {
+            --richbook-green: #198754;
+            --richbook-green-dark: #146c43;
+            --richbook-gray: #6c757d;
+        }
+
+        .login-hero {
+            color: rgb(3, 66, 30);
+           
+            border-radius: 0 0 1.5rem 1.5rem;
+            margin-bottom: 3rem;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+            text-align: center;
+        }
+
+        .login-card {
+            max-width: 480px;
+            margin: 0 auto;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: var(--richbook-green);
+            color: white;
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        .login-body {
+            padding: 2.5rem 2rem;
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 0.75rem 1.25rem;
+            border: 1px solid #ced4da;
+        }
+
+        .form-control:focus {
+            border-color: var(--richbook-green);
+            box-shadow: 0 0 0 0.25rem rgba(25,135,84,0.25);
+        }
+
+        .btn-login {
+            padding: 0.75rem 1.5rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+        }
+
+        .link-register {
+            color: var(--richbook-green);
+            font-weight: 500;
+        }
+
+        .link-register:hover {
+            color: var(--richbook-green-dark);
+            text-decoration: underline;
+        }
+
+        .alert {
+            border-radius: 10px;
+        }
+
+        @media (max-width: 576px) {
+            .login-hero { padding: 4rem 1rem 3rem; }
+            .login-body { padding: 2rem 1.5rem; }
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
 
-<div class="row ">
-    <div class="col-lg-3"></div>
-    <div class="col-lg-6 ">
-        <div class="div-default">
-            <h3 class="bg-info text-center text-white p-3"> <i class="fa-solid fa-arrow-right-to-bracket"></i>   Connexion </h3>
-            <p>  Merci de vous Connecter  </p>
+<div class="container">
 
-            <form action="{% url 'login' %}" method="post"  >
-                
-                {% crispy form %}
-                <input type="submit"  class="btn btn-success" value="Se Connecter" />
+    <!-- En-tête visuel -->
+    <div class="login-hero">
+        <h1 class="fw-bold mb-3">Bienvenue sur RICHBOOK</h1>
+        <p class="lead mb-4">Connectez-vous pour accéder à votre arbre généalogique, vos livres et votre communauté</p>
+    </div>
+
+    <!-- Carte de connexion -->
+    <div class="login-card shadow-lg">
+        <div class="login-header">
+            <h3 class="mb-0">
+                <i class="fa-solid fa-arrow-right-to-bracket me-2"></i>
+                Connexion
+            </h3>
+        </div>
+
+        <div class="login-body">
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+
+                {{ form|crispy }}
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-success btn-login fw-bold">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i>
+                        Se connecter
+                    </button>
+                </div>
             </form>
-            <a href="{% url 'subscribe' %}" class="text-info m-4"> Pas encore de compte? S'inscrire</a>
+
+            <div class="text-center mt-4">
+                <p class="text-muted mb-2">Pas encore de compte ?</p>
+                <a href="{% url 'subscribe' %}" class="link-register fs-5">
+                    <i class="fa-solid fa-user-plus me-2"></i>
+                    Créer un compte gratuitement
+                </a>
+            </div>
+
+            {% if request.GET.next %}
+                <p class="text-center text-muted small mt-3">
+                    Vous serez redirigé après connexion
+                </p>
+            {% endif %}
         </div>
     </div>
-    <div class="col-lg-3"></div>
+
 </div>
+
 {% endblock %}

@@ -3,13 +3,7 @@
 {% block title %} {{ request.session.nomcomplet }} {% endblock %}
 {% block content %}
 <div class="container">
-    <div class="row">
-        <div class="col-lg-12">
-            <h3 class="bg-default text-center text-white">  {{ request.session.nomcomplet}} </h3>
- 
-            {%  include 'usercore/partials/home.html'  with membre=user %}
-        </div>
-    </div>
+    
     <div class="row">
         <a href="{% url 'commandes_livres' %}" class="btn btn-info col-2 m-3"> <i class="fas fa-book"></i> Livres demandés (Commandes)</a>
         {% if  'ADD_COMMUNAUTE' in request.session.userrights %} 
@@ -52,6 +46,14 @@
             </div>
             {% endif %}
         {% endblock %}
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="bg-default text-center text-white">  {{ request.session.nomcomplet}} </h3>
+ 
+            {%  include 'usercore/partials/home.html'  with membre=user %}
+        </div>
     </div>
 </div>
 {% endblock %}

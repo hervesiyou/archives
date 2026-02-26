@@ -1,11 +1,15 @@
 ## A Verifier
 
 - inserer la famille nkouonchichoue et la famille takoukam
-- lors de l'inscription cacher les pwd, 
+- ajouter les lieux clés et personnes clés d'une famille et d'une communauté
+- ajouter la geographie lors de la creation et l'update d'une communauté
+        - lors de l'inscription cacher les pwd,
+        - figer la taille des description et cacher le reste
+- afficher les erreurs lors des insertions
+- echapper les caracteres speciaux dans les formulaires
 - verifier que els mail sont ok
 
         - on peut faire des dons dans une communautés
-
         - gerer la recherche des livres et la recherche dans la page de la librairie
         - ajouter les interessés à un evenements, et afficher mes evenements dont je suis interessés
 

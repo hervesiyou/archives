@@ -1,5 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %} {{parent}} Liste de communautés {% endblock %}
+{% block css %}
+     <link rel="stylesheet" href="{% static 'css/minidescription.css' %}" />
+{% endblock %}
 {% block content %}
     <div class="container">
         <div class="row">
@@ -7,37 +11,47 @@
 
                 <div class="card-body">
                     <h3 class="card-title my-4">  Nos Communautés   </h3>
-                    {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                    {% comment %} {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
                             <a href="{% url 'add_communaute' %}" class="btn btn-success btn-xs"> Nouvelle Communaté </a>
-                    {% endif %}
+                    {% endif %} {% endcomment %}
                     <div class="row">
-                        {% for com in communautes %}
-                            <div class="col-md-6 col-lg-2 col-xlg-3">
-                                <div class="card card-hover">
-                                    <a href="{% url 'listfamilles' id=com.id mode=1 %}">
-                                        <div class="box bg-success text-center">
-                                            {% comment %} <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i> </h1> {% endcomment %}
-                                            {% if  com.publique %}
-                                                <h6 class="text-white"><i class="fa-solid fa-person-shelter"></i> {{ com.nom}} </h6>
-                                                {% comment %} {% if  'VOIR_COMMUNAUTE' in request.session.userrights or com.publique %} {% endcomment %}
-                                            <a href="{% url 'show_communaute' com.id %}" class="text-center badge bg-secondary"> Voir en détail</a>
-                                            {% else %}
-                                                <h6 class="text-white"><i class="fa-solid fa-person-shelter"></i> {{ com.nom}} </h6>
-                                                <a href="#" data-com="{{com.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partComID"> Je souhaite être {{ com.nom }}</a>
-                                            {% endif %}
-                                        </div>
+                        {% for com in communautes %} 
 
-                                        <div class="card-body">
-                                            <p> {{com.description}} </p>
+                           <div class="col-lg-4 col-md-6 mb-4  card card-hover">
+                                <div class="box bg-success text-center">
+                                    {% comment %} <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i> </h1> {% endcomment %}
+                                    {% if  com.publique %}
+                                        <h6 class="text-white"><i class="fa-solid fa-person-shelter"></i> {{ com.nom}} </h6>
+                                        {% comment %} {% if  'VOIR_COMMUNAUTE' in request.session.userrights or com.publique %} {% endcomment %}
+                                    <a href="{% url 'show_communaute' com.id %}" class="text-center badge bg-secondary"> Voir en détail</a>
+                                    {% else %}
+                                        <h6 class="text-white"><i class="fa-solid fa-person-shelter"></i> {{ com.nom}} </h6>
+                                        <a href="#" data-com="{{com.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partComID"> Je souhaite être {{ com.nom }}</a>
+                                    {% endif %}
+                                </div>
+                                <div class="card community-card h-100 shadow-sm border-0 overflow-hidden">
+                                    
+                                    <img src="{% static 'images/communaute.jpg' %}" 
+                                            class="card-img-top" 
+                                            alt="{{ com.nom}}" 
+                                            style="height: 220px; object-fit: cover;">
+
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title fw-bold mb-3">{{ com.nom}}</h5>
+ 
+                                        <p class="card-text community-desc flex-grow-1">
+                                            <a href="{% url 'listfamilles' id=com.id mode=1 %}" class="stretched-link">
+                                            {{com.description}} 
+                                            </a>
+                                        </p>                                       
+                                        <div class="mt-auto">
+                                            <a href="{% url 'listfamilles' id=com.id mode=1 %}" class="btn btn-primary w-100">
+                                            Découvrir la communauté →
+                                            </a>
                                         </div>
-                                        <div class="card-footer">
-                                            <div class="text-info">
-                                                {{ com.type}} , {{ com.origine}}
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div> 
-                            </div>
+                                    </div>
+                                </div>
+                            </div> 
                         {% endfor %}  
                     
                     </div>

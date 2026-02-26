@@ -8,39 +8,22 @@
     </style>
 {% endblock %}
 {% block content %}
-    {% comment %} <div class="row bg">
-        <div class="col-md-3">
-            <div class="card mt-0">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="peity_line_neutral left text-center mt-2">
-                            <h6>{{famille.membres_set|length}}</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-    </div> {% endcomment %}
+     
 
 <div class="container ">
-    <h3 class="p-5">
+    <h3 class="">
     <b>{{famille.nom}}</b> 
-    <span class="pull-right">
-    <button class="btn btn-xs btn-success text-white"> Inscrire un membre</button>
-    </span>
+    {% comment %} <span class="pull-right">
+    <button class="btn btn-xs btn-success text-white"> Inscrire un membre gg</button>
+    </span> {% endcomment %}
     </h3>
    {% if famille %}
     <div class="row">
         <div class="col-md-12">
-            <div class="card p-5 printableArea">
-                    {% comment %} <div class="pull-left"> {% endcomment %}
-                        {% comment %} <address> {% endcomment %}
-                            <h3> &nbsp;<b class="text-danger text-capitalize">{{famille.description}} </b></h3>
-                            <p class="text-muted ms-1">{{famille.chef.nomcomplet}}
-                                <br> {{famille.description}} 
-                        {% comment %} </address> {% endcomment %}
-                    {% comment %} </div>  {% endcomment %}
+            <div class="card p-5 printableArea"> 
+                <h3> &nbsp;<b class="text-danger text-capitalize">{{famille.description}} </b></h3>
+                <p class="text-muted ms-1">{{famille.chef.nomcomplet}}
+                    <br> {{famille.description}}  
                
             </div>
         </div>

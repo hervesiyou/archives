@@ -1,29 +1,179 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %} {{parent}} Détail - {{ livre.nom }} {% endblock %}
-{% block css %}  
+
+{% block title %}{{ livre.nom }} – {{ librairie.nom }}{% endblock %}
+
+{% block css %}
     <style>
-      .book-image img{
-        max-height:90px;
-        max-width:90px;
-      }
-    </style>
-    <script>
-        function enableCommandeButton() {        
-            document.getElementById('addOrderID').disabled = false;
+        :root {
+            --richbook-primary: #0d6efd;
+            --richbook-success: #198754;
+            --richbook-warning: #ffc107;
+            --richbook-danger: #dc3545;
+        } 
+ 
+        .book-cover {
+            max-width: 320px;
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            border: 8px solid white;
         }
-    </script>
+
+        .price-badge {
+            font-size: 1.6rem;
+            padding: 0.6rem 1.4rem;
+            border-radius: 50px;
+        }
+
+        .rating-stars {
+            font-size: 1.4rem;
+            color: #ffc107;
+        }
+
+        .action-btn {
+            min-width: 220px;
+            margin: 0.5rem 0;
+        }
+
+        .modal-header.bg-success, .modal-header.bg-warning, .modal-header.bg-danger {
+            color: white;
+        }
+
+        @media (max-width: 992px) {
+            .book-cover { max-width: 280px; margin: 0 auto 2rem; }
+            .book-hero { padding: 4rem 1rem 3rem; }
+        }
+    </style>
 {% endblock %}
+
 {% block content %}
-    <div class="container">
+
+<div class="container">
+
+    <!-- En-tête visuel -->
+    <div class=" text-center">
+        <h1 class="fw-bold mb-2">{{ livre.nom }}</h1>
+        <p class="lead mb-1">
+            <span class="badge bg-light text-dark fs-5 px-4 py-2">
+                {{ livre.type }} • {{ livre.auteur }}
+            </span>
+        </p>
+
+        <div aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center mb-4">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa fa-home me-1"></i>Accueil</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'show_librairie' librairie.id %}"><i class="fa fa-book me-1"></i>{{ librairie.nom }}</a></li>
+                <li class="breadcrumb-item active">{{ livre.nom }}</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row g-5">
+
+        <!-- Colonne couverture + infos rapides -->
+        <div class="col-lg-4 text-center text-lg-start">
+            {% if livre.images.exists %}
+                <img src="{{ livre.images.first.fichier.url }}" 
+                     class="book-cover shadow-lg" 
+                     alt="Couverture de {{ livre.nom }}">
+            {% else %}
+                <img src="{% static 'images/richbook.png' %}" 
+                     class="book-cover shadow-lg" 
+                     alt="Couverture par défaut">
+            {% endif %}
+
+            <div class="mt-4">
+                <h3 class="price-badge bg-danger text-white">
+                    {{ livre.prix }} XAF
+                </h3>
+                <p class="mt-3">
+                    <span class="badge bg-secondary fs-6">
+                        Stock : {{ livre.stock }} exemplaire{{ livre.stock|pluralize }}
+                    </span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Colonne infos + actions -->
+        <div class="col-lg-8">
+
+            <div class="mb-4">
+                <h2 class="fw-bold text-danger mb-3">{{ livre.nom }}</h2>
+                <p class="lead text-muted">
+                    {{ livre.auteur }} • {{ livre.domaine|default:"—" }} • ISBN : {{ livre.isbn|default:"Non renseigné" }}
+                </p>
+
+                <div class="mb-4">
+                    <div class="rating-stars mb-2">
+                        {% with livre.moyenne_notes|floatformat:0 as moyenne %}
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= moyenne %}⭐{% else %}☆{% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                        <small class="text-muted ms-2">
+                            ({{ livre.total_notes }} avis)
+                        </small>
+                    </div>
+                    <p class="text-muted lead">{{ livre.description|linebreaks }}</p>
+                </div>
+
+                <!-- Actions principales -->
+                <div class="d-flex flex-wrap gap-3 mt-4">
+                    {% if livre.type == "Numerique" %}
+                        {% if request.user.is_authenticated %}
+                            {% if achat %}
+                                <button class="btn btn-lg btn-success action-btn" data-bs-toggle="modal" data-bs-target="#paiementModal">
+                                    <i class="fa fa-download me-2"></i>Télécharger maintenant
+                                </button>
+                            {% else %}
+                                <a href="{% url 'abonnement' %}" class="btn btn-lg btn-warning action-btn">
+                                    <i class="fa fa-star me-2"></i>S’abonner pour lire
+                                </a>
+                            {% endif %}
+
+                            <button class="btn btn-lg btn-outline-warning action-btn" data-bs-toggle="modal" data-bs-target="#notationModal">
+                                <i class="fa fa-star-half-alt me-2"></i>Noter ce livre
+                            </button>
+                        {% else %}
+                            <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-lg btn-outline-primary action-btn">
+                                <i class="fa fa-sign-in-alt me-2"></i>Se connecter pour acheter
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <span class="alert alert-info d-block w-100 text-center">
+                            Livre physique – Contactez le propriétaire pour commande
+                        </span>
+                    {% endif %}
+
+                    {% if 'COMMANDER_LIVRE' in request.session.userrights %}
+                        <button class="btn btn-lg btn-danger action-btn" data-bs-toggle="modal" data-bs-target="#orderModal">
+                            <i class="fa fa-shopping-cart me-2"></i>Me le procurer
+                        </button>
+                    {% endif %}
+                </div>
+
+                {% if livre.file.url and achat %}
+                    <div class="mt-4">
+                        <a href="{{ livre.file.url }}" target="_blank" class="btn btn-outline-success">
+                            <i class="fa fa-file-download me-2"></i>Télécharger le fichier
+                        </a>
+                        <a href="{% url 'show_book_file' livre.id %}" target="_blank" class="btn btn-outline-info ms-2">
+                            <i class="fa fa-eye me-2"></i>Lire en ligne
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="  card-body printableArea">
-                    <div class="breadcrumb">
-                        <a href="{% url 'home' %}"> <i class="fa fa-home"></i> Accueil </a> >
-                        <a href="{% url 'show_librairie' librairie.id %}"> <i class="fa fa-book"></i> {{ librairie.nom }} </a> > {{livre.nom}} 
-                    </div>
-
+                    
                     <h3><b>{{livre.nom}}</b> <span class="pull-right">ISBN: {{ livre.isbn}}</span> - <span class="  bg-default">{{ livre.type}} </span></h3>
                     <hr>
                     <div class="row">
@@ -214,84 +364,123 @@
         </div>
     </div>
 
-    {% if achat  %}
-        <div class="modal fade" id="paiementModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title">Paiement du livre</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <form method="post" action="{% url 'payer_livre' livre.id %}">
-                    {% csrf_token %}
-
-                    <div class="modal-body">
-                        <p><b>Livre :</b> {{ livre.nom }}</p>
-                        <p><b>Description :</b> {{ livre.description }}</p>
-                        <p><b>Prix :</b> <span class="text-danger">{{ livre.prix }} XAF</span></p>
-                        <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
-                    </div>
-
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">
-                            Confirmer le paiement
-                        </button>
-                    </div>
-                </form>
-
-                </div>
-            </div>
-        </div>
-    {% endif %}
-
-
-    <div class="modal fade" id="notationModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-            <div class="modal-header bg-warning">
-                <h5 class="modal-title">Noter {{ livre.nom }}</h5>
+<!-- Modal Paiement / Téléchargement direct -->
+{% if achat and livre.type == "Numerique" %}
+<div class="modal fade" id="paiementModal" tabindex="-1" aria-labelledby="paiementModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="paiementModalLabel">Confirmation d’achat</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-
-            <form method="post" action="{% url 'noter_livre' livre.id %}">
-                {% csrf_token %}
-
-                <div class="modal-body">
-
-                    <label>Votre note</label>
-                    <select name="note" class="form-select" required>
-                        <option value="">Choisir</option>
-                        <option value="5">★★★★★ Excellent</option>
-                        <option value="4">★★★★☆ Très bon</option>
-                        <option value="3">★★★☆☆ Moyen</option>
-                        <option value="2">★★☆☆☆ Faible</option>
-                        <option value="1">★☆☆☆☆ Mauvais</option>
-                    </select>
-
-                    <label class="mt-2">Commentaire</label>
-                    <textarea name="commentaire"
-                                class="form-control"
-                                placeholder="Votre avis (optionnel)"></textarea>
-
-                    <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-warning">
-                        Envoyer ma note
-                    </button>
-                </div>
-
-            </form>
-
+            <div class="modal-body">
+                <p><strong>Livre :</strong> {{ livre.nom }}</p>
+                <p><strong>Prix :</strong> <span class="text-danger fs-5">{{ livre.prix }} XAF</span></p>
+                <p class="text-muted">Votre abonnement permet le téléchargement direct.</p>
+                <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="{% url 'payer_livre' livre.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Confirmer et télécharger</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
+{% endif %}
 
+<!-- Modal Notation -->
+<div class="modal fade" id="notationModal" tabindex="-1" aria-labelledby="notationModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="notationModalLabel">Votre avis sur {{ livre.nom }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{% url 'noter_livre' livre.id %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Note</label>
+                        <select name="note" class="form-select" required>
+                            <option value="">Choisir...</option>
+                            <option value="5">★★★★★ Excellent</option>
+                            <option value="4">★★★★☆ Très bon</option>
+                            <option value="3">★★★☆☆ Moyen</option>
+                            <option value="2">★★☆☆☆ Faible</option>
+                            <option value="1">★☆☆☆☆ Mauvais</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Commentaire (facultatif)</label>
+                        <textarea name="commentaire" class="form-control" rows="4" placeholder="Votre ressenti, points forts..."></textarea>
+                    </div>
+                    <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-warning">Envoyer mon avis</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-   
-{% endblock content %}
+<!-- Modal Commande chez le propriétaire -->
+{% if 'COMMANDER_LIVRE' in request.session.userrights %}
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="orderModalLabel">Commande de {{ livre.nom }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="orderForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Propriétaire</label>
+                        <input type="text" class="form-control" readonly value="{{ librairie.possesseur.nomcomplet }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Contact</label>
+                        <input type="text" class="form-control" readonly value="{{ librairie.possesseur.email|default:'—' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Votre nom</label>
+                        <input type="text" name="nom" class="form-control" value="{{ request.session.nomcomplet|default:'' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Téléphone</label>
+                        <input type="tel" name="telephone" class="form-control" placeholder="Ex: +237 6XX XXX XXX" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Message au propriétaire</label>
+                        <textarea name="message" class="form-control" rows="4" placeholder="Quantité, adresse de livraison, questions..."></textarea>
+                    </div>
+                    <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" id="addOrderID" class="btn btn-danger" disabled data-livre="{{ livre.id }}">
+                    Envoyer la commande
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        // Compteur caractères si besoin + activation bouton après captcha
+        function enableCommandeButton() {
+            document.querySelectorAll('#addOrderID, #paiementModal button[type="submit"]').forEach(btn => {
+                btn.disabled = false;
+            });
+        }
+    </script>
+{% endblock %}

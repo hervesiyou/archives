@@ -1,92 +1,200 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %} {{parent}} Liste de nos librairies {% endblock %}
+
+{% block title %}Nos Librairies – RICHBOOK{% endblock %}
+
+{% block css %}
+    <style>
+        :root {
+            --richbook-red: #dc3545;
+            --richbook-green: #198754;
+        }
+
+        .librairie-hero {
+            background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.70)),
+                        url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1473&q=80') center/cover;
+            color: white;
+            padding: 5rem 1rem 3.5rem;
+            border-radius: 0 0 1.5rem 1.5rem;
+            margin-bottom: 2.5rem;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.7);
+        }
+
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .breadcrumb a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .lib-card {
+            transition: all 0.28s ease;
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            height: 100%;
+        }
+
+        .lib-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .lib-header {
+            background: var(--richbook-red);
+            color: white;
+            padding: 1.2rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .lib-header a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .lib-header a:hover {
+            text-decoration: underline;
+        }
+
+        .lib-body {
+            padding: 1.25rem;
+        }
+
+        .lib-desc {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.5;
+            min-height: 4.5em;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .lib-footer {
+            padding: 0.9rem 1.25rem;
+            background: #f8f9fa;
+            font-size: 0.92rem;
+            border-top: 1px solid #eee;
+        }
+
+        .lib-avatar {
+            height: 180px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        @media (max-width: 576px) {
+            .librairie-hero { padding: 3.5rem 1rem 2.5rem; }
+            .lib-header { font-size: 1.15rem; padding: 1rem; }
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
-   
-    <div class="container">
 
-        <div class="breadcrumb">
-            <a href="{% url 'home' %}"> <i class="fa fa-home"></i> Accueil </a> >
-            <a href="{% url 'listlibs' %}"> <i class="fa fa-book"></i> Librairies </a>
+<div class="container">
+
+    <!-- En-tête visuel -->
+    <div class=" text-center">
+        <h1 class="fw-bold mb-3">Nos Librairies</h1>
+
+        <div aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa fa-home me-1"></i>Accueil</a></li>
+                <li class="breadcrumb-item active"><i class="fa fa-book me-1"></i>Librairies</li>
+            </ol>
         </div>
-    <div class="row">
-        <div class="col-12">
-            
-            <div class="card-body">
-                <h3 class="card-title text-danger text-bold">
-                    Nos Librairies                    
-                </h3>
-                 {% if  'ADD_LIBRAIRIE' in request.session.userrights %}
-                        <a href="{% url 'add_librairie' %}" class="btn btn-success btn-xs">Nouvelle librairie </a>
-                    {% endif %}
 
-                <div class="row">
-                    <div class="col-lg-3"></div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                        <form method="post" action="{% url 'search_book'  %}">
-                            {% csrf_token %}
-                            <input class="col-10" type="text" value="{{ name }}" name="rechLivre" />
-                            <button  class="  btn-success " type="submit"> Rechercher </button>
-                        </form>
-                        </div>
+        {% if 'ADD_LIBRAIRIE' in request.session.userrights %}
+            <a href="{% url 'add_librairie' %}" class="btn btn-lg btn-danger mt-2">
+                <i class="fa fa-plus-circle me-2"></i>Nouvelle librairie
+            </a>
+        {% endif %}
+    </div>
+
+    <!-- Barre de recherche -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-12 col-md-8 col-lg-6">
+            <form method="post" action="{% url 'search_book' %}" class="input-group input-group-lg">
+                {% csrf_token %}
+                <input type="text" 
+                       class="form-control" 
+                       name="rechLivre" 
+                       value="{{ name|default:'' }}" 
+                       placeholder="Rechercher un livre dans toutes les librairies...">
+                <button class="btn btn-danger" type="submit">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Grille des librairies -->
+    <div class="row g-4">
+        {% for lib in librairies %}
+            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                <div class="card lib-card h-100">
+                    
+                    <div class="lib-header">
+                        <a href="{% url 'listbooks' id=lib.id mode=1 %}">
+                            {{ lib.nom }}
+                        </a>
                     </div>
-                    <div class="col-lg-3">
-                        
-                    </div>
-                </div>
 
+                    <img src="{% static 'images/richbooklib.png' %}" 
+                         class="lib-avatar card-img-top" 
+                         alt="{{ lib.nom }}">
 
-                <div class="row el-element-overlay">
-                    {% for lib in librairies %}
-                        <div class="col-md-6 col-lg-2 col-xlg-3">
-                            <div class="card card-hover">
-                                <a href="{% url 'listbooks' id=lib.id mode=1 %}">
-                                    <div class="box bg-danger text-center">
-                                        <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i> </h1>
-                                        <h6 class="text-white">{{ lib.nom}} </h6>
-                                    </div>
-                                </a>
-                  
-                                <div class="el-card-item">
-                                 
-                                    
-                                        <div class="el-card-avatar el-overlay-1"> <img src="{% static 'images/richbooklib.png' %} " alt="user" style="width:100%;">
-                                            <div class="el-overlay">
-                                                <ul class="list-style-none el-info">
-                                                    <li class="el-item"><a class="btn default btn-outline image-popup-vertical-fit el-link" href="{% static 'images/richbooklib.png' %}  "><i class="mdi mdi-magnify-plus"></i></a></li>
-                                                    
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="el-card-content">
-                                            <a href="{% url 'listbooks' id=lib.id mode=1 %}">
-                                                <h4 class="mb-0">{{ lib.nom}} </h4> <span class="text-muted">  {{ lib.description }} </span>
-                                            </a>
-                                        </div>
-                                </div>                               
-                                
-
-                                <a href="{% url 'show_librairie' lib.id %}">
-                                    <div class="card-footer">
-                                        <span class="badge text-info bg-light">
-                                            {{ lib.type}} 
-                                        </span>
-                                        <span class="badge text-white bg-success">
-                                            {{ lib.nombre_livres }} livres
-                                        </span>
-                                    </div>
-                                </a>
-                            </div> 
+                    <div class="lib-body d-flex flex-column">
+                        <div class="lib-desc flex-grow-1">
+                            <a href="{% url 'listbooks' id=lib.id mode=1 %}" class="text-dark text-decoration-none">
+                                {{ lib.description|truncatechars:140 }}
+                            </a>
                         </div>
-                    {% endfor %} 
+
+                        <a href="{% url 'show_librairie' lib.id %}" 
+                           class="btn btn-outline-danger mt-3 w-100">
+                            Voir la librairie →
+                        </a>
+                    </div>
+
+                    <div class="lib-footer d-flex justify-content-between">
+                        <span class="badge bg-light text-danger">
+                            {{ lib.type|default:"Générale" }}
+                        </span>
+                        <span class="badge bg-success">
+                            <i class="fa fa-book me-1"></i>
+                            {{ lib.nombre_livres }} livres
+                        </span>
+                    </div>
+
                 </div>
             </div>
-        
-        </div>
-    </div>
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <h4 class="text-muted">Aucune librairie enregistrée pour le moment</h4>
+                {% if 'ADD_LIBRAIRIE' in request.session.userrights %}
+                    <a href="{% url 'add_librairie' %}" class="btn btn-danger mt-3">
+                        Créer la première librairie
+                    </a>
+                {% endif %}
+            </div>
+        {% endfor %}
     </div>
 
-  
+</div>
 
- {% endblock %}
+{% endblock %}

@@ -1,109 +1,199 @@
 {% extends "base.html" %}
 {% load static %}
 {% load custom_filters %}
-{% block title %} {{parent}} Liste des associations {{ communaute.nom }} {% endblock %}
-{% block css %} 
 
-    <link href="{% static 'css/dataTables.bootstrap4.css' %} " rel="stylesheet">
+{% block title %}Associations de {{ communaute.nom }}{% endblock %}
+
+{% block css %}
+    <link href="{% static 'css/dataTables.bootstrap5.min.css' %}" rel="stylesheet">
+
     <style>
-        th{
-            text-transform: uppercase;            
+        :root {
+            --richbook-success: #198754;
+            --richbook-success-dark: #146c43;
+        }
+ 
+
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .breadcrumb a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .asso-card {
+            transition: all 0.28s ease;
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+            height: 100%;
+        }
+
+        .asso-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.14);
+        }
+
+        .asso-header {
+            background: var(--richbook-success);
+            color: white;
+            padding: 1.15rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.15rem;
+        }
+
+        .asso-header a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .asso-header a:hover {
+            text-decoration: underline;
+        }
+
+        .asso-body {
+            padding: 1.25rem;
+        }
+
+        .asso-desc {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.5;
+            min-height: 4.5em;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .asso-footer {
+            padding: 0.9rem 1.25rem;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+
+        @media (max-width: 576px) {
+            .asso-hero { padding: 3.5rem 1rem 2.5rem; }
+            .asso-header { font-size: 1.05rem; padding: 1rem; }
         }
     </style>
 {% endblock %}
+
 {% block content %}
 
-    <div class="my-3">
-        {% comment %} <div class="col-12"> {% endcomment %}
-            
-            <div class="card-body">
-                <div class="breadcrumb">
-                <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a> >
-                <a href="{% url 'listcom' %}" class=" "> Communautés </a> >  
-                <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a> >
-                Associations
-                </div>
-            </div>
-            
-        {% comment %} </div> {% endcomment %}
+<div class="container">
+
+    <!-- En-tête visuel -->
+    <div class="text-center my-3">
+        <h1 class="fw-bold mb-3">Associations de {{ communaute.nom }}</h1>
+
+        <div aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa fa-home me-1"></i>Accueil</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'listcom' %}">Communautés</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'show_communaute' communaute.id %}">{{ communaute.nom }}</a></li>
+                <li class="breadcrumb-item active">Associations</li>
+            </ol>
+        </div>
+
+         
     </div>
-   
-    <div class="row">
-        <div class="col-12">
-            
-            <div class="card-body">
-                <h5 class="card-title my-2">
-                    <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a>
-                    &nbsp;
-                    {% if  'ADD_ASSOCIATION' in request.session.userrights or liv.publique %}
-                        <a href="{% url 'add_association' %}" class="btn btn-xs btn-success text-white"> Nouvelle association</a>
-                    {% endif %}
-                </h5>
 
-                <div class="row">
-                    <div class="col-lg-3"></div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <input class="col-10" type="text" value="" name="rechLivre" />
-                            <button  class="  btn-success "> Rechercher </button>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <a href="{% url 'listassociations' id=communaute.id  mode=0 %}" class=" btn btn-sm btn-outline-info my-2"> Afficher en liste</a>
-                    </div>
-                </div>
-
-                <div class="row">
-                    {% for liv in associations %}
-                        <div class="col-md-6 col-lg-2 col-xlg-3">
-                            <div class="card card-hover">
-                                <div class="box bg-success text-center">
-                                    {% comment %} <h1 class="font-light text-white">  </h1> {% endcomment %}
-                                    {% if liv.publique  or liv|appartient:request.session.userid  or 'VOIR_ASSOCIATION' in request.session.userrights %}
-                                        <a href="{% url 'show_association' liv.id %}" class="text-center h5  text-white"><i class="fa-solid fa-users-line"></i> {{ liv.nom}} </a>
-                                    {% else %}
-                                        <h6 class="text-white"><i class="fa-solid fa-ranking-star"></i> {{ liv.nom}} </h6>
-                                    {% endif %}
-                                </div>
-
-                                <div class="card-body">
-                                    <h5 class="card-title">                                    
-                                         
-                                        {% if liv.publique  or liv|appartient:request.session.userid  or 'VOIR_ASSOCIATION' in request.session.userrights %}
-   
-                                           <a href="{% url 'show_association' liv.id %}" class="text-center badge bg-secondary"> <i class="fa fa-eye"></i> Voir en détail</a>
-                                        {% else %}
-                                            <a href="#" data-asso="{{liv.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partAssoID"> Je souhaite participer à  {{ liv.nom }}</a>
-                                        {% endif %}
-                                    </h5>
-                                    <p> {{liv.description}} </p>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="text-info">
-                                        {{ liv.type}}
-                                    </div>
-                                </div>
-
-                                
-                            </div> 
-                        </div>
-                    {% endfor %} 
-                            
-                </div>
+    <!-- Barre de recherche + vue liste -->
+    <div class="row justify-content-between align-items-center mb-4 g-3">
+        <div class="col-12 col-md-6 col-lg-5">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Rechercher une association..." name="rechAsso">
+                <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
             </div>
-            
+        </div>
+        <div class="col-12 col-md-4 col-lg-3 text-end">
+            <a href="{% url 'listassociations' id=communaute.id mode=0 %}" 
+               class="btn btn-outline-primary w-100 w-md-auto">
+                <i class="fa fa-list me-1"></i>Afficher en liste
+            </a>
         </div>
     </div>
 
-    
-    
+    <!-- Grille des associations -->
+    <div class="row g-4">
+        {% for asso in associations %}
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+                <div class="card asso-card h-100">
 
+                    <div class="asso-header">
+                        {% if asso.publique or asso|appartient:request.session.userid or 'VOIR_ASSOCIATION' in request.session.userrights %}
+                            <a href="{% url 'show_association' asso.id %}">
+                                {{ asso.nom }}
+                            </a>
+                        {% else %}
+                            {{ asso.nom }}
+                        {% endif %}
+                    </div>
+
+                    <div class="asso-body d-flex flex-column">
+                        <div class="asso-desc flex-grow-1">
+                            {% if asso.publique or asso|appartient:request.session.userid or 'VOIR_ASSOCIATION' in request.session.userrights %}
+                                <a href="{% url 'show_association' asso.id %}" class="text-dark text-decoration-none">
+                                    {{ asso.description|truncatechars:160 }}
+                                </a>
+                            {% else %}
+                                {{ asso.description|truncatechars:160 }}
+                            {% endif %}
+                        </div>
+
+                        {% if asso.publique or asso|appartient:request.session.userid or 'VOIR_ASSOCIATION' in request.session.userrights %}
+                            <a href="{% url 'show_association' asso.id %}" 
+                               class="btn btn-outline-success mt-3">
+                                <i class="fa fa-eye me-1"></i>Voir l’association
+                            </a>
+                        {% else %}
+                            <a href="#" 
+                               data-asso="{{ asso.id }}" 
+                               data-user="{{ request.session.userid }}" 
+                               class="btn btn-sm btn-danger mt-3 partAssoID">
+                                <i class="fa fa-handshake-angle me-1"></i>Demander à rejoindre
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <div class="asso-footer text-center">
+                        <span class="badge bg-info text-dark">
+                            {{ asso.type|default:"Association" }}
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <h4 class="text-muted">Aucune association enregistrée pour le moment</h4>
+                {% if 'ADD_ASSOCIATION' in request.session.userrights %}
+                    <a href="{% url 'add_association' %}" class="btn btn-success mt-3">
+                        Créer la première association
+                    </a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
 
 {% endblock %}
 
 {% block js %}
-    {% comment %} <script src="{% static 'js/datatables.min.js' %}"></script>
-    <script> 
-        $('#zero_config').DataTable();
-    </script> {% endcomment %}
+    <!-- Pour la demande d'adhésion AJAX si tu veux la développer -->
+    <!-- <script src="{% static 'js/association-request.js' %}"></script> -->
 {% endblock %}

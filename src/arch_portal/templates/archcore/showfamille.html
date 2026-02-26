@@ -1,219 +1,303 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %} {{parent}} Détail - {{ famille.nom }} {% endblock %}
-{% block css %}  
+{% load custom_filters %}
+
+{% block title %}{{ famille.nom }} – Détail Famille{% endblock %}
+
+{% block css %}
+    <link href="{% static 'css/dataTables.bootstrap5.min.css' %}" rel="stylesheet">
+
     <style>
-      
+        :root {
+            --richbook-green: #198754;
+            --richbook-green-dark: #146c43;
+            --richbook-gray: #6c757d;
+        }
+
+        .family-hero {
+            background: linear-gradient(rgba(0,0,0,0.60), rgba(0,0,0,0.75)),
+url("{% static 'images/familleafrican.jpg' %}");        
+    color: white;
+            padding: 6rem 1rem 4rem;
+            border-radius: 0 0 1.5rem 1.5rem;
+            margin-bottom: 2.5rem;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+        }
+
+        
+         
+
+        .stats-card {
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 12px;
+            padding: 1.2rem;
+            text-align: center;
+            transition: all 0.25s;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.18);
+        }
+
+        .stats-number {
+            font-size: 2.1rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .stats-label {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .family-description {
+            background: white;
+            border-radius: 12px;
+            padding: 1.8rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .chief-badge {
+            background: var(--richbook-green);
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            display: inline-block;
+            margin: 1rem 0;
+        }
+
+        .table thead th {
+            background: var(--richbook-green) !important;
+            color: white !important;
+            text-transform: uppercase;
+            font-size: 0.88rem;
+            border: none;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(25,135,84,0.05);
+        }
+
+        .btn-tree {
+            min-width: 220px;
+            margin: 0.4rem 0;
+        }
+
+        @media (max-width: 992px) {
+            .stats-card { margin-bottom: 1rem; }
+            .family-hero { padding: 4rem 1rem 3rem; }
+        }
+
+        @media (max-width: 576px) {
+            .stats-number { font-size: 1.7rem; }
+        }
     </style>
 {% endblock %}
+
 {% block content %}
-    <div class="container">
-        <div class="breadcrumb">
-        <a href="{% url 'home' %}" > <i class="fa fa-home"></i> Accueil </a> > 
-        <a href="{% url 'show_communaute' famille.communaute.id %}" >
-         <i class="fas fa-users"></i> {{famille.communaute.nom}}
-        </a> >
-        {{ famille.nom }}
+
+<div class="container">
+
+    <!-- Hero / En-tête -->
+    <div class="family-hero text-center">
+        <h1 class="fw-bold mb-3">{{ famille.nom }}</h1>
+
+        <div  aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa fa-home me-1"></i>Accueil</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'show_communaute' famille.communaute.id %}"><i class="fas fa-users me-1"></i>{{ famille.communaute.nom }}</a></li>
+                <li class="breadcrumb-item active">{{ famille.nom }}</li>
+            </ol>
         </div>
-        {% comment %} <a href="{% url 'list_familles' %}" class="btn btn-sm btn-outline-secondary my-2"> <i class="fas fa-arrow-left"></i> Familles </a> {% endcomment %}
-        <div class="row bg my-5">
-            <div class="col-md-2">
-                <div class=" mt-0">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="text-info text-center mt-2"> 
-                                <h3 class="mb-0 fw-bold">{{famille.get_members|length}}</h3>
-                                <span class="text-muted">Membres</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6 border-left text-center pt-2">
-                            <h3 class="mb-0 fw-bold">150</h3>
-                            <span class="text-muted">Fils</span>
-                        </div>
-                    </div>
-                </div>
+    </div>
+
+    <!-- Statistiques clés -->
+    <div class="row g-3 mb-5">
+        <div class="col-6 col-md-3 col-lg-2">
+            <div class="stats-card">
+                <div class="stats-number">{{ famille.get_members|length }}</div>
+                <div class="stats-label">Membres</div>
             </div>
-            <div class="col-md-2">
-                <div class=" mt-0">
-                    <div class="row"> 
-                        <div class="col-md-6 border-left text-center pt-2">
-                            <h3 class="mb-0 fw-bold">4560</h3>
-                            <span class="text-muted">Petits fils</span>
-                        </div>
-                    </div>
-                </div>
+        </div>
+        <div class="col-6 col-md-3 col-lg-2">
+            <div class="stats-card">
+                <div class="stats-number">{{ famille.get_sous_familles|length }}</div>
+                <div class="stats-label">Sous-familles</div>
             </div>
-            <div class="col-md-2">
-                <div class=" mt-0">
-                    <div class="row"> 
-                        <div class="col-md-6 border-left text-center pt-2">
-                            <h3 class="mb-0 ">5672</h3>
-                            <span class="text-muted">Arrière petit fils</span>
-                        </div>
-                    </div>
-                </div>
+        </div>
+        <div class="col-6 col-md-3 col-lg-2">
+            <div class="stats-card">
+                <div class="stats-number">{{ famille.associations.all|length }}</div>
+                <div class="stats-label">Associations</div>
             </div>
-            <div class="col-md-2">
-                <div class=" mt-0">
-                    <div class="row"> 
-                        <div class="col-md-6 border-left text-center pt-2">
-                        
-                        <a href="{% url 'listassociationsfam' famille.id %}">
-                            <h3 class="mb-0 ">{{famille.associations.all|length}}</h3>
-                            <span class="text-muted">Associations</span>
+        </div>
+        <div class="col-6 col-md-3 col-lg-2">
+            <div class="stats-card">
+                <div class="stats-number text-warning">—</div>
+                <div class="stats-label">Fils / Petits-fils</div>
+                <small class="d-block opacity-75">(à calculer)</small>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 text-lg-end">
+            <div class="stats-card h-100 d-flex align-items-center justify-content-center flex-column">
+                {% if famille.famille_mere %}
+                    <h5 class="mb-1">Branche de</h5>
+                    <a href="{% url 'show_famille' famille.famille_mere.id %}" class="h4 text-white mb-2">
+                        {{ famille.famille_mere.nom }}
+                    </a>
+                {% else %}
+                    <h5 class="mb-1 text-info">Famille Mère</h5>
+                {% endif %}
+                <small>{{ famille.administrateurs.all|length }} administrateur{{ famille.administrateurs.all|length|pluralize }}</small>
+
+                {% if 'ADD_FAMILLE_ADMIN' in request.session.userrights %}
+                    <div class="mt-3">
+                        <a href="{% url 'show_admin_fam' famille.id %}" class="btn btn-sm btn-outline-success me-2">
+                            <i class="fas fa-user-check"></i> Administrateurs
                         </a>
-                        </div>
+                        <button class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#adminModal">
+                            <i class="fas fa-user-plus"></i> Ajouter
+                        </button>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class=" mt-0">
-                    <div class="row"> 
-                        <div class="col-md-6 border-left text-center pt-2">
-                            <h5 class="mb-0 fw-bold">
-                                {% if famille.famille_mere %}
-                                    <a href="{% url 'show_famille' famille.famille_mere.id %}">{{famille.famille_mere}}</a>
-                                {% else %}
-                                    <span class="text-info">FAMILLE MERE</span>
-                                {% endif %}
-                            </h5>
-                            <a href="{% url 'show_communaute' famille.communaute.id %}" class="text-center"> {{famille.communaute.nom}}</a>
-                            <h6> <span class="text-muted">{{ famille.administrateurs.all|length }} Administrateurs</span></h6>
-                            <div >
-                                {% if  'ADD_FAMILLE_ADMIN' in request.session.userrights %}
-                                    <a href="{% url 'show_admin_fam' famille.id %}" class=" btn btn-sm btn-outline-success my-2 text-success " >
-                                    <i class="fas fa-user-check"></i> Voir les Administrateurs </a>
-                                    
-                                    
-                                {% endif %}
-                            </div>
-                            <small class="font-light"> 
-                                {% if  'ADD_FAMILLE_ADMIN' in request.session.userrights %}
-                                    <div class=" text-end pull-right">
-                                        <button class="btn btn-sm btn-outline-danger text-danger" data-bs-toggle="modal" data-bs-target="#adminModal"type="button">
-                                        <i class="fas fa-user-plus"></i> Ajouter un Administrateur </button>
-                                    </div>
-                                    
-                                {% endif %}
-                            </small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class=" card-body printableArea">
-                    <h3><b>{{famille.nom}}</b> <span class="pull-right">
-                    {% if  'ADD_MEMBRE' in request.session.userrights %}
-                        <a class="btn btn-xs btn-outline-success text-success" href="{% url 'add_user' %}"> Ajouter un membre</a></span>
-                    {% endif %}
-                    </h3>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-10">
-                            <div class="pull-left">
-                                <address>
-                                    <h3> &nbsp;<b class="text-danger text-capitalize">{{famille.description}}</b></h3>
-                                    <h5 class="text-info ms-1">{{famille.chef.nomcomplet}}</h5>
-                                    <h6 class="ms-1"> 
-                                        <a href="{% url 'famille_arbre' famille.id %}" class="btn btn-outline-primary"> Voir l'arbre généalogique </a>
-                                        <a href="{% url 'famille_arbre_graphique' famille.id %}" class="btn btn-outline-info"> Voir l'arbre généalogique visuel </a>
-                                        <a href="{% url 'famille_generations' famille.id %}" class="btn btn-outline-warning"> Voir les générations </a>
-                                    </h6>
-                                    <p class="text-success ms-1">{{famille.chef.nomcomplet}}
-                                        <br> {{famille.description}}
-                                        <br> 
-                                        {% comment %} <br> Bhavnagar - 364002</p> {% endcomment %}
-                                </address>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2"> 
-                            <h5> {{famille.get_sous_familles|length}} Sous Familles</h5>
-                            {% for fam in famille.get_sous_familles %}
-                                <a href="{% url 'show_famille' fam.id %}" class="text-success" title="{{fam.description}}"> {{ fam.nom}}</a>
-                            {% endfor %}
-                        </div> 
-                        <div class="col-md-12">
-                            <div class="table-responsive mt-5" style="clear: both;">
-                                <table id="zero_config"  class="table table-hover">
-                                    <thead class="bg-success text-white">
-                                        <tr>
-                                            <th class="text-center">#</th>
-                                            <th>Nom Complet</th>
-                                            <th class="text-end">.</th>
-                                            <th class="text-end">.</th>
-                                            <th class="text-end">Détail</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for  membre in famille.get_members %}
-                                        <tr>
-                                            <td class="text-center"> {{forloop.counter}} </td>
-                                            <td> <a href="{% url 'show_user' membre.id %}" title="Détail de {{membre.nomcomplet}} "> {{membre.nomcomplet}} </a> </td>
-                                            <td class="text-end"> . </td>
-                                            <td class="text-end"> . </td>
-                                            <td class="text-end"> 
-                                            {% if appartient %}
-                                                <a href="{% url 'show_user' membre.id %}"> Fiche individuelle </a>
-                                            {% endif %}
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+                {% endif %}
             </div>
         </div>
     </div>
 
-     {% if  'ADD_FAMILLE_ADMIN' in request.session.userrights %} 
-
-        <div class="modal fade" id="adminModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white ">
-                <h5 class="modal-title " id="exampleModalLabel"> Ajout d'un administrateur à  {{ famille.nom}} </h5>
-                <button type="button" class="btn-close clos" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Description + Chef + Arbres -->
+    <div class="family-description">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-4">
+            <div>
+                <h2 class="fw-bold mb-3">{{ famille.nom }}</h2>
+                <div class="chief-badge">
+                    Chef de famille : {{ famille.chef.nomcomplet|default:"Non défini" }}
                 </div>
-    
-                <form  method="post" >
-                    <div class="modal-body"> 
-                        {% csrf_token %}
-                        <h3 class=""> Choisir l'administrateur</h3><br/>
-                        <select name="adminFam" class="form-control">
-                            <option value="">--------</option>
+                <p class="lead text-muted mb-4">{{ famille.description|linebreaks }}</p>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'famille_arbre' famille.id %}" class="btn btn-outline-primary btn-tree">
+                        <i class="fa fa-sitemap me-2"></i>Arbre généalogique (liste)
+                    </a>
+                    <a href="{% url 'famille_arbre_graphique' famille.id %}" class="btn btn-outline-info btn-tree">
+                        <i class="fa fa-project-diagram me-2"></i>Arbre visuel
+                    </a>
+                    <a href="{% url 'famille_generations' famille.id %}" class="btn btn-outline-warning btn-tree">
+                        <i class="fa fa-layer-group me-2"></i>Générations
+                    </a>
+                </div>
+            </div>
+
+            <div class="text-end">
+                {% if 'ADD_MEMBRE' in request.session.userrights %}
+                    <a href="{% url 'add_user' %}" class="btn btn-success">
+                        <i class="fa fa-user-plus me-2"></i>Ajouter un membre
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des membres -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+            <h4 class="mb-0">Membres de la famille</h4>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="membresTable" class="table table-hover table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>Nom complet</th>
+                            <th class="text-center">Détail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for membre in famille.get_members %}
+                            <tr>
+                                <td class="text-center">{{ forloop.counter }}</td>
+                                <td>
+                                    <a href="{% url 'show_user' membre.id %}" class="fw-medium">
+                                        {{ membre.nomcomplet }}
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    {% if appartient %}
+                                        <a href="{% url 'show_user' membre.id %}" class="btn btn-sm btn-outline-primary">
+                                            Fiche
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center py-5 text-muted">
+                                    Aucun membre enregistré pour le moment
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal Ajout Administrateur -->
+{% if 'ADD_FAMILLE_ADMIN' in request.session.userrights %}
+<div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="adminModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="adminModalLabel">
+                    Ajouter un administrateur à {{ famille.nom }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" id="addAdminForm">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="adminFam" class="form-label fw-bold">Choisir le membre</label>
+                        <select name="adminFam" id="adminFam" class="form-select" required>
+                            <option value="">Sélectionner...</option>
                             {% for membre in famille.membres_famille.all %}
-                                <option value="{{membre.id}}">{{membre.nomcomplet}}</option>
+                                <option value="{{ membre.id }}">{{ membre.nomcomplet }}</option>
                             {% endfor %}
-                        </select> 
-                        {% comment %} <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div> {% endcomment %}
+                        </select>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" id="addAdminFamID" data-fam="{{ famille.id }}" class="btn btn-danger">
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
 
-                    <div class="modal-footer">
+{% endblock %}
 
-                    {% comment %} disabled  {% endcomment %}
-                    <input type="button" data-fam="{{famille.id}}" class="btn btn-primary" id="addAdminFamID" 
-                    value="Enregistrer" />
-                    </div>
-    
-                </form>
-            </div>
-            </div>
-        </div> 
-     
-    {% endif %}
-
-{% endblock content %}
 {% block js %}
     <script src="{% static 'js/datatables.min.js' %}"></script>
-    <script> 
-        $('#zero_config').DataTable();
+    <script>
+        $(document).ready(function() {
+            $('#membresTable').DataTable({
+                responsive: true,
+                pageLength: 15,
+                lengthMenu: [10, 15, 25, 50],
+                language: { url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json' },
+                order: [[0, 'asc']]
+            });
+        });
     </script>
 {% endblock %}

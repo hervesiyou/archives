@@ -1,112 +1,284 @@
-{% extends "base.html" %}
+ {% extends "base.html" %}
 {% load static %}
-{% block title %} {{librairie.nom}} {% endblock %}
+
+{% block title %}{{ librairie.nom }} – Librairie RICHBOOK{% endblock %}
+
+{% block css %}
+    <style>
+        :root {
+            --richbook-primary: #0d6efd;
+            --richbook-success: #198754;
+            --richbook-danger: #dc3545;
+        }
+
+        .librairie-hero {
+            background: linear-gradient(rgba(0,0,0,0.50), rgba(0,0,0,0.70)),
+                        url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1473&q=80') center/cover;
+            color: white;
+            padding: 6rem 1rem 4rem;
+            border-radius: 0 0 1.5rem 1.5rem;
+            margin-bottom: 2.5rem;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+        }
+
+        
+
+        .book-card {
+            transition: all 0.25s ease;
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+            height: 100%;
+        }
+
+        .book-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+        }
+
+        .book-img {
+            height: 240px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .book-body {
+            padding: 1.25rem;
+        }
+
+        .book-desc {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.48;
+            min-height: 4.44em;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .owner-footer {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-top: 1px solid #eee;
+            font-size: 0.98rem;
+        }
+
+        @media (max-width: 576px) {
+            .librairie-hero { padding: 4rem 1rem 3rem; }
+            .book-img { height: 200px; }
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
 
-   
+<div class="container">
 
-    <div class="container mt-4">
-        <div class="breadcrumb">
-            <a href="{% url 'home' %}"> <i class="fa fa-home"></i> Accueil </a> >
-            <a href="{% url 'listlibs' %}"> <i class="fa fa-book"></i> Librairies </a>
+    <!-- En-tête visuel -->
+    <div class=" text-center">
+        <h1 class="fw-bold mb-2">{{ librairie.nom }}</h1>
+        <p class="lead mb-4">
+            <span class="badge bg-light text-dark fs-5 px-3 py-2">
+                {{ librairie.nombre_livres }} livre{{ librairie.nombre_livres|pluralize }}
+            </span>
+        </p>
+
+        <div aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa fa-home me-1"></i>Accueil</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'listlibs' %}"><i class="fa fa-book me-1"></i>Librairies</a></li>
+                <li class="breadcrumb-item active">{{ librairie.nom }}</li>
+            </ol>
         </div>
-        <header class="bg-info text-white text-center p-4">
-            <h1>  {{librairie.nom}} :  ( {{ librairie.nombre_livres }} ) livres </h1>
-        </header>
+    </div>
 
-        <div class="row">
-            <div class="col-md-3">
-                <h4>Rechercher</h4>
-                <form method="post" action="{% url 'search_book_lib' librairie.id  %}">
-                    {% csrf_token %}
-                    <input type="text" class="form-control" name="rechLivre" placeholder="Rechercher un livre">
-                    <button type="submit" class="btn btn-primary mt-2">Rechercher</button>
-                </form>
-                {% comment %} <h5>Genres</h5>
-                <ul class="list-group">
-                    <li class="list-group-item">Fiction</li>
-                    <li class="list-group-item">Non-Fiction</li>
-                    <li class="list-group-item">Science</li>
-                </ul> {% endcomment %}
-            </div>
+    <div class="row g-4">
 
-            <div class="col-md-9">
-                <div class="row">
-                        {% for livre in librairie.livres.all %}
-                            <div class="col-md-4 col-lg-3">
-                                <div class="card mb-4">
-                                    <img src="{% static 'images/richbook.png' %}" class="card-img-top" alt="Livre 1">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{livre.nom}}</h5>
-                                        <p class="card-text">{{livre.auteur}} - {{ livre.domaine}} </p>
-                                        <p class="card-text">{{livre.description}}</p>
-                                        <a href="{% url 'show_book' livre.id %}" class="btn btn-outline-primary">Détails</a>
-                                    </div>
-                                </div>
-                            </div>
-                            {% if forloop.counter|divisibleby:4 %}
-                                </div><div class="row">
-                            {% endif %}
-                        {% endfor %}
-                    <!-- Répéter pour d'autres livres -->
+        <!-- Colonne latérale (recherche + infos) -->
+        <div class="col-lg-3">
+
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Rechercher dans cette librairie</h5>
+                    <form method="post" action="{% url 'search_book_lib' librairie.id %}">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="text" 
+                                   class="form-control" 
+                                   name="rechLivre" 
+                                   placeholder="Titre, auteur, domaine...">
+                            <button class="btn btn-success" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
+
+            <!-- À développer plus tard : filtres par domaine, prix, etc. -->
+            <!-- <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">Domaines populaires</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><a href="#">Littérature africaine</a></li>
+                        <li class="list-group-item"><a href="#">Histoire & Patrimoine</a></li>
+                        ...
+                    </ul>
+                </div>
+            </div> -->
+
         </div>
-    </div>
 
-    <footer class="bg-light text-center p-4">
-        <p>Proprietaire : <strong>{{librairie.possesseur.nomcomplet}} </strong> </p> 
-        <a class="btn btn-sm btn-outline-success text-success"  data-bs-toggle="modal"  data-bs-target="#messageModal">  
-            <span> Laisser une message </span>
-        </a>
-        {% if  'VOIR_MESSAGES_LIBRAIRIES' in request.session.userrights %}  - 
-            <a href="{% url 'library_messages' librairie.id %}" title="" class="btn btn-sm btn-success" >
-                <span> Voir les messages  </span>
-            </a>
-        {% endif %}
-    </footer>
+        <!-- Grille des livres -->
+        <div class="col-lg-9">
 
-
-
-    <div class="modal fade" id="messageModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title">Envoi du message au propriétaire de <span class=""> {{librairie.nom}} </span> </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="mb-0">Livres disponibles</h3>
+                <small class="text-muted">Tri par : récent • populaire • alphabétique</small>
             </div>
 
-             <div class="form-section">
-                <h3>Poster un Message</h3> 
+            <div class="row g-4">
+                {% for livre in librairie.livres.all %}
+                    <div class="col-sm-6 col-md-6 col-lg-4">
+                        <div class="card book-card h-100">
+                            <img src="{% static 'images/richbook.png' %}" 
+                                 class="book-img card-img-top" 
+                                 alt="{{ livre.nom }}">
 
-                {% comment %} <div class="error-message" id="errorMessage"></div> {% endcomment %}
+                            <div class="book-body d-flex flex-column">
+                                <h5 class="card-title fw-bold mb-2">
+                                    {{ livre.nom }}
+                                </h5>
+                                <p class="text-muted mb-1">
+                                    {{ livre.auteur|default:"Auteur inconnu" }}
+                                </p>
+                                <p class="text-primary small mb-2">
+                                    {{ livre.domaine|default:"—" }}
+                                </p>
+                                <p class="book-desc flex-grow-1">
+                                    {{ livre.description|truncatechars:140|default:"Aucune description disponible" }}
+                                </p>
 
-                <form method="post"  >
-                    <div class="modal-body">
-                          {% csrf_token %}
-                        <div class="form-group">
-                            <label for="username" class="form_label" >Votre Nom *</label>
-                            <input type="text" id="username" name="username"  class="form-control" required placeholder="Entrez votre nom">
-                        </div>
-
-                        <div class="form-group">
-                            <input type="hidden" id="idlib" value="{{librairie.id}}" />
-                            <label for="message" class="form_label">Votre Message *</label>
-                            <textarea id="message" name="message" class="form-control"  required placeholder="Écrivez votre message ici..."></textarea>
-                            <div class="char-count">
-                                <span id="charCount">0</span>/5000
+                                <a href="{% url 'show_book' livre.id %}" 
+                                   class="btn btn-outline-primary mt-auto">
+                                    Voir les détails →
+                                </a>
                             </div>
                         </div>
-                        <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
                     </div>
-                    <div class="modal-footer">
-                        <input type="button" id="addMessageLibID"  class="submit-btn btn btn-success" value="Envoyer le Message"/>
+                {% empty %}
+                    <div class="col-12 text-center py-5">
+                        <h4 class="text-muted">Aucun livre disponible dans cette librairie pour le moment</h4>
+                        {% if 'ADD_LIVRE' in request.session.userrights %}
+                            <a href="{% url 'add_livre' %}" class="btn btn-success mt-3">
+                                Ajouter un livre
+                            </a>
+                        {% endif %}
                     </div>
-                </form>
-            </div> 
-
+                {% endfor %}
             </div>
+
         </div>
     </div>
+
+    <!-- Footer propriétaire + messages -->
+    <div class="owner-footer mt-5 text-center">
+        <p class="mb-2">
+            Propriétaire : <strong>{{ librairie.possesseur.nomcomplet|default:"—" }}</strong>
+        </p>
+
+        <div class="d-flex justify-content-center gap-3">
+            <button class="btn btn-outline-success" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#messageModal">
+                <i class="fa fa-envelope me-1"></i>Laisser un message
+            </button>
+
+            {% if 'VOIR_MESSAGES_LIBRAIRIES' in request.session.userrights %}
+                <a href="{% url 'library_messages' librairie.id %}" 
+                   class="btn btn-success">
+                    <i class="fa fa-eye me-1"></i>Voir les messages
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal Message -->
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="messageModalLabel">
+                    Message au propriétaire de {{ librairie.nom }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form method="post" id="messageForm">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <input type="hidden" name="librairie_id" value="{{ librairie.id }}">
+
+                    <div class="mb-3">
+                        <label for="username" class="form-label fw-bold">Votre nom *</label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="username" 
+                               name="username" 
+                               required 
+                               placeholder="Entrez votre nom">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="message" class="form-label fw-bold">Votre message *</label>
+                        <textarea class="form-control" 
+                                  id="message" 
+                                  name="message" 
+                                  rows="5" 
+                                  maxlength="5000" 
+                                  required 
+                                  placeholder="Écrivez votre message ici..."></textarea>
+                        <div class="text-end small mt-1">
+                            <span id="charCount">0</span>/5000
+                        </div>
+                    </div>
+
+                    <!-- hCaptcha ou reCAPTCHA -->
+                    <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableSendButton"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" id="addMessageLibID" class="btn btn-success" disabled>
+                        Envoyer le message
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        // Compteur de caractères en direct
+        const textarea = document.getElementById('message');
+        const count = document.getElementById('charCount');
+        if (textarea && count) {
+            textarea.addEventListener('input', () => {
+                count.textContent = textarea.value.length;
+            });
+        }
+
+        // Activer le bouton après hCaptcha (exemple simplifié)
+        function enableSendButton() {
+            document.getElementById('addMessageLibID').disabled = false;
+        }
+    </script>
 {% endblock %}

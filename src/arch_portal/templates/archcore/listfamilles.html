@@ -1,115 +1,216 @@
 {% extends "base.html" %}
 {% load static %}
 {% load custom_filters %}
-{% block title %} {{parent}} Liste des Familles {{ communaute.nom }} {% endblock %}
-{% block css %} 
 
-    <link href="{% static 'css/dataTables.bootstrap4.css' %} " rel="stylesheet">
+{% block title %}Familles de {{ communaute.nom }}{% endblock %}
+
+{% block css %}
+    <link href="{% static 'css/dataTables.bootstrap4.css' %}" rel="stylesheet">
     <style>
-        th{
-            text-transform: uppercase;            
+        :root {
+            --primary: #198754;     /* vert success bootstrap */
+            --primary-dark: #146c43;
+        }
+
+        .page-header {
+            background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.65)),
+                        url("{% static 'images/com.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 4rem 1rem 3rem;
+            border-radius: 0 0 1rem 1rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+        }
+
+        
+
+        .family-card {
+            transition: all 0.28s ease;
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            height: 100%;
+        }
+
+        .family-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+        }
+
+        .family-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.1rem 1.25rem;
+            font-weight: 600;
+        }
+
+        .family-header a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .family-header a:hover {
+            text-decoration: underline;
+        }
+
+        .family-body {
+            padding: 1.25rem;
+        }
+
+        .family-desc {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.48;
+            min-height: 4.44em;   /* ≈ 3 lignes */
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .family-desc a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .family-desc a:hover {
+            text-decoration: underline;
+        }
+
+        .family-footer {
+            padding: 0.9rem 1.25rem;
+            background: #f8f9fa;
+            font-size: 0.92rem;
+        }
+
+        .btn-request {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+
+        @media (max-width: 576px) {
+            .page-header { padding: 3rem 1rem 2rem; }
+            .family-header { font-size: 1.1rem; padding: 0.9rem; }
         }
     </style>
 {% endblock %}
+
 {% block content %}
-   
-    <div class="row">
-        <div class="col-12">
-            
-            <div class="card-body">
-                <div class="breadcrumb">
 
-                <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a> >
-                <a href="{% url 'listcom' %}" class=" "> Communautés </a> > 
-                <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a>  > Familles 
-                </div>
-                    {% if  'ADD_FAMILLE' in request.session.userrights %}
-                        <a href="{% url 'add_famille' %}" class="btn btn-xs btn-success text-white"> Nouvelle famille</a>
-                    {% endif %}
-                
+<div class="container">
 
-                <div class="row">
-                    <div class="col-lg-3"></div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <input class="col-10" type="text" value="" name="rechLivre" />
-                            <button  class="  btn-success "> Rechercher </button>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <a href="{% url 'listfamilles' id=communaute.id  mode=0 %}" class=" btn btn-xs btn-outline-info text-info"> Afficher en liste</a>
-                    </div>
-                </div>
+    <!-- En-tête avec image communauté / famille -->
+    <div class="page-header text-center">
+        <h1 class="mb-3 fw-bold">Familles de {{ communaute.nom }}</h1>
+        <div aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center mb-4">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'listcom' %}">Communautés</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'show_communaute' communaute.id %}">{{ communaute.nom }}</a></li>
+                <li class="breadcrumb-item active">Familles</li>
+            </ol>
+        </div>
 
-                <div class="row">
-                    {% for liv in familles %}
-                        <div class="col-md-6 col-lg-2 col-xlg-3">
-                            <div class="card card-hover">
-                                <div class="box bg-success text-center">
-                                    {% comment %} <h1 class="font-light text-white"> </h1> {% endcomment %}
-                                    {% if  liv|appartient_a_famille:request.session.userid %}
-                                    {% comment %} <h6 class="text-white"> {% endcomment %} 
-                                        <a href="{% url 'show_famille' liv.id %}" class="text-white h4 text-center"><i class="fa fa-dashboard"></i>  {{ liv.nom}} </a>
-                                    {% comment %} </h6> {% endcomment %}
-                                    {% else %}
-                                        <h6 class="text-white"><i class="fa fa-dashboard"></i>  {{ liv.nom}} </h6>
-                                    {% endif %}
-                                </div>
+        {% if 'ADD_FAMILLE' in request.session.userrights %}
+            <a href="{% url 'add_famille' %}" class="btn btn-lg btn-success mb-2">
+                <i class="fa fa-plus-circle"></i> Nouvelle famille
+            </a>
+        {% endif %}
+    </div>
 
-                                <div class="card-body">
-                                {% comment %} {% if  'VOIR_FAMILLE' in request.session.userrights or liv.publique %} {% endcomment %}
-                                {% comment %} valeur: {{  liv.appartient 'request.session.userid' }} {% endcomment %}               
-
-                                {% if  liv|appartient_a_famille:request.session.userid %}
-                                    {% comment %} <p>L'utilisateur {{ request.session.userid }} appartient à cette famille .</p>
-                                     {{ liv.membres_famille.all }} {% endcomment %}
-                                    
-                                        <h5 > <a href="{% url 'show_famille' liv.id %}" class="text-center"> <i class="fa fa-eye"></i> Voir en détail </a>  </h5>
-                                     
-                                {% else %} 
-                                    
-                                    {% if liv.publique %}
-                                        <h5 > 
-                                        <a href="{% url 'show_famille' liv.id %}" class="btn btn-xs btn-outline-info text-info"> <i class="fa fa-eye"></i> Voir en détail </a>
-                                        </h5>
-                                    {% else %}
-                                        <a href="#" data-fam="{{liv.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partFamID"> Je veux appartenir à {{ liv.nom }}</a>
-                                    {% endif %}
-                                {% endif %}
-
-                                    <p> {{liv.description}} </p>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="text-info">
-                                    <i class="fa-solid fa-person-military-pointing"></i>
-                                        <span class="badge bg-info" title="Chef de la famille"> {{ liv.chef.nomcomplet}}</span>
-                                        {% comment %} <span class="float-right"> {{ liv.origine}} </span> {% endcomment %}
-                                    </div>
-                                    <div class="float-right"> <span class="badge bg-secondary"> <i class="fa fa-users"></i> {{ liv.membres.count }} membres &nbsp; </span>   </div>  
-                                </div>
-
-                                
-                            </div> 
-                        </div>
-                    {% endfor %} 
-                            
-                </div>
+    <!-- Barre de recherche + vue liste -->
+    <div class="row justify-content-between align-items-center mb-4 g-3">
+        <div class="col-12 col-sm-7 col-md-6">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Rechercher une famille..." name="rechFamille">
+                <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
             </div>
-            
+        </div>
+        <div class="col-12 col-sm-5 col-md-4 col-lg-3 text-end">
+            <a href="{% url 'listfamilles' id=communaute.id mode=0 %}" class="btn btn-outline-primary w-100 w-sm-auto">
+                <i class="fa fa-list"></i> Afficher en liste
+            </a>
         </div>
     </div>
 
-    
+    <!-- Grille des familles -->
+    <div class="row g-4">
+        {% for fam in familles %}
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+                <div class="card family-card h-100">
 
-    
-        
-    
+                    <div class="family-header text-center">
+                        {% if fam|appartient_a_famille:request.session.userid %}
+                            <a href="{% url 'show_famille' fam.id %}">
+                                {{ fam.nom }}
+                            </a>
+                        {% else %}
+                            {{ fam.nom }}
+                        {% endif %}
+                    </div>
+
+                    <div class="family-body d-flex flex-column">
+                        <div class="family-desc flex-grow-1">
+                            {% if fam|appartient_a_famille:request.session.userid or fam.publique %}
+                                <a href="{% url 'show_famille' fam.id %}">
+                                    {{ fam.description|truncatechars:180 }}
+                                </a>
+                            {% else %}
+                                {{ fam.description|truncatechars:180 }}
+                            {% endif %}
+                        </div>
+
+                        {% if fam|appartient_a_famille:request.session.userid %}
+                            <a href="{% url 'show_famille' fam.id %}" class="btn btn-outline-success mt-2">
+                                <i class="fa fa-eye"></i> Voir la famille
+                            </a>
+                        {% elif fam.publique %}
+                            <a href="{% url 'show_famille' fam.id %}" class="btn btn-outline-info mt-2">
+                                <i class="fa fa-eye"></i> Voir en détail
+                            </a>
+                        {% else %}
+                            <a href="#" 
+                               data-fam="{{ fam.id }}" 
+                               data-user="{{ request.session.userid }}" 
+                               class="btn btn-sm btn-danger btn-request mt-2 partFamID">
+                                <i class="fa fa-handshake-angle"></i> Demander à rejoindre
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <div class="family-footer d-flex justify-content-between align-items-center">
+                        <div class="text-muted">
+                            <i class="fa-solid fa-person-military-pointing me-1"></i>
+                            <span class="badge bg-info text-dark">{{ fam.chef.nomcomplet|default:"—" }}</span>
+                        </div>
+                        <span class="badge bg-secondary">
+                            <i class="fa fa-users me-1"></i> {{ fam.membres.count }} membres
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <h4 class="text-muted">Aucune famille trouvée pour le moment</h4>
+                {% if 'ADD_FAMILLE' in request.session.userrights %}
+                    <a href="{% url 'add_famille' %}" class="btn btn-success mt-3">
+                        Créer la première famille
+                    </a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
 
 {% endblock %}
 
 {% block js %}
-    {% comment %} <script src="{% static 'js/datatables.min.js' %}"></script>
-    <script> 
-        $('#zero_config').DataTable();
-    </script> {% endcomment %}
+    <!-- Ton futur script pour la recherche AJAX ou la demande d'appartenance -->
+    <!-- <script src="{% static 'js/family-request.js' %}"></script> -->
 {% endblock %}
