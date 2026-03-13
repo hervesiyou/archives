@@ -2,6 +2,8 @@
 
 - inserer la famille nkouonchichoue et la famille takoukam
 - ajouter les librairies
+- ajouter l'image de la librairie
+- connecter la mediatheques des communautés avec google photos et google drive
 - ajouter la geographie lors de la creation et l'update d'une communauté
 - afficher les erreurs lors des insertions
 - echapper les caracteres speciaux dans les formulaires

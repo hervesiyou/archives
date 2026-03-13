@@ -22,7 +22,7 @@ class  Communaute(models.Model):
 
     legende_fondatrice = models.TextField( blank=True,  verbose_name=_(" Légende de fondation"), help_text=_("Récit mythique ou traditionnel de l'origine") )
     histoire_detaillee = models.TextField( blank=True, verbose_name=_("Histoire détaillée"), help_text=_("Événements historiques, évolutions, dates clés") )
-    # longitude = models.TextField(default="", blank=True)
+    image = models.ForeignKey("Image",on_delete=models.SET_NULL, null=True, blank=True)
     # latitude = models.TextField(default="", blank=True)
     # geographie = models.TextField(default="", blank=True)
     geographie = models.ForeignKey(LieuGeographique, on_delete=models.CASCADE, blank=True, null=True, related_name="communaute_geographie")

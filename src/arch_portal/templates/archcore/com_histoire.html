@@ -224,7 +224,7 @@
     <div class="container">
         <div class="breadcrumb">
             <a href="/">Accueil</a> >
-            <a href="{% url 'show_communaute' community_id %}">{{ community_name }}</a> >
+            <a href="{% url 'show_communaute' community_id %}">{{ community_name }} </a> >
             <span>Histoire</span>
         </div>
 
@@ -296,20 +296,22 @@
         </div>
     </div>
     {% endif %} {% endcomment %}
-         {% if histoires %}
+    {% comment %} {{  histoires|pprint }} {% endcomment %}
+        {% if histoires %}
         <div class="history-section">
             <h2>Chronologie des Événements historiques Clés</h2>
 
             <div class="timeline">
-                {{ histoire.count}}
                 {% for event in histoires %}
 
                     <div class="timeline-item">
-                        <div class="timeline-item-year">{{ event.date}}</div>
+                        <div class="timeline-item-year">{{ event.nom}}</div>
+                        <div class="timeline-item-year">{{ event.date}} - {{event.lieu}} </div>
                         <div class="timeline-item-event">
                             <span class="text-bold w-5"><b> {{ event.nom}}</b> </span> - {{ event.description }}
                         </div>
                     </div>
+
                 {% empty %}
                     <p class="text-muted">Aucune histoire supplémentaire enregistrée.</p>
                 {% endfor %}

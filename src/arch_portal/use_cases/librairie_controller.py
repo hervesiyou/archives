@@ -3,6 +3,7 @@ import json
 from django.http import JsonResponse, HttpResponseForbidden, FileResponse, HttpResponse
 # from django.shortcuts import redirect, render
 from arch_portal.domain.forms.librairie import LibrairieForm
+from arch_portal.domain.forms.image import ImageForm
 from arch_portal.domain.forms.livre import LivreForm, ImageFormSet
 from arch_portal.domain.models.librairie import Librairie
 from arch_portal.domain.models.image import Image
@@ -141,10 +142,8 @@ def payer_livre(request, livre_id):
 
             t = threading.Thread(target=send_email, args=(sujet, message,  destinataires))
             t.start()
-            return redirect("show_book", id=livre.id)
-            
+            return redirect("show_book", id=livre.id)           
                       
-
     return render(request, "paiement/payer_livre.html", { "livre": livre })
 
 @transaction.atomic
@@ -309,6 +308,100 @@ def facture_pdf(request, paiement_id):
 
     return response
 
+def edit_librairie(request, id):
+
+    librairie = Librairie.objects.get(id=id)
+
+    image_instance = librairie.image if hasattr(librairie, 'image') else None
+    if request.method == "POST":
+        form = LibrairieForm(request.POST, request.FILES, instance=librairie)
+        imageForm = ImageForm(request.POST, request.FILES, instance=image_instance)
+        # image_formset = ImageFormSet(request.POST, request.FILES, queryset=livre.images.all())
+
+        if form.is_valid() and imageForm.is_valid():
+            librairie = form.save()
+
+            if( imageForm.has_changed() or imageForm.cleaned_data.get("fichier")):
+                image = imageForm.save(commit=False)
+                librairie.image =  image
+                image.save() 
+
+            librairie.save()
+
+            messages.success(request, "Livre mis à jour avec succès !")
+            return redirect("show_librairie", librairie.id)
+        else:
+            messages.error(request, "Veuillez corriger les erreurs du formulaire.")
+    else:
+        form = LibrairieForm(instance=librairie)
+        image_formset = ImageFormSet()
+        image_form = ImageForm()
+
+    return render(
+        request, 
+        "libcore/new_librairie.html",
+        { 
+            "form": form,
+            "image_formset": image_formset,
+            "librairie": librairie,
+            "image_form": image_form,   
+        }
+    )
+
+
+def edit_book(request, id):
+    
+    livre = Livre.objects.get(id=id)
+    librairieid = request.session.get('librairieid',None)
+    if librairieid == None :
+        librairie = livre.librairies.first()
+    else:
+        librairie = Librairie.objects.get(id=librairieid)   
+
+    image_instance = livre.image if hasattr(livre, 'image') else None
+
+    if request.method == "POST":
+        form = LivreForm(request.POST, request.FILES, instance=livre)
+        imageForm = ImageForm(request.POST, request.FILES, instance=image_instance)
+        image_formset = ImageFormSet(request.POST, request.FILES, queryset=livre.images.all())
+
+        if form.is_valid() and image_formset.is_valid() and imageForm.is_valid():
+            livre = form.save()
+
+            if( imageForm.has_changed() or imageForm.cleaned_data.get("fichier")):
+                image = imageForm.save(commit=False)
+                livre.image =  image
+                image.save()
+
+            for image_form in image_formset:
+                if image_form.has_changed():
+                    image = image_form.save(commit=False)
+                    image.sonlivre = livre
+                    image.save()
+
+            livre.save()
+
+            messages.success(request, "Livre mis à jour avec succès !")
+            return redirect("show_book", livre.id)
+        else:
+            messages.error(request, "Veuillez corriger les erreurs du formulaire.")
+    else:
+        form = LivreForm(instance=livre)
+        image_formset = ImageFormSet(queryset=livre.images.all())
+        image_form = ImageForm()
+
+    # return render(request, "libcore/edit_book.html", {
+    return render(
+        request, 
+        "libcore/addbook.html",
+        {
+            "livre": livre,
+            "form": form,
+            "image_formset": image_formset,
+            "librairie": librairie,
+            "image_form": image_form,   
+        }
+    )
 
 def show_book(request,id):
     liv = Livre.objects.get(id=id)
@@ -333,12 +426,14 @@ def show_book(request,id):
         messages.error(request, "La librairie de ce livre n'existe pas , merci de choisir un autre  livre .")
         return  redirect("listlibs")
     
-    return render(request, "libcore/showbook.html", {"livre" : liv,"librairie" : librairie, "connecte":connecte, "abonnements":abos , "achat":achat} )
+    return render(request, "libcore/showbook.html", {"livre" : liv,"librairie" : librairie, "connecte":connecte, "abonnements":abos , "achat":achat } )
 
 def add_book(request):
+
     librairie = request.session.get('librairie',"")
     librairieid = request.session.get('librairieid',"")
-    if librairie is None or librairieid is None:
+
+    if librairie is None or librairieid is None or librairieid == "" or librairie == "":
         messages.error(request, "La librairie correspondante n'existe pas , merci de choisir la librairie de ce livre .")
         return  redirect("listlibs")
     
@@ -346,35 +441,36 @@ def add_book(request):
         form = LivreForm(request.POST, request.FILES)
         image_formset = ImageFormSet(request.POST, request.FILES) 
         if form.is_valid(): 
-            livre = form.save(commit=True)
-            # livre = form.save(commit=False)
-            if( livre.type == "Numerique"):
-                livre.stock = 1000
+            livre = form.save(commit=False)
 
-            # print(form, livre)
-            # livre.librairies.add(Librairie.objects.get(id=librairieid)) 
-            # livre.save()
+            if not livre.isbn:
+                livre.isbn = livre.generer_isbn()
+
+            livre.save()
+            
+            if( livre.type == "Numerique"):
+                livre.stock = 1000 
             try:
                 librairie = Librairie.objects.filter(id=librairieid).first()
                 if librairie:
                     livre.librairies.add(librairie)
-                    livre.save()
+                    # livre.save()
             
             except Librairie.DoesNotExist:
-                print("Librairie introuvable")
+                # print("Librairie introuvable")
+                messages.error(request, "La librairie sélectionnée n'existe pas.")
+                return redirect("listlibs")
 
             if image_formset.is_valid():
                 
                 for image_form in image_formset:
                     if image_form.has_changed(): 
                         image = image_form.save(commit=False)
-                        image.livre = livre 
+                        image.sonlivre = livre 
                         image.save()
                         livre.images.add(image) 
-            # else:
-            #     com = form.save() 
-            #     com.librairies.add(Librairie.objects.get(id=librairieid)) 
-            #     com.save()
+
+            messages.success(request, "Livre ajouté avec succès !")
             return redirect("show_book",livre.id )
         else:
             messages.error(request, f"Veuillez corriger les erreurs suivantes.{form.errors}") 
@@ -437,6 +533,9 @@ def search_book(request):
 
 def show_librairie(request,id):
     lib = Librairie.objects.get(id=id)
+    # je garde les informations de la librairie consultée en cours , ca peut aider lors de l'ajout du livre
+    request.session['librairie'] = lib.nom
+    request.session['librairieid'] = lib.id
     return render(request, "libcore/show_librairie.html", { "librairie" : lib, } )
 
 def add_librairie(request):

@@ -16,8 +16,12 @@
 
         .family-hero {
             background: linear-gradient(rgba(0,0,0,0.60), rgba(0,0,0,0.75)),
-url("{% static 'images/familleafrican.jpg' %}");        
-    color: white;
+            {% if famille.image %}
+                url("{{ famille.image.fichier.url }}")
+            {% else %}
+                url("{% static 'images/familleafrican.jpg' %}");    
+            {% endif %}    
+            color: white;
             padding: 6rem 1rem 4rem;
             border-radius: 0 0 1.5rem 1.5rem;
             margin-bottom: 2.5rem;
@@ -105,7 +109,11 @@ url("{% static 'images/familleafrican.jpg' %}");
 
     <!-- Hero / En-tête -->
     <div class="family-hero text-center">
-        <h1 class="fw-bold mb-3">{{ famille.nom }}</h1>
+        <h1 class="fw-bold mb-3">{{ famille.nom }} 
+        {% if 'ADD_FAMILLE' in request.session.userrights %}
+            <a href="{% url 'edit_famille' famille.id %}"> <i class="fa fa-edit"></i> </a>
+        {% endif %}
+        </h1>
 
         <div  aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-center">

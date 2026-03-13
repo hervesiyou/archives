@@ -10,6 +10,45 @@
                 <form method="post" action="{% url 'add_librairie' %}">
                     {% comment %} {% csrf_token %} {% endcomment %}
                     {% crispy form %}
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card mb-4">
+                                <div class="card-header">Images associée</div>
+                                    <div class="card-body">
+            
+                                        {% if librairie.image %}
+                                            <div class="mb-3 text-center">
+                                                <img src="{{ librairie.image.fichier.url }}" alt="Image actuelle" class="img-thumbnail" style="max-height: 250px;">
+                                                {% if librairie.image.legende %}
+                                                    <p class="mt-2"><small>{{ librairie.image.legende }}</small></p>
+                                                {% endif %}
+                                            </div>
+                                        {% else %}
+                                            <p class="text-muted">Aucune image pour le moment.</p>
+                                        {% endif %}
+
+                                        <hr>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">
+                                                {% if librairie.image %}Remplacer l'image{% else %}Ajouter une image{% endif %}
+                                            </label>
+                                            {{ image_form.fichier }}
+                                            {{ image_form.fichier.errors }}
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Légende (optionnel)</label>
+                                            {{ image_form.legende }}
+                                            {{ image_form.legende.errors }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <input type="submit" class="btn btn-success" value="Ajouter cette Librairie" />
                 </form>
             {% comment %} </div> 

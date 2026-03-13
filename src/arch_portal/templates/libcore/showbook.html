@@ -4,13 +4,7 @@
 {% block title %}{{ livre.nom }} – {{ librairie.nom }}{% endblock %}
 
 {% block css %}
-    <style>
-        :root {
-            --richbook-primary: #0d6efd;
-            --richbook-success: #198754;
-            --richbook-warning: #ffc107;
-            --richbook-danger: #dc3545;
-        } 
+    <style> 
  
         .book-cover {
             max-width: 320px;
@@ -44,6 +38,19 @@
             .book-cover { max-width: 280px; margin: 0 auto 2rem; }
             .book-hero { padding: 4rem 1rem 3rem; }
         }
+
+        .carousel-inner {
+            max-height:150px;
+        }
+        .carousel-item img{
+            height: 150px;
+             object-fit: contain;
+        }
+        .book-image  img{    
+            display: block;
+            gap: 10px;            
+            max-height:200px !important;
+        }
     </style>
 {% endblock %}
 
@@ -51,28 +58,33 @@
 
 <div class="container">
 
-    <!-- En-tête visuel -->
+    <div aria-label="breadcrumb">
+        <ol class="breadcrumb justify-content-center mb-4">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa fa-home me-1"></i>Accueil</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'show_librairie' librairie.id %}"><i class="fa fa-book me-1"></i>{{ librairie.nom }}</a></li>
+            <li class="breadcrumb-item active">{{ livre.nom }}</li>
+        </ol>
+    </div>
     <div class=" text-center">
-        <h1 class="fw-bold mb-2">{{ livre.nom }}</h1>
+        <h1 class="fw-bold mb-2"> {{ livre.nom }} </h1>
         <p class="lead mb-1">
             <span class="badge bg-light text-dark fs-5 px-4 py-2">
                 {{ livre.type }} • {{ livre.auteur }}
             </span>
         </p>
-
-        <div aria-label="breadcrumb">
-            <ol class="breadcrumb justify-content-center mb-4">
-                <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa fa-home me-1"></i>Accueil</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'show_librairie' librairie.id %}"><i class="fa fa-book me-1"></i>{{ librairie.nom }}</a></li>
-                <li class="breadcrumb-item active">{{ livre.nom }}</li>
-            </ol>
-        </div>
+        {% if  'ADD_LIVRE' in request.session.userrights %}
+                <a href="{% url 'edit_book' livre.id %}" class="btn btn-sm btn-info"><i class="fa fa-plus"></i>  Editer ce livre</a>
+        {% endif %}        
     </div>
+
+ 
+
 
     <div class="row g-5">
 
         <!-- Colonne couverture + infos rapides -->
         <div class="col-lg-4 text-center text-lg-start">
+        {% comment %} {{ livre.images|length }} {% endcomment %}
             {% if livre.images.exists %}
                 <img src="{{ livre.images.first.fichier.url }}" 
                      class="book-cover shadow-lg" 
@@ -127,7 +139,7 @@
                                     <i class="fa fa-download me-2"></i>Télécharger maintenant
                                 </button>
                             {% else %}
-                                <a href="{% url 'abonnement' %}" class="btn btn-lg btn-warning action-btn">
+                                <a href="{% url 'abonement_librairie' %}" class="btn btn-lg btn-warning action-btn">
                                     <i class="fa fa-star me-2"></i>S’abonner pour lire
                                 </a>
                             {% endif %}
@@ -174,20 +186,38 @@
             <div class="col-md-12">
                 <div class="  card-body printableArea">
                     
-                    <h3><b>{{livre.nom}}</b> <span class="pull-right">ISBN: {{ livre.isbn}}</span> - <span class="  bg-default">{{ livre.type}} </span></h3>
+                    <h3><b>{{livre.nom}}</b> <span class="pull-right"> ISBN: {{ livre.isbn}}</span> - <span class="  bg-default">{{ livre.type}} </span></h3>
                     <hr>
                     <div class="row">
                         <div class="col-md-4">
-                            {%  if livre.images.all|length > 0 %}
-                                {% with first_image=livre.images.first %}
-                                    <div class="book-image">
-                                        <img src="{{ first_image.fichier.url }}" alt="{{ livre.description|default:'Couverture du livre' }}">
+                           
+
+                            {% if livre.images.exists %}
+                                {%  if livre.images.all|length > 0 %}
+                                <div id="bookImagesCarousel" class="carousel slide mt-4" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                        {% for image in livre.images.all %}
+                                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                                <img src="{{ image.fichier.url }}" 
+                                                    class="d-block w-100" 
+                                                    alt="Image {{ forloop.counter }}" 
+                                                    style=" object-fit: contain;">
+                                            </div>
+                                        {% endfor %}
                                     </div>
-                                {% endwith %}
-                            {% else %}
-                                <img src="{% static 'images/big/img2.jpg' %} " alt="{{livre.description}}" style="max-width: 200px; max-height: 200px;">
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#bookImagesCarousel" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Précédent</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#bookImagesCarousel" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Suivant</span>
+                                    </button>
+                                </div>
+                                {% else %}
+                                    <img src="{% static 'images/big/img2.jpg' %} " alt="{{livre.description}}" style="max-width: 200px; max-height: 200px;">
+                                {% endif %}
                             {% endif %}
-                            {% comment %} <img src="{% static 'images/big/img2.jpg' %} " alt="{{livre.description}}" style="max-width: 200px; max-height: 200px;"> {% endcomment %}
                         </div>
                         <div class="col-md-8">
                             <div class="pull-left">
@@ -217,7 +247,7 @@
                                         <tr>
                                             <td class="text-center"> 
                                                 <div class="book-images">
-                                                {%  if livre.images.all|length > 0 %}
+                                                {% comment %} {%  if livre.images.all|length > 0 %}
                                                     {% for image in livre.images.all %}
                                                         <div class="book-image">
                                                             <img src="{{ image.fichier.url }}" alt="{{livre.description}}">                                                        
@@ -225,7 +255,17 @@
                                                     {% endfor %}
                                                 {% else %}
                                                 <img src="{% static 'images/big/img2.jpg' %} " alt="{{livre.description}}" style="max-width: 100px; max-height: 100px;">
+                                                {% endif %} {% endcomment %}
+                                                {%  if livre.images.all|length > 0 %}
+                                                    {% with first_image=livre.images.first %}
+                                                        <div class="book-image">
+                                                            <img src="{{ first_image.fichier.url }}" alt="{{ livre.description|default:'Couverture du livre' }}">
+                                                        </div>
+                                                    {% endwith %}
+                                                {% else %}
+                                                    <img src="{% static 'images/big/img2.jpg' %} " alt="{{livre.description}}" style="max-width: 200px; max-height: 200px;">
                                                 {% endif %}
+                            
                                                 </div>
                                             </td>
                                             <td><span class="text-info text-bold"> {{livre.description}} </span></td>

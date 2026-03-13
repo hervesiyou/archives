@@ -7,10 +7,7 @@
 {% block css %}
     <link href="{% static 'css/dataTables.bootstrap4.css' %}" rel="stylesheet">
     <style>
-        :root {
-            --primary: #198754;     /* vert success bootstrap */
-            --primary-dark: #146c43;
-        }
+         
 
         .page-header {
             background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.65)),
@@ -22,9 +19,7 @@
             border-radius: 0 0 1rem 1rem;
             margin-bottom: 2rem;
             text-shadow: 0 2px 4px rgba(0,0,0,0.6);
-        }
-
-        
+        }        
 
         .family-card {
             transition: all 0.28s ease;
@@ -144,6 +139,16 @@
                 <div class="card family-card h-100">
 
                     <div class="family-header text-center">
+                     
+                        {%  if fam.image %}
+                            {% with first_image=fam.image %}
+                                <div class="book-image">
+                                    <img src="{{ first_image.fichier.url }}" alt="{{ fam.description|default:'Couverture de la famille' }}">
+                                </div>
+                            {% endwith %}
+                        {% else %}
+                            <img src="{% static 'images/richbook.png' %} " alt="{{fam.description}}" style="max-width: 200px; max-height: 200px;">
+                        {% endif %}
                         {% if fam|appartient_a_famille:request.session.userid %}
                             <a href="{% url 'show_famille' fam.id %}">
                                 {{ fam.nom }}

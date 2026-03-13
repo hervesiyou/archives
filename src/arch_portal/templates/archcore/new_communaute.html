@@ -22,7 +22,7 @@
             <h2> {{ titre }}</h1>
             {% comment %} <h3> Nouvelle Communauté</h3> {% endcomment %}
                 <h5 class="bg-info text-center">.{{id}}</h5>
-                <form method="post">
+                <form method="post" enctype="multipart/form-data"  >
                     {% csrf_token %}
                     {% crispy form %}
 
@@ -124,6 +124,43 @@
                                             <span class="delete-form-btn btn btn-outline-danger float-end" title="Supprimer ce lieu">×</span>
                                         </div>
                                     {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card mb-4">
+                                <div class="card-header">Images associée</div>
+                                    <div class="card-body">
+            
+                                        {% if famille.image %}
+                                            <div class="mb-3 text-center">
+                                                <img src="{{ famille.image.fichier.url }}" alt="Image actuelle" class="img-thumbnail" style="max-height: 250px;">
+                                                {% if famille.image.legende %}
+                                                    <p class="mt-2"><small>{{ famille.image.legende }}</small></p>
+                                                {% endif %}
+                                            </div>
+                                        {% else %}
+                                            <p class="text-muted">Aucune image pour le moment.</p>
+                                        {% endif %}
+
+                                        <hr>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">
+                                                {% if famille.image %}Remplacer l'image{% else %}Ajouter une image{% endif %}
+                                            </label>
+                                            {{ image_form.fichier }}
+                                            {{ image_form.fichier.errors }}
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Légende (optionnel)</label>
+                                            {{ image_form.legende }}
+                                            {{ image_form.legende.errors }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

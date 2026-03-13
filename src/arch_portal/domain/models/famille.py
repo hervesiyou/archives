@@ -16,9 +16,11 @@ class Famille(models.Model):
     description = models.TextField()
     histoire = models.TextField( null=True, blank=True)
     origine = models.TextField(  null=True, blank=True)
+    urlgoogle = models.CharField( max_length=250, null=True, blank=True)
     type = models.CharField(max_length=50, blank=True)
     
     famille_mere = models.ForeignKey("Famille",on_delete=models.SET_NULL, null=True, blank=True)
+    image = models.ForeignKey("Image",on_delete=models.SET_NULL, null=True, blank=True)
     communaute = models.ForeignKey("Communaute",on_delete=models.SET_NULL, null=True, blank=True)
     chef = models.ForeignKey("Membre",on_delete=models.SET_NULL,related_name="mon_chef", null=True, blank=True)
     associations = models.ManyToManyField(Association, related_name="association_familles", null=True, blank=True)

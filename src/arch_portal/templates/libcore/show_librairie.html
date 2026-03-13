@@ -77,32 +77,38 @@
 
 <div class="container">
 
+    <div aria-label="breadcrumb">
+        <ol class="breadcrumb justify-content-center">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa fa-home me-1"></i>Accueil</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'listlibs' %}"><i class="fa fa-book me-1"></i>Librairies</a></li>
+            <li class="breadcrumb-item active">{{ librairie.nom }}</li>
+        </ol>
+    </div>
+
     <!-- En-tête visuel -->
     <div class=" text-center">
-        <h1 class="fw-bold mb-2">{{ librairie.nom }}</h1>
+        <h1 class="fw-bold mb-2">{{ librairie.nom }}
+            <a href="{% url 'edit_librairie' librairie.id %}" class="btn btn-sm btn-outline-secondary ms-2">
+                <i class="fa fa-edit me-1"></i> 
+            </a>
+        </h1>
         <p class="lead mb-4">
             <span class="badge bg-light text-dark fs-5 px-3 py-2">
-                {{ librairie.nombre_livres }} livre{{ librairie.nombre_livres|pluralize }}
+                {{ librairie.nombre_livres }} livre {{ librairie.nombre_livres|pluralize }}
             </span>
-        </p>
-
-        <div aria-label="breadcrumb">
-            <ol class="breadcrumb justify-content-center">
-                <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa fa-home me-1"></i>Accueil</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'listlibs' %}"><i class="fa fa-book me-1"></i>Librairies</a></li>
-                <li class="breadcrumb-item active">{{ librairie.nom }}</li>
-            </ol>
-        </div>
+            {% if  'ADD_LIVRE' in request.session.userrights %}
+                <a href="{% url 'addbook' %}" class="btn btn-sm btn-info"><i class="fa fa-plus"></i>  Ajouter un livre</a>
+            {% endif %}
+        </p>        
     </div>
 
     <div class="row g-4">
-
         <!-- Colonne latérale (recherche + infos) -->
         <div class="col-lg-3">
 
             <div class="card shadow-sm mb-4 border-0">
                 <div class="card-body">
-                    <h5 class="card-title mb-3">Rechercher dans cette librairie</h5>
+                    <h5 class="card-title mb-3"> Rechercher dans cette librairie </h5>
                     <form method="post" action="{% url 'search_book_lib' librairie.id %}">
                         {% csrf_token %}
                         <div class="input-group">
@@ -136,7 +142,7 @@
         <div class="col-lg-9">
 
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="mb-0">Livres disponibles</h3>
+                <h3 class="mb-0">Livres disponibles ({{ librairie.livres.all|length }})</h3>
                 <small class="text-muted">Tri par : récent • populaire • alphabétique</small>
             </div>
 
@@ -144,9 +150,21 @@
                 {% for livre in librairie.livres.all %}
                     <div class="col-sm-6 col-md-6 col-lg-4">
                         <div class="card book-card h-100">
-                            <img src="{% static 'images/richbook.png' %}" 
+
+                            {%  if livre.images.all|length > 0 %}
+                                {% with first_image=livre.images.first %}
+                                    <div class="book-image">
+                                        <img src="{{ first_image.fichier.url }}" 
+                                             class="book-img card-img-top"
+                                             alt="{{ livre.description|default:'Couverture du livre' }}">
+                                    </div>
+                                {% endwith %}
+                            {% else %}
+                                <img src="{% static 'images/richbook.png' %} " alt="{{livre.description}}" style="max-width: 200px; max-height: 200px;">
+                            {% endif %}
+                            {% comment %} <img src="{% static 'images/richbook.png' %}" 
                                  class="book-img card-img-top" 
-                                 alt="{{ livre.nom }}">
+                                 alt="{{ livre.nom }}"> {% endcomment %}
 
                             <div class="book-body d-flex flex-column">
                                 <h5 class="card-title fw-bold mb-2">
@@ -173,7 +191,7 @@
                     <div class="col-12 text-center py-5">
                         <h4 class="text-muted">Aucun livre disponible dans cette librairie pour le moment</h4>
                         {% if 'ADD_LIVRE' in request.session.userrights %}
-                            <a href="{% url 'add_livre' %}" class="btn btn-success mt-3">
+                            <a href="{% url 'addbook' %}" class="btn btn-success mt-3">
                                 Ajouter un livre
                             </a>
                         {% endif %}

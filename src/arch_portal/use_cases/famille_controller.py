@@ -1,6 +1,7 @@
 
 from django.shortcuts import redirect, render, get_object_or_404
 from arch_portal.domain.forms.famille import FamilleForm
+from arch_portal.domain.forms.image import ImageForm
 from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.famille import Famille
 from arch_portal.domain.models.role import Role
@@ -9,7 +10,36 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import HttpResponseForbidden, JsonResponse 
 from collections import defaultdict
+from django.contrib import messages
 
+def edit_famille(request, id):
+    
+    famille = get_object_or_404(Famille, id=id)
+    image_instance = famille.image if hasattr(famille, 'image') else None
+
+    if request.method == 'POST':
+        form = FamilleForm(request.POST, instance=famille)
+        image_form = ImageForm(request.POST, request.FILES, instance=image_instance)
+
+        if form.is_valid() and image_form.is_valid():
+            famille = form.save()
+
+            if( image_form.has_changed() or image_form.cleaned_data.get("fichier")):
+                image = image_form.save(commit=False)
+                famille.image =  image
+                image.save()            
+ 
+            messages.success(request, "Famille et images modifiées avec succès.")
+            return redirect('show_famille', id=id)
+        else:
+            messages.error(request, "Veuillez corriger les erreurs dans le formulaire.")
+
+    else:
+        # GET : formulaire vierge + formset pré-rempli avec les images existantes
+        form = FamilleForm(instance=famille)
+        image_form = ImageForm(instance=image_instance)
+
+    return render(request, 'famille/edit_famille.html', {'famille': famille, 'form': form , 'image_form': image_form,})
 
 def famille_generations(request, famille_id):
 

@@ -35,6 +35,8 @@ class FamilleForm(forms.ModelForm):
                 Column('communaute', css_class='col-md-4'),
                 Column('chef', css_class='col-md-4'),
                 Column('type', css_class='col-md-4'),
+                # Column('image', css_class='col-md-6'),
+                Column('urlgoogle', css_class='col-md-12'),
                 css_class='row'
             ),
         )

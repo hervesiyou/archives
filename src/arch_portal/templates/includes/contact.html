@@ -2,6 +2,41 @@
 
 {% block title %}Contactez-nous{% endblock %}
 
+{% block  css %}
+
+          .titreService{
+            color:rgb(111 235 189)  !important;
+            text-transform: uppercase;
+            border-bottom: 2px solid rgba(3, 37, 3, 0.31);
+            margin-bottom: 15px;
+          }
+
+          button {
+              padding: 12px 40px;
+              background-color: #6c757d;  
+              color: white;
+              border: none;
+              border-radius: 6px;
+              font-weight: bold;
+              cursor: not-allowed;
+              transition: all 0.3s;
+          }
+
+          button.btn-active,
+          button:not(:disabled):hover {
+              background-color: #28a745;           
+              cursor: pointer;
+              transform: translateY(-1px);
+              box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+          }
+
+          button:disabled {
+              opacity: 0.6;
+          }
+        
+
+{% endblock %}
+
 {% block content %}
     <div class="container my-5">
         <div class="row justify-content-center">
@@ -12,7 +47,7 @@
                         <h4>Contactez RichBook - Archives</h4>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="{% url 'contact' %}">
+                        <form method="post" action="{% url 'contact' %}" id="contactForm">
                             {% csrf_token %}
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nom complet</label>
@@ -29,11 +64,13 @@
                             {% if HCAPTCHA %}
                             <div class="mb-3">
                                 <!-- hCaptcha widget -->
-                                <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}"></div>
+                                <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}"
+                                 data-callback="onCaptchaSuccess" 
+                                 data-expired-callback="onCaptchaExpired"></div>
                             </div>
                             {% endif %}
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Envoyer</button>
+                                <button type="submit" id="contactID" class="btn btn-primary" disabled >Envoyer</button>
                             </div>
                         </form>
                     </div>
@@ -75,6 +112,44 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        // Fonction appelée quand le captcha est réussi
+        function onCaptchaSuccess(token) {
+            const button = document.getElementById('contactID');
+            button.disabled = false;
+            button.classList.add('btn-active');  
+        }
+
+        
+        function onCaptchaExpired() {
+            const button = document.getElementById('contactID');
+            button.disabled = true;
+            button.classList.remove('btn-active'); 
+        } 
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const button = document.getElementById('contactID');
+            button.disabled = true;
+            
+            // Si tu veux aussi vérifier que les champs sont remplis (bonus)
+            const inputs = document.querySelectorAll('#contactForm input[required], #contactForm textarea[required]');
+            function checkForm() {
+                let allFilled = true;
+                inputs.forEach(input => {
+                    if (!input.value.trim()) allFilled = false;
+                });
+                // On combine : captcha OK ET champs remplis
+                button.disabled = !(allFilled && !button.dataset.captchaExpired);
+            }
+
+            inputs.forEach(input => {
+                input.addEventListener('input', checkForm);
+            });
+        });
+    </script>
 {% endblock %}
  
 

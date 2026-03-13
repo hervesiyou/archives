@@ -23,7 +23,7 @@
                                     {% if  com.publique %}
                                         <h6 class="text-white"><i class="fa-solid fa-person-shelter"></i> {{ com.nom}} </h6>
                                         {% comment %} {% if  'VOIR_COMMUNAUTE' in request.session.userrights or com.publique %} {% endcomment %}
-                                    <a href="{% url 'show_communaute' com.id %}" class="text-center badge bg-secondary"> Voir en détail</a>
+                                    <a href="{% url 'listfamilles' id=com.id mode=1 %}" class="text-center badge bg-secondary"> Voir ses familles </a>
                                     {% else %}
                                         <h6 class="text-white"><i class="fa-solid fa-person-shelter"></i> {{ com.nom}} </h6>
                                         <a href="#" data-com="{{com.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partComID"> Je souhaite être {{ com.nom }}</a>
@@ -45,7 +45,7 @@
                                             </a>
                                         </p>                                       
                                         <div class="mt-auto">
-                                            <a href="{% url 'listfamilles' id=com.id mode=1 %}" class="btn btn-primary w-100">
+                                            <a href="{% url 'show_communaute' com.id %}" class="btn btn-primary w-100">
                                             Découvrir la communauté →
                                             </a>
                                         </div>

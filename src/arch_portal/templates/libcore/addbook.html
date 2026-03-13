@@ -24,15 +24,18 @@
     </style>
 {% endblock %}
 {% block content %}
-
     <div class="container">
 
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-body printableArea">
-                    <h3><b>{{librairie}}</b>  - <span class="pull-right"> Ajout d'un livre </span>
-                    <a href="{% url 'addbook' %}" class="btn btn-sm btn-danger w-25"> Ajouter un nouveau livre</a>
-                    </h3>
+                    {% if livre %}
+                        <span class="btn btn-outline-info"> <b>{{librairie}}</b>  - <span class="pull-right"> Editer ce livre </span></span>
+                    {% else %}
+                        <h3><b>{{librairie}}</b>  - <span class="pull-right"> Ajout d'un livre </span>
+                        <a href="{% url 'addbook' %}" class="btn btn-sm btn-danger w-25"> Ajouter un nouveau livre</a>
+                        </h3>
+                    {% endif %}
 
                     <hr>
                     <div class="row">
@@ -63,7 +66,7 @@
                             
                                     <!--button type="button" id="add-image-button" >Ajouter une image</button -->
                                     <br/><br/>
-                                    <input type="submit" class="btn btn-success" value="Ajouter ce livre" />
+                                    <input type="submit" class="btn btn-success" {% if livre %}  value="Editer ce livre" {% else %} value="Ajouter ce livre" {% endif %} />
                                 </form>
                             </div>
                         </div>

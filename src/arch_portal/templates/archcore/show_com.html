@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %} {{communaute.nom}} {% endblock %}
+{% block css %}
+     <link rel="stylesheet" href="{% static 'css/minidescription.css' %}" />    
+
+{% endblock %}
 
 {% block content %}
 
@@ -75,9 +79,18 @@
         <div class=" col-md-6 col-lg-4">
              {% if communaute.histoire %}
                 <h5 class="text-success text-bold"> <a href="{% url 'com_histoire' communaute.id %}"> Histoire</a> </h5>
-                <div class=" ">
-                    {{ communaute.histoire }}
+                
+                <div class="text-container">
+                    <div class="short-text">
+                        {{ communaute.histoire }}
+                    </div>
+
+                        <label for="expand1" class="plus">Voir plus</label>
+                        <label for="expand1" class="moins">Voir moins</label>
+                        <input type="checkbox" class="expand-toggle" id="expand1">
                 </div>
+ 
+
             {% endif %}
         </div>
 
@@ -121,10 +134,20 @@
                                 </a>
                             {% endif %}
                             <div class="flot-chart mt-2">
+    
+                            {%  if communaute.image %}
+                                {% with first_image=communaute.image %}
+                                    <div class="my-2 text-center">
+                                        <img src="{{ first_image.fichier.url }}"  style="max-width: 100%; max-height: 400px;" alt="{{ communaute.description|default:'Couverture de la communauté' }}">
+                                    </div>
+                                {% endwith %}
+                            {% else %}
                                 <div class="my-4">
-                                    <img src="{% static 'images/com.jpg' %} " alt="user" style="max-width: 100%; max-height: 400px;">
-                                    {% comment %} <img src="{% static 'images/big/img2.jpg' %} " alt="user" style="max-width: 100%; max-height: 400px;"> {% endcomment %}
-                                </div> 
+                                    <img src="{% static 'images/com.jpg' %} " alt="user" style="max-width: 100%; max-height: 400px;" >
+                                </div>                            
+                            {% endif %}
+
+                                
                             </div>
                         </div>
                         <div class="col-lg-3">
@@ -132,11 +155,13 @@
                                 <div class="col-6">
                                     <div class="bg-dark p-10 text-white text-center">
                                         
+                                        <a href="{% url 'listfamilles' id=communaute.id mode=1 %}">
                                         <h5 class="mb-0 mt-1">
                                             <i class="fa fa-users mb-1 font-16"></i> 
                                             <span class="badge bg-white text-dark">{{communaute.get_familles|length }}</span> 
                                             Familles
                                         </h5>
+                                        </a>
                                         {% if appartient %}
                                         <small class="font-light"><a href="{% url 'listfamilles' id=communaute.id mode=1  %}"><i class="fa fa-eye"></i> Consulter </a></small>
                                         {% endif %}
@@ -476,5 +501,25 @@
             card.addEventListener('mouseenter', () => card.style.transform = 'translateY(-6px)');
             card.addEventListener('mouseleave', () => card.style.transform = 'translateY(0)');
         });
+    </script>
+
+    <script>
+
+     $(".expand-toggle").change(function() {
+        var isChecked = $(this).is(":checked"); 
+        var textContainer = $(this).closest(".text-container");
+        if (isChecked) {
+            textContainer.find(".short-text").css("max-height", "none");
+            textContainer.find(".plus").hide();
+            textContainer.find(".moins").show();
+        } else {
+            textContainer.find(".short-text").css("max-height", "3.6em");
+            textContainer.find(".plus").show();
+            textContainer.find(".moins").hide();
+        }
+
+     });
+    
+
     </script>
 {% endblock %}

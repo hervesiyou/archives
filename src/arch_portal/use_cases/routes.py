@@ -11,6 +11,7 @@ import arch_portal.use_cases.evenement_controller as evenement
 urlpatterns = [ 
     path('lfam/<int:id>.<int:mode>', famille.listfamilles, name="listfamilles"),
     path('sf/<int:id>', famille.show_famille, name="show_famille"),
+    path('edf/<int:id>', famille.edit_famille, name="edit_famille"),
     path('nf/', famille.add_famille, name="add_famille"),
     path('sh_ad_fa/<int:id>', famille.show_admin_fam, name="show_admin_fam"),
     path('add_ad_fam', famille.add_admin_fam, name="add_admin_fam"),
@@ -102,8 +103,7 @@ urlpatterns += [
     path('u/adcom', membre.show_user_comadmin, name="home_comadmin"),
     path('u/adasso', membre.show_user_assoadmin, name="home_assoadmin"),
     path('u/seemes', membre.show_user_messages, name="home_messageadmin"),
-    path('u/abo', membre.user_abonnement, name="home_abonnement"),
-    
+    path('u/abo', membre.user_abonnement, name="home_abonnement"),    
 ]
 
 urlpatterns += [ 
@@ -111,6 +111,8 @@ urlpatterns += [
     path('libab', librairie.abonement_librairie, name="abonement_librairie"),
     path('lbs/<int:id>.<int:mode>', librairie.listbooks,  name="listbooks"),
     path('sb/<int:id>', librairie.show_book, name="show_book"),
+    path('edli/<int:id>', librairie.edit_librairie, name="edit_librairie"),
+    path('edb/<int:id>', librairie.edit_book, name="edit_book"),
     path('searb', librairie.search_book, name="search_book"),
     path('searbl/<int:id>', librairie.search_book_lib, name="search_book_lib"),
     path('sbf/<int:id>', librairie.show_book_file, name="show_book_file"),

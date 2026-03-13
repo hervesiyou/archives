@@ -8,9 +8,12 @@ from arch_portal.domain.forms.association import AssociationForm
 from arch_portal.domain.forms.communaute import CommunauteForm 
 from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.famille import Famille
+from arch_portal.domain.forms.image import ImageForm
 from arch_portal.domain.models.abonnement import Abonnement
 from arch_portal.domain.models.plantarifaire import Plan
 from arch_portal.domain.models.roi import Rois
+from arch_portal.domain.models.image import Image
+
 from arch_portal.domain.models.histoire import MiniHistoire
 from arch_portal.domain.models import *
 from django.contrib.auth.decorators import login_required , permission_required
@@ -32,8 +35,6 @@ from arch_portal.domain.models.personnecle import PersonneCle
 from arch_portal.domain.models.lieucle   import LieuCle  
 from arch_portal.domain.forms.lieucle   import LieuCleForm  
 from arch_portal.domain.forms.personnecle   import PersonneCleForm 
-
-
 # ────────────── PERSONNES CLÉS ──────────────
 
  
@@ -341,8 +342,7 @@ def add_abonnement(request):
                             )
                             ab.save()
                             user.save()
-                            message = f'''Merci de faire le depot au numero {settings.NO_ORANGE} pour OM et  {settings.NO_MTN} pour MOMO pour l'activation de votre compte !
-                            '''
+                            message = f'''Merci de faire le depot au numero {settings.NO_ORANGE} pour OM et  {settings.NO_MTN} pour MOMO pour l'activation de votre compte ! '''
                             return JsonResponse({'status': True ,"message": message})
                         else:
                             return JsonResponse({'status': False ,"message": "Desolé, vous avez dejà souscris à cet abonnement !"})
@@ -499,17 +499,17 @@ def edit_communaute(request, id):
     personnes_formset = PersonneFormSet(request.POST, instance=com, prefix='personnes')
     lieux_formset     = LieuFormSet(request.POST, instance=com, prefix='lieux')
 
+    image_instance = com.image if hasattr(com, 'image') else None
 
     if request.method == "POST":
         form = CommunauteForm(request.POST, instance=com) 
+        image_form = ImageForm(request.POST, request.FILES, instance=image_instance)
 
         histoires_formset = MiniHistoireFormSet(request.POST, instance=com, prefix='mini_histoire')
-        rois_formset = RoiFormSet(request.POST, instance=com, prefix='rois_communaute')
+        rois_formset = RoiFormSet(request.POST, instance=com, prefix='rois_communaute')        
 
-        
-
-        if form.is_valid() and histoires_formset.is_valid() and rois_formset.is_valid():  
-            com = form.save() 
+        if form.is_valid() and histoires_formset.is_valid() and rois_formset.is_valid() and image_form.is_valid()   :  
+            com = form.save(commit=False) 
             com.save()
             histoires_formset.save()
             rois_formset.save()
@@ -520,12 +520,23 @@ def edit_communaute(request, id):
             personnes_formset.save()
             lieux_formset.save()
 
+            # sauvegarde de l'image de la communauté
+            image = image_form.save(commit=False)
+            com.image =  image
+            image.save() 
+            com.save()
+    
+            form.save_m2m()  
+            # histoires_formset.save_m2m()
+
             messages.success(request, "Communauté modifiée avec succès.")
             return redirect("show_communaute",com.id )
     else:
         form = CommunauteForm(instance=com)
         histoires_formset =MiniHistoireFormSet(instance=com, prefix='mini_histoire')
         rois_formset = RoiFormSet(instance=com, prefix='rois_communaute')
+
+        image_form = ImageForm()
         
 
     context ={
@@ -538,6 +549,7 @@ def edit_communaute(request, id):
 
         "titre": f"Modification - {com.nom}",
         "action": "Modifier",
+        'image_form': image_form,
         "communaute": com
     }
 
@@ -562,6 +574,9 @@ def add_communaute(request):
         fields='__all__', extra=1, can_delete=True
     )
 
+    # image_instance = com.image if hasattr(com, 'image') else None
+    
+
     if request.method == "POST":
         form = CommunauteForm(request.POST)
 
@@ -569,17 +584,20 @@ def add_communaute(request):
         histoires_formset = MiniHistoireFormSet(request.POST, instance=Communaute(), prefix='mini_histoire')
         rois_formset      = RoiFormSet(request.POST, instance=Communaute(), prefix='rois_communaute')
         personnes_formset = PersonneFormSet(request.POST, instance=Communaute(), prefix='personnes')
-        lieux_formset     = LieuFormSet(request.POST, instance=Communaute(), prefix='lieux')
+        lieux_formset     = LieuFormSet(request.POST, instance=Communaute(), prefix='lieux')  
+
+        image_form = ImageForm(request.POST, request.FILES)      
 
         # Validation complète
         if (form.is_valid() and 
             histoires_formset.is_valid() and 
             rois_formset.is_valid() and 
             personnes_formset.is_valid() and 
-            lieux_formset.is_valid()):
+            lieux_formset.is_valid() and
+            image_form.is_valid()) :
 
             # Sauvegarde principale d'abord → on obtient un ID !
-            com = form.save()  # ← ici com a un .pk valide
+            com = form.save()
 
             # Ré-associer les formsets à l’objet réel sauvegardé
             histoires_formset.instance = com
@@ -587,10 +605,15 @@ def add_communaute(request):
 
             personnes_formset.instance = com
             lieux_formset.instance     = com
-
             # Sauvegarde des inline maintenant que l’instance parent existe
             histoires_formset.save()
             rois_formset.save()
+
+            # sauvegarde de l'image de la communauté
+            image = image_form.save(commit=False)
+            com.image =  image
+            image.save()
+            com.save()
 
             personnes_formset.save()
             lieux_formset.save()
@@ -599,12 +622,7 @@ def add_communaute(request):
             return redirect("show_communaute", com.id)
 
         else:
-            # Debug : affiche les erreurs pour comprendre
-            # print("Form errors:", form.errors)
-            # print("Histoires errors:", histoires_formset.errors)
-            # print("Rois errors:", rois_formset.errors)
-            # print("Personnes errors:", personnes_formset.errors)
-            # print("Lieux errors:", lieux_formset.errors)
+            
             messages.error(request, "Erreur lors de la création. Vérifiez les champs.")
 
     else:
@@ -615,17 +633,21 @@ def add_communaute(request):
         personnes_formset = PersonneFormSet(instance=Communaute(), prefix='personnes')
         lieux_formset     = LieuFormSet(instance=Communaute(), prefix='lieux')
 
+        image_form = ImageForm()
+
     context = {
         'form': form,
         'histoires_formset': histoires_formset,
         'rois_formset': rois_formset,
         'personnes_formset': personnes_formset,
         'lieux_formset': lieux_formset,
+        'image_form': image_form,
         'titre': "Créer une nouvelle communauté",
         'action': "Créer",
     }
 
     return render(request, "archcore/new_communaute.html", context)
+
 def add_communaute0(request):
 
     PersonneFormSet = inlineformset_factory(
@@ -713,11 +735,12 @@ def add_galerie(request):
 def community_history(request, community_id):
     com = Communaute.objects.get(id=community_id)
     # histoires = com.histoires.all().order_by('-date', 'nom')
+    histoires = MiniHistoire.objects.filter(communaute=com).order_by('-date', 'nom')
     
-    histoires = com.histoires.filter(
-        models.Q(nom__isnull=False) & ~models.Q(nom="") |
-        models.Q(description__isnull=False) & ~models.Q(description="")
-    ).order_by('-date', 'nom')
+    # histoires = com.histoires.filter(
+    #     models.Q(nom__isnull=False) & ~models.Q(nom="") |
+    #     models.Q(description__isnull=False) & ~models.Q(description="")
+    # ).order_by('-date', 'nom')
 
     context = {
         'community_id': community_id,
