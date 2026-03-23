@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
+
+
 {% block title %} {{communaute.nom}} {% endblock %}
 {% block css %}
-     <link rel="stylesheet" href="{% static 'css/minidescription.css' %}" />    
-
+     <link rel="stylesheet" href="{% static 'css/minidescription.css' %}" /> 
 {% endblock %}
 
 {% block content %}
@@ -116,7 +117,7 @@
                             {% endif %}
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row my-3">
                         <div class="col-lg-9">
                             <a href="{% url 'com_geographie' communaute.id %}" title="Détail geographique">
                                 <span> Carte géographique </span>
@@ -138,7 +139,7 @@
                             {%  if communaute.image %}
                                 {% with first_image=communaute.image %}
                                     <div class="my-2 text-center">
-                                        <img src="{{ first_image.fichier.url }}"  style="max-width: 100%; max-height: 400px;" alt="{{ communaute.description|default:'Couverture de la communauté' }}">
+                                        <img src="{{ first_image.fichier.url }}"  style="width: 100%; max-height: 400px;" alt="{{ communaute.description|default:'Couverture de la communauté' }}">
                                     </div>
                                 {% endwith %}
                             {% else %}
@@ -250,12 +251,31 @@
                                         <button class="nav-link" id="personnes-tab" data-bs-toggle="tab" 
                                                 data-bs-target="#personnes" type="button" role="tab">
                                             Personnes Clés <span class="badge bg-success ms-1">{{ personnes_cles.count }}</span>
-                                        </button>
+                                       
+                                        {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                                             
+                                            <span type="button" class="btn btn-success btn-sm" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#addPersonneModal">
+                                                <i class="fa-solid fa-plus me-2"></i>Ajouter une personne clé
+                                            </span>
+                                        {% endif %}
+                                         </button>
+
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link" id="lieux-tab" data-bs-toggle="tab" 
                                                 data-bs-target="#lieux" type="button" role="tab">
                                             Lieux Clés <span class="badge bg-success ms-1">{{ lieux_cles.count }}</span>
+                                        
+                                        {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                                             
+                                            <span type="button" class="btn btn-success btn-sm" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#addLieuModal">
+                                                <i class="fa-solid fa-plus me-2"></i>Ajouter un lieu clé
+                                            </span>
+                                        {% endif %}
                                         </button>
                                     </li>
                                 </ul>
@@ -264,7 +284,7 @@
                         <div class="tab-content" id="commTabContent">
                         
                             <div class="tab-pane fade show active" id="overview" role="tabpanel">
-                                <!-- Ton contenu actuel ici -->
+                                
                                 <div class="card shadow-sm">
                                     <div class="card-body">
                                         <h4 class="card-title">Description détaillée</h4>
@@ -277,13 +297,22 @@
                             <!-- Onglet Personnes Clés -->
                             <div class="tab-pane fade" id="personnes" role="tabpanel">
                                 <div class="d-flex justify-content-between align-items-center mb-4">
-                                    <h3 class="mb-0">Personnes Clés</h3>
-                                    {% if can_add_personne %}
-                                        <a href="{% url 'personnecle_create_com' communaute.id %}" 
+                                    <h3 class="mb-0">Personnes Clés
+                                    {% comment %} {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                                        <a href="{% url 'personnecle_create' communaute.id %}" 
                                         class="btn btn-success btn-sm">
                                             <i class="fa-solid fa-plus me-2"></i>Ajouter une personne
                                         </a>
+                                    {% endif %} {% endcomment %}
+                                    {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                                             
+                                        <button type="button" class="btn btn-success btn-sm"  title="Ajouter une personne clé"
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#addPersonneModal">
+                                            <i class="fa-solid fa-plus me-2"></i>
+                                        </button>
                                     {% endif %}
+                                    </h3>
                                 </div>
 
                                 {% if personnes_cles %}
@@ -292,7 +321,7 @@
                                             <div class="col-md-6 col-lg-4">
                                                 <div class="card h-100 shadow-sm hover-lift">
                                                     {% if p.photo %}
-                                                        <img src="{{ p.photo.fichier.url }}" class="card-img-top" 
+                                                        <img src="{{ p.photo.url }}" class="card-img-top" 
                                                             alt="{{ p.nom }}" style="height: 180px; object-fit: cover;">
                                                     {% endif %}
                                                     <div class="card-body">
@@ -327,11 +356,19 @@
                             <div class="tab-pane fade" id="lieux" role="tabpanel">
                                 <div class="d-flex justify-content-between align-items-center mb-4">
                                     <h3 class="mb-0">Lieux Clés</h3>
-                                    {% if can_add_lieu %}
-                                        <a href="{% url 'lieucles_create_com' communaute.id %}" 
+                                    {% comment %} {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                                        <a href="{% url 'lieucle_create' communaute.id %}" 
                                         class="btn btn-success btn-sm">
                                             <i class="fa-solid fa-plus me-2"></i>Ajouter un lieu
                                         </a>
+                                    {% endif %} {% endcomment %}
+                                    {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                                             
+                                        <button type="button" class="btn btn-success btn-sm" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#addLieuModal">
+                                            <i class="fa-solid fa-plus me-2"></i>Ajouter un lieu clé
+                                        </button>
                                     {% endif %}
                                 </div>
 
@@ -341,7 +378,7 @@
                                             <div class="col-md-6 col-lg-4">
                                                 <div class="card h-100 shadow-sm hover-lift">
                                                     {% if l.photo %}
-                                                        <img src="{{ l.photo.fichier.url }}" class="card-img-top" 
+                                                        <img src="{{ l.photo.url }}" class="card-img-top" 
                                                             alt="{{ l.nom }}" style="height: 180px; object-fit: cover;">
                                                     {% endif %}
                                                     <div class="card-body">
@@ -483,6 +520,10 @@
             </div>
         </div>
     </div>
+
+
+    {% include 'archcore/includes/add_pers_cle.html' with form=form_personne %}
+    {% include 'archcore/includes/add_lieu_cle.html' with form=form_lieu %}
 
 {% endblock %}
 

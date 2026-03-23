@@ -70,75 +70,19 @@
                         </div>
                     </div> 
 
-                    <div class="row">
-                        <!-- Personnes Clés -->
-                        <div class="col-lg-6">
-                            <div class="section-card">
-                                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">Personnes Clés</h5>
-                                    <button type="button" class="btn btn-light btn-sm add-btn" id="btn-add-personne">
-                                        <i class="fa-solid fa-plus me-1"></i>Ajouter
-                                    </button>
-                                </div>
-                                <div class="card-body" id="personnes-forms">
-                                    {{ personnes_formset.management_form }}
+                   
 
-                                    <!-- Formulaire modèle caché (sera cloné) -->
-                                    <div class="form-row d-none" id="personne-template">
-                                        {% crispy personnes_formset.empty_form %}
-                                        <span class="delete-form-btn float-end" title="Supprimer cette personne">×</span>
-                                    </div>
-
-                                    <!-- Formulaires existants -->
-                                    {% for form in personnes_formset %}
-                                        <div class="form-row">
-                                            {% crispy form %}
-                                            <span class="delete-form-btn btn-outline-danger float-end" title="Supprimer cette personne">×</span>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Lieux Clés -->
-                        <div class="col-lg-6">
-                            <div class="section-card">
-                                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">Lieux Clés</h5>
-                                    <button type="button" class="btn btn-light btn-sm add-btn" id="btn-add-lieu">
-                                        <i class="fa-solid fa-plus me-1"></i>Ajouter
-                                    </button>
-                                </div>
-                                <div class="card-body" id="lieux-forms">
-                                    {{ lieux_formset.management_form }}
-
-                                    <!-- Formulaire modèle caché -->
-                                    <div class="form-row d-none" id="lieu-template">
-                                        {% crispy lieux_formset.empty_form %}
-                                        <span class="delete-form-btn float-end" title="Supprimer ce lieu">×</span>
-                                    </div>
-
-                                    {% for form in lieux_formset %}
-                                        <div class="form-row">
-                                            {% crispy form %}
-                                            <span class="delete-form-btn btn btn-outline-danger float-end" title="Supprimer ce lieu">×</span>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-12">
                             <div class="card mb-4">
                                 <div class="card-header">Images associée</div>
                                     <div class="card-body">
             
-                                        {% if famille.image %}
+                                        {% if communaute.image %}
                                             <div class="mb-3 text-center">
-                                                <img src="{{ famille.image.fichier.url }}" alt="Image actuelle" class="img-thumbnail" style="max-height: 250px;">
-                                                {% if famille.image.legende %}
-                                                    <p class="mt-2"><small>{{ famille.image.legende }}</small></p>
+                                                <img src="{{ communaute.image.fichier.url }}" alt="Image actuelle" class="img-thumbnail" style="max-height: 250px;">
+                                                {% if communaute.image.legende %}
+                                                    <p class="mt-2"><small>{{ communaute.image.legende }}</small></p>
                                                 {% endif %}
                                             </div>
                                         {% else %}
@@ -149,7 +93,7 @@
 
                                         <div class="mb-3">
                                             <label class="form-label">
-                                                {% if famille.image %}Remplacer l'image{% else %}Ajouter une image{% endif %}
+                                                {% if communaute.image %}Remplacer l'image{% else %}Ajouter une image{% endif %}
                                             </label>
                                             {{ image_form.fichier }}
                                             {{ image_form.fichier.errors }}

@@ -4,6 +4,7 @@ from arch_portal.domain.forms.famille import FamilleForm
 from arch_portal.domain.forms.image import ImageForm
 from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.famille import Famille
+from arch_portal.domain.models.pagefamille import Pagefamille
 from arch_portal.domain.models.role import Role
 from arch_portal.domain.models.membre import Membre
 from django.views.decorators.csrf import csrf_exempt
@@ -11,6 +12,45 @@ import json
 from django.http import HttpResponseForbidden, JsonResponse 
 from collections import defaultdict
 from django.contrib import messages
+
+
+def page_famille(request, id):
+    famille = get_object_or_404(Famille, pk=id)
+    return render(request, 'famille/page_famille.html', {'famille': famille})
+
+def add_page(request, id):
+
+    famille = get_object_or_404(Famille, pk=id)    
+    # Vérification des droits
+    # if not (famille.administrateurs.filter(id=request.user.id).exists()):
+    #     messages.error(request, "Vous n'avez pas le droit d'ajouter une histoire à cette famille.")
+    #     return redirect('show_famille', id=famille.id)
+    
+    if request.method == "POST":
+        titre = request.POST.get("titre", "").strip()
+        contenu = request.POST.get("contenu", "").strip()
+        ordre = request.POST.get("ordre", "10")
+        
+        if not titre or not contenu:
+            messages.error(request, "Le titre et le contenu sont obligatoires.")
+        else:
+            try:
+                ordre = int(ordre)
+            except:
+                ordre = 10
+                
+            Pagefamille.objects.create(
+                famille=famille,
+                titre=titre,
+                contenu=contenu,
+                ordre=ordre,
+                # created_by=request.user  ← si tu ajoutes ce champ plus tard
+            )
+            messages.success(request, "Histoire détaillée ajoutée avec succès !")
+            return redirect('show_famille', id=famille.id)
+    
+    # GET → on ne devrait normalement pas arriver ici car c'est une modal
+    return redirect('show_famille', id=id)
 
 def edit_famille(request, id):
     

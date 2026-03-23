@@ -17,7 +17,7 @@ from arch_portal.domain.models.image import Image
 from arch_portal.domain.models.histoire import MiniHistoire
 from arch_portal.domain.models import *
 from django.contrib.auth.decorators import login_required , permission_required
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.http import HttpResponseForbidden, JsonResponse
 from arch_portal.domain.models import Association
 from django.views.decorators.http import require_http_methods
@@ -294,7 +294,6 @@ def don_delete(request, communaute_id, don_id):
     }
     return render(request, 'archcore/don_delete.html', context)
 
-
 @login_required
 def premium_content(request):
     user = request.user
@@ -452,8 +451,54 @@ def add_association(request):
 
     return render(request, "archcore/new_association.html", { "form":form  })
  
+def personnecle_create(request, idcom):
+    com = Communaute.objects.get(id=idcom)
+
+    if( request.method == "POST" ):
+        person_form = PersonneCleForm(request.POST,request.FILES) 
+
+        if (person_form.is_valid()):
+            person = person_form.save(commit=False)
+            person.communaute = com
+            
+            person.save()
+            com.save()
+            messages.success(request, f"{person.nom} ajouté avec success !.")
+            
+        else:
+            messages.error(request, "Informations invalides.")       
+     
+
+    return redirect("show_communaute",com.id )
+
+def lieucle_create(request, idcom):
+    com = Communaute.objects.get(id=idcom) 
+
+    if( request.method == "POST" ):
+        person_form = LieuCleForm(request.POST,request.FILES)
+        
+        print(request.POST["nom"])
+        print(person_form.errors)
+
+        if (person_form.is_valid()):
+            person = person_form.save(commit=False)
+            person.communaute = com
+            
+            person.save()
+            com.save()
+            messages.success(request, f"{person.nom} ajouté avec success !.")
+            
+        else:
+            messages.error(request, "Informations invalides.")       
+     
+
+    return redirect("show_communaute",com.id )
+
 def show_communaute(request, id):
     com = Communaute.objects.get(id=id)
+
+    form_personne = PersonneCleForm()
+    form_lieu = LieuCleForm()
     #  ce utilisateur ne peut voir les info detaillée de la famille que si il appartient à la famille ou a des droits
     userid = request.session.get("userid","")
     if not userid :
@@ -471,6 +516,9 @@ def show_communaute(request, id):
             "appartient" : appartient,
             'personnes_cles': com.personnescles_communaute.all().order_by('nom'),
             'lieux_cles': com.lieucles_communaute.all().order_by('nom'),
+
+            'form_personne': form_personne,
+            'form_lieu': form_lieu
         }
     )
 
@@ -484,9 +532,10 @@ def show_admin_asso(request,id):
     # print(com.administrateurs.all())
     return render(request, "archcore/listadminasso.html", {"admins": com.administrateurs.all(), "association": com})
 
+@csrf_protect
 def edit_communaute(request, id):
     com = get_object_or_404(Communaute, id=id)
-
+    '''
     PersonneFormSet = inlineformset_factory(
         Communaute, PersonneCle, form=PersonneCleForm,
         fields='__all__', extra=1, can_delete=True
@@ -495,9 +544,7 @@ def edit_communaute(request, id):
         Communaute, LieuCle, form=LieuCleForm,
         fields='__all__', extra=1, can_delete=True
     )
-
-    personnes_formset = PersonneFormSet(request.POST, instance=com, prefix='personnes')
-    lieux_formset     = LieuFormSet(request.POST, instance=com, prefix='lieux')
+    '''
 
     image_instance = com.image if hasattr(com, 'image') else None
 
@@ -506,46 +553,79 @@ def edit_communaute(request, id):
         image_form = ImageForm(request.POST, request.FILES, instance=image_instance)
 
         histoires_formset = MiniHistoireFormSet(request.POST, instance=com, prefix='mini_histoire')
-        rois_formset = RoiFormSet(request.POST, instance=com, prefix='rois_communaute')        
+        rois_formset = RoiFormSet(request.POST, instance=com, prefix='rois_communaute') 
+        # personnes_formset = PersonneFormSet(request.POST,request.FILES, instance=com, prefix='personnes')
+        # lieux_formset     = LieuFormSet(request.POST, request.FILES, instance=com, prefix='lieux')
 
-        if form.is_valid() and histoires_formset.is_valid() and rois_formset.is_valid() and image_form.is_valid()   :  
+        if all( [
+            form.is_valid() and 
+            histoires_formset.is_valid() and 
+            rois_formset.is_valid() and 
+            image_form.is_valid()   
+            # and
+            # personnes_formset.is_valid() 
+            # and lieux_formset.is_valid()
+        ]) :  
+            
             com = form.save(commit=False) 
             com.save()
             histoires_formset.save()
             rois_formset.save()
-
+            
+            '''
             personnes_formset.instance = com
             lieux_formset.instance     = com
 
-            personnes_formset.save()
+            personnes = personnes_formset.save(commit=False)
             lieux_formset.save()
 
+            for form in personnes_formset:
+                if form.is_valid():  # déjà vérifié globalement, mais safe
+                    personne = form.save(commit=False)
+                    photo_field = form['photo']  # ou le nom exact du champ file
+                    if photo_field.value():      # ou if form.cleaned_data.get('photo')
+                        file = request.FILES.get(photo_field.html_name)
+                        if file:
+                            img = Image.objects.create(
+                                fichier=file,
+                                titre=f"Photo de {personne.nom or 'personne'}"
+                            )
+                            personne.photo = img
+                    personne.save()
+            
+            personnes_formset.save()
+            '''
+
+            # lieux_formset.save()
             # sauvegarde de l'image de la communauté
             image = image_form.save(commit=False)
-            com.image =  image
-            image.save() 
-            com.save()
-    
-            form.save_m2m()  
-            # histoires_formset.save_m2m()
+            if image_form.cleaned_data.get('fichier'):  # nouveau fichier
+                image = image_form.save()
+                com.image = image
+            elif image_form.cleaned_data.get('DELETE', False):  # si tu ajoutes un champ delete
+                com.image = None
+
+            com.save()    
+            form.save_m2m()            
 
             messages.success(request, "Communauté modifiée avec succès.")
             return redirect("show_communaute",com.id )
     else:
         form = CommunauteForm(instance=com)
-        histoires_formset =MiniHistoireFormSet(instance=com, prefix='mini_histoire')
+        histoires_formset = MiniHistoireFormSet(instance=com, prefix='mini_histoire')
         rois_formset = RoiFormSet(instance=com, prefix='rois_communaute')
+        # personnes_formset = PersonneFormSet( instance=com, prefix='personnes')
+        # lieux_formset     = LieuFormSet( instance=com, prefix='lieux')
 
         image_form = ImageForm()
-        
-
+   
     context ={
         "form": form,
         "histoires_formset": histoires_formset,
         "rois_formset": rois_formset,
 
-        'personnes_formset': personnes_formset,
-        'lieux_formset': lieux_formset,
+        # 'personnes_formset': personnes_formset,
+        # 'lieux_formset': lieux_formset,
 
         "titre": f"Modification - {com.nom}",
         "action": "Modifier",
@@ -574,8 +654,7 @@ def add_communaute(request):
         fields='__all__', extra=1, can_delete=True
     )
 
-    # image_instance = com.image if hasattr(com, 'image') else None
-    
+    # image_instance = com.image if hasattr(com, 'image') else None   
 
     if request.method == "POST":
         form = CommunauteForm(request.POST)
@@ -749,13 +828,7 @@ def community_history(request, community_id):
         'history': {
             'origin': com.origine,
             'chief': com.chef.nomcomplet if com.chef else "Inconnu",
-            'description': com.histoire,
-            # 'key_events': [
-            #     {'year': 1950, 'event': 'Fondation de la communauté'},
-            #     {'year': 1975, 'event': 'Premier grand rassemblement'},
-            #     {'year': 2000, 'event': 'Modernisation des structures'},
-            #     {'year': 2020, 'event': 'Intégration numérique'},
-            # ]
+            'description': com.histoire, 
         }
     }
     return render(request, 'archcore/com_histoire.html', context)
@@ -768,18 +841,8 @@ def community_geography(request, community_id):
     context = {
         'community_id': community_id,
         'community_name': f"{community.nom}",
-        'geographie': community.geographie,
-        # 'latitude': 6.8276, 
-        # 'longitude': -0.7893,
-        'map_zoom': 12,
-        # 'geography': {
-        #     'region': 'Région --',
-        #     'country': 'Pays --',
-        #     'area_km2': 1500,
-        #     'population': 250000,
-        #     'climate': 'Tropical',
-        #     'terrain': 'Accidenté avec vallées'
-        # }
+        'geographie': community.geographie, 
+        'map_zoom': 12, 
     }
     return render(request, 'archcore/com_geo.html', context)
 
@@ -792,25 +855,7 @@ def king_detail(request, community_id, king_id):
     context = {
         'community_id': community_id,
         'community_name': f"{community.nom}",
-        "roi": roi ,
-
-        # 'king': {
-        #     'id': king_id,
-        #     'name': 'Roi ',
-        #     'reign_start': 1985,
-        #     'reign_end': 2010,
-        #     'biography': 'Biographie détaillée du roi...',
-        #     'achievements': [
-        #         'Réforme administrative',
-        #         'Expansion territoriale',
-        #         'Développement des arts',
-        #     ],
-        #     'family': {
-        #         'father': 'Père  ',
-        #         'mother': 'Mère  ',
-        #         'successors': 'Successeur  '
-        #     }
-        # }
+        "roi": roi , 
     }
     return render(request, 'archcore/king_detail.html', context)
 
@@ -823,29 +868,6 @@ def kings_list(request, community_id):
         'communaute': community,
         'rois': community.rois.all(),
         'community_name': f'{community.nom}',
-        'description': f'{community.description}',
-        # 'kings': [
-        #     {
-        #         'id': 1,
-        #         'name': 'Roi   1',
-        #         'reign_period': '1950-1975',
-        #         'photo': '/static/images/rois.jpg',
-        #         'status': 'Décédé'
-        #     },
-        #     {
-        #         'id': 2,
-        #         'name': 'Roi   2',
-        #         'reign_period': '1975-2000',
-        #         'photo': '/static/images/king2.jpg',
-        #         'status': 'Décédé'
-        #     },
-        #     {
-        #         'id': 3,
-        #         'name': 'Roi   3',
-        #         'reign_period': '2000-Présent',
-        #         'photo': '/static/images/king3.jpg',
-        #         'status': 'En vie'
-        #     },
-        # ]
+        'description': f'{community.description}', 
     }
     return render(request, 'archcore/king_list.html', context)

@@ -33,6 +33,10 @@ class Famille(models.Model):
     @property
     def membres(self):
         return self.membres_famille.all()
+
+    @property
+    def pages_famille(self):
+        return self.pages_famille.all()
     
     def get_members(self):
         members = mod.Membre.objects.filter(familles=self.id)

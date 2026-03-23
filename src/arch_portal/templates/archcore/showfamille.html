@@ -168,9 +168,17 @@
                         <a href="{% url 'show_admin_fam' famille.id %}" class="btn btn-sm btn-outline-success me-2">
                             <i class="fas fa-user-check"></i> Administrateurs
                         </a>
-                        <button class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#adminModal">
+                        <button class="btn btn-sm btn-outline-info" title="Ajouter un administrateur" data-bs-toggle="modal" data-bs-target="#adminModal">
                             <i class="fas fa-user-plus"></i> Ajouter
                         </button>
+                         
+                            <button 
+                                    class="btn btn-outline-primary btn-sm shadow m-2"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalAddHistoire">
+                                <i class="bi bi-plus-lg me-2"></i>Ajouter une histoire détaillée
+                            </button>
+                       
                     </div>
                 {% endif %}
             </div>
@@ -188,6 +196,9 @@
                 <p class="lead text-muted mb-4">{{ famille.description|linebreaks }}</p>
 
                 <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'page_famille' famille.id %}" class="btn btn-outline-success btn-tree">
+                        <i class="fa fa-layer-group me-2"></i>Livre & Histoire
+                    </a>
                     <a href="{% url 'famille_arbre' famille.id %}" class="btn btn-outline-primary btn-tree">
                         <i class="fa fa-sitemap me-2"></i>Arbre généalogique (liste)
                     </a>
@@ -256,6 +267,8 @@
     </div>
 
 </div>
+
+{% include "archcore/includes/add_page_famille.html" %}
 
 <!-- Modal Ajout Administrateur -->
 {% if 'ADD_FAMILLE_ADMIN' in request.session.userrights %}

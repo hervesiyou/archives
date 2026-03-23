@@ -23,7 +23,7 @@
                                     {% if  com.publique %}
                                         <h6 class="text-white"><i class="fa-solid fa-person-shelter"></i> {{ com.nom}} </h6>
                                         {% comment %} {% if  'VOIR_COMMUNAUTE' in request.session.userrights or com.publique %} {% endcomment %}
-                                    <a href="{% url 'listfamilles' id=com.id mode=1 %}" class="text-center badge bg-secondary"> Voir ses familles </a>
+                                    <a href="{% url 'listfamilles' id=com.id mode=1 %}" class="text-center badge bg-white text-success"> Voir ses familles </a>
                                     {% else %}
                                         <h6 class="text-white"><i class="fa-solid fa-person-shelter"></i> {{ com.nom}} </h6>
                                         <a href="#" data-com="{{com.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partComID"> Je souhaite être {{ com.nom }}</a>
@@ -31,10 +31,22 @@
                                 </div>
                                 <div class="card community-card h-100 shadow-sm border-0 overflow-hidden">
                                     
-                                    <img src="{% static 'images/communaute.jpg' %}" 
-                                            class="card-img-top" 
-                                            alt="{{ com.nom}}" 
-                                            style="height: 220px; object-fit: cover;">
+                                    {%  if com.image %}
+                                        {% with first_image=com.image %}
+                                            <div class="my-2 text-center">
+                                                <img src="{{ first_image.fichier.url }}"  style="width: 100%; max-height: 400px;" alt="{{ com.description|default:'Couverture de la communauté' }}">
+                                            </div>
+                                        {% endwith %}
+                                    {% else %}
+                                        <div class="my-4">
+                                            <img src="{% static 'images/communaute.jpg' %}" 
+                                                class="card-img-top" 
+                                                alt="{{ com.nom}}" 
+                                                style="height: 220px; object-fit: cover;">
+                                        </div>                            
+                                    {% endif %}
+
+                                    
 
                                     <div class="card-body d-flex flex-column">
                                         <h5 class="card-title fw-bold mb-3">{{ com.nom}}</h5>

@@ -11,7 +11,9 @@ import arch_portal.use_cases.evenement_controller as evenement
 urlpatterns = [ 
     path('lfam/<int:id>.<int:mode>', famille.listfamilles, name="listfamilles"),
     path('sf/<int:id>', famille.show_famille, name="show_famille"),
-    path('edf/<int:id>', famille.edit_famille, name="edit_famille"),
+    path('spages/<int:id>', famille.page_famille, name="page_famille"),
+    path('adpa/<int:id>', famille.add_page, name="add_page"),
+    path('edf/<int:pk>', famille.edit_famille, name="edit_famille"),
     path('nf/', famille.add_famille, name="add_famille"),
     path('sh_ad_fa/<int:id>', famille.show_admin_fam, name="show_admin_fam"),
     path('add_ad_fam', famille.add_admin_fam, name="add_admin_fam"),
@@ -88,6 +90,10 @@ urlpatterns += [
     path('lc/<int:pk>/sh', communaute.lieucle_detail, name='lieucle_detail'),
     path('lc/<int:pk>/ed', communaute.lieucle_edit, name='lieucle_edit'),
     path('lc/<int:pk>/', communaute.lieucle_delete, name='lieucle_delete'),
+
+    path('lcc/<int:idcom>/', communaute.lieucle_create, name='lieucle_create'),
+    path('pcc/<int:idcom>/', communaute.personnecle_create, name='personnecle_create'),
+
     path('pc/<int:pk>/de', communaute.personnecle_delete, name='personnecle_delete'),
 
 ]

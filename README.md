@@ -2,6 +2,8 @@
 
 - inserer la famille nkouonchichoue et la famille takoukam
 - ajouter les librairies
+        - ajouter une page pour le detail de l'histoire de la famille(les pages du livre famillial)
+
 - ajouter l'image de la librairie
 - connecter la mediatheques des communautés avec google photos et google drive
 - ajouter la geographie lors de la creation et l'update d'une communauté
