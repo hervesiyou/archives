@@ -27,8 +27,12 @@
                             <h3 class="mb-0 fw-bold">
                                 {{association.communaute}}
                             </h3>
+                            {% if galerie is not None and galerie.0.id is not None %}
+                                <a class="btn btn-outline-success my-2" href="{% url 'show_galerie' galerie.0.id %}"> Photos de {{ association.nom }} </a>
+                            {% endif %}
+
                             <span class="text-muted">
-                                <a href="{% url 'listassociations' id=association.communaute.id mode=1 %}"> Autres associations</a>
+                                <a  class="btn btn-outline-info my-2" href="{% url 'listassociations' id=association.communaute.id mode=1 %}"> Autres associations</a>
                             </span>
                         </div>
                     </div>
@@ -53,7 +57,7 @@
                     <div class="col-md-8">
                         <div class="pull-left">
                             <address>
-                                <h3> &nbsp;<b class="text-danger text-capitalize">{{association.description}} </b></h3>
+                                {% comment %} <h3> <b class="text-danger text-capitalize">{{association.description}} </b></h3> {% endcomment %}
                                 <p class="text-muted ms-1">{{association.type}}
                                     <br> {{association.description}}
                                     <br> {{association.adhesion}}

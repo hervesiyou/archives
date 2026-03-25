@@ -1,3 +1,5 @@
+# from arch_portal.domain.forms import GalerieForm
+from arch_portal.domain.models.galerie import Galerie
 from django.contrib  import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from django.conf import settings
@@ -24,13 +26,13 @@ from django.views.decorators.http import require_http_methods
 from django.db import models
 from django.forms import inlineformset_factory
 
-from arch_portal.domain.forms.sets import MiniHistoireFormSet, RoiFormSet   , RoiForm, MiniHistoireForm
+from arch_portal.domain.forms.sets import MiniHistoireFormSet, RoiFormSet , RoiForm, MiniHistoireForm
 
 import json
 from datetime import date
 
 from arch_portal.domain.models.don import Don
-from arch_portal.domain.models.communaute import Communaute   
+# from arch_portal.domain.models.communaute import Communaute   
 from arch_portal.domain.models.personnecle import PersonneCle   
 from arch_portal.domain.models.lieucle   import LieuCle  
 from arch_portal.domain.forms.lieucle   import LieuCleForm  
@@ -420,7 +422,8 @@ def listcom(request):
  
 def show_association(request,id):
     asso = Association.objects.get(id=id)
-    return render(request, "archcore/showassociation.html", {"association": asso})
+    galerie = Galerie.objects.filter(association=asso)
+    return render(request, "archcore/showassociation.html", {"association": asso, "galerie": galerie})
 
 def listassociationsfam(request, id): 
     com = Famille.objects.get(id=id)
@@ -506,6 +509,7 @@ def show_communaute(request, id):
         return redirect("login" )
 
     user = Membre.objects.get(id=userid)
+    galerie = Galerie.objects.get(id=com.id)
     appartient=False
     if ( user in com.membres_communaute.all()):
         appartient = True
@@ -513,6 +517,7 @@ def show_communaute(request, id):
     return render(request, "archcore/show_com.html", 
         {
             "communaute":com, 
+            "galerie":galerie, 
             "appartient" : appartient,
             'personnes_cles': com.personnescles_communaute.all().order_by('nom'),
             'lieux_cles': com.lieucles_communaute.all().order_by('nom'),
@@ -792,17 +797,38 @@ def add_communaute0(request):
 
     return render(request, "archcore/new_communaute.html", context)
 
+def upload_image(request):
+    if request.method == "POST" and request.FILES.get("image"):
+        image = Image.objects.create(
+            fichier=request.FILES["image"],
+            nom=request.POST.get("nom", "")
+        )
+        return JsonResponse({
+            "id": image.id,
+            "url": image.fichier.url
+        })
+    return JsonResponse({"error": "Erreur upload"}, status=400)
+
+
 def show_galerie(request, id):
-    pass
+
+    galerie = get_object_or_404(Galerie, pk=id)
+    return render(request, "usercore/show_galerie.html", { "galerie":galerie  })
+
 def add_galerie(request):
     
     if request.method == "POST":
         form = GalerieForm(request.POST)
+        images_ids = request.POST.getlist("images_ids[]")
+
         if form.is_valid():  
-            com = form.save() 
-            com.save()
+            galerie = form.save() 
+            galerie.save()
             
-            return redirect("show_galerie",com.id )
+            galerie.images.set(images_ids)
+            
+            return redirect("show_galerie",galerie.id )
+ 
     else:
         form = GalerieForm()
 

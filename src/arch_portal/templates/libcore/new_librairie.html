@@ -5,7 +5,7 @@
     <div class="container card-body">
         <h3> Nouvelle Librairie</h3>
         
-                <form method="post" action="{% url 'add_librairie' %}">
+                <form method="post" action="{% url 'add_librairie' %}" enctype="multipart/form-data">
                    
                     {% crispy form %}
 
@@ -30,7 +30,7 @@
 
                                         <div class="mb-3">
                                             <label class="form-label">
-                                                {% if librairie.image %}Remplacer l'image{% else %}Ajouter une image{% endif %}
+                                                {% if librairie.image %} Remplacer l'image {% else %}Ajouter une image{% endif %}
                                             </label>
                                             {{ image_form.fichier }}
                                             {{ image_form.fichier.errors }}

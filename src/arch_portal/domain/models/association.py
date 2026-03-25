@@ -19,12 +19,12 @@ class Association(models.Model):
 
     administrateurs = models.ManyToManyField("Membre", related_name="asso_admins", blank=True, null=True)
 
-
     type = models.CharField(
         max_length=50, 
         choices=ASSO_CHOICES,
         blank=True,null=1
     )
+
     def __str__(self):
         return self.nom
     

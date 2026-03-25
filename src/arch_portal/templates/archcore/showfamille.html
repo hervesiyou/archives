@@ -118,7 +118,9 @@
         <div  aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-center">
                 <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa fa-home me-1"></i>Accueil</a></li>
+                {% if famille.communaute is not None and famille.communaute.id is not None %}
                 <li class="breadcrumb-item"><a href="{% url 'show_communaute' famille.communaute.id %}"><i class="fas fa-users me-1"></i>{{ famille.communaute.nom }}</a></li>
+                {% endif %}
                 <li class="breadcrumb-item active">{{ famille.nom }}</li>
             </ol>
         </div>
@@ -180,6 +182,9 @@
                             </button>
                        
                     </div>
+                {% endif %}
+                {% if galerie is not None and galerie.id is not None %}
+                    <a class="btn btn-outline-success my-2" href="{% url 'show_galerie' galerie.id %}"> Photos de {{ famille.nom }} </a>
                 {% endif %}
             </div>
         </div>

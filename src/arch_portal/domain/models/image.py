@@ -19,7 +19,6 @@ class Image(models.Model):
     def save(self, *args, **kwargs):
         # Appeler la méthode save() du parent
         super().save(*args, **kwargs)
-
         # Ouvrir l'image avec Pillow
         img = PILImage.open(self.fichier.path)
 

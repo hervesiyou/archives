@@ -6,6 +6,7 @@ from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.famille import Famille
 from arch_portal.domain.models.contact import Contact
 from arch_portal.domain.models.membre import Membre
+from arch_portal.domain.models.image import Image
 from arch_portal.domain.models.message import Message
 from arch_portal.domain.models.association import Association
 from arch_portal.domain.models.librairie import Librairie
@@ -20,6 +21,9 @@ from arch_portal.use_cases.services.core import send_email
 from django.http import HttpResponseForbidden, JsonResponse
 from datetime import date, datetime
 from django.contrib import messages
+
+
+
 
 def index(request): 
     return render(request, "base.html" )

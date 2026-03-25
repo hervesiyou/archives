@@ -171,12 +171,15 @@
                                 <div class="col-6">
                                     <div class="bg-dark p-10 text-white text-center">
                                          
-                                        <h5 class="mb-0 mt-1"> 
-                                        <span class="badge bg-white text-dark">{{communaute.get_associations|length }}</span> Associations</h5>
+                                        <h5 class="mb-0 mt-1" title="Merci d'adhérer à cette communauté pour avoir le droit de consulter les associations"> 
+                                        <span class="badge bg-white text-dark" >{{communaute.get_associations|length }}</span> Associations</h5>
+                                        
                                         {% if appartient %}
                                         <small class="font-light">
                                             <a href="{% url 'listassociations' id=communaute.id mode=1  %}"><i class="fa fa-eye"></i> Consulter </a>
                                         </small> 
+                                        {% else %}
+                                        <span class="text-small text-xs"> </span>
                                         {% endif %}
                                     </div>
                                 </div> 
@@ -207,6 +210,10 @@
                                         <h5 class="mb-0 mt-1">
                                          <a href="{% url 'listlibs' %}"  > Mediathèque </a> </h5>
                                         {% comment %} <small class="font-light">.</small> {% endcomment %}
+                                        {{galerie}}
+                                        {% if galerie  is not None and galerie.id is not None %}
+                                            <a class="btn btn-outline-success" href="{% url 'show_galerie' galerie.id %}"> Photos de {{ communaute.nom}} </a>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="col-6 mt-3">
@@ -217,17 +224,22 @@
                                         </h6>
                                         <div >
                                             {% if  'ADD_COMMUNAUTE_ADMIN' in request.session.userrights %}
-                                             <a href="{% url 'show_admin_com' communaute.id %}" class="text-success py-3" >Voir les Administrateurs  de {{communaute.nom}}</a> 
+                                            <a href="{% url 'show_admin_com' communaute.id %}" 
+                                                class=" btn btn-outline-success text-success my-3"
+                                                title="Voir les Administrateurs  de {{communaute.nom}}"
+                                            > 
+                                                <i class="fa fa-eye"></i> Les lister  </a> 
 
                                             {% endif %}
                                         </div>
                                         <small class="font-light"> 
                                          {% if  'ADD_COMMUNAUTE_ADMIN' in request.session.userrights %}
                                             <div class=" text-end pull-right">
-                                                <button class="  btn-danger text-white" 
+                                                <a class=" btn btn-outline-danger text-white" 
+                                                      title=" Ajouter un Administrateur à cette communauté"
                                                       data-bs-toggle="modal" 
                                                       data-bs-target="#adminModal" 
-                                                      type="button"> <i class="fa fa-plus"></i> Ajouter un Administrateur à cette communauté </button>
+                                                      type="button"> <i class="fa fa-plus"></i> Ajouter  </a>
                                             </div>
                                             
                                         {% endif %}

@@ -308,11 +308,53 @@ def facture_pdf(request, paiement_id):
 
     return response
 
+
+def edit_librairie(request, id):
+    librairie = get_object_or_404(Librairie, pk=id)
+    current_image = librairie.image   
+
+    if request.method == "POST":
+        form = LibrairieForm(request.POST, instance=librairie)
+        image_form = ImageForm(request.POST, request.FILES, instance=current_image)
+
+        if form.is_valid() and image_form.is_valid():
+            librairie = form.save(commit=False)
+            new_file = image_form.cleaned_data.get('fichier')
+
+            if new_file:                         
+                if current_image:
+                    current_image.delete(save=False)  
+
+                new_image = image_form.save(commit=False)
+                new_image.save()
+                librairie.image = new_image
+
+            elif 'fichier-clear' in request.POST and current_image:  
+                current_image.delete()
+                librairie.image = None
+            # sinon → on garde l'image existante (ou None)
+
+            librairie.save()
+            messages.success(request, "Librairie modifiée avec succès.")
+            return redirect("show_librairie", librairie.id)
+        else: 
+            messages.success(request, "Informations invalides.")
+    
+    else:
+        form = LibrairieForm(instance=librairie)
+        image_form = ImageForm(instance=current_image)
+
+    return render(request, "libcore/edit_librairie.html", {
+        "form": form,
+        "image_form": image_form,
+        "librairie": librairie,
+    })
+"""
 def edit_librairie(request, id):
 
     librairie = Librairie.objects.get(id=id)
-
     image_instance = librairie.image if hasattr(librairie, 'image') else None
+
     if request.method == "POST":
         form = LibrairieForm(request.POST, request.FILES, instance=librairie)
         imageForm = ImageForm(request.POST, request.FILES, instance=image_instance)
@@ -339,7 +381,7 @@ def edit_librairie(request, id):
 
     return render(
         request, 
-        "libcore/new_librairie.html",
+        "libcore/edit_librairie.html",
         { 
             "form": form,
             "image_formset": image_formset,
@@ -347,6 +389,7 @@ def edit_librairie(request, id):
             "image_form": image_form,   
         }
     )
+"""
 
 
 def edit_book(request, id):
@@ -548,8 +591,9 @@ def add_librairie(request):
             return redirect("show_librairie",com.id )
     else: 
         form = LibrairieForm()
+        image_form = ImageForm()
 
-    return render(request, "libcore/new_librairie.html", { "form":form  })
+    return render(request, "libcore/new_librairie.html", { "form":form , "image_form": image_form, })
 
 def abonement_librairie(request): 
     plans = Plan.objects.filter(appli="LIB")

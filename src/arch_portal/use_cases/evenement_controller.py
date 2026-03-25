@@ -1,3 +1,4 @@
+from arch_portal.domain.models.galerie import Galerie
 from django.shortcuts import redirect, render, get_object_or_404
 from arch_portal.domain.forms.evenement import EvenementForm
 from arch_portal.domain.models.communaute import Communaute
@@ -22,13 +23,21 @@ def show_evenement(request, id):
     # return render(request, "archcore/showevenement.html", {"evenement": event})
 
     event = get_object_or_404(Evenement, id=id)
+    # galerie = get_object_or_404(Galerie, id=event.ev_galerie_id)
+    galerie = Galerie.objects.filter(evenement=event)
     deja_like = False
     userid = request.session.get("userid","") 
     if userid is not None:
-        user = get_object_or_404(Membre, id=id)
+        user = get_object_or_404(Membre, id=userid)
         deja_like = EvenementLike.objects.filter( user=user, evenement=event ).exists()
 
-    return render(request, "archcore/showevenement.html", {"evenement": event, "deja_like": deja_like })
+    return render(request, "archcore/showevenement.html", 
+        {
+            "evenement": event,
+            "galerie": galerie,
+            "deja_like": deja_like
+        }
+    )
 
 
 @login_required

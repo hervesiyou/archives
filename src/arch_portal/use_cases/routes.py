@@ -64,6 +64,7 @@ urlpatterns += [
     path('lass/<int:id>.<int:mode>', communaute.listassociations, name="listassociations"),
     path('lassfam/<int:id>', communaute.listassociationsfam, name="listassociationsfam"),
     path('ngal/', communaute.add_galerie, name="add_galerie"),
+    path('upim/', communaute.upload_image, name="upload_image"),
     path('ga/<int:id>', communaute.show_galerie, name="show_galerie"),
     path('c/faq', communaute.faq, name="faq_communaute"),
 

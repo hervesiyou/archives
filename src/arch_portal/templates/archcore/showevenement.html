@@ -27,11 +27,19 @@
                     <div class="col-md-6">
                         <div class="text-info text-center mt-2"> 
                             <h3 class="mb-2 fw-bold">{{evenement.communaute}}</h3>
-                            <span class="text-muted">
+                            
+                            <div class="text-muted">
                                 <a href="{% url 'listevenements' id=evenement.communaute.id mode=1 %} "> Autres evenements</a>
-                            </span>
+                            </div>
+                            
+                            <h4>
+                            {% comment %} {{ galerie.0.images|pprint}} {% endcomment %}
 
-                            <a href="{% url 'mes_evenements_likes' %}" class="btn btn-outline-info"> Mes evenements interessants</a>
+                            {% if galerie is not None and galerie.0.id is not None %}
+                                <a class="btn btn-outline-success" href="{% url 'show_galerie' galerie.0.id %}"> Photos de {{ evenement.titre }} </a>
+                            {% endif %}
+                                <a href="{% url 'mes_evenements_likes' %}" class="btn btn-outline-info"> Mes evenements interessants</a>
+                            </h4>
                         </div>
                     </div>
                     <div class="col-md-6 border-left text-center pt-2">

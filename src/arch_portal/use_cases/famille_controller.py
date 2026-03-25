@@ -3,6 +3,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from arch_portal.domain.forms.famille import FamilleForm
 from arch_portal.domain.forms.image import ImageForm
 from arch_portal.domain.models.communaute import Communaute
+from arch_portal.domain.models.galerie import Galerie
 from arch_portal.domain.models.famille import Famille
 from arch_portal.domain.models.pagefamille import Pagefamille
 from arch_portal.domain.models.role import Role
@@ -192,11 +193,13 @@ def show_famille(request,id):
     #  ce utilisateur ne peut voir les info detaillée de la famille que si il appartient à la famille ou a des droits
     userid = request.session.get("userid","")
     user = Membre.objects.get(id=userid)
+
+    galerie = Galerie.objects.filter(famille=fam).first()
     appartient=False
     if ( user in fam.membres_famille.all()):
         appartient = True
     
-    return render(request, "archcore/showfamille.html", {"famille" : fam, "appartient" : appartient} )
+    return render(request, "archcore/showfamille.html", {"famille" : fam, "appartient" : appartient, "galerie" : galerie} )
 
 
 def show_admin_fam(request,id):

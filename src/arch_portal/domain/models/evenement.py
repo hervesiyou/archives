@@ -12,6 +12,8 @@ class Evenement(models.Model):
     description=models.TextField()
     # likes = models.ManytoMany("EvenementLike", related_name="", null=True, blank=True)
     communaute=models.ForeignKey(modele.communaute.Communaute,on_delete=models.SET_NULL,null=True)
+    famille = models.ForeignKey("Famille", on_delete=models.CASCADE, blank=True, null=True, related_name="fam_evenement")
+
     periodicite=models.CharField(max_length=50)
 
     # def __init__(self, *args, **kwargs):

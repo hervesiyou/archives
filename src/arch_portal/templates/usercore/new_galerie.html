@@ -1,19 +1,82 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 {% block title %}Nouvelle Galerie {% endblock %}
 {% block content %}
     <div class="container card-body">
-        <h3> Nouvelle Galerie</h3>
+    <div class="my-4">
+        <a href="{% url 'home' %}" class="my-2"> <i class="fa fa-home"></i> Accueil </a>  >
+        <a href="{% url 'listcom' %}" class="my-2"> <i class="fas fa-users"></i> Communautés </a> > {{ communaute.nom }}
+
+         
+    </div>
+        <h3> Nouvelle Galerie </h3>
         <div class="row">
             
             <div class="col-lg-12">
                 <h5 class="bg-info text-center">.{{id}}</h5>
                 <form method="post">
                     {% csrf_token %}
-                    {{ form }}
+                    {% crispy form %}
+                    <button type="button" class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#imageModal">
+                        Ajouter une image
+                    </button>
+
+                    <div id="preview-images" class="row m-3"></div>
+                    <div id="hidden-inputs"></div>
+
                     <input type="submit" class="btn btn-success" value="Ajouter cette Galerie" />
                 </form>
             </div> 
         </div>
     </div>
-        <br/>
- {% endblock %}
+
+    {% include "usercore/partials/add_image_galerie.html" %}
+    <br/>
+{% endblock %}
+
+{% block js %}
+<script>
+    let imagesIds = [];
+
+    function uploadImage() {
+        let fileInput = document.getElementById("imageFile");
+        let title = document.getElementById("imageTitle").value;
+
+        let formData = new FormData();
+        formData.append("image", fileInput.files[0]);
+        formData.append("nom", title);
+        formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+
+        fetch("{% url 'upload_image' %}", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.id) {
+                imagesIds.push(data.id);
+
+                // preview
+                document.getElementById("preview-images").innerHTML += `
+                    <div class="col-md-3">
+                        <img src="${data.url}" class="img-fluid"/>
+                    </div>
+                `;
+                $("#imageModal").close()
+
+                updateHiddenInputs();
+            }
+        });
+    }
+
+    function updateHiddenInputs() {
+        let container = document.getElementById("hidden-inputs");
+        container.innerHTML = "";
+
+        imagesIds.forEach(id => {
+            container.innerHTML += `<input type="hidden" name="images_ids[]" value="${id}">`;
+        });
+    }
+</script>
+
+{% endblock %}
