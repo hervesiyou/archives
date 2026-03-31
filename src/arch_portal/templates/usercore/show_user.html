@@ -89,6 +89,31 @@
             background: #ffffff;
             border-top: 1px solid #eee;
         }
+
+        .info-item {
+            background: #f8f9fa;
+            border-left: 4px solid #198754;
+            padding: 10px 12px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .info-item:hover {
+            background: #eef7f1;
+            transform: translateY(-2px);
+        }
+
+        .label {
+            font-size: 0.8rem;
+            color: green !important;
+            display: block;
+        }
+
+        .value {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #212529;
+        }
     </style>
 {% endblock %}
 
@@ -188,21 +213,145 @@
         <!-- Onglet Identité -->
         <div class="tab-pane fade show active" id="identite" role="tabpanel">
             <div class="row g-4">
+            {% if membre.image %}
                 <div class="col-lg-8">
+            {% else %}
+                <div class="col-lg-12">
+            {% endif %}
                     <div class="info-row">
                         <h4 class="fw-bold mb-3 text-success">Informations personnelles</h4>
-                        <p class="lead mb-1">
-                            <strong>{{ membre.nomcomplet }}</strong>
-                        </p>
-                        {% if membre.date_naissance %}
-                            <p class="mb-1">Né(e) le {{ membre.date_naissance|date:"d F Y" }}</p>
-                        {% endif %}
-                        {% if membre.lieu_naissance %}
-                            <p class="mb-1">À {{ membre.lieu_naissance }}</p>
-                        {% endif %}
-                        {% if membre.date_deces %}
-                            <p class="text-muted">Décédé(e) le {{ membre.date_deces|date:"d F Y" }}</p>
-                        {% endif %}
+                        <div class="card shadow-sm border-0 rounded-4 p-3">
+
+                            <!-- Nom -->
+                            {% if membre.nomcomplet %}
+                                <h4 class="fw-bold text-success mb-3">
+                                    {{ membre.nomcomplet }}
+                                </h4>
+                            {% endif %}
+
+                            {% if membre.description %}
+                                <p class="text-muted">
+                                    {{ membre.description }}
+                                </p>
+                            {% endif %}
+
+                            <!-- Infos principales -->
+                            <div class="row g-3">
+
+                                {% if membre.telephone %}
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <span class="label">📞 Téléphone</span>
+                                        <div class="value">{{ membre.telephone }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if membre.sexe %}
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <span class="label">👤 Sexe</span>
+                                        <div class="value">{{ membre.sexe }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if membre.etatcivil %}
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <span class="label">💍 État civil</span>
+                                        <div class="value">{{ membre.etatcivil }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if membre.nbenfant %}
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <span class="label">👶 Enfants</span>
+                                        <div class="value">{{ membre.nbenfant }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if membre.generation %}
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <span class="label">🧬 Génération</span>
+                                        <div class="value">{{ membre.generation }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if membre.type %}
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <span class="label">🏷️ Type</span>
+                                        <div class="value">{{ membre.type }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                            </div>
+
+                            <hr>
+                            <!-- Dates -->
+                            <div class="row g-3">
+
+                                {% if membre.date_naissance %}
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <span class="label">🎂 Naissance</span>
+                                        <div class="value">{{ membre.date_naissance|date:"d F Y" }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if membre.lieu_naissance %}
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <span class="label">📍 Lieu</span>
+                                        <div class="value">{{ membre.lieu_naissance }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if membre.date_deces %}
+                                <div class="col-md-12">
+                                    <div class="info-item text-danger">
+                                        <span class="label">🕊️ Décès</span>
+                                        <div class="value">{{ membre.date_deces|date:"d F Y" }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                            </div>
+
+                            <hr>
+                            <!-- Famille -->
+                            <div class="row g-3">
+
+                                {% if membre.pere %}
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <span class="label">👨 Père</span>
+                                        <div class="value">{{ membre.pere }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if membre.mere %}
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <span class="label">👩 Mère</span>
+                                        <div class="value">{{ membre.mere }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
                     </div>
 
                     <div class="info-row">
@@ -221,7 +370,7 @@
                         </p>
                     </div>
                 </div>
-
+                {% if membre.image %}
                 <div class="col-lg-4">
                     <!-- Photo secondaire ou documents si besoin -->
                     {% if membre.images.count > 1 %}
@@ -230,6 +379,7 @@
                              class="img-fluid rounded shadow-sm">
                     {% endif %}
                 </div>
+                {% endif %}
             </div>
         </div>
 
@@ -265,6 +415,31 @@
                                 <p><strong>Mère :</strong> <a href="{% url 'show_user' membre.nommere.id %}">{{ membre.nommere.nomcomplet }}</a></p>
                             {% endif %}
                         </div>
+
+
+                            <div class="row g-3">
+
+                                {% if membre.pere %}
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <span class="label">👨 Père</span>
+                                        <div class="value">{{ membre.pere }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if membre.mere %}
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <span class="label">👩 Mère</span>
+                                        <div class="value">{{ membre.mere }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                               
+
+                            </div>
                     </div>
                 </div>
 
@@ -274,8 +449,15 @@
                             <h5 class="mb-0">Conjoint(e) / Enfants</h5>
                         </div>
                         <div class="card-body">
-                            <!-- À compléter selon tes relations (conjoint, enfants, etc.) -->
-                            <p class="text-muted">Aucun conjoint/enfant enregistré pour le moment</p>
+                             {% if membre.nbenfant %}
+                                <div class="col-md-6">
+                                    <div class="info-item">
+                                        <span class="label">👶 Enfants</span>
+                                        <div class="value">{{ membre.nbenfant }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <p class="text-muted">...</p>
                         </div>
                     </div>
                 </div>
@@ -297,8 +479,10 @@
                                         data-bs-toggle="collapse" 
                                         data-bs-target="#collapse{{ forloop.counter }}">
                                     
+                                   <div class="text-success fw-bold text-uppercase">
                                     {{ histoire.nom }}
-                                    
+                                   </div>
+
                                     {% if histoire.date %}
                                         <span class="ms-3 badge bg-success">
                                             {{ histoire.date }}
@@ -319,12 +503,61 @@
                                         </p>
                                     {% endif %}
 
-                                    <p>
+                                    <p class="m-2">
                                         {{ histoire.description|linebreaks }}
                                     </p>
 
                                 </div>
                             </div>
+
+                             {% if histoire.images.all %}
+                            <div id="carouselGalerie" class="carousel slide" 
+                                data-bs-ride="carousel" 
+                                data-bs-pause="hover"
+                                data-bs-interval="5000">
+
+                                <!-- Indicateurs -->
+                                <div class="carousel-indicators">
+                                    {% for image in histoire.images.all %}
+                                        <button type="button"
+                                                data-bs-target="#carouselGalerie"
+                                                data-bs-slide-to="{{ forloop.counter0 }}"
+                                                class="{% if forloop.first %}active{% endif %}">
+                                        </button>
+                                    {% endfor %}
+                                </div>
+
+                                <!-- Images -->
+                                <div class="carousel-inner">
+                                    {% for image in histoire.images.all %}
+                                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                            <img src="{{ image.fichier.url }}"
+                                                class="d-block w-100"
+                                                style="height:400px; object-fit:cover;"
+                                                alt="{{ image.titre }}">
+                                            
+                                            {% if image.titre %}
+                                            <div class="carousel-caption d-none d-md-block">
+                                                <h5>{{ image.titre }}</h5>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                                <!-- Boutons navigation -->
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselGalerie" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon"></span>
+                                </button>
+
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselGalerie" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon"></span>
+                                </button>
+
+                            </div>
+                            {% else %}
+                                <p class="text-danger m-5">Aucune image dans cette histoire.</p>
+                            {% endif %}
                         </div>
                     {% endfor %}
 

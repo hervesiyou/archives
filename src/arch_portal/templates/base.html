@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>{% block title %}RICHBOOK – Archives {% endblock %}</title>
+    <title>{% block title %} RICHBOOK – Archives {% endblock %}</title>
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/logo.png' %}">
 
     <!-- Bootstrap 5 + Font Awesome -->
@@ -121,7 +121,7 @@
         }
     </style>
 
-     {% block css %} {% endblock %}
+    {% block css %} {% endblock %}
     <link rel="stylesheet" href="{% static 'css/style.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/core.css' %}" />
@@ -175,14 +175,7 @@
     </style>
 </head>
 
-<body data-url="http://127.0.0.1:8000">
-
-    <!-- Preloader
-    <div class="preloader">
-        <div class="lds-ripple">
-            <div></div><div></div>
-        </div>
-    </div> -->
+<body data-url="{{URL}}"> 
 
     <!-- Barre supérieure fixe -->
     <div class="main-wrapper"> 
@@ -280,7 +273,7 @@
                 </div>
             </div>
 
-            <div class="row" style="margin-top:80px;">                
+            <div class="row" style="margin-top:100px;">                
                 <div class="col-12">
                     
                     <div class="card-body">
@@ -419,18 +412,7 @@
     </div>  
 
     <!-- Footer -->
-    <footer class="bg-white border-top py-4 mt-5">
-        <div class="container text-center text-muted small">
-            <div class="mb-2">
-                <a href="{% url 'index' %}" class="mx-2"><i class="fa-solid fa-info-circle"></i> À propos</a> •
-                <a href="{% url 'faq_index' %}" class="mx-2"><i class="fa-solid fa-circle-question"></i> Aide / FAQ</a> •
-                <a href="{% url 'contact' %}" class="mx-2 text-success"><i class="fa-solid fa-envelope"></i> Contact</a>
-            </div>
-            <div>
-                RICHBOOK © {{ 'now'|date:"Y" }} • <span class="badge bg-success">{{ VERSION|default:"v1.0" }}</span>
-            </div>
-        </div>
-    </footer>
+   
 
     <!-- Scripts -->
          <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
@@ -448,16 +430,13 @@
         document.addEventListener("DOMContentLoaded", () => {
             document.querySelector(".preloader")?.classList.add("d-none");
         });
-    </script>
-
-    
+    </script>   
 
     <script>
         $(".preloader").fadeOut();
     </script> 
 
     <!-- Preloader -->
- 
 
     {% block js %}{% endblock %}
 </body>

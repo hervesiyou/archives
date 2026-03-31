@@ -14,13 +14,14 @@ class Membre(models.Model):
         verbose_name = " Membre"
         verbose_name_plural = "Les Membres"
     
+    description = models.CharField(max_length=1000, null=True, blank=True)
     nomcomplet = models.CharField(max_length=100)
     login = models.CharField(max_length=50)
     pwd = models.CharField(max_length=300)
     email = models.CharField(max_length=50)
     telephone = models.CharField(max_length=50, null=True, blank=True)
     etatvalidation = models.BooleanField(default=0,null=True)
-    dateinscription = models.DateTimeField(null=True)
+    dateinscription = models.DateTimeField(null=True,auto_now_add=True)
     
     generation =  models.CharField(max_length=50, choices=GENERATIONS,blank=True,null=1)
     type =  models.CharField(max_length=50, choices=TYPE_MEMBER_CHOICES,blank=True,null=1)
@@ -29,7 +30,7 @@ class Membre(models.Model):
     datenaissance = models.CharField(max_length=50, null=True)
     lieunaissance = models.CharField(max_length=50, null=True, blank=True)
     residence = models.CharField(max_length=150, null=True, blank=True)
-    etatcivil = models.CharField(max_length=50, choices=ETATCIVIL_CHOICES, null=True)
+    etatcivil = models.CharField(max_length=50, choices=ETATCIVIL_CHOICES, null=True, blank=True)
     nbenfant = models.IntegerField(default=0)
     notabilite = models.CharField(max_length=250, null=True, blank=True)
     education = models.CharField(max_length=250, null=True, blank=True)
@@ -60,7 +61,7 @@ class Membre(models.Model):
         if self.pere != None and self.mere != None:
             if len(self.pere)<3 and len(self.mere)<3:
                 if len(self.nompere.nomcomplet)<3 and len(self.nommere.nomcomplet)<3:
-                    print("merci de choisir les parents")
+                    # print("merci de choisir les parents")
                     raise ValueError("Merci de fournir les parents de ce membre")
 
         super().save(*args, **kwargs)

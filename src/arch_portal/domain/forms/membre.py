@@ -13,6 +13,15 @@ class MembreForm(forms.ModelForm):
     class Meta:
         model = Membre
         exclude = ["etatvalidation","dateinscription","approbateurs","galeries" ]
+        
+        widgets = {
+            'description': forms.Textarea(attrs={
+                'rows': 4,
+                'cols': 50,
+                'class': 'form-control',
+                'placeholder': 'Décrivez le membre...'
+            })
+        }
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -22,6 +31,7 @@ class MembreForm(forms.ModelForm):
             Row(
                 Column('nomcomplet', css_class='col-md-8'),
                 Column('generation', css_class='col-md-4'),
+                Column('description', css_class='col-md-12'),
                 Column('login', css_class='col-md-6'),
                 Column(
                     Field('pwd', type='password', css_class='form-control'),
@@ -62,7 +72,8 @@ class MembreForm(forms.ModelForm):
 class MembreEditForm(forms.ModelForm):
     class Meta:
         model = Membre
-        fields = '__all__'
+        exclude = ["etatvalidation","dateinscription","approbateurs","galeries" ]
+        # fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

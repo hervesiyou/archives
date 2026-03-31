@@ -10,10 +10,12 @@ from arch_portal.domain.forms.membre import MembreForm,UsersLoginForm,UsersSubsc
 from arch_portal.domain.models.membre import Membre
 from arch_portal.domain.models.histoire import MiniHistoire
 
+from arch_portal.domain.models.image import Image
+from django.http import  JsonResponse
   
 from arch_portal.domain.forms.membre import MembreEditForm
 
-from arch_portal.domain.serializers import MembreSerializer
+# from arch_portal.domain.serializers import MembreSerializer
 
 def subscribe(request):
     if request.method == "POST":
@@ -153,6 +155,18 @@ def add_user(request):
 
     return render(request, "usercore/newuser.html", {"form":form})
 
+def upload_image_histoire(request):
+    if request.method == "POST" and request.FILES.get("image"):
+        image = Image.objects.create(
+            fichier=request.FILES["image"],
+            nom=request.POST.get("nom", "")
+        )
+        return JsonResponse({
+            "id": image.id,
+            "url": image.fichier.url
+        })
+    return JsonResponse({"error": "Erreur upload"}, status=400)
+
 
 
 def edit_user(request, id):
@@ -160,12 +174,14 @@ def edit_user(request, id):
 
     if request.method == 'POST':
         form = MembreEditForm(request.POST, request.FILES, instance=membre)
+        
+
         if form.is_valid():
-            form.save()
+            form.save()            
             messages.success(request, "✅ Membre mis à jour avec succès")
             return redirect('show_user', id=membre.id)
         else:
-            messages.error(request, "❌ Veuillez corriger les erreurs")
+            messages.error(request, f"❌ Veuillez corriger les erreurs {form.errors} du formulaire.")
     else:
         form = MembreEditForm(instance=membre)
 
@@ -183,6 +199,9 @@ def add_histoire_membre(request, id):
         titre = request.POST.get("nom", "").strip()
         contenu = request.POST.get("description", "").strip()
         ordre = request.POST.get("ordre", "10")
+
+        #  je recupere les id des image de la minihistoire uploadé
+        images_ids = request.POST.getlist("images_ids[]")
         
         if not titre or not contenu:
             messages.error(request, "Le titre et le contenu sont obligatoires.")
@@ -192,13 +211,15 @@ def add_histoire_membre(request, id):
             except:
                 ordre = 10
                 
-            MiniHistoire.objects.create(
+            histoire = MiniHistoire.objects.create(
                 membre=user,
                 lieu=lieu,
                 nom=titre,
                 description=contenu,
                 ordre=ordre, 
             )
+
+            histoire.images.set(images_ids)
             messages.success(request, "Histoire détaillée ajoutée avec succès !")
             return redirect('show_user', id=user.id)
     
