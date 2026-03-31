@@ -13,7 +13,7 @@
 
         .profile-hero {
             background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.65)),
-url("{% static 'images/user.jpg' %}");            color: white;
+            url("{% static 'images/user.jpg' %}");            color: white;
             padding: 5rem 1rem 4rem;
             border-radius: 0 0 1.5rem 1.5rem;
             margin-bottom: 2.5rem;
@@ -70,6 +70,25 @@ url("{% static 'images/user.jpg' %}");            color: white;
             .profile-avatar { width: 140px; height: 140px; margin-top: -70px; border-width: 5px; }
             .profile-hero { padding: 4rem 1rem 3rem; }
         }
+
+        .accordion-button {
+            border-radius: 12px !important;
+            background: #f8f9fa;
+        }
+
+        .accordion-button:not(.collapsed) {
+            background-color: #e9f7ef;
+            color: var(--richbook-green-dark);
+        }
+
+        .accordion-item {
+            overflow: hidden;
+        }
+
+        .accordion-body {
+            background: #ffffff;
+            border-top: 1px solid #eee;
+        }
     </style>
 {% endblock %}
 
@@ -79,7 +98,15 @@ url("{% static 'images/user.jpg' %}");            color: white;
 
     <!-- En-tête avec photo profil -->
     <div class="profile-hero text-center">
-        <h1 class="fw-bold mb-2">{{ membre.nomcomplet }}</h1>
+        <h1 class="fw-bold mb-2">{{ membre.nomcomplet }}
+        
+        {% if 'ADD_MEMBRE' in request.session.userrights %}
+            
+            <a href="{% url 'edit_membre' membre.id %}" title="Modifier ce membre">
+                <i class="fa fa-edit"></i> 
+            </a>
+        {% endif %}
+        </h1> 
 
         <div aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-center mb-4">
@@ -99,6 +126,7 @@ url("{% static 'images/user.jpg' %}");            color: white;
                     </li>
                 {% endif %}
                 <li class="breadcrumb-item active">{{ membre.nomcomplet }}</li>
+                
             </ol>
         </div>
 
@@ -109,7 +137,7 @@ url("{% static 'images/user.jpg' %}");            color: white;
                  class="profile-avatar mx-auto d-block">
         {% else %}
             <img src="{% static 'images/placeholders/user-avatar.jpg' %}" 
-                 alt="Photo de profil" 
+                 alt="{{ membre.nomcomplet }}" 
                  class="profile-avatar mx-auto d-block">
         {% endif %}
 
@@ -121,7 +149,7 @@ url("{% static 'images/user.jpg' %}");            color: white;
                     {{ fam.nom }}
                 </a>
             {% empty %}
-                <span class="badge bg-secondary">Aucune famille associée</span>
+                <span class="badge bg-secondary">Aucune famille associée à {{ membre.nomcomplet }}</span>
             {% endfor %}
         </div>
     </div>
@@ -131,19 +159,25 @@ url("{% static 'images/user.jpg' %}");            color: white;
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="identite-tab" data-bs-toggle="tab" 
                     data-bs-target="#identite" type="button" role="tab">
-                Identité
+                Son Identité
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="vie-sociale-tab" data-bs-toggle="tab" 
                     data-bs-target="#vie-sociale" type="button" role="tab">
-                Vie Sociale
+               Sa Vie Sociale
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="famille-tab" data-bs-toggle="tab" 
                     data-bs-target="#famille" type="button" role="tab">
-                Famille
+                Sa Famille
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="histoires-tab" data-bs-toggle="tab" 
+                    data-bs-target="#histoires" type="button" role="tab">
+                Son Histoire détaillée <span class="badge bg-success ms-1">    {{ membre.mini_histoire.count }} </span>
             </button>
         </li>
     </ul>
@@ -246,6 +280,60 @@ url("{% static 'images/user.jpg' %}");            color: white;
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="tab-pane fade" id="histoires" role="tabpanel">
+            <h4 class="fw-bold mb-4 text-success">📖 Mini Histoires</h4>
+
+            {% if membre.mini_histoire.all %}
+                <div class="accordion" id="accordionHistoires">
+
+                    {% for histoire in membre.mini_histoire.all|dictsort:"ordre" %}
+                        <div class="accordion-item border-0 shadow-sm mb-3 rounded-3">
+                            
+                            <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                                <button class="accordion-button collapsed fw-semibold" 
+                                        type="button" 
+                                        data-bs-toggle="collapse" 
+                                        data-bs-target="#collapse{{ forloop.counter }}">
+                                    
+                                    {{ histoire.nom }}
+                                    
+                                    {% if histoire.date %}
+                                        <span class="ms-3 badge bg-success">
+                                            {{ histoire.date }}
+                                        </span>
+                                    {% endif %}
+                                </button>
+                            </h2>
+
+                            <div id="collapse{{ forloop.counter }}" 
+                                class="accordion-collapse collapse" 
+                                data-bs-parent="#accordionHistoires">
+                                
+                                <div class="accordion-body">
+
+                                    {% if histoire.lieu %}
+                                        <p class="text-muted mb-2">
+                                            📍 {{ histoire.lieu }}
+                                        </p>
+                                    {% endif %}
+
+                                    <p>
+                                        {{ histoire.description|linebreaks }}
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            {% else %}
+                <div class="alert alert-light border text-muted">
+                    Pas encore d'histoire enregistrée pour {{membre.nomcomplet}}.
+                </div>
+            {% endif %}
         </div>
     </div>
 

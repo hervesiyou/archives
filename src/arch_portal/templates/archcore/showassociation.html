@@ -13,7 +13,9 @@
         <div class="card-body">
         <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a> >
         <a href="{% url 'listcom' %}" class=" "> Communautés </a> >  
+        {% if association.communaute  is not None %}
         <a href="{% url 'show_communaute' association.communaute.id %}" class="text-center"> {{ association.communaute.nom }} </a> >
+        {% endif %}
             Associations
         </div>
     </div>
@@ -30,10 +32,11 @@
                             {% if galerie is not None and galerie.0.id is not None %}
                                 <a class="btn btn-outline-success my-2" href="{% url 'show_galerie' galerie.0.id %}"> Photos de {{ association.nom }} </a>
                             {% endif %}
-
+                            {% if association.communaute  is not None %}
                             <span class="text-muted">
                                 <a  class="btn btn-outline-info my-2" href="{% url 'listassociations' id=association.communaute.id mode=1 %}"> Autres associations</a>
                             </span>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="col-md-6 border-left text-center pt-2">

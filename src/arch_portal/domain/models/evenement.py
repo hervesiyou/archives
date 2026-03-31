@@ -11,7 +11,7 @@ class Evenement(models.Model):
     titre=models.CharField(max_length=200)
     description=models.TextField()
     # likes = models.ManytoMany("EvenementLike", related_name="", null=True, blank=True)
-    communaute=models.ForeignKey(modele.communaute.Communaute,on_delete=models.SET_NULL,null=True)
+    communaute=models.ForeignKey(modele.communaute.Communaute,on_delete=models.SET_NULL,null=True,blank=True,related_name="com_evenement" )
     famille = models.ForeignKey("Famille", on_delete=models.CASCADE, blank=True, null=True, related_name="fam_evenement")
 
     periodicite=models.CharField(max_length=50)

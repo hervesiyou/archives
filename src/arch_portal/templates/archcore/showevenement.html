@@ -14,7 +14,9 @@
             <div class="breadcrumb">
             <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a> >
             <a href="{% url 'listcom' %}" class=" "> Communautés </a> >  
+            {% if evenement.communaute  is not None %}
             <a href="{% url 'show_communaute' evenement.communaute.id %}" class="text-center"> {{ evenement.communaute.nom }} </a> >
+            {% endif %}
                 {{evenement.titre}}
             </div>  
         </div>
@@ -27,11 +29,11 @@
                     <div class="col-md-6">
                         <div class="text-info text-center mt-2"> 
                             <h3 class="mb-2 fw-bold">{{evenement.communaute}}</h3>
-                            
+                            {% if evenement.communaute  is not None %}
                             <div class="text-muted">
                                 <a href="{% url 'listevenements' id=evenement.communaute.id mode=1 %} "> Autres evenements</a>
                             </div>
-                            
+                            {% endif %}
                             <h4>
                             {% comment %} {{ galerie.0.images|pprint}} {% endcomment %}
 

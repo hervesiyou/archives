@@ -1,13 +1,17 @@
 import json
 
-from django.core.serializers import serialize
-from django.shortcuts import redirect, render
+# from django.core.serializers import serialize
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from arch_portal.domain.models.wallet import Wallet
 from arch_portal.domain.exceptions.membre_exception import MembreException
 from arch_portal.use_cases.services.core import compute_sha1
 from arch_portal.domain.forms.membre import MembreForm,UsersLoginForm,UsersSubscribeForm
 from arch_portal.domain.models.membre import Membre
+from arch_portal.domain.models.histoire import MiniHistoire
+
+  
+from arch_portal.domain.forms.membre import MembreEditForm
 
 from arch_portal.domain.serializers import MembreSerializer
 
@@ -131,14 +135,15 @@ def show_user_assoadmin(request):
 
 
 def show_user(request,id):
-    membre = Membre.objects.get(id=id)
+    # membre = Membre.objects.get(id=id)
+    membre = Membre.objects.prefetch_related('mini_histoire').get(id=id)
     return render(request, "usercore/show_user.html", {"membre":membre})
 
 def add_user(request):
 
     if request.method == "POST":
         form = MembreForm(request.POST)
-        print(form.errors)
+        # print(form.errors)
         if form.is_valid():  
             com = form.save() 
             com.save()
@@ -148,3 +153,54 @@ def add_user(request):
 
     return render(request, "usercore/newuser.html", {"form":form})
 
+
+
+def edit_user(request, id):
+    membre = get_object_or_404(Membre, id=id)
+
+    if request.method == 'POST':
+        form = MembreEditForm(request.POST, request.FILES, instance=membre)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "✅ Membre mis à jour avec succès")
+            return redirect('show_user', id=membre.id)
+        else:
+            messages.error(request, "❌ Veuillez corriger les erreurs")
+    else:
+        form = MembreEditForm(instance=membre)
+
+    return render(request, 'usercore/edit_user.html', {
+        'form': form,
+        'membre': membre
+    })
+
+def add_histoire_membre(request, id):
+
+    user = get_object_or_404(Membre, pk=id)   
+    
+    if request.method == "POST":
+        lieu = request.POST.get("lieu", "").strip()
+        titre = request.POST.get("nom", "").strip()
+        contenu = request.POST.get("description", "").strip()
+        ordre = request.POST.get("ordre", "10")
+        
+        if not titre or not contenu:
+            messages.error(request, "Le titre et le contenu sont obligatoires.")
+        else:
+            try:
+                ordre = int(ordre)
+            except:
+                ordre = 10
+                
+            MiniHistoire.objects.create(
+                membre=user,
+                lieu=lieu,
+                nom=titre,
+                description=contenu,
+                ordre=ordre, 
+            )
+            messages.success(request, "Histoire détaillée ajoutée avec succès !")
+            return redirect('show_user', id=user.id)
+    
+    # GET → on ne devrait normalement pas arriver ici car c'est une modal
+    return redirect('show_user', id=id)

@@ -1,16 +1,24 @@
 ## A Verifier
 
 - inserer la famille nkouonchichoue et la famille takoukam
-        - ajouter les librairies
-        - ajouter une page pour le detail de l'histoire de la famille(les pages du livre famillial)
-
-        - ajouter l'image de la librairie
 - connecter la mediatheques des communautés avec google photos et google drive
+- faire l'edition des associations et des evenements
+- l'ajout des galeries ne sauvegarde pas les images   
+partew
+
+- ajouter les images sur les histoires
+- dynamiser les informations de la pages d'accueil
 - ajouter la geographie lors de la creation et l'update d'une communauté
+
 - afficher les erreurs lors des insertions
 - echapper les caracteres speciaux dans les formulaires
 - verifier que els mail sont ok
 
+        - ajouter une page ou histoire detaillée sur une personne
+        - ajouter les librairies
+        - ajouter une page pour le detail de l'histoire de la famille(les pages du livre famillial)
+
+        - ajouter l'image de la librairie
         - ajouter les lieux clés et personnes clés d'une famille et d'une communauté
         - lors de l'inscription cacher les pwd,
         - figer la taille des description et cacher le reste

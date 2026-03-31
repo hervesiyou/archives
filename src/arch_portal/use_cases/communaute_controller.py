@@ -509,7 +509,11 @@ def show_communaute(request, id):
         return redirect("login" )
 
     user = Membre.objects.get(id=userid)
-    galerie = Galerie.objects.get(id=com.id)
+    try:
+        galerie = Galerie.objects.get(id=com.id)
+    except Galerie.DoesNotExist:
+        galerie = None
+        
     appartient=False
     if ( user in com.membres_communaute.all()):
         appartient = True

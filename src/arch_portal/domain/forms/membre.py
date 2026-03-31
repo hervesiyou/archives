@@ -59,6 +59,18 @@ class MembreForm(forms.ModelForm):
             ),
         )
 
+class MembreEditForm(forms.ModelForm):
+    class Meta:
+        model = Membre
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        for field in self.fields.values():
+            field.widget.attrs.update({
+                'class': 'form-control'
+            })
 class UsersLoginForm(forms.ModelForm):
     pwd = forms.CharField(widget=forms.PasswordInput, label="Mot de passe")
     login = forms.CharField( label="Login ou Pseudonyme")

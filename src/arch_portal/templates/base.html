@@ -158,6 +158,19 @@
             max-height:200px !important;
         }
 
+        .error-box .error-body .error-title {
+            font-size: 100px !important;
+            font-weight: 900 !important;
+            line-height: 70px !important;
+        }
+
+        .richbook-box {
+            font-size: 56px !important;
+            font-weight: 900 !important;
+            line-height: 65px !important;
+            text-shadow: -4px -1px 0 #FED, -5px -4px 0 #343A33;
+        }
+
 
     </style>
 </head>
@@ -183,87 +196,87 @@
             <div class="row" style="background-color:white;">                
                 <div class="col-12">
                     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
-    <div class="container-fluid px-3 px-md-4">
+                        <div class="container-fluid px-3 px-md-4">
 
-        <!-- Logo + Toggler -->
-        <a class="navbar-brand d-flex align-items-center" href="{% url 'index' %}">
-            <img src="{% static 'images/logo.png' %}" alt="RICHBOOK" height="42">
-            <span class="ms-2 fw-bold text-success">RICHBOOK</span>
-        </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        {% if request.session.userrights %}
-                {% if 'ADD_COMMUNAUTE' in request.session.userrights %}
-                        <a class="p-2" href="{% url 'add_communaute' %}">
-                            <i class="fa-solid fa-users me-2 text-success"></i> Communauté
-                        </a>
-                        <a class="p-2" href="{% url 'add_galerie' %}">
-                            <i class="fa-solid fa-users me-2 text-success"></i> Galerie
-                        </a>
-                    {% endif %}
-                    {% if  'ADD_EVENEMENT' in request.session.userrights %}
-                        <a class="p-2" href="{% url 'add_evenement' %}">
-                            <i class="fa-solid fa-calendar-plus me-2 text-success"></i> Evenement
-                        </a>
-                    {% endif %}
-                    {% if 'ADD_FAMILLE' in request.session.userrights %}
-                        <a class="p-2" href="{% url 'add_famille' %}">
-                            <i class="fa-solid fa-users me-2 text-success"></i> Famille
-                        </a>
-                    {% endif %}
-                    {% if 'ADD_MEMBRE' in request.session.userrights %}
-                        <a class="p-2" href="{% url 'add_user' %}">
-                            <i class="fa-solid fa-user-plus me-2 text-success"></i> Membre
-                        </a>
-                    {% endif %}
-                    {% if 'ADD_LIBRAIRIE' in request.session.userrights %}
-                        <a class="p-2" href="{% url 'add_librairie' %}">
-                            <i class="fa-solid fa-book me-2 text-success"></i> Librairie
-                        </a>
-                    {% endif %}
-                    {% if 'ADD_ASSOCIATION' in request.session.userrights %}
-                        <a class="p-2" href="{% url 'add_association' %}">
-                            <i class="fa-solid fa-users-rectangle me-2 text-success"></i> Association
-                        </a>
-                    {% endif %}
-        {% endif %}
-
-        <!-- Menu principal -->
-        <div class="collapse navbar-collapse" id="navbarMain">
-            <ul class="navbar-nav ms-auto align-items-center gap-2 gap-lg-3"> 
-               
-
-                <!-- Connexion / Profil -->
-                <li class="nav-item">
-                    {% if not request.session.username %}
-                        <a class="nav-link btn btn-outline-success rounded-pill px-4" href="{% url 'login' %}">
-                            <i class="fa-solid fa-right-to-bracket me-1"></i> Connexion
-                        </a>
-                    {% else %}
-                        <div class="d-flex align-items-center gap-3">
-                            <a href="{% url 'home' %}" class="text-success fw-bold text-decoration-none">
-                                <i class="fa-solid fa-user-circle me-1"></i>{{ request.session.username }}
+                            <!-- Logo + Toggler -->
+                            <a class="navbar-brand d-flex align-items-center" href="{% url 'index' %}">
+                                <img src="{% static 'images/logo.png' %}" alt="RICHBOOK" height="42">
+                                <span class="ms-2 fw-bold text-success">RICHBOOK</span>
                             </a>
-                            <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger rounded-pill px-3">
-                                Déconnexion
-                            </a>
+
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+
+                            {% if request.session.userrights %}
+                                    {% if 'ADD_COMMUNAUTE' in request.session.userrights %}
+                                            <a class="p-2" href="{% url 'add_communaute' %}">
+                                                <i class="fa-solid fa-users me-2 text-success"></i> Communauté
+                                            </a>
+                                            <a class="p-2" href="{% url 'add_galerie' %}">
+                                                <i class="fa-solid fa-users me-2 text-success"></i> Galerie
+                                            </a>
+                                        {% endif %}
+                                        {% if  'ADD_EVENEMENT' in request.session.userrights %}
+                                            <a class="p-2" href="{% url 'add_evenement' %}">
+                                                <i class="fa-solid fa-calendar-plus me-2 text-success"></i> Evenement
+                                            </a>
+                                        {% endif %}
+                                        {% if 'ADD_FAMILLE' in request.session.userrights %}
+                                            <a class="p-2" href="{% url 'add_famille' %}">
+                                                <i class="fa-solid fa-users me-2 text-success"></i> Famille
+                                            </a>
+                                        {% endif %}
+                                        {% if 'ADD_MEMBRE' in request.session.userrights %}
+                                            <a class="p-2" href="{% url 'add_user' %}">
+                                                <i class="fa-solid fa-user-plus me-2 text-success"></i> Membre
+                                            </a>
+                                        {% endif %}
+                                        {% if 'ADD_LIBRAIRIE' in request.session.userrights %}
+                                            <a class="p-2" href="{% url 'add_librairie' %}">
+                                                <i class="fa-solid fa-book me-2 text-success"></i> Librairie
+                                            </a>
+                                        {% endif %}
+                                        {% if 'ADD_ASSOCIATION' in request.session.userrights %}
+                                            <a class="p-2" href="{% url 'add_association' %}">
+                                                <i class="fa-solid fa-users-rectangle me-2 text-success"></i> Association
+                                            </a>
+                                        {% endif %}
+                            {% endif %}
+
+                            <!-- Menu principal -->
+                            <div class="collapse navbar-collapse" id="navbarMain">
+                                <ul class="navbar-nav ms-auto align-items-center gap-2 gap-lg-3"> 
+                                
+
+                                    <!-- Connexion / Profil -->
+                                    <li class="nav-item">
+                                        {% if not request.session.username %}
+                                            <a class="nav-link btn btn-outline-success rounded-pill px-4" href="{% url 'login' %}">
+                                                <i class="fa-solid fa-right-to-bracket me-1"></i> Connexion
+                                            </a>
+                                        {% else %}
+                                            <div class="d-flex align-items-center gap-3">
+                                                <a href="{% url 'home' %}" class="text-success fw-bold text-decoration-none">
+                                                    <i class="fa-solid fa-user-circle me-1"></i>{{ request.session.username }}
+                                                </a>
+                                                <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                                                    Déconnexion
+                                                </a>
+                                            </div>
+                                        {% endif %}
+                                    </li>
+
+                                    <!-- Recharger compte -->
+                                    <li class="nav-item">
+                                        <a class="nav-link text-warning fw-medium" href="{% url 'home_abonnement' %}">
+                                            <i class="fa-solid fa-coins me-1"></i> Recharger
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                    {% endif %}
-                </li>
-
-                <!-- Recharger compte -->
-                <li class="nav-item">
-                    <a class="nav-link text-warning fw-medium" href="{% url 'home_abonnement' %}">
-                        <i class="fa-solid fa-coins me-1"></i> Recharger
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+                    </nav>
                 </div>
             </div>
 
@@ -360,10 +373,8 @@
                     </div>
                      
                 </div>
-            </div>
-            
-           
-            <div  >
+            </div> 
+
                 {% if messages %}
                     <header class="messages">
                         {% for message in messages %}
@@ -375,7 +386,7 @@
                 {% endif %}
                 <div class="content">
                     {% block content %}
-                    <div class="error-box">
+                    {% comment %} <div class="error-box">
                         <div class="error-body text-center">
 
                             <img src="{% static 'images/logo.png' %}" alt="logo" class="img-fluid" style="width:150px; height:150px;" />
@@ -385,10 +396,12 @@
                             <p class="text-muted mt-4 mb-4">Comprendre pour impacter</p>
                             <a href="{% url 'login' %}" class="btn  btn btn-outline-success btn-rounded waves-effect waves-light mb-5 text-success">Impacter pour illuminer</a> 
                         </div>
-                    </div>
+                    </div> {% endcomment %}
+                    {%  include "includes/main.html" %}
                     {% endblock %}
                 </div>
-            </div>
+
+            
 
         </div>
         <!-- <div class="row"> 

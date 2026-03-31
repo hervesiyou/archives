@@ -21,9 +21,9 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card p-5 printableArea"> 
-                <h3> &nbsp;<b class="text-danger text-capitalize">{{famille.description}} </b></h3>
+                <h3> &nbsp;<b class="text-danger text-capitalize"> {{famille.description}} </b></h3>
                 <p class="text-muted ms-1">{{famille.chef.nomcomplet}}
-                    <br> {{famille.description}}  
+                <br> {{famille.description}}  
                
             </div>
         </div>
@@ -32,13 +32,8 @@
    
     <div class="row">
         <div class="col-md-12 p-5">
-            <h1 class="text-success"> Inscription d'un nouveau membre </h1>
-            {% comment %} 
-            
-                {% endcomment %}
-        {% comment %} </div> {% endcomment %}
+            <h1 class="text-success"> Inscription d'un nouveau membre </h1> 
 
-        {% comment %} <div class="col-md-12 p-5"> {% endcomment %}
             <div class="table-responsive mt-5" >
                 <form method="post">
                     {% csrf_token %}
@@ -50,4 +45,7 @@
     </div>
 
 </div>
+
+
+
 {% endblock content %}

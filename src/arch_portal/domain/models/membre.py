@@ -18,7 +18,7 @@ class Membre(models.Model):
     login = models.CharField(max_length=50)
     pwd = models.CharField(max_length=300)
     email = models.CharField(max_length=50)
-    telephone = models.CharField(max_length=50)
+    telephone = models.CharField(max_length=50, null=True, blank=True)
     etatvalidation = models.BooleanField(default=0,null=True)
     dateinscription = models.DateTimeField(null=True)
     
@@ -36,7 +36,7 @@ class Membre(models.Model):
     diplomes = models.CharField(max_length=250, null=True, blank=True)
     profession = models.CharField(max_length=150, null=True, blank=True)
     
-    messages = models.ManyToManyField(Message,related_name="membres_message", null=True, blank=True)
+    messages = models.ManyToManyField(Message,related_name="membres_message", blank=True)
     familles = models.ManyToManyField(Famille,related_name="membres_famille", null=True)
     associations = models.ManyToManyField(Association, related_name="membres_association", null=True, blank=True)
     images = models.ManyToManyField(Image, null=True, blank=True)
@@ -55,10 +55,11 @@ class Membre(models.Model):
 
     role = models.ManyToManyField(  Role, null=True, blank=True )
 
+   
     def save(self, *args, **kwargs):
         if self.pere != None and self.mere != None:
             if len(self.pere)<3 and len(self.mere)<3:
-                if len(self.nompere.nomcomplet)<3 and len(self.nommere.nomocomplet)<3:
+                if len(self.nompere.nomcomplet)<3 and len(self.nommere.nomcomplet)<3:
                     print("merci de choisir les parents")
                     raise ValueError("Merci de fournir les parents de ce membre")
 
