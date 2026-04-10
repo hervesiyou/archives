@@ -194,6 +194,7 @@ def admin_accept_invitation(request,token):
     
     membre = Membre.objects.filter(email=inv.email).first()
     inv.famille.administrateurs.add(membre)
+    inv.famille.membres_famille.add(membre)
     inv.emetteur.familles.add(inv.famille)
     inv.datevalidation = datetime.now()
     inv.etat =f" Validé le {0}".format(inv.datevalidation)
