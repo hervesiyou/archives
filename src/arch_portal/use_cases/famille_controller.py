@@ -5,6 +5,7 @@ from arch_portal.domain.forms.image import ImageForm
 from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.galerie import Galerie
 from arch_portal.domain.models.famille import Famille
+# from arch_portal.domain.models.salleattentefamille import SalleAttenteFamille
 from arch_portal.domain.models.pagefamille import Pagefamille
 from arch_portal.domain.models.role import Role
 from arch_portal.domain.models.membre import Membre
@@ -55,7 +56,16 @@ def add_page(request, id):
 
 def edit_famille(request, id):
     
+    if not request.session.get("userid","") :
+        return redirect("login" )
+    
     famille = get_object_or_404(Famille, id=id)
+    admins = famille.administrateurs.all()
+    # si le user connecté n'est pas administrateur
+    if not (famille.administrateurs.filter(id=request.session.get("userid")).exists()):
+        messages.error(request, "Vous n'avez pas le droit de modifier cette famille.")
+        return redirect('show_famille', id=famille.id)
+    
     image_instance = famille.image if hasattr(famille, 'image') else None
 
     if request.method == 'POST':
@@ -65,10 +75,11 @@ def edit_famille(request, id):
         if form.is_valid() and image_form.is_valid():
             famille = form.save()
 
-            if( image_form.has_changed() or image_form.cleaned_data.get("fichier")):
-                image = image_form.save(commit=False)
-                famille.image =  image
-                image.save()            
+            if( image_form.cleaned_data.get("fichier") != None and len(image_form.cleaned_data.get('fichier')) >0 ):
+                if image_form.has_changed() :
+                    image = image_form.save(commit=False)
+                    famille.image =  image
+                    image.save()            
  
             messages.success(request, "Famille et images modifiées avec succès.")
             return redirect('show_famille', id=id)
@@ -80,7 +91,7 @@ def edit_famille(request, id):
         form = FamilleForm(instance=famille)
         image_form = ImageForm(instance=image_instance)
 
-    return render(request, 'famille/edit_famille.html', {'famille': famille, 'form': form , 'image_form': image_form,})
+    return render(request, 'famille/edit_famille.html', {'famille': famille, 'administrateurs':len(admins), 'admins':admins, 'form': form , 'image_form': image_form,})
 
 def famille_generations(request, famille_id):
 
@@ -242,12 +253,22 @@ def add_admin_fam(request):
 
 
 def add_famille(request):
-    
+    # celui qui cree une famille est son administrateur par defaut        
     if request.method == "POST":
         form = FamilleForm(request.POST)
         if form.is_valid():  
+
+            if not request.session.get("userid","") :
+                return redirect("login" )
+
             com = form.save() 
+
+            userid = request.session.get("userid","")
+            user = Membre.objects.get(id=userid)
+            com.administrateurs.add(user)
+            # print(user.get_rights())
             com.save()
+
             return redirect("show_famille",com.id )
     else:
         form = FamilleForm()

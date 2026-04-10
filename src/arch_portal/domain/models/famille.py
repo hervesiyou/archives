@@ -12,7 +12,7 @@ class Famille(models.Model):
     
     db_table = "familles"
     nom = models.CharField(max_length=150)
-    publique = models.BooleanField(default=True)
+    publique = models.BooleanField(default=False)
     description = models.TextField()
     histoire = models.TextField( null=True, blank=True)
     origine = models.TextField(  null=True, blank=True)
@@ -47,13 +47,13 @@ class Famille(models.Model):
 
     def appartient(self, userid):
         
-        member = mod.Membre.objects.get(id=userid)
+        member = mod.Membre.objects.filter(id=userid)
+        # print( self.membres_famille.all() , member, userid, (member in self.membres_famille.all()) )
         if  member :
-            if( member in self.membres_famille.all() ):
-                return True 
-            else :
-                return False 
-        return False
+            return  member in self.membres_famille.all()             
+        else :
+            return False 
+        # return False
 
     def get_sous_familles(self):
         return mod.Famille.objects.filter(famille_mere=self.id)

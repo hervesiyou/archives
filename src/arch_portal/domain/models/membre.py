@@ -78,5 +78,29 @@ class Membre(models.Model):
     def get_familles(self):
         # return self.librairies.all().first().nom
         return [lib.nom for lib in self.familles.all()]
+    
+    def appartient_a_famille(self, famille_or_id):
+        """Vérifie si le membre appartient à une famille (objet ou ID)"""
+        if famille_or_id is None:
+            return False
+        if isinstance(famille_or_id, int):
+            return self.familles.filter(id=famille_or_id).exists()
+        return self.familles.filter(id=famille_or_id.id).exists()
+
+    def appartient_a_communaute(self, com_or_id):
+        """Vérifie si le membre appartient à une Communaute (objet ou ID)"""
+        if com_or_id is None:
+            return False
+        if isinstance(com_or_id, int):
+            return self.communautes.filter(id=com_or_id).exists()
+        return self.communautes.filter(id=com_or_id.id).exists()
+    
+    def appartient_a_association(self, ass_or_id):
+        """Vérifie si le membre appartient à une Association (objet ou ID)"""
+        if ass_or_id is None:
+            return False
+        if isinstance(ass_or_id, int):
+            return self.associations.filter(id=ass_or_id).exists()
+        return self.associations.filter(id=ass_or_id.id).exists()
 
 

@@ -9,7 +9,6 @@
 
     <title>{% block title %} RICHBOOK – Archives {% endblock %}</title>
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/logo.png' %}">
-
     <!-- Bootstrap 5 + Font Awesome -->
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
@@ -19,9 +18,29 @@
             --richbook-green: #198754;
             --richbook-green-dark: #146c43;
             --richbook-gray: #6c757d;
+        
+            --gold:     #A8782A;
+            --gold-lt:  #C9A84C;
+            --gold-bg:  rgba(168,120,42,0.08);
+            --bg:       #FDFAF5;
+            --mid:      #F4EFE6;
+            --card-bg:  #FFFFFF;
+            --text:     #1A1410;
+            --muted:    #7A6F64;
+            --border:   rgba(168,120,42,0.18);
         }
 
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
         body {
+            /* background: var(--bg);*/
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 300;
+            overflow-x: hidden;
+            
             background-color: #f8f9fa;
             font-family: 'Segoe UI', system-ui, sans-serif;
         }
@@ -128,7 +147,6 @@
     <link rel="stylesheet" href="{% static 'css/sweetalert.css' %}" />
     <link rel="stylesheet" href="{% static 'css/toastr.min.css' %}" />
     <link rel="stylesheet" href="{% static 'fa/css/all.min.css' %}" />
- 
 
     <style>
 
@@ -171,7 +189,29 @@
             text-shadow: -4px -1px 0 #FED, -5px -4px 0 #343A33;
         }
 
-
+         footer {
+      background: var(--mid);
+      border-top: 1px solid var(--border);
+      padding: 3rem 0 1.5rem;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 700; color: var(--gold); letter-spacing: .1em;
+    }
+    .footer-tagline { font-size: .8rem; color: var(--muted); margin-top: .3rem; }
+    .footer-links { list-style: none; padding: 0; }
+    .footer-links li { margin-bottom: .5rem; }
+    .footer-links a { font-size: .82rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-head { font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+    .footer-copy { font-size: .75rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 2.5rem; }
+    .version-badge {
+      font-size: .7rem; color: var(--muted); border: 1px solid var(--border);
+      padding: .15rem .5rem; letter-spacing: .08em;
+    }
+    .bg-white0{
+        background-color: var(--mid);
+    }
     </style>
 </head>
 
@@ -188,10 +228,9 @@
             
             <div class="row" style="background-color:white;">                
                 <div class="col-12">
-                    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-white0 shadow-sm fixed-top">
                         <div class="container-fluid px-3 px-md-4">
-
-                            <!-- Logo + Toggler -->
+                            
                             <a class="navbar-brand d-flex align-items-center" href="{% url 'index' %}">
                                 <img src="{% static 'images/logo.png' %}" alt="RICHBOOK" height="42">
                                 <span class="ms-2 fw-bold text-success">RICHBOOK</span>
@@ -200,73 +239,73 @@
                             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
                                 <span class="navbar-toggler-icon"></span>
                             </button>
-
-                            {% if request.session.userrights %}
-                                    {% if 'ADD_COMMUNAUTE' in request.session.userrights %}
-                                            <a class="p-2" href="{% url 'add_communaute' %}">
+                            <div class="row">
+                                <div class="col-8">
+                                    {% if request.session.userrights %}
+                                    <div class="row">
+                                        {% if 'ADD_COMMUNAUTE' in request.session.userrights %}
+                                            <a class="p-2 col-1" href="{% url 'add_communaute' %}">
                                                 <i class="fa-solid fa-users me-2 text-success"></i> Communauté
                                             </a>
-                                            <a class="p-2" href="{% url 'add_galerie' %}">
+                                            <a class="p-2 col-1" href="{% url 'add_galerie' %}">
                                                 <i class="fa-solid fa-users me-2 text-success"></i> Galerie
                                             </a>
                                         {% endif %}
                                         {% if  'ADD_EVENEMENT' in request.session.userrights %}
-                                            <a class="p-2" href="{% url 'add_evenement' %}">
+                                            <a class="p-2 col-1" href="{% url 'add_evenement' %}">
                                                 <i class="fa-solid fa-calendar-plus me-2 text-success"></i> Evenement
                                             </a>
                                         {% endif %}
                                         {% if 'ADD_FAMILLE' in request.session.userrights %}
-                                            <a class="p-2" href="{% url 'add_famille' %}">
+                                            <a class="p-2 col-1" href="{% url 'add_famille' %}">
                                                 <i class="fa-solid fa-users me-2 text-success"></i> Famille
                                             </a>
                                         {% endif %}
                                         {% if 'ADD_MEMBRE' in request.session.userrights %}
-                                            <a class="p-2" href="{% url 'add_user' %}">
+                                            <a class="p-2 col-1" href="{% url 'add_user' %}">
                                                 <i class="fa-solid fa-user-plus me-2 text-success"></i> Membre
                                             </a>
                                         {% endif %}
                                         {% if 'ADD_LIBRAIRIE' in request.session.userrights %}
-                                            <a class="p-2" href="{% url 'add_librairie' %}">
+                                            <a class="p-2 col-1" href="{% url 'add_librairie' %}">
                                                 <i class="fa-solid fa-book me-2 text-success"></i> Librairie
                                             </a>
                                         {% endif %}
                                         {% if 'ADD_ASSOCIATION' in request.session.userrights %}
-                                            <a class="p-2" href="{% url 'add_association' %}">
+                                            <a class="p-2 col-1" href="{% url 'add_association' %}">
                                                 <i class="fa-solid fa-users-rectangle me-2 text-success"></i> Association
                                             </a>
                                         {% endif %}
-                            {% endif %}
-
-                            <!-- Menu principal -->
-                            <div class="collapse navbar-collapse" id="navbarMain">
-                                <ul class="navbar-nav ms-auto align-items-center gap-2 gap-lg-3"> 
-                                
-
-                                    <!-- Connexion / Profil -->
-                                    <li class="nav-item">
-                                        {% if not request.session.username %}
-                                            <a class="nav-link btn btn-outline-success rounded-pill px-4" href="{% url 'login' %}">
-                                                <i class="fa-solid fa-right-to-bracket me-1"></i> Connexion
-                                            </a>
-                                        {% else %}
-                                            <div class="d-flex align-items-center gap-3">
-                                                <a href="{% url 'home' %}" class="text-success fw-bold text-decoration-none">
-                                                    <i class="fa-solid fa-user-circle me-1"></i>{{ request.session.username }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-3">
+                                    <div class="collapse navbar-collapse" id="navbarMain">
+                                        <ul class="navbar-nav ms-auto align-items-center gap-2 gap-lg-3"> 
+                                            <li class="nav-item">
+                                                {% if not request.session.username %}
+                                                    <a class="nav-link btn btn-outline-success rounded-pill px-4" href="{% url 'login' %}">
+                                                        <i class="fa fa-right-to-bracket "></i> Connexion 
+                                                    </a>
+                                                {% else %}
+                                                    <div class="d-flex align-items-center gap-3">
+                                                        <a href="{% url 'home' %}" class="text-success fw-bold text-decoration-none">
+                                                            <i class="fa-solid fa-user-circle me-1"></i>{{ request.session.username }}
+                                                        </a>
+                                                        <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                                                            Déconnexion
+                                                        </a>
+                                                    </div>
+                                                {% endif %}
+                                            </li> 
+                                            <li class="nav-item">
+                                                <a class="nav-link text-warning fw-medium" href="{% url 'home_abonnement' %}">
+                                                    <i class="fa-solid fa-coins me-1"></i> Recharger
                                                 </a>
-                                                <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger rounded-pill px-3">
-                                                    Déconnexion
-                                                </a>
-                                            </div>
-                                        {% endif %}
-                                    </li>
-
-                                    <!-- Recharger compte -->
-                                    <li class="nav-item">
-                                        <a class="nav-link text-warning fw-medium" href="{% url 'home_abonnement' %}">
-                                            <i class="fa-solid fa-coins me-1"></i> Recharger
-                                        </a>
-                                    </li>
-                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </nav>
@@ -326,8 +365,51 @@
                                 
                             </div>
                         </div>  -->
+
+                        <div class="row g-3 mt-2">
+
+                            <div class="col-4 col-lg-4">
+                                <a href="{% url 'listcom' %}" class="text-decoration-none">
+                                    <div class="card card-hover text-center p-3 border-0 shadow-sm h-100" style="border-radius: 16px;">
+                                        <div class="mb-2">
+                                            <span style="background:#28a745; border-radius:50%; width:60px; height:60px; display:inline-flex; align-items:center; justify-content:center;">
+                                                <i class="fa fa-archive fa-2x text-white"></i>
+                                            </span>
+                                        </div>
+                                        <h6 class="text-uppercase fw-bold text-success" style="font-size:11px;">Archives Communautaires</h6>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-4 col-lg-4">
+                                <a href="{% url 'listlibs' %}" class="text-decoration-none">
+                                    <div class="card card-hover text-center p-3 border-0 shadow-sm h-100" style="border-radius: 16px;">
+                                        <div class="mb-2">
+                                            <span style="background:#dc3545; border-radius:50%; width:60px; height:60px; display:inline-flex; align-items:center; justify-content:center;">
+                                                <i class="fa fa-book fa-2x text-white"></i>
+                                            </span>
+                                        </div>
+                                        <h6 class="text-uppercase fw-bold text-danger" style="font-size:11px;">Librairies</h6>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-4 col-lg-4">
+                                <a href="{% url 'listmarches' %}" class="text-decoration-none">
+                                    <div class="card card-hover text-center p-3 border-0 shadow-sm h-100" style="border-radius: 16px;">
+                                        <div class="mb-2">
+                                            <span style="background:#ffc107; border-radius:50%; width:60px; height:60px; display:inline-flex; align-items:center; justify-content:center;">
+                                                <i class="fa fa-shopping-basket fa-2x text-white"></i>
+                                            </span>
+                                        </div>
+                                        <h6 class="text-uppercase fw-bold text-warning" style="font-size:11px;">Nos Marchés</h6>
+                                    </div>
+                                </a>
+                            </div>
+
+                        </div>
                         
-                        <div class="row"> 
+                        {% comment %} <div class="row"> 
                             <div class="col-md-4 col-lg-4 col-xlg-4">
                                 <div class="card card-hover">
                                     <div class="box bg-success text-center">
@@ -339,7 +421,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Column -->
+                        
                             <div class="col-md-4 col-lg-4 col-xlg-4">
                                 <div class="card card-hover">
                                     <div class="box bg-danger text-center">
@@ -362,7 +444,7 @@
                                 </div>
                             </div>
                             
-                        </div>
+                        </div> {% endcomment %}
                     </div>
                      
                 </div>
@@ -393,9 +475,6 @@
                     {%  include "includes/main.html" %}
                     {% endblock %}
                 </div>
-
-            
-
         </div>
         <!-- <div class="row"> 
             <div class="col-md-6 col-lg-4 col-xlg-4"></div>
@@ -407,15 +486,59 @@
 
             </div>
         </div> -->
+    </div> 
+    <footer class="mt-5">
+        <div class="container">
+            <div class="row gy-4">
+            <div class="col-lg-4">
+                <a class="navbar-brand d-flex align-items-center" href="{% url 'index' %}"><div class="footer-logo">RICHBOOK</div></a>
+                <div class="footer-tagline footer-head">Archives · Librairies · Marchés</div>
+                <p class="mt-3" style="font-size:.8rem; color:var(--muted); line-height:1.7;">Votre passerelle vers la mémoire collective et le savoir numérique africain.</p>
+            </div>
+            <div class="col-6 col-lg-2">
+                <div class="footer-head">Navigation</div>
+                <ul class="footer-links">
+                <li><a href="https://richbook.net/lcom">Communautés</a></li>
+                <li><a href="https://richbook.net/libs">Librairies</a></li>
+                <li><a href="https://richbook.net/alm">Marchés</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-lg-2">
+                <div class="footer-head">Compte</div>
+                <ul class="footer-links">
+                <li><a href="https://richbook.net/u/login">Connexion</a></li>
+                <li><a href="https://richbook.net/u/abo">Recharger</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-lg-2">
+                <div class="footer-head">Support</div>
+                <ul class="footer-links">
+                <li><a href="{% url 'tarifs' %}">Nos Tarifs</a></li>
+                <li><a href="{% url 'temoignages' %}">Temoignages</a></li>
+                <li><a href="https://richbook.net/faqi">FAQ</a></li>
+                <li><a href="https://richbook.net/cont">Contact</a></li>
+                </ul>
+            </div>
+            </div>
+            <div class="footer-copy d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <span>© RICHBOOK  {{ 'now'|date:"Y" }} — Tous droits réservés.</span>
+            <span class="version-badge">v 1.0.1</span>
+            </div>
+        </div>
 
-
-    </div>  
-
-    <!-- Footer -->
-   
-
-    <!-- Scripts -->
-         <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+        <div class=" border-top py-4 mt-5">
+            <div class="  text-center text-muted  ">
+                <div class="mb-2">
+                    <a href="{% url 'index' %}" class="mx-2"><i class="fa-solid fa-info-circle"></i> À propos</a> •
+                    <a href="{% url 'faq_index' %}" class="mx-2"><i class="fa-solid fa-circle-question"></i> Aide / FAQ</a> •
+                    <a href="{% url 'contact' %}" class="mx-2 text-success"><i class="fa-solid fa-envelope"></i> Contact</a>
+                </div>
+                {% comment %} <div>
+                    • <span class="badge bg-success">{{ VERSION|default:"v1.0" }}</span>
+                </div> {% endcomment %}
+            </div>
+        </div>
+    </footer>
 
      <script type="text/javascript" src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script> 
      
@@ -425,8 +548,7 @@
     <script src="{% static 'js/core.js' %}"></script>
     <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 
-    <script>
-        // Fin du preloader
+    <script> 
         document.addEventListener("DOMContentLoaded", () => {
             document.querySelector(".preloader")?.classList.add("d-none");
         });
@@ -434,9 +556,7 @@
 
     <script>
         $(".preloader").fadeOut();
-    </script> 
-
-    <!-- Preloader -->
+    </script>  
 
     {% block js %}{% endblock %}
 </body>

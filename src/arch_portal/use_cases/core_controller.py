@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect 
+from django.shortcuts import render, redirect ,get_object_or_404
 from django.conf import settings
 from arch_portal.domain.exceptions.membre_exception import MembreException
 from arch_portal.domain.models.salleattentefamille import SalleAttenteFamille
@@ -6,8 +6,11 @@ from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.famille import Famille
 from arch_portal.domain.models.contact import Contact
 from arch_portal.domain.models.membre import Membre
+from arch_portal.domain.models.livre import Livre
 from arch_portal.domain.models.image import Image
 from arch_portal.domain.models.message import Message
+from arch_portal.domain.models.marche import Marche
+from arch_portal.domain.models.invitationadminfamille import InvitationAdminFamille
 from arch_portal.domain.models.association import Association
 from arch_portal.domain.models.librairie import Librairie
 from arch_portal.domain.models.librairiemessage import LibrairieMessage
@@ -21,12 +24,92 @@ from arch_portal.use_cases.services.core import send_email
 from django.http import HttpResponseForbidden, JsonResponse
 from datetime import date, datetime
 from django.contrib import messages
+from arch_portal.use_cases.services.core import generate_token, send_invitation_adminfamille_mail
 
+import threading
 
+def temoignages(request): 
+    testimonials = [ 
+        {
+        'name': "Dr. Marie-Claire Fotso",
+        'location': "Yaoundé, Cameroun",
+        'avatar': "images/users/f4.png", 
+        'quote': "Richbook m’a permis de redécouvrir l’histoire complète de ma chefferie Bameka. C’est bien plus qu’une plateforme, c’est un pont entre nos racines et l’avenir."
+      },
+      {
+        'name': "Jean-Pierre Nguetchueng",
+        'location': "Douala, Cameroun",
+        'avatar': "images/users/h3.png",
+        'quote': "Grâce à la librairie digitale, j’ai pu former toute mon équipe au marketing digital sans dépenser une fortune. Le contenu est de très haute qualité."
+      },
+      {
+        'name': "Aïcha Djomo",
+        'location': "Paris, France (Diaspora)",
+        'avatar': "images/users/h4.png",
+        'quote': "Enfin un espace qui valorise notre patrimoine bamiléké tout en nous donnant des outils concrets pour réussir. Je me sens fière et outillée."
+      },
+      {
+        'name': "Chef Honoré Tchoupo",
+        'location': "Bandjoun",
+        'avatar': "images/users/h2.png",
+        'quote': "Richbook archive dignement notre histoire. Mes enfants et petits-enfants peuvent maintenant apprendre notre passé sans voyager."
+      },
+      {
+        'name': "Stéphane Mbal",
+        'location': "Bafoussam",
+        'avatar': "images/users/7.jpg",
+        'quote': "Les livres sur le hacking éthique et la cybersécurité m’ont ouvert les yeux. Je recommande fortement à tous les jeunes camerounais."
+      },
+      {
+        'name': "Fatou Bakary",
+        'location': "Yaoundé",
+        'avatar': "images/users/h1.png",
+        'quote': "Le slider des archives communautaires est magnifique. J’ai passé des heures à découvrir des quartiers et chefferies que je ne connaissais pas."
+      },
+      {
+        'name': "Olivier Kemajou",
+        'location': "Montréal, Canada",
+        'avatar': "images/users/f3.png",
+        'quote': "En tant que membre de la diaspora, Richbook me reconnecte à mes origines tout en m’aidant à développer mes compétences professionnelles."
+      },
+      {
+        'name': "Pr. Élisabeth Wambo",
+        'location': "Dschang",
+        'avatar': "images/users/f2.png",
+        'quote': "Une initiative remarquable qui allie préservation du patrimoine et développement personnel. Bravo à l’équipe !"
+      },
+      {
+        'name': "Armel Takougang",
+        'location': "Buea",
+        'avatar': "images/users/f1.png",
+        'quote': "J’ai trouvé dans la section Budo Masters des connaissances qui m’ont aidé à progresser en arts martiaux avec une vraie dimension culturelle."
+      },
+      {
+        'name': "Sophie Nkoumou",
+        'location': "Berlin, Allemagne",
+        'avatar': "images/users/f5.png",
+        'quote': "Richbook est devenu mon rituel du dimanche. Je lis, j’apprends, je m’inspire. Merci pour ce beau projet panafricain."
+      }
+    ]
 
+    return render(request,"includes/temoignages.html", { "temoignages" : testimonials})
 
+ 
 def index(request): 
-    return render(request, "base.html" )
+    coms = Communaute.objects.all()
+    livres = Livre.objects.all()
+    librairies = Librairie.objects.all()
+    marches = Marche.objects.all()
+    membres = Membre.objects.all()
+
+    return render(request, "base.html",
+        {
+            "nbcommunautes" : len(coms),
+            "nblivres": len(livres),
+            "nblibrairies" : len(librairies),
+            "nbmarches": len(marches),
+            "nbmembres": len(membres),
+        } )
 
 def contact(request): 
 
@@ -97,6 +180,90 @@ def show_asso_salle(request,id):
     else:
         return redirect("login")
 
+def admin_accept_invitation(request,token):
+    
+    inv = InvitationAdminFamille.objects.filter(token=token).first()
+
+    if not inv :
+        messages.error(request, "Cette invitation n'existe pas ou a expiré.")
+        return redirect('index')
+    
+    if hasattr(inv, 'etat') and inv.etat and "Validé" in str(inv.etat):
+        messages.warning(request, "Cette invitation a déjà été acceptée.")
+        return redirect('show_famille', id=inv.famille.id)
+    
+    membre = Membre.objects.filter(email=inv.email).first()
+    inv.famille.administrateurs.add(membre)
+    inv.emetteur.familles.add(inv.famille)
+    inv.datevalidation = datetime.now()
+    inv.etat =f" Validé le {0}".format(inv.datevalidation)
+    # inv.famille.save()
+    # inv.emetteur.save()
+    messages.success(request,f" Bravo, vous avez accepté l'invitation de  { inv.nomcomplet} à administrer { inv.famille.nom }  !")
+
+    return redirect('show_famille', id=inv.famille.id)
+
+
+def admin_create(request,id):
+
+    famille = get_object_or_404(Famille,pk=id)
+    userid = request.session.get("userid","") 
+    membre = get_object_or_404(Membre,pk=userid)
+
+    if not(membre in famille.administrateurs.all()):
+        messages.danger(request,f" Desolé, vous n'avez pas le droit d'administrer { famille.nom }  !")
+    else:
+        if request.method == "POST":  
+
+            if userid :
+                
+                nom = request.POST.get('nom')
+                email = request.POST.get('email')
+                message = request.POST.get('message')
+
+                if( InvitationAdminFamille.objects.filter(nomcomplet=nom, emetteur=membre,famille=famille).exists()):
+                    messages.error(request,f" Desolé, vous avez déjà invité  { nom} à administrer { famille.nom }  !")
+                    return redirect("edit_famille", id=famille.id )
+                
+                # je genere le token et je cree l'invitaition 
+                token = generate_token(nom)
+
+                inv = InvitationAdminFamille(
+                    nomcomplet = nom,
+                    famille=famille,
+                    emetteur = membre,
+                    email = email,
+                    message= message,
+                    token=token.replace(" ", ""),
+                )
+
+                # send_invitation_adminfamille_mail(
+                #     email=email,
+                #     token=token,
+                #     nomfamille=famille.nom, 
+                #     emnom=membre.nomcomplet,
+                #     nom=nom,
+                #     message=message
+                # )
+
+                thread = threading.Thread(
+                    target=send_invitation_adminfamille_mail, 
+                    args=(email, token, famille.nom, membre.nomcomplet,nom,message)
+                )
+                thread.daemon = True
+                thread.start()
+                
+                inv.save()
+                messages.info(request,f" Bravo, vous avez invité  { nom} à administrer { famille.nom }  !")
+
+            else:
+                messages.danger(request,f" Desolé, vous n'avez pas le droit d'administrer { famille.nom }  !")
+        else:
+            messages.danger(request,f" Desolé, vous n'avez pas le droit d'administrer { famille.nom }  !")
+            
+    return redirect("edit_famille",id=famille.id )
+
+
 
 @csrf_exempt
 def valide_salleatt(request):
@@ -116,7 +283,9 @@ def valide_salleatt(request):
                         return JsonResponse({'status': False ,"message": "Probleme de procedure !"})
                     else:
                         user = Membre.objects.get(id=userid)
+
                         if( data.get("direction") == "FAM"):
+                            # je veux valider l'appartenance d'un membre à une famille
                             salle = SalleAttenteFamille.objects.get(id=data.get("salle"))
                             salle.famille.membres_famille.add(salle.personne)
                             mes = Message(

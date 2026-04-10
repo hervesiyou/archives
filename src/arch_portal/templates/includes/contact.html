@@ -3,7 +3,7 @@
 {% block title %}Contactez-nous{% endblock %}
 
 {% block  css %}
-
+    <style>
           .titreService{
             color:rgb(111 235 189)  !important;
             text-transform: uppercase;
@@ -33,14 +33,14 @@
           button:disabled {
               opacity: 0.6;
           }
-        
+    </style>    
 
 {% endblock %}
 
 {% block content %}
     <div class="container my-5">
         <div class="row justify-content-center">
-            <!-- Section formulaire -->
+            
             <div class="col-lg-6 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white text-center">
@@ -62,8 +62,7 @@
                                 <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
                             </div>
                             {% if HCAPTCHA %}
-                            <div class="mb-3">
-                                <!-- hCaptcha widget -->
+                            <div class="mb-3"> 
                                 <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}"
                                  data-callback="onCaptchaSuccess" 
                                  data-expired-callback="onCaptchaExpired"></div>
@@ -76,8 +75,7 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Section contacts rapides -->
+ 
             <div class="col-lg-4">
                 <div class="card shadow-sm mb-3">
                     <div class="card-header bg-success text-white text-center">
@@ -86,23 +84,30 @@
                     <div class="card-body">
                         <ul class="list-unstyled mb-0">
                             {% if ORANGE %}
-                            <li class="mb-2"><strong>+ {{ ORANGE }} </strong> </li>
+                                <li class="mb-2"> 
+                                <a href="https://wa.me/{{ ORANGE }}" target="_blank"
+                                 class="text-decoration-none text-success">
+                                <i class="fa fa-whatsapp fa-2x text-white"></i>
+                                <strong> 
+                                <i class="fa fa-whatsapp"></i>
+                                + {{ ORANGE }} </strong></a>
+                                </li>
                             {% endif %}
                             {% comment %} {% if MTN %}
                             <li class="mb-2"><strong>MTN :</strong> {{ MTN }}</li>
                             {% endif %}  {% endcomment %}
-                            <li class="mb-2"><strong>Email :</strong> {{ EMAIL }}</li> 
+                            <li class="mb-2"><strong><i class="fa fa-envelope"></i> </strong> {{ EMAIL }}</li> 
                         </ul>
                     </div>
                 </div>
 
-                <!-- Section localisation -->
+                
                 <div class="card shadow-sm">
                     <div class="card-header bg-info text-white text-center">
                         <h5>Localisation</h5>
                     </div>
                     <div class="card-body p-0">
-                        <!-- Remplacer l'iframe avec la vraie localisation Google Maps -->
+                         
                         <iframe 
                             src="https://maps.google.com/maps?q=Douala&t=&z=13&ie=UTF8&iwloc=&output=embed" 
                             width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy">
@@ -116,13 +121,12 @@
 
 {% block js %}
     <script>
-        // Fonction appelée quand le captcha est réussi
+         
         function onCaptchaSuccess(token) {
             const button = document.getElementById('contactID');
             button.disabled = false;
             button.classList.add('btn-active');  
         }
-
         
         function onCaptchaExpired() {
             const button = document.getElementById('contactID');
@@ -132,16 +136,14 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             const button = document.getElementById('contactID');
-            button.disabled = true;
-            
-            // Si tu veux aussi vérifier que les champs sont remplis (bonus)
+            button.disabled = true; 
             const inputs = document.querySelectorAll('#contactForm input[required], #contactForm textarea[required]');
             function checkForm() {
                 let allFilled = true;
                 inputs.forEach(input => {
                     if (!input.value.trim()) allFilled = false;
                 });
-                // On combine : captcha OK ET champs remplis
+                
                 button.disabled = !(allFilled && !button.dataset.captchaExpired);
             }
 

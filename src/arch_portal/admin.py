@@ -34,6 +34,7 @@ from arch_portal.domain.models.personnecle import PersonneCle
 from arch_portal.domain.models.lieucle import LieuCle
 from arch_portal.domain.models.don import Don
 from arch_portal.domain.models.evenementlike import EvenementLike
+from arch_portal.domain.models.invitationadminfamille import InvitationAdminFamille
 
 
 admin.site.register(Communaute)
@@ -71,3 +72,4 @@ admin.site.register(Wallet)
 admin.site.register(PaiementLivre)
 admin.site.register(NotationLivre)
 admin.site.register(Pagefamille)
+admin.site.register(InvitationAdminFamille)

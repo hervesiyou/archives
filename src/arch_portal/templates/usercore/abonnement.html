@@ -87,6 +87,92 @@
         font-weight: 600;
     }
 </style>
+
+<style>
+
+
+    .pricing-section {
+        margin: 4rem 0 3rem;
+        background: #f8f5f0;
+        padding: 2.5rem;
+        border-radius: 16px;
+    }
+
+    .pricing-title {
+        text-align: center;
+        color: #8b5a2b;
+        font-family: 'Playfair Display', serif;
+        margin-bottom: 2rem;
+    }
+
+    .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.8rem;
+    }
+
+    .plan-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.8rem 1.5rem;
+        text-align: center;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .plan-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 30px rgba(139, 90, 43, 0.15);
+    }
+
+    .plan-card.featured {
+        border-color: #d4af37;
+        position: relative;
+    }
+
+    .plan-card.featured::after {
+        content: "Recommandé";
+        position: absolute;
+        top: -12px;
+        right: 20px;
+        background: #d4af37;
+        color: white;
+        font-size: 0.85rem;
+        padding: 4px 14px;
+        border-radius: 20px;
+    }
+
+    .plan-name {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #8b5a2b;
+        margin-bottom: 0.5rem;
+    }
+
+    .plan-price {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #2c3e50;
+        margin: 0.8rem 0;
+    }
+
+    .plan-duration {
+        color: #777;
+        font-size: 0.95rem;
+    }
+
+    .plan-features {
+        text-align: left;
+        margin: 1.5rem 0;
+        line-height: 1.8;
+    }
+
+    .plan-features li {
+        margin-bottom: 0.6rem;
+        padding-left: 5px;
+    }
+</style> 
 {% endblock %}
 
 {% block content %}
@@ -110,28 +196,12 @@
                         vos differents achats sur notre plateforme.
                     </h4>
                 </div>
-                <div class="payment-body text-center">
-                    <!-- <div class="btn-group flex-wrap justify-content-center" role="group">
-                        <button type="button" class="btn btn-outline-primary amount-btn" data-amount="1000">1 000 FCFA</button>
-                        <button type="button" class="btn btn-outline-primary amount-btn" data-amount="2500">2 500 FCFA</button>
-                        <button type="button" class="btn btn-outline-primary amount-btn" data-amount="5000">5 000 FCFA</button>
-                        <button type="button" class="btn btn-outline-primary amount-btn" data-amount="10000">10 000 FCFA</button>
-                        <button type="button" class="btn btn-outline-primary amount-btn" data-amount="20000">20 000 FCFA</button>
-                        <button type="button" class="btn btn-outline-primary amount-btn" data-amount="50000">50 000 FCFA</button>
-                    </div> -->
-
-                    <!-- <div class="mt-4">
-                        <label for="custom-amount" class="form-label fw-bold">Autre montant :</label>
-                        <div class="input-group input-group-lg w-50 mx-auto">
-                            <span class="input-group-text">FCFA</span>
-                            <input type="number" class="form-control text-center" id="custom-amount" min="500" placeholder="Montant">
-                        </div>
-                    </div> -->
+                <div class="payment-body text-center"> 
                 </div>
             </div>
 
             <!-- Choix de l'opérateur -->
-            <div class="row g-4">
+            <div class="row g-4" id="payment-options">
                 <div class="col-md-4">
                     <div class="card payment-card h-100">
                         <div class="payment-header mtn">
@@ -211,6 +281,74 @@
                 <p class="text-muted">En cas de problème, contactez-nous via WhatsApp ou par email.</p>
             </div>
 
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="pricing-section">
+                <h3 class="pricing-title">Nos Forfaits Richbook</h3>
+                
+                <div class="pricing-grid">
+                    <!-- FREE -->
+                    <div class="plan-card">
+                        <div class="plan-name">FREE</div>
+                        <div class="plan-price">0 FCFA</div>
+                        <div class="plan-duration">Pour toujours</div>
+                        <ul class="plan-features list-unstyled">
+                            <li>✓ 1 Famille gratuite</li>
+                            <li>✓ 1 Librairie gratuite</li>
+                            <li>✓ 5 livres par librairie</li>
+                            <li>✓ 1 Communauté gratuite</li>
+                        </ul>
+                        <a class="btn btn-outline-primary amount-btn mt-3 " href="#payment-options">Actuellement Gratuit</a><br/>
+                        <small class="text-muted">Idéal pour découvrir la plateforme</small>
+                    </div>
+
+                    <!-- BASIC -->
+                    <div class="plan-card">
+                        <div class="plan-name">BASIC</div>
+                        <div class="plan-price">19 000 FCFA</div>
+                        <div class="plan-duration">par AN</div>
+                        <ul class="plan-features list-unstyled">
+                            <li>✓ 3 Communautés</li>
+                            <li>✓ 3 Librairies</li>
+                            <li>✓ 30 livres au total</li>
+                        </ul>
+                        <a class="btn btn-outline-primary amount-btn mt-3 " href="#payment-options"> Obtenir </a><br/>
+                        <small class="text-muted">Parfait pour les petites structures</small>
+                    </div>
+
+                    <!-- PRO (recommandé) -->
+                    <div class="plan-card featured">
+                        <div class="plan-name">PRO</div>
+                        <div class="plan-price">29 000 FCFA</div>
+                        <div class="plan-duration">par AN</div>
+                        <ul class="plan-features list-unstyled">
+                            <li>✓ 5 Communautés</li>
+                            <li>✓ 6 Librairies</li>
+                            <li>✓ 60 livres au total</li>
+                        </ul>
+                        <a class="btn btn-outline-primary amount-btn mt-3 " href="#payment-options"> Obtenir </a><br/>
+                        <small class="text-muted">Le plus choisi par nos utilisateurs</small>
+                    </div>
+
+                    <!-- DIAMOND -->
+                    <div class="plan-card">
+                        <div class="plan-name">DIAMOND</div>
+                        <div class="plan-price">50 000 FCFA</div>
+                        <div class="plan-duration">par AN</div>
+                        <ul class="plan-features list-unstyled">
+                            <li>✓ 7 Communautés</li>
+                            <li>✓ 10 Librairies</li>
+                            <li>✓ 150 livres au total</li>
+                        </ul>
+                        <a class="btn btn-outline-primary amount-btn mt-3 " href="#payment-options"> Obtenir </a><br/>
+                        <small class="text-muted">Pour les gros projets & institutions</small>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin section tarifs -->
         </div>
     </div>
 </div>

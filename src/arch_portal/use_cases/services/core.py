@@ -4,6 +4,7 @@ import hashlib
 from django.core.mail import send_mail 
 import re
 import unicodedata
+from django.conf import settings
 
 
 def nettoyer_caracteres_speciaux(texte: str, mode: str = "remplacer") -> str:
@@ -74,9 +75,31 @@ def send_email(subject, message, recipient_list):
         raise
         # return False
 
+def send_invitation_adminfamille_mail(email, token, nomfamille,emnom, nom,message=None):
+    url = settings.URL_SITE
+    url = f"{url}/admaccinv/{token}".replace(" ", "")
+   
+    try:
+        send_mail(
+            subject=f"Invitation comme ADMINISTRATEUR de famille ({nomfamille})",
+            message=f"Bonjour {nom},\n\nVous avez été invité à administrer une famille - {nomfamille} - sur le site de RichBook.\n\nPour accepter l'invitation, cliquez sur le lien suivant : {url}\n\n Vous avez été sollicité par {emnom} et son message est  {message}. \n\nCordialement , l'Equipe RICHBOOK\n \n. V",
+            from_email="service@richbook.net",
+            recipient_list=[email,"bookrich4@gmail.com"],
+            fail_silently=False
+        )
+        return True
+    except Exception as e:
+        
+        print(f"Erreur envoi email : {e}")
+       
+        raise
+
 
 def generate_code(string):
-    return "".join( random.sample(string,len(string)) )+str(int(time.time()));
+    return "".join( random.sample(string,len(string)//2) )+str(int(time.time())).replace(" ","-")
+
+def generate_token(string):
+    return "".join( random.sample(string,len(string)) )+str(int(time.time()))
     
 def compute_duration(start, end):
     start = start.split(":")

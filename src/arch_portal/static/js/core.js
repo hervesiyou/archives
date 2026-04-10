@@ -96,6 +96,7 @@ $(document).ready(function(){
  				"comid": $(this).data("com"), 
  				"userid": $(this).data("user"), 
 			} 
+            alert(BASEURL)
             if( parseInt(data.userid) > 0 && data.comid != undefined   ){
 
                 $.ajax({

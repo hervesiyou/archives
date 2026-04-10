@@ -18,7 +18,7 @@ EMAIL_HOST_SERVICE = 'mfrelyon@gmail.com'
 EMAIL_HOST_PASSWORD = 'oHPZJaGbFI9iLgGr'
 EMAIL = 'contact@richbook.net'
 # EMAIL = 'contact@richbook.net'
-URL_SITE = 'https://richbook.net'
+URL_SITE = 'http://127.0.0.1:8000'
 
 NO_ORANGE=237687329239
 NO_MTN=237687329239
@@ -41,7 +41,7 @@ APP_HCAPTCHA = os.getenv("APP_HCAPTCHA")
 DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 ALLOWED_HOSTS = ['richbook.net', 'www.richbook.net', '127.0.0.1',"192.168.43.193"]
 # ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
-
+ 
 
 # Application definition
 

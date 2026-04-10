@@ -110,10 +110,28 @@ class UsersSubscribeForm(forms.ModelForm):
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Mot de passe'}),
         label="Mot de passe"
     )
+
+    # password = forms.CharField(
+    #     widget=forms.PasswordInput(attrs={
+    #         'class': 'form-control',
+    #         'placeholder': 'Mot de passe (minimum 6 caractères)'
+    #     }),
+    #     label="Mot de passe",
+    #     min_length=6,
+    # )
+
+    password_confirm = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Confirmer le mot de passe'
+        }),
+        label="Confirmer le mot de passe",
+    )
     
     class Meta:
         model = Membre
-        fields = ["nomcomplet", "login","pwd","email","telephone","sexe","datenaissance","lieunaissance","residence"]
+        # exclude = ["etatvalidation","dateinscription","approbateurs","galeries" ]
+        fields = ["nomcomplet", "email","telephone","sexe","datenaissance","lieunaissance","residence", "login", "pwd", "password_confirm"]
         
 
     def __init__(self, *args, **kwargs):
@@ -121,19 +139,49 @@ class UsersSubscribeForm(forms.ModelForm):
         # self.fields['pwd'].widget = forms.PasswordInput(render_value=False)
         self.helper = FormHelper()
         self.helper.form_tag = False
-        # self.helper.layout = Layout(
-        #     Field('pwd', type='password', css_class='form-control')
-        # )
+        self.helper.layout = Layout(
+            Row(
+                Column('nomcomplet', css_class='col-md-12'), 
+               
+                # Column(
+                #     Field('pwd', type='password', css_class='form-control'),
+                #     css_class='col-md-6',
+                # ), 
+
+                Column('email', css_class='col-md-6'),
+                Column('telephone', css_class='col-md-6'),
+                # Column('type', css_class='col-md-2'), 
+                Column('sexe', css_class='col-md-4'), 
+                Column('datenaissance', css_class='col-md-4'), 
+                Column('lieunaissance', css_class='col-md-4'),  
+                css_class='row'
+            ),
+            Row(
+                Column('login', css_class='col-md-12'),
+                Column('pwd', css_class='col-md-6'),
+                Column('password_confirm', css_class='col-md-6'),
+                css_class='row g-3'
+            ),
+            
+        )
 
 
     def clean(self):
         cleaned_data = super().clean()
         nom = cleaned_data.get("nomcomplet")
-        sexe = cleaned_data.get("type")
-        pere = cleaned_data.get("pere")
-        if Membre.objects.filter(nomcomplet=nom, sexe=sexe, pere=pere).exists():
+        sexe = cleaned_data.get("sexe")
+        login = cleaned_data.get("login")
+        if Membre.objects.filter(nomcomplet=nom, sexe=sexe, login=login).exists():
             raise forms.ValidationError("Ce membre existe dejà ! ")
+        
+        pwd = cleaned_data.get("pwd")
+        pwd_confirm = cleaned_data.get("password_confirm")
+
+        if pwd and pwd_confirm and pwd != pwd_confirm:
+            raise forms.ValidationError("Les deux mots de passe ne correspondent pas.")
+
         return cleaned_data
+        
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -141,6 +189,4 @@ class UsersSubscribeForm(forms.ModelForm):
         if commit:
             user.save()
         return user
-
-
-        
+    

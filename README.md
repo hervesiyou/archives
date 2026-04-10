@@ -1,18 +1,27 @@
 ## A Verifier
 
-- inserer la famille nkouonchichoue et la famille takoukam
 - connecter la mediatheques des communautés avec google photos et google drive
 - faire l'edition des associations et des evenements
-- l'ajout des galeries ne sauvegarde pas les images   
-partew
-
+- l'ajout des galeries ne sauvegarde pas les images  
 - ajouter les images sur les histoires
-- dynamiser les informations de la pages d'accueil
 - ajouter la geographie lors de la creation et l'update d'une communauté
-
-- afficher les erreurs lors des insertions
+- le chargement des images ne marche pas, 
+- envoyer un mail quand un nouveau membre s'inscrit
 - echapper les caracteres speciaux dans les formulaires
 - verifier que els mail sont ok
+- verifier que n'importe qui n'accède pas à une famille et verifier les famille privées et publiques
+- valider le compte par mail lors de l'inscription 
+- gerer les editions des familles
+- gerer les images des librairies et leurs editions
+- gerer les sous familles
+- en creant un membre on peut charger sa photo, et en affichant les membres on les affiches aussi en card avec leurs photos
+- gerer les arbres genealogiques, les generations et les exports 
+- ne charger que les familles concernées et les personnes conerncés lors de la crreation
+- verifie qu'on ne fasse pas les CRUD si on a pas le droit ni l'abonnemnet pour le faire
+
+        - inserer la famille nkouonchichoue et la famille takoukam
+        - dynamiser les informations de la pages d'accueil
+        - afficher les erreurs lors des insertions
 
         - ajouter une page ou histoire detaillée sur une personne
         - ajouter les librairies

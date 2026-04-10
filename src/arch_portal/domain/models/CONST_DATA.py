@@ -3,6 +3,11 @@ SEX_CHOICES =(
     ("F","Female"),
     ("M","Male")
 )
+STATUTDEMANDE_CHOICES = [
+    ('en_attente', 'En attente'),
+    ('accepte', 'Accepté'),
+    ('refuse', 'Refusé'),
+]
 
 GENERATIONS = [
     ("G1", "Generation 1"),
