@@ -5,21 +5,22 @@
 <div class="container">
     
     <div class="row">
-        <a href="{% url 'commandes_livres' %}" class="btn btn-info col-2 m-3"> <i class="fas fa-book"></i> Livres demandés (Commandes)</a>
+        <a href="{% url 'commandes_livres' %}" class="btn btn-info col-lg-2 col-5 m-2"> <i class="fas fa-book"></i> Livres demandés (Commandes)</a>
         {% if  'ADD_COMMUNAUTE' in request.session.userrights %} 
-            <a href="{% url 'home_comadmin' %}" class="btn btn-success col-2 m-3"> <i class="fas fa-users"></i> Mes Communautés </a>
+            <a href="{% url 'home_comadmin' %}" class="btn btn-success col-lg-2 col-5 m-2"> <i class="fas fa-users"></i> Mes Communautés </a>
         {% endif %}
          {% if  'ADD_FAMILLE' in request.session.userrights %} 
-            <a href="{% url 'home_famadmin' %}" class="btn btn-warning col-2 m-3"> <i class="fas fa-home"></i>   Mes Familles </a>
+            <a href="{% url 'home_famadmin' %}" class="btn btn-warning col-lg-2 col-5 m-2"> <i class="fas fa-home"></i>   Mes Familles </a>
         {% endif %}
          {% if  'ADD_ASSOCIATION' in request.session.userrights %} 
-            <a href="{% url 'home_assoadmin' %}" class="btn btn-primary col-2 m-3"> <i class="fas fa-building"></i> Mes Associations </a>
+            <a href="{% url 'home_assoadmin' %}" class="btn btn-primary col-lg-2 col-5 m-2"> <i class="fas fa-building"></i> Mes Associations </a>
         {% endif %}
-        <a href="{% url 'home_messageadmin' %}" class="btn btn-info col-2 m-3"> <i class="fas fa-envelope"></i> Mes Messages </a>
-        <a href="{% url 'home_abonnement' %}" class="btn btn-success col-2 m-3"> <i class="fas fa-receipt"></i> Recharger mon compte </a>
-        <a href="{% url 'historique_paiements' %}" class="btn btn-info col-2 m-3"> <i class="fas fa-history"></i> Historique des paiements </a>
-        <a href="{% url 'mes_evenements_likes' %}" class="btn btn-info col-2 m-3"> Mes evenements interéssants</a>
-                    
+        <a href="{% url 'home_messageadmin' %}" class="btn btn-info col-lg-2 col-5 m-2"> <i class="fas fa-envelope"></i> Mes Messages </a>
+        <a href="{% url 'home_abonnement' %}" class="btn btn-success col-lg-2 col-5 m-2"> <i class="fas fa-receipt"></i> Recharger mon compte </a>
+        <a href="{% url 'historique_paiements' %}" class="btn btn-info col-lg-2 col-5 m-2"> <i class="fas fa-history"></i> Historique des paiements </a>
+        <a href="{% url 'mes_evenements_likes' %}" class="btn btn-info col-lg-2 col-5 m-2"> Mes evenements interéssants</a>
+    </div>
+    <div>             
         {% block body %}
             {% if commandes %}
             <div class="card-body">

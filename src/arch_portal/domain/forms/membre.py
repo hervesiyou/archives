@@ -1,5 +1,6 @@
 
 from django import forms
+from django.forms import CheckboxInput
 from arch_portal.use_cases.services.core import compute_sha1
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column,Field
@@ -10,9 +11,18 @@ class MembreForm(forms.ModelForm):
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Mot de passe'}),
         label="Mot de passe"
     )
+    fichier_image = forms.ImageField(
+        required=False,
+        label="Photo de profil",
+        widget=forms.FileInput(attrs={
+            'class':'form-control',
+            "accept":'image/*'
+        }),
+        
+    )
     class Meta:
         model = Membre
-        exclude = ["etatvalidation","dateinscription","approbateurs","galeries" ]
+        exclude = ["etatvalidation","dateinscription","approbateurs","galeries", "token" ]
         
         widgets = {
             'description': forms.Textarea(attrs={
@@ -31,6 +41,8 @@ class MembreForm(forms.ModelForm):
             Row(
                 Column('nomcomplet', css_class='col-md-8'),
                 Column('generation', css_class='col-md-4'),
+                
+                Column('fichier_image', css_class='col-md-12'), 
                 Column('description', css_class='col-md-12'),
                 Column('login', css_class='col-md-6'),
                 Column(
@@ -70,6 +82,21 @@ class MembreForm(forms.ModelForm):
         )
 
 class MembreEditForm(forms.ModelForm):
+
+    fichier_image = forms.ImageField(
+        required=False,
+        label="Photo de profil",
+        widget=forms.FileInput(attrs={
+            'class':'form-control',
+            "accept":'image/*'
+        }),
+        
+    )
+    delete_photo = forms.BooleanField(
+        required=False,
+        label="Supprimer la photo actuelle"
+    )
+     
     class Meta:
         model = Membre
         exclude = ["etatvalidation","dateinscription","approbateurs","galeries" ]
@@ -79,9 +106,21 @@ class MembreEditForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         
         for field in self.fields.values():
-            field.widget.attrs.update({
-                'class': 'form-control'
-            })
+            if isinstance(field.widget, CheckboxInput):
+                field.widget.attrs.update({
+                    'class': 'form-check-input'
+                })
+            else:
+                field.widget.attrs.update({
+                    'class': 'form-control'
+                })
+
+        # for field in self.fields.values():
+        #     print(field)
+        #     field.widget.attrs.update({
+        #         'class': 'form-control'
+        #     })
+
 class UsersLoginForm(forms.ModelForm):
     pwd = forms.CharField(widget=forms.PasswordInput, label="Mot de passe")
     login = forms.CharField( label="Login ou Pseudonyme")

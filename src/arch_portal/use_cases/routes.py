@@ -25,12 +25,14 @@ urlpatterns = [
     path("ev/likes", evenement.mes_evenements_likes, name="mes_evenements_likes"),
     path('levts/<int:id>.<int:mode>', evenement.listevenements, name="listevenements"),
     path('sev/<int:id>', evenement.show_evenement, name="show_evenement"),
+    path('edev/<int:id>', evenement.edit_evenement, name="edit_evenement"),
     path('nev/', evenement.add_evenement, name="add_evenement"),
 ]
 
 urlpatterns += [ 
     path('', core.index, name="index"),
     path('admcr/<int:id>', core.admin_create, name="admin_create"),
+   
     path('admaccinv/<str:token>', core.admin_accept_invitation, name="admin_accept_invitation"),
     path('tem', core.temoignages, name="temoignages"),
     path('tarifs', membre.user_abonnement, name="tarifs"),
@@ -60,6 +62,7 @@ urlpatterns += [
     path('add_ad_asso', communaute.add_admin_asso, name="add_admin_asso"),
     path('add_abonnement', communaute.add_abonnement, name="add_abonnement"),
     path('sa/<int:id>', communaute.show_association, name="show_association"),
+    path('edas/<int:id>', communaute.edit_association, name="edit_association"),
     path('sma/<int:id>', communaute.listmembresassociation, name="listmembresassociation"),
     path('sc/<int:id>', communaute.show_communaute, name="show_communaute"),
     path('nc/', communaute.add_communaute, name="add_communaute"),
@@ -117,7 +120,8 @@ urlpatterns += [
     path('u/adcom', membre.show_user_comadmin, name="home_comadmin"),
     path('u/adasso', membre.show_user_assoadmin, name="home_assoadmin"),
     path('u/seemes', membre.show_user_messages, name="home_messageadmin"),
-    path('u/abo', membre.user_abonnement, name="home_abonnement"),    
+    path('u/abo', membre.user_abonnement, name="home_abonnement"), 
+    path('valusins/<str:token>', membre.user_valide_inscription, name="user_valide_inscription"),   
 ]
 
 urlpatterns += [ 

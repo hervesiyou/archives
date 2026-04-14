@@ -22,8 +22,15 @@ class LivreForm(ModelForm):
         nom = cleaned_data.get("nom")
         auteur = cleaned_data.get("auteur")
         prix = cleaned_data.get("prix")
-        if Livre.objects.filter(nom=nom, auteur=auteur, prix=prix).exists():
+
+        liv = Livre.objects.filter(nom=nom, auteur=auteur, prix=prix)
+
+        if self.instance and self.instance.pk:
+            liv = liv.exclude(pk=self.instance.pk)
+            
+        if liv.exists():
             raise ValidationError("Ce livre existe dejà !")
+        
         return cleaned_data
 
     def __init__(self, *args, **kwargs):
@@ -42,10 +49,10 @@ class LivreForm(ModelForm):
             
             Row(
                 Column('type', css_class='col-md-2 typeClass'),
-                Column('file', css_class='col-md-2 fichierClass'),
-                Column('stock', css_class='col-md-1 stockClass'),
+                Column('stock', css_class='col-md-2 stockClass'),
                 Column('domaine', css_class='col-md-4'),
                 Column('prix', css_class='col-md-4'),
+                Column('file', css_class='col-md-12 fichierClass'),
                 css_class='row'
             ), 
             Fieldset(

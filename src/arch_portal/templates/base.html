@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="fr" dir="ltr">
 <head>
@@ -190,28 +190,34 @@
         }
 
          footer {
-      background: var(--mid);
-      border-top: 1px solid var(--border);
-      padding: 3rem 0 1.5rem;
-    }
-    .footer-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.4rem; font-weight: 700; color: var(--gold); letter-spacing: .1em;
-    }
-    .footer-tagline { font-size: .8rem; color: var(--muted); margin-top: .3rem; }
-    .footer-links { list-style: none; padding: 0; }
-    .footer-links li { margin-bottom: .5rem; }
-    .footer-links a { font-size: .82rem; color: var(--muted); text-decoration: none; transition: color .2s; }
-    .footer-links a:hover { color: var(--gold); }
-    .footer-head { font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
-    .footer-copy { font-size: .75rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 2.5rem; }
-    .version-badge {
-      font-size: .7rem; color: var(--muted); border: 1px solid var(--border);
-      padding: .15rem .5rem; letter-spacing: .08em;
-    }
-    .bg-white0{
-        background-color: var(--mid);
-    }
+            background: var(--mid);
+            border-top: 1px solid var(--border);
+            padding: 3rem 0 1.5rem;
+            }
+            .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem; font-weight: 700; color: var(--gold); letter-spacing: .1em;
+            }
+            .footer-tagline { font-size: .8rem; color: var(--muted); margin-top: .3rem; }
+            .footer-links { list-style: none; padding: 0; }
+            .footer-links li { margin-bottom: .5rem; }
+            .footer-links a { font-size: .82rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+            .footer-links a:hover { color: var(--gold); }
+            .footer-head { font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+            .footer-copy { font-size: .75rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 2.5rem; }
+            .version-badge {
+            font-size: .7rem; color: var(--muted); border: 1px solid var(--border);
+            padding: .15rem .5rem; letter-spacing: .08em;
+            }
+            .bg-white0{
+                background-color: var(--mid);
+            }
+
+        @media (min-width: 992px) {
+            ul.gap-lg-3 {
+                gap: 24rem !important;
+            }
+        }
     </style>
 </head>
 
@@ -289,13 +295,23 @@
                                                     </a>
                                                 {% else %}
                                                     <div class="d-flex align-items-center gap-3">
-                                                        <a href="{% url 'home' %}" class="text-success fw-bold text-decoration-none">
-                                                            <i class="fa-solid fa-user-circle me-1"></i>{{ request.session.username }}
+                                                        {% comment %} <a href="{% url 'home' %}" class="text-success fw-bold text-decoration-none"> {% endcomment %}
+                                                            {% comment %} <i class="fa-solid fa-user-circle me-1"></i>{{ request.session.username }} {% endcomment %}
+                                                        {% comment %} </a> {% endcomment %}
+
+                                                        <a href="{% url 'home' %}" class="text-success fw-bold text-decoration-none d-flex align-items-center gap-2">
+                                                            <div class="rounded-circle bg-success text-white fw-bold d-flex align-items-center justify-content-center"
+                                                                 style="width: 36px; height: 36px; font-size: 15px;">
+                                                                 {{ request.session.username|make_initials }}
+                                                            </div>
+                                                            <span class="d-none d-xs-inline">{{ request.session.username }}</span>
                                                         </a>
+
                                                         <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger rounded-pill px-3">
                                                             Déconnexion
                                                         </a>
                                                     </div>
+
                                                 {% endif %}
                                             </li> 
                                             <li class="nav-item">
@@ -506,7 +522,23 @@
             <div class="col-6 col-lg-2">
                 <div class="footer-head">Compte</div>
                 <ul class="footer-links">
-                <li><a href="https://richbook.net/u/login">Connexion</a></li>
+                {% comment %} <li><a href="https://richbook.net/u/login">Connexion</a> {% endcomment %}
+                    {% if not request.session.username %}
+                        <a class="" href="{% url 'login' %}">
+                            <i class="fa fa-right-to-bracket "></i> Connexion 
+                        </a>
+                    {% else %}
+                         
+                            <a href="{% url 'home' %}" class="text-success fw-bold text-decoration-none">
+                                <i class="fa-solid fa-user-circle me-1"></i>{{ request.session.username }}
+                            </a>
+                            <a href="{% url 'logout' %}" class=" ">
+                                Déconnexion
+                            </a>
+                        
+
+                    {% endif %}
+                </li>
                 <li><a href="https://richbook.net/u/abo">Recharger</a></li>
                 </ul>
             </div>

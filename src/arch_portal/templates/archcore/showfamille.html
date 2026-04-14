@@ -192,36 +192,49 @@
 
     <!-- Description + Chef + Arbres -->
     <div class="family-description">
-        <div class="d-flex flex-wrap justify-content-between align-items-start gap-4">
-            <div>
-                <h2 class="fw-bold mb-3">{{ famille.nom }}</h2>
-                <div class="chief-badge">
-                    Chef de famille : {{ famille.chef.nomcomplet|default:"Non défini" }}
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-4 ">
+            <div class="row">
+            {% if famille.image and famille.image.fichier %}
+                <div class="col-3">
+                    <img src="{{famille.image.fichier.url}}"  
+                         style="height:auto; width:100%; box-shadow: 0 17px 19px rgba(0, 0, 0, 020);"
+                         class="card" />
+                    {% comment %} {{famille.image.fichier.url}} {% endcomment %}
                 </div>
-                <p class="lead text-muted mb-4">{{ famille.description|linebreaks }}</p>
+                <div class="col-9">
+            {% else %}
+                <div class="col-12">
+            {% endif %}
+                    <h2 class="fw-bold mb-3">{{ famille.nom }}</h2>
+                    <div class="chief-badge">
+                        Chef de famille : {{ famille.chef.nomcomplet|default:"Non défini" }}
+                    </div>
+                    <p class="lead text-muted mb-4">{{ famille.description|linebreaks }}</p>
 
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="{% url 'page_famille' famille.id %}" class="btn btn-outline-success btn-tree">
-                        <i class="fa fa-layer-group me-2"></i>Livre & Histoire
-                    </a>
-                    <a href="{% url 'famille_arbre' famille.id %}" class="btn btn-outline-primary btn-tree">
-                        <i class="fa fa-sitemap me-2"></i>Arbre généalogique (liste)
-                    </a>
-                    <a href="{% url 'famille_arbre_graphique' famille.id %}" class="btn btn-outline-info btn-tree">
-                        <i class="fa fa-project-diagram me-2"></i>Arbre visuel
-                    </a>
-                    <a href="{% url 'famille_generations' famille.id %}" class="btn btn-outline-warning btn-tree">
-                        <i class="fa fa-layer-group me-2"></i>Générations
-                    </a>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="{% url 'page_famille' famille.id %}" class="btn btn-outline-success btn-tree">
+                            <i class="fa fa-layer-group me-2"></i>Livre & Histoire
+                        </a>
+                        <a href="{% url 'famille_arbre' famille.id %}" class="btn btn-outline-primary btn-tree">
+                            <i class="fa fa-sitemap me-2"></i>Arbre généalogique (liste)
+                        </a>
+                        <a href="{% url 'famille_arbre_graphique' famille.id %}" class="btn btn-outline-info btn-tree">
+                            <i class="fa fa-project-diagram me-2"></i>Arbre visuel
+                        </a>
+                        <a href="{% url 'famille_generations' famille.id %}" class="btn btn-outline-warning btn-tree">
+                            <i class="fa fa-layer-group me-2"></i>Générations
+                        </a>
+                    </div>
+                
+
+                    <div class="text-end">
+                        {% if 'ADD_MEMBRE' in request.session.userrights %}
+                            <a href="{% url 'add_user' %}" class="btn btn-success">
+                                <i class="fa fa-user-plus me-2"></i>Ajouter un membre
+                            </a>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-
-            <div class="text-end">
-                {% if 'ADD_MEMBRE' in request.session.userrights %}
-                    <a href="{% url 'add_user' %}" class="btn btn-success">
-                        <i class="fa fa-user-plus me-2"></i>Ajouter un membre
-                    </a>
-                {% endif %}
             </div>
         </div>
     </div>

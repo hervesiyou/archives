@@ -13,8 +13,14 @@ class FamilleForm(forms.ModelForm):
         nom = cleaned_data.get("nom")
         type = cleaned_data.get("type")
         famille_mere = cleaned_data.get("famille_mere")
-        if Famille.objects.filter(nom=nom, type=type, famille_mere=famille_mere).exists():
+        fam = Famille.objects.filter(nom=nom, type=type, famille_mere=famille_mere)
+        
+        if self.instance and self.instance.pk:
+            fam = fam.exclude(pk=self.instance.pk)
+
+        if fam.exists():
             raise forms.ValidationError("Cette Famille existe dejà ! ")
+        
         return cleaned_data
 
     def __init__(self, *args, **kwargs):

@@ -9,7 +9,7 @@ from arch_portal.domain.models.membre import Membre
 
 from django.contrib.auth.decorators import login_required 
 from arch_portal.domain.models.evenementlike import EvenementLike
- 
+from django.contrib  import messages
 
 def listevenements(request, id, mode=0):
     events = Evenement.objects.filter(communaute=id)
@@ -17,6 +17,28 @@ def listevenements(request, id, mode=0):
     if not mode: 
         return render(request, "archcore/listevenements_tab.html", {"evenements": events, "communaute": com})
     return render(request, "archcore/listevenements.html", {"evenements": events, "communaute": com})
+
+def edit_evenement(request, id):
+    evenement = get_object_or_404(Evenement, id=id)
+    admin = False
+
+    user = get_object_or_404(Membre, id=request.session['userid'])
+    if not user:
+        return redirect("login")
+    
+    if not ( user in evenement.communaute.administrateurs.all() or ("ADD_EVENEMENT" in request.session["userrights"]) ):
+        messages.error(request, "Vous n'avez pas le droit de modifier cet evenement")
+        return redirect('show_evenement', id=evenement.id)
+    
+    if request.method == "POST":
+        form = EvenementForm(request.POST, instance=evenement)
+        if form.is_valid():
+            form.save()
+            return redirect("show_evenement", id=evenement.id)
+    else:
+        form = EvenementForm(instance=evenement)
+
+    return render(request, "archcore/edit_evenement.html", {"form": form, "evenement": evenement, "admin":admin})
 
 def show_evenement(request, id):
     # event = Evenement.objects.get(id=id)

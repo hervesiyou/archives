@@ -86,7 +86,14 @@
     <div class="row">
         <div class="col-md-12">
             <div class="  card-body printableArea">
-                <h3><b>{{evenement.titre}}</b> <span class="pull-right"></h3>
+                <h3><b>{{evenement.titre}}</b> <span class="pull-right">
+                {% if 'ADD_EVENEMENT' in request.session.userrights  or admin %}
+                    <a href="{% url 'edit_evenement' evenement.id %}" class="btn btn-outline-secondary">
+                        <i class="fa-solid fa-edit me-2"></i>
+                        {{evenement.association.nom}}
+                    </a>
+                {% endif %}
+                </h3>
                 <hr>
                 <div class="row">
                     <div class="col-md-12">

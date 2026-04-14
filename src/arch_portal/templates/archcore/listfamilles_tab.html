@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load custom_filters %}
-
+{% load famille_tags %}
 {% block title %}Familles de {{ communaute.nom }}{% endblock %}
 
 {% block css %}
@@ -113,9 +113,14 @@
                     </thead>
                     <tbody>
                         {% for fam in familles %}
+
+                            {% appartient_a_famille request.session.userid fam.id as est_membre %}
+
                             <tr>
                                 <td class="fw-medium">
-                                    {% if fam|appartient_a_famille:request.session.userid or fam.publique %}
+                                {% comment %} {{est_membre|pprint}} {% endcomment %}
+                                    {% if est_membre or fam.publique %}
+                                    {% comment %} {% if fam|appartient_a_famille:request.session.userid or fam.publique %} {% endcomment %}
                                         <a href="{% url 'show_famille' fam.id %}" class="family-name-link">
                                             {{ fam.nom }}
                                         </a>

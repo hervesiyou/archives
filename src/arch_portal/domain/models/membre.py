@@ -14,13 +14,16 @@ class Membre(models.Model):
         verbose_name = " Membre"
         verbose_name_plural = "Les Membres"
     
+    photo = models.ForeignKey("Image", related_name="membre_photo", on_delete=models.SET_NULL, null=True, blank=True)
+
     description = models.CharField(max_length=1000, null=True, blank=True)
     nomcomplet = models.CharField(max_length=100)
     login = models.CharField(max_length=50)
     pwd = models.CharField(max_length=300)
     email = models.CharField(max_length=50)
     telephone = models.CharField(max_length=50, null=True, blank=True)
-    etatvalidation = models.BooleanField(default=0,null=True)
+    etatvalidation = models.BooleanField(default=False,null=True)
+    token = models.CharField( blank=True,null=True,max_length=100, default="")
     dateinscription = models.DateTimeField(null=True,auto_now_add=True)
     
     generation =  models.CharField(max_length=50, choices=GENERATIONS,blank=True,null=1)
@@ -57,7 +60,8 @@ class Membre(models.Model):
     role = models.ManyToManyField(  Role, null=True, blank=True )
 
    
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs): 
+
         if self.pere != None and self.mere != None:
             if len(self.pere)<3 and len(self.mere)<3:
                 if len(self.nompere.nomcomplet)<3 and len(self.nommere.nomcomplet)<3:

@@ -75,6 +75,38 @@ def send_email(subject, message, recipient_list):
         raise
         # return False
 
+def send_email_information_nouveau_inscrit(email, nom, tel, sexe):
+    mail = settings.EMAIL_HOST_SERVICE
+    try:
+        send_mail(
+            subject="NOUVELLE INSCRIPTION SUR RICHBOOK",
+            message=f"Bonjour EQUIPE RICHBOOK,\n\n Un nouveau membre s'est inscrit\n\n {email} , {nom}, {tel}, {sexe} \n\nCordialement , le Robot RICHBOOK\n \n. ",
+            from_email="service@richbook.net",
+            recipient_list=[mail,"bookrich4@gmail.com"],
+            fail_silently=False
+        )
+        return True
+    except Exception as e:        
+        print(f"Erreur envoi email : {e}")       
+        raise
+
+def send_email_inscription(email, nom,token):
+
+    url = settings.URL_SITE
+    url = f"{url}/valusins/{token}".replace(" ", "")
+    try:
+        send_mail(
+            subject="VALIDATION DE VOTRE INSCRIPTION SUR RICHBOOK",
+            message=f"Bonjour {nom},\n\nMerci de valider votre compte sur le site de RichBook.\n\nCliquez sur le lien suivant : {url}\n\nCordialement , l'Equipe RICHBOOK\n \n. ",
+            from_email="service@richbook.net",
+            recipient_list=[email,"bookrich4@gmail.com"],
+            fail_silently=False
+        )
+        return True
+    except Exception as e:        
+        print(f"Erreur envoi email : {e}")       
+        raise
+
 def send_invitation_adminfamille_mail(email, token, nomfamille,emnom, nom,message=None):
     url = settings.URL_SITE
     url = f"{url}/admaccinv/{token}".replace(" ", "")
@@ -88,10 +120,8 @@ def send_invitation_adminfamille_mail(email, token, nomfamille,emnom, nom,messag
             fail_silently=False
         )
         return True
-    except Exception as e:
-        
-        print(f"Erreur envoi email : {e}")
-       
+    except Exception as e:        
+        print(f"Erreur envoi email : {e}")       
         raise
 
 

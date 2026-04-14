@@ -338,7 +338,7 @@ def edit_librairie(request, id):
             messages.success(request, "Librairie modifiée avec succès.")
             return redirect("show_librairie", librairie.id)
         else: 
-            messages.success(request, "Informations invalides.")
+            messages.success(request, f"Informations invalides.{form.errors}")
     
     else:
         form = LibrairieForm(instance=librairie)
@@ -405,24 +405,31 @@ def edit_book(request, id):
 
     if request.method == "POST":
         form = LivreForm(request.POST, request.FILES, instance=livre)
-        imageForm = ImageForm(request.POST, request.FILES, instance=image_instance)
+        image_form = ImageForm(request.POST, request.FILES, instance=image_instance)
         image_formset = ImageFormSet(request.POST, request.FILES, queryset=livre.images.all())
 
-        if form.is_valid() and image_formset.is_valid() and imageForm.is_valid():
+        if form.is_valid() :
             livre = form.save()
 
-            if( imageForm.has_changed() or imageForm.cleaned_data.get("fichier")):
-                image = imageForm.save(commit=False)
-                livre.image =  image
-                image.save()
+            if image_formset.is_valid() and image_form.is_valid():
 
-            for image_form in image_formset:
-                if image_form.has_changed():
+                # if( image_form.has_changed() or image_form.cleaned_data.get("fichier") > 0 ):
+                if( image_form.cleaned_data.get("fichier") is not None ):
                     image = image_form.save(commit=False)
-                    image.sonlivre = livre
+                    livre.image =  image
                     image.save()
 
-            livre.save()
+            instances = image_formset.save(commit=False)
+            for instance in instances:
+            # for image_form in image_formset:
+                # if image_form.has_changed():
+                # image = image_form.save(commit=False)
+                instance.sonlivre = livre                    
+                instance.save()
+
+            for obj in image_formset.deleted_objects:
+                obj.delete()
+            # livre.save()
 
             messages.success(request, "Livre mis à jour avec succès !")
             return redirect("show_book", livre.id)
@@ -431,12 +438,13 @@ def edit_book(request, id):
     else:
         form = LivreForm(instance=livre)
         image_formset = ImageFormSet(queryset=livre.images.all())
-        image_form = ImageForm()
+        image_form = ImageForm(instance=image_instance)
 
     # return render(request, "libcore/edit_book.html", {
     return render(
         request, 
-        "libcore/addbook.html",
+        "libcore/edit_book.html",
+        # "libcore/addbook.html",
         {
             "livre": livre,
             "form": form,

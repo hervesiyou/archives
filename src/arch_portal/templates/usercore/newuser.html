@@ -3,9 +3,7 @@
 {% load crispy_forms_tags %}
 {% block title %} {{parent}} Nouveau Membre - {{ famille.nom }} {% endblock %}
 {% block css %}  
-    <style>
-      
-    </style>
+    {% comment %} <style>   </style> {% endcomment %}
 {% endblock %}
 {% block content %}
      
@@ -17,6 +15,14 @@
     <button class="btn btn-xs btn-success text-white"> Inscrire un membre gg</button>
     </span> {% endcomment %}
     </h3>
+     {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} shadow-sm">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %} 
+
    {% if famille %}
     <div class="row">
         <div class="col-md-12">
@@ -35,7 +41,7 @@
             <h1 class="text-success"> Inscription d'un nouveau membre </h1> 
 
             <div class="table-responsive mt-5" >
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {% crispy form %}
                     <input type="submit" class="btn btn-success" value="Ajouter ce membre" />

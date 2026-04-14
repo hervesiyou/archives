@@ -22,7 +22,7 @@ class Livre(models.Model):
     langue = models.CharField(max_length=250, null=True, blank=True)
     # cover_image = models.ImageField(upload_to='couvertures/')
     file = models.FileField(upload_to='livres/',null=True, blank=True)
-    images = models.ManyToManyField(Image, null=True, blank=True)
+    images = models.ManyToManyField(Image, blank=True)
 
     domaine = models.CharField(max_length=250, null=True, blank=True)
     prix = models.IntegerField(default=0)

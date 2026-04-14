@@ -59,10 +59,13 @@ def edit_famille(request, id):
     if not request.session.get("userid","") :
         return redirect("login" )
     
+    user = request.session['userid']
+    user = get_object_or_404(Membre, pk=user)
+    
     famille = get_object_or_404(Famille, id=id)
     admins = famille.administrateurs.all()
     # si le user connecté n'est pas administrateur
-    if not (famille.administrateurs.filter(id=request.session.get("userid")).exists()):
+    if not ( user in famille.administrateurs.all() or ("ADD_FAMILLE" in request.session["userrights"]) ):
         messages.error(request, "Vous n'avez pas le droit de modifier cette famille.")
         return redirect('show_famille', id=famille.id)
     
@@ -75,11 +78,12 @@ def edit_famille(request, id):
         if form.is_valid() and image_form.is_valid():
             famille = form.save()
 
-            if( image_form.cleaned_data.get("fichier") != None and len(image_form.cleaned_data.get('fichier')) >0 ):
-                if image_form.has_changed() :
-                    image = image_form.save(commit=False)
-                    famille.image =  image
-                    image.save()            
+            if( image_form.cleaned_data.get("fichier") != None and len(image_form.cleaned_data.get('fichier')) > 0 ):
+                # if image_form.has_changed() :
+                image = image_form.save(commit=False)
+                famille.image =  image
+                image.save()
+                famille.save()            
  
             messages.success(request, "Famille et images modifiées avec succès.")
             return redirect('show_famille', id=id)

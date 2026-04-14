@@ -50,7 +50,7 @@ class Famille(models.Model):
         member = mod.Membre.objects.filter(id=userid)
         # print( self.membres_famille.all() , member, userid, (member in self.membres_famille.all()) )
         if  member :
-            return  member in self.membres_famille.all()             
+            return ( member in self.membres_famille.all() or (member in self.administrateurs.all() ))           
         else :
             return False 
         # return False

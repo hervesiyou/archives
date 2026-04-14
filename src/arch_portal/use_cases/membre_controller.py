@@ -9,10 +9,10 @@ from arch_portal.use_cases.services.core import compute_sha1
 from arch_portal.domain.forms.membre import MembreForm,UsersLoginForm,UsersSubscribeForm
 from arch_portal.domain.models.membre import Membre
 from arch_portal.domain.models.histoire import MiniHistoire
-
+from arch_portal.use_cases.services.core import generate_token, send_email_inscription, send_email_information_nouveau_inscrit
 from arch_portal.domain.models.image import Image
 from django.http import  JsonResponse
-  
+import threading
 from arch_portal.domain.forms.membre import MembreEditForm
 
 # from arch_portal.domain.serializers import MembreSerializer
@@ -20,13 +20,51 @@ from arch_portal.domain.forms.membre import MembreEditForm
 def subscribe(request):
     if request.method == "POST":
         form = UsersSubscribeForm(request.POST)
+
+        if Membre.objects.filter(login=request.POST.get("login"),email=request.POST.get("email")).exists():
+            messages.info(request,f"Desolé { request.POST.get("login") }  nous est deja inscrit !")
+            return redirect("subscribe")    
+        
         if form.is_valid():  
             user = form.save()
+            # je genere le token et je cree l'invitaition
+            token = generate_token(user.login)
+
+            thread = threading.Thread(
+                target=send_email_inscription, 
+                args=(user.email, user.nomcomplet, token)
+            )
+            thread.daemon = True
+            thread.start()
+            # send_email_inscription(user.email, user.nomcomplet, token)
+
+            user.token = token
+            user.save()
+
         return redirect("login")
     else:
         form = UsersSubscribeForm()
+
     return render(request, "usercore/subscribe.html", {"form":form})   
 
+def user_valide_inscription(request, token):
+    user = Membre.objects.filter(token=token).first()
+    if user != None:
+        user.etatvalidation = True
+        user.save()
+
+        #  j'envoi le mail d'information d'un nouveau membre
+        thread = threading.Thread(
+                target=send_email_information_nouveau_inscrit, 
+                args=(user.email, user.nomcomplet, user.telephone,user.sexe)
+            )
+        thread.daemon = True
+        thread.start()
+
+        return redirect("login")
+    else:
+        return redirect("subscribe")
+    
 def log_out(request):
     del request.session["username"]
     del request.session["userid"]
@@ -45,6 +83,10 @@ def log_user(request):
             ).first()
 
             if user != None:
+
+                if user.etatvalidation != True:
+                    messages.info(request,f" Desolé { form.cleaned_data['login']}  votre adresse email n'a pas été  validée ! Un lien vous a été envoyé dans  votre email pour valider votre compte, merci de cliquer dessus .")
+                    return redirect("login")
 
                 request.session["username"] = user.login 
                 request.session["userrights"] =  user.get_rights()
@@ -144,12 +186,28 @@ def show_user(request,id):
 def add_user(request):
 
     if request.method == "POST":
-        form = MembreForm(request.POST)
+        form = MembreForm(request.POST, request.FILES)
         # print(form.errors)
         if form.is_valid():  
-            com = form.save() 
+            com = form.save(commit=False) 
+
+            if form.cleaned_data.get("delete_photo"):
+                if com.photo:
+                    com.photo.delete()
+                com.photo = None
+
+            # sauvegarde de la photo
+            if 'fichier_image' in request.FILES:
+                image = Image.objects.create(fichier=request.FILES["fichier_image"])
+                com.photo = image
+
             com.save()
+            form.save_m2m() 
+            messages.success(request, "✅ Membre ajouté avec succès")
             return redirect("show_user",com.id )
+        
+        else:
+            messages.error(request, f"❌ Veuillez corriger les erreurs {form.errors} du formulaire.")
     else:
         form = MembreForm()
 
@@ -168,16 +226,22 @@ def upload_image_histoire(request):
     return JsonResponse({"error": "Erreur upload"}, status=400)
 
 
-
 def edit_user(request, id):
     membre = get_object_or_404(Membre, id=id)
 
     if request.method == 'POST':
-        form = MembreEditForm(request.POST, request.FILES, instance=membre)
-        
+        form = MembreEditForm(request.POST, request.FILES, instance=membre)       
 
         if form.is_valid():
-            form.save()            
+            membre=form.save(commit=False) 
+            fichier = request.FILES.get("fichier_image")
+            if fichier:
+                image = Image.objects.create(fichier=fichier)
+                membre.photo = image  
+
+            membre.save()   
+            form.save_m2m()   
+
             messages.success(request, "✅ Membre mis à jour avec succès")
             return redirect('show_user', id=membre.id)
         else:

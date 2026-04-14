@@ -1,4 +1,5 @@
-# from arch_portal.domain.forms import GalerieForm
+ 
+ 
 from arch_portal.domain.models.galerie import Galerie
 from django.contrib  import messages
 from django.shortcuts import redirect, render, get_object_or_404
@@ -23,7 +24,7 @@ from django.contrib.auth.decorators import login_required , permission_required
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from arch_portal.domain.models import Association
 from django.views.decorators.http import require_http_methods
-from django.db import models
+# from django.db import models
 from django.forms import inlineformset_factory
 
 from arch_portal.domain.forms.sets import MiniHistoireFormSet, RoiFormSet , RoiForm, MiniHistoireForm
@@ -424,6 +425,43 @@ def show_association(request,id):
     asso = Association.objects.get(id=id)
     galerie = Galerie.objects.filter(association=asso)
     return render(request, "archcore/showassociation.html", {"association": asso, "galerie": galerie})
+
+
+def edit_association(request,id):
+    association= get_object_or_404(Association, pk=id)
+    galerie = Galerie.objects.filter(association=association)
+
+    admin = False
+
+    user = request.session['userid']
+    user = get_object_or_404(Membre, pk=user)
+    if not user:
+        messages.error(request, "Merci de vous connecter au prealable.")
+        return redirect("login")
+    
+    if user in association.administrateurs.all():
+        admin = True
+       
+    if not( association.administrateurs.filter(id=user.id).exists() or ("ADD_ASSOCIATION" in request.session["userrights"] )) :
+        messages.error(request, "Vous n'avez pas les droits pour modifier cette association.")
+        return redirect('show_association', id=association.id)
+
+    if request.method == 'POST':
+        form = AssociationForm(request.POST, instance=association)
+        
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"L'association '{association.nom}' a été mise à jour avec succès.")
+            return redirect('show_association', id=association.id)
+        else:
+            messages.error(request, "Veuillez corriger les erreurs ci-dessous.")
+
+    else:
+        form = AssociationForm(instance=association)
+
+    return render(request, "archcore/editassociation.html", {"form":form, "association": association, "galerie": galerie, "admin":admin})
+
+
 
 def listassociationsfam(request, id): 
     com = Famille.objects.get(id=id)
