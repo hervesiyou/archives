@@ -144,11 +144,11 @@
     <div class="profile-hero text-center">
         <h1 class="fw-bold mb-2">{{ membre.nomcomplet }}
         
-        {% if 'ADD_MEMBRE' in request.session.userrights %}            
-            <a href="{% url 'edit_membre' membre.id %}" title="Modifier ce membre">
-                <i class="fa fa-edit"></i> 
-            </a>
-        {% endif %}
+            {% if 'ADD_MEMBRE' in request.session.userrights %}            
+                <a href="{% url 'edit_membre' membre.id %}" title="Modifier ce membre">
+                    <i class="fa fa-edit"></i> 
+                </a>
+            {% endif %}
         
         </h1> 
 

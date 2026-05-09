@@ -15,6 +15,5 @@ class Galerie(models.Model):
     famille = models.ForeignKey("Famille", on_delete=models.CASCADE, blank=True, null=True, related_name="fam_galerie")
     evenement = models.ForeignKey("Evenement", on_delete=models.CASCADE, blank=True, null=True, related_name="ev_galerie")
 
-
     def __str__(self):
         return self.nom

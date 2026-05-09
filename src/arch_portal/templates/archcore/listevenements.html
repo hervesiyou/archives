@@ -35,12 +35,14 @@
     </h5>
     
     <div class="row">
-        <div class="col-lg-3"></div>
-        <div class="col-lg-6">
-            <div class="form-group">
-                <input class="col-10" type="text" value="" name="rechLivre" />
-                <button  class="  btn-success "> Rechercher </button>
-            </div>
+        <div class="col-lg-2"></div>
+        <div class="col-lg-4">
+            {% comment %} <div class="form-group"> {% endcomment %}
+                <input class="col-10 form-control" type="text" value="" name="rechLivre" />
+        </div>
+        <div class="col-lg-3">
+                <button  class="btn btn-rounded  btn-success "> Rechercher </button>
+            {% comment %} </div> {% endcomment %}
         </div>
         <div class="col-lg-3">
             <a href="{% url 'listevenements' id=communaute.id  mode=0 %}" class="btn btn-outline-info"> Afficher en liste</a>
@@ -62,9 +64,10 @@
                     <div class="card-body">
                         <h5 class="card-title"><a href="{% url 'show_famille' liv.id %}"> {{liv.nom}} </a></h5>
                         <p> {{liv.description}} </p>
-                        <p>
-                            <a href="{% url 'show_evenement' liv.id %}" class="text-sm" title=" cliquer pour le détail de {{liv.titre}}"> <i class="fa fa-info-circle"></i> Détail </a>
-                        </p>
+                        <div class="btn btn-outline-info btn-sm p-2 w-100">
+                             <a href="{% url 'show_evenement' liv.id %}" class="text-sm text-info" title=" cliquer pour le détail de {{liv.titre}}"> <i class="fa fa-info-circle"></i> Détail </a>
+                            {% comment %} <a href="{% url 'show_evenement' liv.id %}" class="text-sm" title=" cliquer pour le détail de {{liv.titre}}"> <i class="fa fa-info-circle"></i> Détail </a> {% endcomment %}
+                        </div>
                     </div>
                     <div class="card-footer">
                         <div class="text-info">

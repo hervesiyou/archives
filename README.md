@@ -1,22 +1,35 @@
 ## A Verifier
 
 - connecter la mediatheques des communautés avec google photos et google drive
-- l'ajout des galeries ne sauvegarde pas les images  
-        - ajouter les images sur les histoires
 - ajouter la geographie lors de la creation et l'update d'une communauté
-- le chargement des images ne marche pas, 
-- echapper les caracteres speciaux dans les formulaires
-        - verifier que les mail sont ok
-        - gerer les images des librairies et leurs editions
-        - gerer les sous familles 
-- en creant un membre on peut charger sa photo, et en affichant les membres on les affiches aussi en card avec leurs photos
+     
 - gerer les arbres genealogiques, les generations et les exports 
 - ne charger que les familles concernées et les personnes conerncés lors de la creation
 - verifie qu'on ne fasse pas les CRUD si on a pas le droit ni l'abonnemnet pour le faire
+- sur richbook on peut creer des cagnottes et les gens cotisent, 
+- on va donner des types de badges aux meilleurs contributeurs
+        - ajouter le DOULA et sa convertion, 
+- ajouter les notifications sur les projets en cours et les donneurs avec les CTA
+- creer ma monnaie communautaire
+- tester le paiement d'un livre qui debite mon compte
+- ne pas permettre qu'on note un livre si on ne l'a pas acheté, 
+- si on a deja payé un livre on signale et liste les livres acheté
 
+        - l'ajout des galeries ne sauvegarde pas les images  
+        - L'edition de l'image d'un livre et d'une librairie ne marche pas
+        - le chargement des images ne marche pas, 
+        
+        - gerer les abonnements
+        - echapper les caracteres speciaux dans les formulaires
+
+        - ajouter les images sur les histoires
+        - verifier que les mail sont ok
+        - gerer les images des librairies et leurs editions
+        - gerer les sous familles 
+        - en creant un membre on peut charger sa photo, et en affichant les membres on les affiches aussi en card avec leurs photos
         - envoyer un mail quand un nouveau membre s'inscrit
         - faire l'edition des associations et des evenements
-        - verifier que n'importe qui n'accède pas à une famille et verifier les famille privées et publiques
+        - verifier que n'importe qui n'accède pas à une famille et verifier les familles privées et publiques
         - valider le compte par mail lors de l'inscription 
         - gerer les editions des familles
 

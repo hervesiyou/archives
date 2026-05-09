@@ -186,6 +186,13 @@
                 {% if galerie is not None and galerie.id is not None %}
                     <a class="btn btn-outline-success my-2" href="{% url 'show_galerie' galerie.id %}"> Photos de {{ famille.nom }} </a>
                 {% endif %}
+                  
+                {% if 'ADD_GALERIE' in request.session.userrights %}
+                    <a class="d-block badge bg-info" href="{% url 'add_galerie' %}" alt="Ajouter une galerie" title="Ajouter une galerie">
+                        <i class="fa-solid fa-plus me-2 text-success"></i>
+                        <i class="fa-solid fa-images me-2 text-success"></i>                                       
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>

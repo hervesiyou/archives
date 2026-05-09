@@ -14,7 +14,6 @@ from arch_portal.domain.models.image import Image
 from django.http import  JsonResponse
 import threading
 from arch_portal.domain.forms.membre import MembreEditForm
-
 # from arch_portal.domain.serializers import MembreSerializer
 
 def subscribe(request):
@@ -97,7 +96,7 @@ def log_user(request):
                 messages.info(request,f"Bienvenue { user.nomcomplet }")
                 return redirect("home" )
             else:
-                messages.info(request,f" Desolé { form.cleaned_data['login']}  nous est inconnu !")
+                messages.error(request,f" Desolé { form.cleaned_data['login']}  nous est inconnu !")
     else:
         request.session.get("username1","")
         request.session.get("userid1",0) 
@@ -176,7 +175,6 @@ def show_user_assoadmin(request):
             raise MembreException( f" Membre {request.session['userid']} introuvable ")  
     else:
         return redirect("login")
-
 
 def show_user(request,id):
     # membre = Membre.objects.get(id=id)

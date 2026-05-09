@@ -26,7 +26,6 @@ from arch_portal.domain.models import Association
 from django.views.decorators.http import require_http_methods
 # from django.db import models
 from django.forms import inlineformset_factory
-
 from arch_portal.domain.forms.sets import MiniHistoireFormSet, RoiFormSet , RoiForm, MiniHistoireForm
 
 import json
@@ -39,7 +38,6 @@ from arch_portal.domain.models.lieucle   import LieuCle
 from arch_portal.domain.forms.lieucle   import LieuCleForm  
 from arch_portal.domain.forms.personnecle   import PersonneCleForm 
 # ────────────── PERSONNES CLÉS ──────────────
-
  
 def personnecle_create(request, type_entite, entite_id):
     """Créer une personne clé pour une Communauté ou une Famille"""
@@ -111,7 +109,6 @@ def lieucles_create(request, type_entite, entite_id):
         'back_url': redirect_url,
     })
 
-
 def personnecle_detail(request, pk):
     personne = get_object_or_404(PersonneCle, pk=pk)
     # Vérifier droits d'accès si besoin (ex: si liée à communauté/famille privée)
@@ -138,8 +135,6 @@ def personnecle_edit(request, pk):
         'bouton': "Mettre à jour",
         'back_url': personne.get_absolute_url(),
     })
-
-
 # ────────────── LIEU CLÉ ──────────────
  
 def lieucle_detail(request, pk):
@@ -148,7 +143,6 @@ def lieucle_detail(request, pk):
         'lieu': lieu,
         'titre': f"Détails de {lieu.nom}",
     })
-
  
 def lieucle_edit(request, pk):
     lieu = get_object_or_404(LieuCle, pk=pk)
@@ -168,7 +162,6 @@ def lieucle_edit(request, pk):
         'bouton': "Mettre à jour",
         'back_url': lieu.get_absolute_url(),
     })
-
  
 def personnecle_delete(request, pk):
     personne = get_object_or_404(PersonneCle, pk=pk)
@@ -176,7 +169,6 @@ def personnecle_delete(request, pk):
     messages.success(request, "Personne clé supprimée.")
     return redirect('home')  # ou vers la liste
 
- 
 def lieucle_delete(request, pk):
     lieu = get_object_or_404(LieuCle, pk=pk)
     lieu.delete()
@@ -195,15 +187,14 @@ def don_list(request, communaute_id):
     }
     return render(request, 'archcore/don_list.html', context)
 
-
 # @login_required
 def don_create(request, communaute_id):
     communaute = get_object_or_404(Communaute, id=communaute_id)
     
-    if request.method == 'POST':
-
-        userid = request.session.get("userid","")
-        user = Membre.objects.get(id=userid)
+    userid = request.session.get("userid","")
+    user = Membre.objects.get(id=userid)
+    
+    if request.method == 'POST':        
         if user != None:
 
             form = DonForm(request.POST)
@@ -220,13 +211,13 @@ def don_create(request, communaute_id):
     else:
         form = DonForm()
     
-    context = {
-        'form': form,
-        'communaute': communaute,
-        'titre': f"Faire un don à {communaute.nom}"
-    }
+        context = {
+            'form': form,
+            'communaute': communaute,
+            'titre': f"Faire un don à {communaute.nom}",
+            'user': user
+        }
     return render(request, 'archcore/don_form.html', context)
-
 
 # @login_required
 def don_detail(request, communaute_id, don_id):
@@ -238,7 +229,6 @@ def don_detail(request, communaute_id, don_id):
         'communaute': communaute,
     }
     return render(request, 'archcore/don_detail.html', context)
-
 
 # @login_required
 def don_update(request, communaute_id, don_id):
@@ -270,7 +260,6 @@ def don_update(request, communaute_id, don_id):
         'titre': "Modifier le don"
     }
     return render(request, 'archcore/don_form.html', context)
-
 
 # @login_required
 def don_delete(request, communaute_id, don_id):
@@ -426,7 +415,6 @@ def show_association(request,id):
     galerie = Galerie.objects.filter(association=asso)
     return render(request, "archcore/showassociation.html", {"association": asso, "galerie": galerie})
 
-
 def edit_association(request,id):
     association= get_object_or_404(Association, pk=id)
     galerie = Galerie.objects.filter(association=association)
@@ -461,8 +449,6 @@ def edit_association(request,id):
 
     return render(request, "archcore/editassociation.html", {"form":form, "association": association, "galerie": galerie, "admin":admin})
 
-
-
 def listassociationsfam(request, id): 
     com = Famille.objects.get(id=id)
     return render(request, "archcore/listassociationsfam.html", { "famille": com})
@@ -470,7 +456,6 @@ def listassociationsfam(request, id):
 def listmembresassociation(request, id): 
     com = Association.objects.get(id=id)
     return render(request, "archcore/listmembresassociation.html", { "association": com})
-
 
 def listassociations(request, id, mode = 0):
     assos = Association.objects.filter(communaute=id)
@@ -480,6 +465,7 @@ def listassociations(request, id, mode = 0):
     return render(request, "archcore/listassociations.html", {"associations": assos, "communaute": com})
 
 def add_association(request):
+
     if request.method == "POST":
         form = AssociationForm(request.POST)
         if form.is_valid():  
@@ -488,7 +474,9 @@ def add_association(request):
             
             return redirect("show_association", com.id )
     else:
-        form = AssociationForm()
+        user = request.session['userid']
+        user = get_object_or_404(Membre, pk=user)
+        form = AssociationForm(user=user)
 
     return render(request, "archcore/new_association.html", { "form":form  })
  
@@ -851,12 +839,35 @@ def upload_image(request):
         })
     return JsonResponse({"error": "Erreur upload"}, status=400)
 
-
 def show_galerie(request, id):
 
     galerie = get_object_or_404(Galerie, pk=id)
     return render(request, "usercore/show_galerie.html", { "galerie":galerie  })
 
+def update_galerie(request, id):
+
+    galerie = get_object_or_404(Galerie, id=id)
+    if request.method == "POST":
+        form = GalerieForm(request.POST, instance=galerie)
+        images_ids = request.POST.getlist("images_ids[]")
+
+        if form.is_valid():
+            galerie = form.save()
+            galerie.images.set(images_ids)
+            return redirect("show_galerie", galerie.id)
+
+    else:
+        form = GalerieForm(instance=galerie)
+
+    return render(
+        request,
+        "usercore/update_galerie.html",
+        {
+            "form": form,
+            "galerie": galerie,
+            "images": galerie.images.all()
+        }
+    )
 def add_galerie(request):
     
     if request.method == "POST":
@@ -875,7 +886,6 @@ def add_galerie(request):
         form = GalerieForm()
 
     return render(request, "usercore/new_galerie.html", { "form":form  })
-
 
 # Afficher l'histoire d'une communauté
 @require_http_methods(["GET"])
@@ -900,7 +910,6 @@ def community_history(request, community_id):
         }
     }
     return render(request, 'archcore/com_histoire.html', context)
-
 
 # Afficher la géographie d'une communauté avec carte Google Maps
 @require_http_methods(["GET"])

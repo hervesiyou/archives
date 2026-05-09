@@ -24,7 +24,7 @@ class GalerieForm(forms.ModelForm):
                 css_class='row'
             ),
             Row(
-                Column('communaute', css_class='col-md-3'),
+                Column('communaute', css_class='col-12 col-lg-3'),
                 Column('association', css_class='col-md-3'),
                 Column('famille', css_class='col-md-3'),
                 Column('evenement', css_class='col-md-3'),

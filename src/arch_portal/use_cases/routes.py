@@ -7,6 +7,7 @@ import arch_portal.use_cases.communaute_controller as communaute
 import arch_portal.use_cases.famille_controller as famille
 import arch_portal.use_cases.core_controller as core
 import arch_portal.use_cases.evenement_controller as evenement
+import arch_portal.use_cases.cagnotte_controller as cagnotte
 
 urlpatterns = [ 
     path('lfam/<int:id>.<int:mode>', famille.listfamilles, name="listfamilles"),
@@ -29,12 +30,22 @@ urlpatterns = [
     path('nev/', evenement.add_evenement, name="add_evenement"),
 ]
 
+urlpatterns += [
+    path( "cag/",  cagnotte.list_cagnottes,  name="list_cagnottes" ),
+    path( "cag/ad",   cagnotte.add_cagnotte,  name="add_cagnotte"   ),
+    path( "cag/<int:id>/",  cagnotte.show_cagnotte, name="show_cagnotte" ),
+    path( "cag/<int:id>/con/",  cagnotte.contribute_cagnotte,  name="contribute_cagnotte"   ),
+    path(  "cag/<int:id>/clo/", cagnotte.close_cagnotte,  name="close_cagnotte"  ),
+]
+
 urlpatterns += [ 
     path('', core.index, name="index"),
     path('admcr/<int:id>', core.admin_create, name="admin_create"),
    
     path('admaccinv/<str:token>', core.admin_accept_invitation, name="admin_accept_invitation"),
     path('tem', core.temoignages, name="temoignages"),
+    path('abosm', core.souscrire_abonnement, name="souscrire_abonnement"),
+    path('shabo/<int:user_id>', core.show_subscriptions, name="show_subscriptions"),
     path('tarifs', membre.user_abonnement, name="tarifs"),
     path('add_ad_famsalleatt', core.add_user_salleattfam, name="ad_sal_fam"),
     path('add_ad_comsalleatt', core.add_user_salleattcom, name="ad_sal_com"),
@@ -71,6 +82,7 @@ urlpatterns += [
     path('lass/<int:id>.<int:mode>', communaute.listassociations, name="listassociations"),
     path('lassfam/<int:id>', communaute.listassociationsfam, name="listassociationsfam"),
     path('ngal/', communaute.add_galerie, name="add_galerie"),
+    path('ugal/<int:id>', communaute.update_galerie, name="update_galerie"),
     path('upim/', communaute.upload_image, name="upload_image"),
     path('ga/<int:id>', communaute.show_galerie, name="show_galerie"),
     path('c/faq', communaute.faq, name="faq_communaute"),

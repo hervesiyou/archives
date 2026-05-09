@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block title %}Contactez-nous{% endblock %}
-
 {% block  css %}
     <style>
           .titreService{
@@ -85,12 +84,15 @@
                         <ul class="list-unstyled mb-0">
                             {% if ORANGE %}
                                 <li class="mb-2"> 
-                                <a href="https://wa.me/{{ ORANGE }}" target="_blank"
-                                 class="text-decoration-none text-success">
-                                <i class="fa fa-whatsapp fa-2x text-white"></i>
-                                <strong> 
-                                <i class="fa fa-whatsapp"></i>
-                                + {{ ORANGE }} </strong></a>
+                                    <a  href="https://wa.me/{{ ORANGE }}" 
+                                        target="_blank"
+                                        class="text-decoration-none text-success">
+                                        <i class="fa fa-whatsapp fa-2x text-white"></i>
+                                        <strong> 
+                                        <i class="fa fa-whatsapp"></i>
+                                        + {{ ORANGE }} 
+                                        </strong>
+                                    </a>
                                 </li>
                             {% endif %}
                             {% comment %} {% if MTN %}

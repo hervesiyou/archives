@@ -4,23 +4,26 @@
 {% block content %}
 <div class="container">
     
-    <div class="row">
-        <a href="{% url 'commandes_livres' %}" class="btn btn-info col-lg-2 col-5 m-2"> <i class="fas fa-book"></i> Livres demandés (Commandes)</a>
+    <div class="row m-3">
+        <a href="{% url 'commandes_livres' %}" class="badge bg-info col-lg-2 col-5 m-1"> <i class="fas fa-book"></i> Livres commandés</a>
         {% if  'ADD_COMMUNAUTE' in request.session.userrights %} 
-            <a href="{% url 'home_comadmin' %}" class="btn btn-success col-lg-2 col-5 m-2"> <i class="fas fa-users"></i> Mes Communautés </a>
+            <a href="{% url 'home_comadmin' %}" class="badge bg-success col-lg-2 col-5 m-1"> <i class="fas fa-users"></i> Mes communautés </a>
         {% endif %}
          {% if  'ADD_FAMILLE' in request.session.userrights %} 
-            <a href="{% url 'home_famadmin' %}" class="btn btn-warning col-lg-2 col-5 m-2"> <i class="fas fa-home"></i>   Mes Familles </a>
+            <a href="{% url 'home_famadmin' %}" class="badge bg-warning col-lg-2 col-5 m-1"> <i class="fas fa-home"></i>   Mes familles </a>
         {% endif %}
          {% if  'ADD_ASSOCIATION' in request.session.userrights %} 
-            <a href="{% url 'home_assoadmin' %}" class="btn btn-primary col-lg-2 col-5 m-2"> <i class="fas fa-building"></i> Mes Associations </a>
+            <a href="{% url 'home_assoadmin' %}" class="badge bg-primary col-lg-2 col-5 m-1"> <i class="fas fa-building"></i> Mes associations </a>
         {% endif %}
-        <a href="{% url 'home_messageadmin' %}" class="btn btn-info col-lg-2 col-5 m-2"> <i class="fas fa-envelope"></i> Mes Messages </a>
-        <a href="{% url 'home_abonnement' %}" class="btn btn-success col-lg-2 col-5 m-2"> <i class="fas fa-receipt"></i> Recharger mon compte </a>
-        <a href="{% url 'historique_paiements' %}" class="btn btn-info col-lg-2 col-5 m-2"> <i class="fas fa-history"></i> Historique des paiements </a>
-        <a href="{% url 'mes_evenements_likes' %}" class="btn btn-info col-lg-2 col-5 m-2"> Mes evenements interéssants</a>
+        <a href="{% url 'home_messageadmin' %}" class="badge bg-info col-lg-2 col-5 m-1"> <i class="fas fa-envelope"></i> Mes messages </a>
+        <a href="{% url 'home_abonnement' %}" class="badge bg-success col-lg-2 col-5 m-1"> <i class="fas fa-receipt"></i> Recharger mon compte </a>
+        <a href="{% url 'historique_paiements' %}" class="badge bg-info col-lg-2 col-5 m-1"> <i class="fas fa-history"></i> Historique des paiements </a>
+        <a href="{% url 'mes_evenements_likes' %}" class="badge bg-info col-lg-2 col-5 m-1"> Mes evenements interéssants</a>
+
+        <a href="{% url 'show_subscriptions' user.id %}" class="badge bg-warning col-lg-2 col-5 m-1"> <i class="fas fa-user"></i> Mes abonnements </a>
+        
     </div>
-    <div>             
+    <div >             
         {% block body %}
             {% if commandes %}
             <div class="card-body">
@@ -51,8 +54,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <h3 class="bg-default text-center text-white">  {{ request.session.nomcomplet}} </h3>
- 
+            <h3 class="bg-default text-center text-white">  {{ request.session.nomcomplet}} </h3> 
             {%  include 'usercore/partials/home.html'  with membre=user %}
         </div>
     </div>

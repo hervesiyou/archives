@@ -201,9 +201,9 @@
             .footer-tagline { font-size: .8rem; color: var(--muted); margin-top: .3rem; }
             .footer-links { list-style: none; padding: 0; }
             .footer-links li { margin-bottom: .5rem; }
-            .footer-links a { font-size: .82rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+            .footer-links a { font-size: .98rem; color: var(--muted); text-decoration: none; transition: color .2s; }
             .footer-links a:hover { color: var(--gold); }
-            .footer-head { font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+            .footer-head { font-size: 1.1rem; letter-spacing: .15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
             .footer-copy { font-size: .75rem; color: var(--muted); border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 2.5rem; }
             .version-badge {
             font-size: .7rem; color: var(--muted); border: 1px solid var(--border);
@@ -218,6 +218,34 @@
                 gap: 24rem !important;
             }
         }
+
+        .bg-primary {
+            background-color: #05285df7 !important;
+        }
+
+        .bg-info{
+            background-color: #294f5687 !important;
+        }
+
+
+.navbar .nav-link{
+    font-size:14px;
+}
+
+@media (max-width: 991px){
+
+    .navbar-collapse{
+        padding:15px 0;
+    }
+
+    .navbar .card{
+        width:100%;
+    }
+
+    .navbar .nav-item{
+        margin-bottom:10px;
+    }
+}
     </style>
 </head>
 
@@ -229,24 +257,29 @@
                 <div class="lds-ripple">
                     <div class="lds-pos"></div>
                     <div class="lds-pos"></div>
+                    <div class="lds-pos"></div>
+                    <div class="lds-pos"></div>
+                    <div class="lds-pos"></div>
                 </div>
-            </div> 
+            </div>  
             
-            <div class="row" style="background-color:white;">                
-                <div class="col-12">
-                    <nav class="navbar navbar-expand-lg navbar-light bg-white0 shadow-sm fixed-top">
+            {% comment %} <div class="row"  >                 {% endcomment %}
+                {% comment %} <div class="col-12"> {% endcomment %}
+                    <nav class="navbar navbar-expand-lg navbar-light  shadow-sm fixed-top">
                         <div class="container-fluid px-3 px-md-4">
                             
-                            <a class="navbar-brand d-flex align-items-center" href="{% url 'index' %}">
-                                <img src="{% static 'images/logo.png' %}" alt="RICHBOOK" height="42">
-                                <span class="ms-2 fw-bold text-success">RICHBOOK</span>
-                            </a>
+                            <div class="row w-100"  >
+                                <div class="col-lg-2 col-xs-4 d-flex align-items-center">
+                                    <a class="navbar-brand d-flex align-items-center" href="{% url 'index' %}">
+                                        <img src="{% static 'images/logo.png' %}" alt="RICHBOOK" height="42">
+                                        <span class="ms-2 d-xs-none d-sm-block fw-bold text-success">RICHBOOK</span>
+                                    </a>
 
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="row">
-                                <div class="col-8">
+                                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                                        <span class="navbar-toggler-icon"></span>
+                                    </button>
+                                </div>
+                                <div class="col-lg-4 col-xs-12 pt-3">
                                     {% if request.session.userrights %}
                                     <div class="row">
                                         {% if 'ADD_COMMUNAUTE' in request.session.userrights %}
@@ -282,12 +315,51 @@
                                                 <i class="fa-solid fa-users-rectangle me-2 text-success"></i> Association
                                             </a>
                                         {% endif %}
+                                        {% if 'ADD_GALERIE' in request.session.userrights %}
+                                            <a class="p-2 col-1" href="{% url 'add_galerie' %}">
+                                                <i class="fa-solid fa-images me-2 text-success"></i> Galerie
+                                            </a>
+                                        {% endif %}
+                                        {% if 'ADD_CAGNOTTE' in request.session.userrights %}
+                                            <a class="p-2 col-1" href="{% url 'add_cagnotte' %}">
+                                                <i class="fa-solid fa-coins me-2 text-success"></i> Cagnotte
+                                            </a>
+                                        {% endif %}
                                     </div>
                                     {% endif %}
                                 </div>
-                                <div class="col-3">
-                                    <div class="collapse navbar-collapse" id="navbarMain">
-                                        <ul class="navbar-nav ms-auto align-items-center gap-2 gap-lg-3"> 
+                                <div class="col-lg-3 col-xs-12">
+                                    <div class="row my-2 align-items-center ">
+                                        <div class="col-6">
+                                            <a href="{% url 'listcom' %}" class="text-decoration-none">
+                                                <div class="card card-hover text-center " style="border-radius: 16px;">
+                                                    <div class="my-2">
+                                                        <span style="background:#28a745; border-radius:50%; width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center;">
+                                                            <i class="fa fa-archive fa-1x text-white"></i>
+                                                        </span>
+                                                    <span class="text-uppercase fw-bold text-success" style="font-size:11px;"> Communautés</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+
+                                        <div class="col-6 ">
+                                            <a href="{% url 'listlibs' %}" class="text-decoration-none">
+                                                <div class="card card-hover text-center border-0 shadow-sm" style="border-radius: 16px;">
+                                                    <div class="m-2">
+                                                        <span style="background:#dc3545; border-radius:50%; width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center;">
+                                                            <i class="fa fa-book fa-1x text-white"></i>
+                                                        </span>
+                                                    <span class="text-uppercase fw-bold text-danger" style="font-size:11px;">Librairies</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div class="col-lg-3 col-xs-12  d-none d-md-block">
+                                    <div class="pt-3" id="navbarMain">
+                                        <ul class="navbar-nav ms-auto align-items-center"> 
                                             <li class="nav-item">
                                                 {% if not request.session.username %}
                                                     <a class="nav-link btn btn-outline-success rounded-pill px-4" href="{% url 'login' %}">
@@ -311,7 +383,6 @@
                                                             Déconnexion
                                                         </a>
                                                     </div>
-
                                                 {% endif %}
                                             </li> 
                                             <li class="nav-item">
@@ -325,10 +396,12 @@
                             </div>
                         </div>
                     </nav>
-                </div>
-            </div>
+                {% comment %} </div> {% endcomment %}
+            {% comment %} </div> {% endcomment %}
 
-            <div class="row" style="margin-top:100px;">                
+            
+
+            <div class="row" style="margin-top:70px;">                
                 <div class="col-12">
                     
                     <div class="card-body">
@@ -382,9 +455,9 @@
                             </div>
                         </div>  -->
 
-                        <div class="row g-3 mt-2">
+                        <div class="row g-3 my-2">
 
-                            <div class="col-4 col-lg-4">
+                            {% comment %} <div class="col-6 col-lg-6">
                                 <a href="{% url 'listcom' %}" class="text-decoration-none">
                                     <div class="card card-hover text-center p-3 border-0 shadow-sm h-100" style="border-radius: 16px;">
                                         <div class="mb-2">
@@ -397,7 +470,7 @@
                                 </a>
                             </div>
 
-                            <div class="col-4 col-lg-4">
+                            <div class="col-6 col-lg-6">
                                 <a href="{% url 'listlibs' %}" class="text-decoration-none">
                                     <div class="card card-hover text-center p-3 border-0 shadow-sm h-100" style="border-radius: 16px;">
                                         <div class="mb-2">
@@ -408,9 +481,9 @@
                                         <h6 class="text-uppercase fw-bold text-danger" style="font-size:11px;">Librairies</h6>
                                     </div>
                                 </a>
-                            </div>
+                            </div> {% endcomment %}
 
-                            <div class="col-4 col-lg-4">
+                            {% comment %} <div class="col-4 col-lg-4">
                                 <a href="{% url 'listmarches' %}" class="text-decoration-none">
                                     <div class="card card-hover text-center p-3 border-0 shadow-sm h-100" style="border-radius: 16px;">
                                         <div class="mb-2">
@@ -421,7 +494,7 @@
                                         <h6 class="text-uppercase fw-bold text-warning" style="font-size:11px;">Nos Marchés</h6>
                                     </div>
                                 </a>
-                            </div>
+                            </div> {% endcomment %}
 
                         </div>
                         
@@ -503,58 +576,59 @@
             </div>
         </div> -->
     </div> 
-    <footer class="mt-5">
+    <footer class="mt-3">
         <div class="container">
             <div class="row gy-4">
-            <div class="col-lg-4">
-                <a class="navbar-brand d-flex align-items-center" href="{% url 'index' %}"><div class="footer-logo">RICHBOOK</div></a>
-                <div class="footer-tagline footer-head">Archives · Librairies · Marchés</div>
-                <p class="mt-3" style="font-size:.8rem; color:var(--muted); line-height:1.7;">Votre passerelle vers la mémoire collective et le savoir numérique africain.</p>
-            </div>
-            <div class="col-6 col-lg-2">
-                <div class="footer-head">Navigation</div>
-                <ul class="footer-links">
-                <li><a href="https://richbook.net/lcom">Communautés</a></li>
-                <li><a href="https://richbook.net/libs">Librairies</a></li>
-                <li><a href="https://richbook.net/alm">Marchés</a></li>
-                </ul>
-            </div>
-            <div class="col-6 col-lg-2">
-                <div class="footer-head">Compte</div>
-                <ul class="footer-links">
-                {% comment %} <li><a href="https://richbook.net/u/login">Connexion</a> {% endcomment %}
-                    {% if not request.session.username %}
-                        <a class="" href="{% url 'login' %}">
-                            <i class="fa fa-right-to-bracket "></i> Connexion 
-                        </a>
-                    {% else %}
-                         
-                            <a href="{% url 'home' %}" class="text-success fw-bold text-decoration-none">
-                                <i class="fa-solid fa-user-circle me-1"></i>{{ request.session.username }}
+                <div class="col-lg-6">
+                    <a class="navbar-brand d-flex align-items-center" href="{% url 'index' %}">
+                        <div class="footer-logo">RICHBOOK</div>
+                    </a>
+                    <div class="footer-tagline footer-head">Archives · Librairies · Marchés</div>
+                    <p class="mt-3" style="font-size:1.2rem; color:var(--muted); line-height:1.7;">Votre passerelle vers la mémoire collective et le savoir numérique africain.</p>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <div class="footer-head">Navigation</div>
+                    <ul class="footer-links">
+                    <li><a href="{% url 'listcom' %}">Communautés</a></li>
+                    <li><a href="{% url 'listlibs' %}">Librairies</a></li>
+                    <li><a href="{% url 'listmarches' %}">Marchés</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <div class="footer-head">Compte</div>
+                    <ul class="footer-links">
+                        {% if not request.session.username %}
+                            <a class="" href="{% url 'login' %}">
+                                <i class="fa fa-right-to-bracket "></i> Connexion 
                             </a>
-                            <a href="{% url 'logout' %}" class=" ">
-                                Déconnexion
-                            </a>
-                        
+                        {% else %}
+                            
+                                <a href="{% url 'home' %}" class="text-success fw-bold text-decoration-none">
+                                    <i class="fa-solid fa-user-circle me-1"></i>{{ request.session.username }}
+                                </a>
+                                <a href="{% url 'logout' %}" class=" ">
+                                    Déconnexion
+                                </a>                        
 
-                    {% endif %}
-                </li>
-                <li><a href="https://richbook.net/u/abo">Recharger</a></li>
-                </ul>
+                        {% endif %}
+                    </li>
+                    <li><a href="{% url 'tarifs' %}">Recharger</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2">
+                    <div class="footer-head">Support</div>
+                    <ul class="footer-links">
+                    <li><a href="{% url 'tarifs' %}">Nos Tarifs</a></li>
+                    <li><a href="{% url 'temoignages' %}">Temoignages</a></li>
+                    <li><a href="{% url 'faq_archcore' %}">FAQ</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="col-6 col-lg-2">
-                <div class="footer-head">Support</div>
-                <ul class="footer-links">
-                <li><a href="{% url 'tarifs' %}">Nos Tarifs</a></li>
-                <li><a href="{% url 'temoignages' %}">Temoignages</a></li>
-                <li><a href="https://richbook.net/faqi">FAQ</a></li>
-                <li><a href="https://richbook.net/cont">Contact</a></li>
-                </ul>
-            </div>
-            </div>
+
             <div class="footer-copy d-flex justify-content-between align-items-center flex-wrap gap-2">
             <span>© RICHBOOK  {{ 'now'|date:"Y" }} — Tous droits réservés.</span>
-            <span class="version-badge">v 1.0.1</span>
+            <span class="version-badge">v 1.0.2</span>
             </div>
         </div>
 
@@ -572,7 +646,8 @@
         </div>
     </footer>
 
-     <script type="text/javascript" src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script> 
+     {% comment %} <script type="text/javascript" src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>  {% endcomment %}
+     <script src="https://code.jquery.com/jquery-4.0.0.min.js" integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao=" crossorigin="anonymous"></script>
      
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="{% static 'js/sweetalert.js' %}"></script>

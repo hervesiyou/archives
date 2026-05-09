@@ -68,58 +68,86 @@
         </div>
         <!-- Column -->
     </div>
-    <div class="row my-5">
-        <div class=" col-md-6 col-lg-4">
+        <div class="row my-5">
             {% if communaute.listerois %}
-                <h5 class="text-success text-bold"> <a href="{% url 'kings_list' communaute.id %}"> Liste des rois</a> </h5>
-                <ul class="list">
-                    <li class="list-item"> {{communaute.listerois}} </li>
-                </ul>
+                <div class=" col-md-4 col-lg-4">
+                        <h5 class="text-success text-bold"> <a href="{% url 'kings_list' communaute.id %}"> Liste des rois</a> </h5>
+                        <ul class="list">
+                            <li class="list-item"> {{communaute.listerois}} </li>
+                        </ul>
+                </div>
+
+                <div class="col-md-4 col-lg-4">
+            {% else %}
+                <div class="col-md-8 col-lg-6">
             {% endif %}
-        </div>
-        <div class=" col-md-6 col-lg-4">
-             {% if communaute.histoire %}
-                <h5 class="text-success text-bold"> <a href="{% url 'com_histoire' communaute.id %}"> Histoire</a> </h5>
-                
-                <div class="text-container">
-                    <div class="short-text">
-                        {{ communaute.histoire }}
-                    </div>
+            {% if communaute.histoire %}
+                    <h5 class="text-success text-bold text-center"> <a href="{% url 'com_histoire' communaute.id %}"> Histoire</a> </h5>
+                    
+                    <div class="text-container">
+                        <div class="short-text">
+                            {{ communaute.histoire }}
+                        </div>
 
                         <label for="expand1" class="plus">Voir plus</label>
                         <label for="expand1" class="moins">Voir moins</label>
                         <input type="checkbox" class="expand-toggle" id="expand1">
-                </div>
- 
-
+                    </div>
             {% endif %}
-        </div>
+                </div>
 
-        <div class=" col-md-6 col-lg-4">
-            <h5 class="text-success text-bold"> <a href="{% url 'don_list' communaute.id %}"> Liste des Dons</a> </h5>
-            <div class=" ">
-            ..
+            <div class=" col-lg-4">
+                <h5 class="text-success text-bold">
+                    <a href="{% url 'don_list' communaute.id %}" class="btn btn-outline-success" > Gestion des Dons</a>
+                        <button class=""  
+                        data-bs-toggle="modal"  data-bs-target="#infosModal"
+                        title="Cliquer ici pour plus d'informations">
+                            <i class="fa fa-info"></i>
+                        </button>
+                </h5>
             </div>
         </div>
-     </div>
 
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
                     <div class="d-md-flex align-items-center">
-                        <div>
-                            <h4 class="card-title">{{communaute.nom}}</h4>
-                            <h5 class="card-subtitle">{{communaute.description}}</h5>
-                             {% if not appartient %} 
-                                <a href="#" data-com="{{communaute.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partComID"> Je souhaite être {{ communaute.nom }}</a>
-                            
-                            {% endif %}
+                        <div class="row my-3">
+                            <div class="col-lg-12">
+                                <h4 class="card-title mb-3">{{communaute.nom}}</h4>
+                                <h5 class="card-subtitle">{{communaute.description}}</h5>
+                                {% if not appartient %} 
+                                    <a href="#" data-com="{{communaute.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partComID"> Je souhaite être {{ communaute.nom }}</a>
+                                
+                                {% endif %}
+                            </div>                        
+                            <div class="col-lg-12 my-3">
+                                <a href="{% url 'com_geographie' communaute.id %}" title="Détail geographique">
+                                    <span> Carte géographique </span>
+                                </a>
+                                <a class="btn btn-sm btn-outline-success text-success"  data-bs-toggle="modal"  data-bs-target="#messageModal">  
+                                    <span> Laisser une message </span>
+                                </a>
+
+                                <a class="btn btn-sm btn-outline-info text-success"  data-bs-toggle="modal"  data-bs-target="#donModal">  
+                                    <span> Faire un Don </span>
+                                </a>
+                                {% if  'VOIR_MESSAGES_COMMUNAUTES' in request.session.userrights %}  - 
+                                    <a href="{% url 'community_messages' communaute.id %}" title="" class="btn btn-sm btn-success" >
+                                        <span> Voir les messages  </span>
+                                    </a>
+                                {% endif %}
+
+                                 <a href="{% url 'list_cagnottes' %}" title="" class="btn btn-sm btn-outline-warning" >
+                                        <span> Voir les cagnottes  </span>
+                                  </a>
+                            </div>
                         </div>
                     </div>
                     <div class="row my-3">
                         <div class="col-lg-9">
-                            <a href="{% url 'com_geographie' communaute.id %}" title="Détail geographique">
+                            {% comment %} <a href="{% url 'com_geographie' communaute.id %}" title="Détail geographique">
                                 <span> Carte géographique </span>
                             </a>
                             <a class="btn btn-sm btn-outline-success text-success"  data-bs-toggle="modal"  data-bs-target="#messageModal">  
@@ -133,7 +161,7 @@
                                 <a href="{% url 'community_messages' communaute.id %}" title="" class="btn btn-sm btn-success" >
                                     <span> Voir les messages  </span>
                                 </a>
-                            {% endif %}
+                            {% endif %} {% endcomment %}
                             <div class="flot-chart mt-2">
     
                             {%  if communaute.image %}
@@ -208,11 +236,17 @@
                                     <div class="bg-dark p-10 text-white text-center">
                                         {% comment %} <i class="fa fa-globe mb-1 font-16"></i> {% endcomment %}
                                         <h5 class="mb-0 mt-1">
-                                         <a href="{% url 'listlibs' %}"  > Mediathèque </a> </h5>
-                                        {% comment %} <small class="font-light">.</small> {% endcomment %}
+                                        <a href="{% url 'listlibs' %}"  > Mediathèque </a> </h5> 
+
                                         {{galerie}}
                                         {% if galerie  is not None and galerie.id is not None %}
                                             <a class="btn btn-outline-success" href="{% url 'show_galerie' galerie.id %}"> Photos de {{ communaute.nom}} </a>
+                                        {% endif %}
+                                        {% if 'ADD_GALERIE' in request.session.userrights %}
+                                            <a class="d-block badge bg-info" href="{% url 'add_galerie' %}" alt="Ajouter une galerie" title="Ajouter une galerie">
+                                                <i class="fa-solid fa-plus me-2 text-success"></i>
+                                                <i class="fa-solid fa-images me-2 text-success"></i>                                       
+                                            </a>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -536,6 +570,16 @@
 
     {% include 'archcore/includes/add_pers_cle.html' with form=form_personne %}
     {% include 'archcore/includes/add_lieu_cle.html' with form=form_lieu %}
+
+ 
+    <div class="modal fade" id="infosModal" tabindex="-1" aria-labelledby="addInfosModalLabel" aria-hidden="true">
+        <div class="modal-dialog ">
+            <div class="modal-content modal-lg">
+            {% include "archcore/includes/infodons.html" %}
+            </div>
+        </div>
+    </div>
+
 
 {% endblock %}
 

@@ -21,6 +21,76 @@ $(document).ready(function(){
 
     const BASEURL = $("body").data('url');
 
+    $(".aboPlanID").on('click', function(e){                         
+        e.preventDefault();
+        let plan = $(this).data("plan")
+        let user = $(this).data("user")
+       
+        var data = {                      
+            "membre": user,
+            "plan": plan, 
+        };
+ 
+        if( data.membre != undefined && data.plan.length > 0 ){
+
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : BASEURL+"/abosm",  
+                dataType    : "JSON",
+                headers: { "X-CSRFToken": getCookie("csrftoken") },
+
+                beforeSend      : function(){
+                    // alert(JSON.stringify(data) + ", url: " + this.url)
+                },
+                error: function(error) {
+                    console.error(error);
+                    // alert(JSON.stringify(error))
+                },
+                success  : function(returnedData){
+                    // console.log(returnedData);             
+                    if (returnedData.status) {
+                        Swal.fire({
+                            icon: "success",
+                            title: " Merci !" ,
+                            text:   " Ajout Reussi de Votre Abonnement ! " ,
+                            timer: 4000,
+                            showConfirmButton: false
+
+                        }).then(
+                            ()=>{
+                                $("#payMessage").html(` <div class="alert alert-info messageDiv">${returnedData.message} </div>`  )
+                            }
+                        ); 
+
+                    }else{
+                        Swal.fire({
+                            icon: "error",
+                            title: " Oups !" ,
+                            text:   " " + returnedData.message ,
+                            timer: 4000,
+                            showConfirmButton: true
+
+                        }); 
+                    }
+                }
+
+            })
+
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de fournir toutes les informations requises pour cet abonnement !!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
+    })
+
+
     $(".abClass").on('click', function(e){                         
         e.preventDefault();
         let code = $(this).data("code")
@@ -299,7 +369,7 @@ $(document).ready(function(){
                 });
                 console.table( data )
 			}
-        })
+    })
 
     $(".partFamID").on('click', function(e){                         
         e.preventDefault();

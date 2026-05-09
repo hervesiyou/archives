@@ -32,6 +32,14 @@
                             {% if galerie is not None and galerie.0.id is not None %}
                                 <a class="btn btn-outline-success my-2" href="{% url 'show_galerie' galerie.0.id %}"> Photos de {{ association.nom }} </a>
                             {% endif %}
+                             
+                            {% if 'ADD_GALERIE' in request.session.userrights %}
+                                <a class=" badge bg-info" href="{% url 'add_galerie' %}" alt="Ajouter une galerie" title="Ajouter une galerie">
+                                    <i class="fa-solid fa-plus me-2 text-success"></i>
+                                    <i class="fa-solid fa-images me-2 text-success"></i>                                       
+                                </a>
+                            {% endif %}
+
                             {% if association.communaute  is not None %}
                             <span class="text-muted">
                                 <a  class="btn btn-outline-info my-2" href="{% url 'listassociations' id=association.communaute.id mode=1 %}"> Autres associations</a>

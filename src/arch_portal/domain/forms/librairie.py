@@ -13,7 +13,14 @@ class LibrairieForm(ModelForm):
         nom = cleaned_data.get("nom")
         type = cleaned_data.get("type")
         possesseur = cleaned_data.get("possesseur")
-        if Librairie.objects.filter(nom=nom, type=type, possesseur=possesseur).exists() :
+
+
+        if self.instance and self.instance.pk:
+            lib = Librairie.objects.filter(nom=nom, type=type, possesseur=possesseur).exclude(pk=self.instance.pk)
+        else:
+            lib = Librairie.objects.filter(nom=nom, type=type, possesseur=possesseur)
+
+        if lib.exists() :
             raise ValidationError("Cette librairie existe dejà en base")
         return cleaned_data
         

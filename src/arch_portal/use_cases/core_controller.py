@@ -7,7 +7,7 @@ from arch_portal.domain.models.famille import Famille
 from arch_portal.domain.models.contact import Contact
 from arch_portal.domain.models.membre import Membre
 from arch_portal.domain.models.livre import Livre
-from arch_portal.domain.models.image import Image
+# from arch_portal.domain.models.image import Image
 from arch_portal.domain.models.message import Message
 from arch_portal.domain.models.marche import Marche
 from arch_portal.domain.models.invitationadminfamille import InvitationAdminFamille
@@ -26,7 +26,122 @@ from datetime import date, datetime
 from django.contrib import messages
 from arch_portal.use_cases.services.core import generate_token, send_invitation_adminfamille_mail
 
+from decimal import Decimal
+from django.db import transaction
+from arch_portal.domain.models.abonnement import Abonnement
+from arch_portal.domain.models.transaction import Transaction
 import threading
+
+def show_subscriptions(request, user_id):
+    user = get_object_or_404(Membre, id=user_id)
+    abonnements = Abonnement.objects.filter(membre=user, is_active=True)
+    return render(request, "usercore/show_user_abonnements.html", {"abonnements": abonnements, "user": user})
+
+@transaction.atomic
+def souscrire_abonnement(request):
+
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    if is_ajax :
+        if request.method == "POST" :
+            data = json.loads(request.body.decode('utf-8'))
+            membre = data.get("membre")
+            plan = data.get("plan")
+
+        # Vérifier si le membre a déjà un abonnement actif pour ce plan
+        abonnement = Abonnement.objects.filter(membre_id=membre, plan_appli=plan, is_active=True).first()
+        if abonnement:
+                response = {
+                    "status": False,
+                    "message": f"Vous avez déjà un abonnement actif pour le plan {plan}."
+                }
+                return JsonResponse(response)
+
+        response = {"status": False, "message": "Une erreur est survenue lors de la souscription à l'abonnement."}
+        if not membre or not plan:
+            # raise ValueError("Membre et plan sont requis pour souscrire à un abonnement.")
+            response["message"] = "Membre et plan sont requis pour souscrire à un abonnement.."
+            response["status"] = False
+            return JsonResponse(response)
+        #  pour le moment les plans sont en dur, mais à terme ils seront dans la base de données et on pourra faire un switch case sur le nom du plan pour appliquer des règles spécifiques à chaque plan
+        membre = Membre.objects.get(id=membre)
+        if membre is None:
+            # raise MembreException(f"Membre avec id {membre} introuvable.")
+            response["message"] = f"Membre avec id {membre} introuvable."
+            response["status"] = False
+            return JsonResponse(response)
+        
+        
+        if plan == "FREE":
+            prix = 0
+            abonnement = Abonnement.objects.create(
+                membre=membre,
+                debut=date.today(),
+                plan_appli=plan,
+                prix=0,
+                is_active=True,
+                duree=365
+            )
+        
+        elif plan == "BASIC":
+            prix = 19000    
+            abonnement = Abonnement.objects.create(
+                membre=membre,
+                debut=date.today(),
+                plan_appli=plan,
+                prix=prix,
+                is_active=True,
+                duree=365
+            )
+            
+        elif plan == "PRO":
+            prix = 29000
+            abonnement = Abonnement.objects.create(
+                membre=membre,
+                debut=date.today(),
+                plan_appli=plan,
+                prix=prix,
+                is_active=True,
+                duree=365
+            )
+            
+        elif plan == "DIAMOND":
+            prix = 50000
+            abonnement = Abonnement.objects.create(
+                membre=membre,
+                debut=date.today(),
+                plan_appli=plan,
+                prix=prix,
+                is_active=True,
+                duree=365
+            )
+            
+        wallet = membre.wallet
+
+        if wallet.solde < prix:
+            # raise Exception("Solde insuffisant")
+            response["message"] = "Solde insuffisant pour souscrire à ce plan d'abonnement."
+            response["status"] = False
+            return JsonResponse(response)
+
+        wallet.solde -= Decimal(prix)
+        wallet.save() 
+        abonnement.save()
+
+        Transaction.objects.create(
+            code=f"TRX-ABO-{abonnement.id}",
+            wallet=wallet,
+            montant=Decimal(prix),
+            type="ABONNEMENT",
+            status="SUCCESS",
+            description=f"Abonnement au plan {abonnement.plan_appli} pour le membre {membre.nomcomplet}"
+        )
+
+        response["status"] = True
+        response["message"] = "Abonnement souscrit avec succès."
+        return JsonResponse(response)
+
+    return HttpResponseForbidden()
+
 
 def temoignages(request): 
     testimonials = [ 

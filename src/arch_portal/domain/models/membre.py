@@ -58,8 +58,7 @@ class Membre(models.Model):
     datedeces = models.CharField(max_length=50, null=True, blank=True)
 
     role = models.ManyToManyField(  Role, null=True, blank=True )
-
-   
+       
     def save(self, *args, **kwargs): 
 
         if self.pere != None and self.mere != None:

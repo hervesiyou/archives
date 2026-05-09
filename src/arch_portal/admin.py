@@ -1,6 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
+from arch_portal.domain.models.cagnotte import Cagnotte
+from arch_portal.domain.models.contribution import Contribution
 from arch_portal.domain.models.pagefamille import Pagefamille
 from arch_portal.domain.models.categorielivre import Categorie
 from arch_portal.domain.models.wallet import Wallet
@@ -34,10 +36,12 @@ from arch_portal.domain.models.personnecle import PersonneCle
 from arch_portal.domain.models.lieucle import LieuCle
 from arch_portal.domain.models.don import Don
 from arch_portal.domain.models.evenementlike import EvenementLike
+from arch_portal.domain.models.transaction import Transaction
 from arch_portal.domain.models.invitationadminfamille import InvitationAdminFamille
 
 
 admin.site.register(Communaute)
+admin.site.register(Transaction)
 admin.site.register(EvenementLike)
 admin.site.register(Rois)
 admin.site.register(LieuGeographique)
@@ -73,3 +77,6 @@ admin.site.register(PaiementLivre)
 admin.site.register(NotationLivre)
 admin.site.register(Pagefamille)
 admin.site.register(InvitationAdminFamille)
+admin.site.register(Cagnotte)
+admin.site.register(Contribution)
+

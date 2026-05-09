@@ -1,7 +1,9 @@
 from arch_portal.domain.models.association import Association
 from django.forms import ModelForm,ValidationError
 from crispy_forms.helper import FormHelper
+from arch_portal.domain.models.famille import Famille
 from crispy_forms.layout import Layout, Row, Column
+from django.db.models import Q
 
 class AssociationForm(ModelForm):
     class Meta:
@@ -19,7 +21,15 @@ class AssociationForm(ModelForm):
 
 
     def __init__(self, *args, **kwargs):
+
+        user = kwargs.pop('user',None)
         super().__init__(*args, **kwargs)
+        if user:
+            self.fields["famille"].queryset = Famille.objects.filter(
+                Q(publique=True) |
+                Q(membres_famille=user)
+            ).distinct()
+
         self.helper = FormHelper()
         self.helper.form_tag = False
         self.helper.layout = Layout(

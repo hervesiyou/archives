@@ -181,22 +181,29 @@
     <div class="row justify-content-center mt-5">
         <div class="col-lg-10 col-xl-12">
 
-            <a href="{% url 'abonement_librairie' %}" class="btn btn-outline-primary amount-btn"> Abonements Librairies </a> 
-            <a href="{% url 'abonement_archive' %}" class="btn btn-outline-primary amount-btn"> Abonements Archives </a>
+            <a href="#" class="btn btn-outline-primary amount-btn"> Abonements Librairies </a> 
+            <a href="#" class="btn btn-outline-primary amount-btn"> Abonements Archives </a>
 
             <div class="text-center mb-5">
                 <h2 class="fw-bold text-dark">Recharger votre compte - {{user.nomcomplet}} </h2>
+                <h6 class="fw-bold text-dark">SOLDE ACTUEL: <span class="badge bg-primary">{{user.wallet.solde}}  DOULAS </span></h6>
                 <p class="text-muted">Ajoutez des crédits à votre compte via Mobile Money</p>
             </div>
 
             <!-- Sélection du montant -->
             <div class="card payment-card mb-5">
                 <div class="payment-header bg-primary text-white">
-                    <h4 class="mb-0">Faite le dépot à notre numero et nous créditerons votre compte pour vous permettre de faire 
+                    <h4 class="mb-0">Faite le dépot à notre numero et nous créditerons votre compte en Unités ( <strong> DOULAS</strong> ) pour vous permettre de faire 
                         vos differents achats sur notre plateforme.
                     </h4>
                 </div>
                 <div class="payment-body text-center"> 
+                    <p>
+                       Le DOULA ( DOULAS au pluriel ) est l'unité de valeur permettant les echanges sur RichBook et sur plusieurs autres plateforme.
+                       <br/>
+                       <br/>
+                       <a class="btn btn-outline-info"> 1 DOULA = 1 XAF</a>
+                    </p>
                 </div>
             </div>
 
@@ -293,7 +300,7 @@
                     <!-- FREE -->
                     <div class="plan-card">
                         <div class="plan-name">FREE</div>
-                        <div class="plan-price">0 FCFA</div>
+                        <div class="plan-price">0 F (Doulas)</div>
                         <div class="plan-duration">Pour toujours</div>
                         <ul class="plan-features list-unstyled">
                             <li>✓ 1 Famille gratuite</li>
@@ -301,49 +308,62 @@
                             <li>✓ 5 livres par librairie</li>
                             <li>✓ 1 Communauté gratuite</li>
                         </ul>
-                        <a class="btn btn-outline-primary amount-btn mt-3 " href="#payment-options">Actuellement Gratuit</a><br/>
-                        <small class="text-muted">Idéal pour découvrir la plateforme</small>
+                        <a class="aboPlanID" data-plan="FREE" data-user="{{ user.id }}"  >
+                            <button class="btn btn-outline-primary amount-btn mt-3 " href="#" >
+                            Actuellement Gratuit</button>
+                        </a>
+                        <br/>
+                        <small class="text-muted"> Idéal pour découvrir la plateforme</small>
                     </div>
 
                     <!-- BASIC -->
                     <div class="plan-card">
                         <div class="plan-name">BASIC</div>
-                        <div class="plan-price">19 000 FCFA</div>
+                        <div class="plan-price">19 000 F (Doulas) </div>
                         <div class="plan-duration">par AN</div>
                         <ul class="plan-features list-unstyled">
                             <li>✓ 3 Communautés</li>
                             <li>✓ 3 Librairies</li>
                             <li>✓ 30 livres au total</li>
                         </ul>
-                        <a class="btn btn-outline-primary amount-btn mt-3 " href="#payment-options"> Obtenir </a><br/>
+                        <a class="aboPlanID" data-plan="BASIC" data-user="{{ user.id }}">
+                            <button class="btn btn-outline-primary amount-btn mt-3 "> Souscrire </button>
+                        </a>
+                        <br/>
                         <small class="text-muted">Parfait pour les petites structures</small>
                     </div>
 
                     <!-- PRO (recommandé) -->
                     <div class="plan-card featured">
                         <div class="plan-name">PRO</div>
-                        <div class="plan-price">29 000 FCFA</div>
+                        <div class="plan-price">29 000 F (Doulas)</div>
                         <div class="plan-duration">par AN</div>
                         <ul class="plan-features list-unstyled">
                             <li>✓ 5 Communautés</li>
                             <li>✓ 6 Librairies</li>
                             <li>✓ 60 livres au total</li>
                         </ul>
-                        <a class="btn btn-outline-primary amount-btn mt-3 " href="#payment-options"> Obtenir </a><br/>
+                        <a class="aboPlanID" data-plan="PRO" data-user="{{ user.id }}">
+                            <button class="btn btn-outline-primary amount-btn mt-3 "> Souscrire </button>
+                        </a>
+                        <br/>
                         <small class="text-muted">Le plus choisi par nos utilisateurs</small>
                     </div>
 
                     <!-- DIAMOND -->
                     <div class="plan-card">
                         <div class="plan-name">DIAMOND</div>
-                        <div class="plan-price">50 000 FCFA</div>
+                        <div class="plan-price">50 000 F (Doulas)</div>
                         <div class="plan-duration">par AN</div>
                         <ul class="plan-features list-unstyled">
                             <li>✓ 7 Communautés</li>
                             <li>✓ 10 Librairies</li>
                             <li>✓ 150 livres au total</li>
                         </ul>
-                        <a class="btn btn-outline-primary amount-btn mt-3 " href="#payment-options"> Obtenir </a><br/>
+                        <a class="aboPlanID" data-plan="DIAMOND" data-user="{{ user.id }}">
+                            <button class="btn btn-outline-primary amount-btn mt-3 "> Souscrire </button>
+                        </a>
+                        <br/>
                         <small class="text-muted">Pour les gros projets & institutions</small>
                     </div>
                 </div>
@@ -356,6 +376,7 @@
 {% endblock %}
 
 {% block js %}
+<script src="{% static 'js/core.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const amountButtons = document.querySelectorAll('.amount-btn');

@@ -323,7 +323,7 @@ def edit_librairie(request, id):
 
             if new_file:                         
                 if current_image:
-                    current_image.delete(save=False)  
+                    current_image.delete()  
 
                 new_image = image_form.save(commit=False)
                 new_image.save()
@@ -338,7 +338,7 @@ def edit_librairie(request, id):
             messages.success(request, "Librairie modifiée avec succès.")
             return redirect("show_librairie", librairie.id)
         else: 
-            messages.success(request, f"Informations invalides.{form.errors}")
+            messages.error(request, f"Informations invalides.{form.errors}")
     
     else:
         form = LibrairieForm(instance=librairie)
@@ -405,31 +405,42 @@ def edit_book(request, id):
 
     if request.method == "POST":
         form = LivreForm(request.POST, request.FILES, instance=livre)
-        image_form = ImageForm(request.POST, request.FILES, instance=image_instance)
+        # image_form = ImageForm(request.POST, request.FILES, instance=image_instance)
         image_formset = ImageFormSet(request.POST, request.FILES, queryset=livre.images.all())
 
         if form.is_valid() :
-            livre = form.save()
+            livre = form.save(commit=False)
 
-            if image_formset.is_valid() and image_form.is_valid():
+            if image_formset.is_valid() and image_formset.is_valid(): 
+                instances = image_formset.save(commit=False)
+                for instance in instances:
+                    if instance != None: 
+                        instance.sonlivre = livre                   
+                        instance.save()
+                        livre.images.add(instance) 
 
-                # if( image_form.has_changed() or image_form.cleaned_data.get("fichier") > 0 ):
-                if( image_form.cleaned_data.get("fichier") is not None ):
-                    image = image_form.save(commit=False)
-                    livre.image =  image
-                    image.save()
 
-            instances = image_formset.save(commit=False)
-            for instance in instances:
-            # for image_form in image_formset:
-                # if image_form.has_changed():
-                # image = image_form.save(commit=False)
-                instance.sonlivre = livre                    
-                instance.save()
+                for obj in image_formset.deleted_objects:
+                    obj.delete()
+                # if( image_formset.cleaned_data.get("fichier") is not None ):
 
-            for obj in image_formset.deleted_objects:
-                obj.delete()
-            # livre.save()
+                    # if image_instance:
+                    #    image_instance.delete(save=False)
+
+                    # image = image_formset.save()
+                    # livre.image =  image
+                    # image.save()
+
+            # instances = image_formset.save(commit=False)
+            # for instance in instances:
+            #     if instance != None: 
+            #         instance.sonlivre = livre                    
+            #         instance.save()
+
+            # for obj in image_formset.deleted_objects:
+            #     obj.delete()
+
+            livre.save()
 
             messages.success(request, "Livre mis à jour avec succès !")
             return redirect("show_book", livre.id)
@@ -438,19 +449,18 @@ def edit_book(request, id):
     else:
         form = LivreForm(instance=livre)
         image_formset = ImageFormSet(queryset=livre.images.all())
-        image_form = ImageForm(instance=image_instance)
+        # image_form = ImageForm(instance=image_instance) 
 
-    # return render(request, "libcore/edit_book.html", {
     return render(
         request, 
         "libcore/edit_book.html",
-        # "libcore/addbook.html",
+        
         {
             "livre": livre,
             "form": form,
             "image_formset": image_formset,
             "librairie": librairie,
-            "image_form": image_form,   
+            # "image_form": image_form,   
         }
     )
 

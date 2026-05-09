@@ -5,8 +5,6 @@ from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.evenement import Evenement
 from arch_portal.domain.models.membre import Membre
 
-# views.py
-
 from django.contrib.auth.decorators import login_required 
 from arch_portal.domain.models.evenementlike import EvenementLike
 from django.contrib  import messages
