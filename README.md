@@ -4,10 +4,10 @@
 - ajouter la geographie lors de la creation et l'update d'une communauté
      
 - gerer les arbres genealogiques, les generations et les exports 
-- ne charger que les familles concernées et les personnes conerncés lors de la creation
+        - ne charger que les familles concernées et les personnes conerncés lors de la creation
 - verifie qu'on ne fasse pas les CRUD si on a pas le droit ni l'abonnemnet pour le faire
-- sur richbook on peut creer des cagnottes et les gens cotisent, 
-- on va donner des types de badges aux meilleurs contributeurs
+        - on va donner des types de badges aux meilleurs contributeurs
+        - sur richbook on peut creer des cagnottes et les gens cotisent, 
         - ajouter le DOULA et sa convertion, 
 - ajouter les notifications sur les projets en cours et les donneurs avec les CTA
 - creer ma monnaie communautaire

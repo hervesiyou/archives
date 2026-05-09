@@ -42,12 +42,16 @@
                             {% endif %}
                                 <a href="{% url 'mes_evenements_likes' %}" class="btn btn-outline-info"> Mes evenements interessants</a>
                             </h4>
+                            <a href="{% url 'list_cagnottes' %}" title="" class="btn btn-sm btn-outline-warning" >
+                                        <span> Voir les cagnottes  </span>
+                                  </a>
                             {% if 'ADD_GALERIE' in request.session.userrights %}
                                 <a class=" badge bg-info" href="{% url 'add_galerie' %}" alt="Ajouter une galerie" title="Ajouter une galerie">
                                     <i class="fa-solid fa-plus me-2 text-success"></i>
                                     <i class="fa-solid fa-images me-2 text-success"></i>                                       
                                 </a>
                             {% endif %}
+                             
 
                         </div>
                     </div>

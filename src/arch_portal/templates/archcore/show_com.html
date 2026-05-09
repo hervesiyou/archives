@@ -130,7 +130,10 @@
                                     <span> Laisser une message </span>
                                 </a>
 
-                                <a class="btn btn-sm btn-outline-info text-success"  data-bs-toggle="modal"  data-bs-target="#donModal">  
+                                 {% comment %} data-bs-toggle="modal"  data-bs-target="#donModal" {% endcomment %}
+                                <a class="btn btn-sm btn-outline-info text-success" 
+                                href="{% url 'don_create' communaute.id %}"
+                                >  
                                     <span> Faire un Don </span>
                                 </a>
                                 {% if  'VOIR_MESSAGES_COMMUNAUTES' in request.session.userrights %}  - 

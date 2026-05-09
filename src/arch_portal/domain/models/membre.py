@@ -8,6 +8,7 @@ from .galerie import Galerie
 from .role import Role
 from .message import Message
 from .communaute import Communaute
+from .badge import Badge
 
 class Membre(models.Model):
     class Meta:
@@ -58,6 +59,8 @@ class Membre(models.Model):
     datedeces = models.CharField(max_length=50, null=True, blank=True)
 
     role = models.ManyToManyField(  Role, null=True, blank=True )
+
+    badges = models.ManyToManyField(  Badge, blank=True,  related_name="membres")
        
     def save(self, *args, **kwargs): 
 
@@ -71,6 +74,15 @@ class Membre(models.Model):
 
     def __str__(self):
         return self.nomcomplet
+
+    def total_contributions_et_dons(self):
+        return self.contributions.count() + self.dons_effectues.count()
+
+    def montant_total_contributions(self):
+        total = self.contributions.aggregate( total=models.Sum("montant") )["total"]
+        total_don = self.dons_effectues.aggregate( total=models.Sum("montant") )["total"]
+
+        return (total + total_don ) or 0
 
     def jappartient_asso(self,asso):
         return ( asso in self.associations.all() )

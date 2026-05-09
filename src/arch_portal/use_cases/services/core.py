@@ -6,6 +6,16 @@ import re
 import unicodedata
 from django.conf import settings
 
+from arch_portal.domain.models.badge import Badge
+
+
+def update_member_badges(membre):
+
+    total = membre.contributions.count() + membre.dons_effectues.count()
+    badges = Badge.objects.filter(    type="CAGNOTTE",   minimum__lte=total   ).order_by("-minimum")
+
+    for badge in badges:
+        membre.badges.add(badge)
 
 def nettoyer_caracteres_speciaux(texte: str, mode: str = "remplacer") -> str:
     """

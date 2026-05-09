@@ -1,5 +1,6 @@
  
  
+from arch_portal.use_cases.services.core import update_member_badges
 from arch_portal.domain.models.galerie import Galerie
 from django.contrib  import messages
 from django.shortcuts import redirect, render, get_object_or_404
@@ -204,6 +205,10 @@ def don_create(request, communaute_id):
                 don.donateur = user 
                 don.save()
                 messages.success(request, "Votre don a été enregistré. Merci beaucoup ! 🙏")
+
+                 # je met a jour le badge du membre
+                update_member_badges(user)
+
                 return redirect('don_list', communaute_id=communaute.id)
         else:
             return redirect("login")

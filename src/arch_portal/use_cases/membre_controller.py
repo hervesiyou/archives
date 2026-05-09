@@ -1,8 +1,10 @@
+from datetime import date
 import json
 
 # from django.core.serializers import serialize
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
+from arch_portal.domain.models.abonnement import Abonnement
 from arch_portal.domain.models.wallet import Wallet
 from arch_portal.domain.exceptions.membre_exception import MembreException
 from arch_portal.use_cases.services.core import compute_sha1
@@ -39,6 +41,17 @@ def subscribe(request):
 
             user.token = token
             user.save()
+            #  je lui donne l'abonnement par defaut
+            abonnement = Abonnement.objects.create(
+                membre=user ,
+                debut=date.today(),
+                plan_appli="FREE",
+                prix=0,
+                is_active=True,
+                duree=365
+            )
+            abonnement.save()
+            messages.success(request, f"Merci { user.nomcomplet } pour votre inscription ! Un email de validation vous a été envoyé, merci de cliquer sur le lien de validation pour activer")
 
         return redirect("login")
     else:

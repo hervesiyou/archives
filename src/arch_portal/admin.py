@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
+from arch_portal.domain.models.badge import Badge
 from arch_portal.domain.models.cagnotte import Cagnotte
 from arch_portal.domain.models.contribution import Contribution
 from arch_portal.domain.models.pagefamille import Pagefamille
@@ -49,6 +50,7 @@ admin.site.register(MiniHistoire)
 admin.site.register(PersonneCle)
 admin.site.register(LieuCle)
 admin.site.register(Don)
+admin.site.register(Badge)
 
 admin.site.register(CommunauteMessage)
 admin.site.register(LibrairieMessage)

@@ -23,6 +23,11 @@
         <a href="{% url 'show_subscriptions' user.id %}" class="badge bg-warning col-lg-2 col-5 m-1"> <i class="fas fa-user"></i> Mes abonnements </a>
         
     </div>
+
+    <div class="row m-3">
+         <div class="col-lg-12 my-2"> 
+            {%  include 'includes/showbadgeuser.html'  with membre=user %}
+        </div>
     <div >             
         {% block body %}
             {% if commandes %}
