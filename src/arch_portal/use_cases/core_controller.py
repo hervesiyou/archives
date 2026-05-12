@@ -8,6 +8,7 @@ from arch_portal.domain.models.contact import Contact
 from arch_portal.domain.models.membre import Membre
 from arch_portal.domain.models.livre import Livre
 # from arch_portal.domain.models.image import Image
+from arch_portal.domain.models.plantarifaire import Plan
 from arch_portal.domain.models.message import Message
 from arch_portal.domain.models.marche import Marche
 from arch_portal.domain.models.invitationadminfamille import InvitationAdminFamille
@@ -39,16 +40,17 @@ def show_subscriptions(request, user_id):
 
 @transaction.atomic
 def souscrire_abonnement(request):
-
+    # les plan_appli sont FREE BASIC PRO DIAMOND
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     if is_ajax :
         if request.method == "POST" :
             data = json.loads(request.body.decode('utf-8'))
             membre = data.get("membre")
             plan = data.get("plan")
+            type = data.get("type")
 
         # Vérifier si le membre a déjà un abonnement actif pour ce plan
-        abonnement = Abonnement.objects.filter(membre_id=membre, plan_appli=plan, is_active=True).first()
+        abonnement = Abonnement.objects.filter(membre_id=membre, plan_appli=plan, type=type, is_active=True).first()
         if abonnement:
                 response = {
                     "status": False,
@@ -68,60 +70,116 @@ def souscrire_abonnement(request):
             # raise MembreException(f"Membre avec id {membre} introuvable.")
             response["message"] = f"Membre avec id {membre} introuvable."
             response["status"] = False
-            return JsonResponse(response)
-        
+            return JsonResponse(response)  
         
         if plan == "FREE":
-            prix = 0
-            abonnement = Abonnement.objects.create(
-                membre=membre,
-                debut=date.today(),
-                plan_appli=plan,
-                prix=0,
-                is_active=True,
-                duree=365
+            prix = 0 
+            p = Plan.objects.create(
+                nom = f"PL-{type}-{plan}-{membre.login}",
+                nbcommunautes = 0,
+                nbadministrateurs = 0,
+                nbfamilles = 1,
+                nblivres = 0,
+                nbcagnotes = 1,
+                nblibrairies = 0,
+                prix = prix
             )
         
         elif plan == "BASIC":
-            prix = 19000    
-            abonnement = Abonnement.objects.create(
-                membre=membre,
-                debut=date.today(),
-                plan_appli=plan,
-                prix=prix,
-                is_active=True,
-                duree=365
-            )
+            prix = 19000  
+            p = Plan.objects.create(
+                nom = f"PL-{type}-{plan}-{membre.login}",
+                nbcommunautes = 3,
+                nbadministrateurs = 5,
+                nbfamilles = 30,
+                nblivres = 0,
+                nbcagnotes =3,
+                nblibrairies = 0,
+                prix = prix
+            ) 
             
         elif plan == "PRO":
             prix = 29000
-            abonnement = Abonnement.objects.create(
-                membre=membre,
-                debut=date.today(),
-                plan_appli=plan,
-                prix=prix,
-                is_active=True,
-                duree=365
-            )
+            p = Plan.objects.create(
+                nom = f"PL-{type}-{plan}-{membre.login}",
+                nbcommunautes = 5,
+                nbadministrateurs = 10,
+                nbfamilles = 60,
+                nblivres = 0,
+                nbcagnotes =5,
+                nblibrairies = 0,
+                prix = prix
+            ) 
             
         elif plan == "DIAMOND":
             prix = 50000
-            abonnement = Abonnement.objects.create(
-                membre=membre,
-                debut=date.today(),
-                plan_appli=plan,
-                prix=prix,
-                is_active=True,
-                duree=365
+            p = Plan.objects.create(
+                nom = f"PL-{type}-{plan}-{membre.login}",
+                nbcommunautes = 8,
+                nbadministrateurs = 15,
+                nbfamilles = 150,
+                nblivres = 0,
+                nbcagnotes =8,
+                nblibrairies = 0,
+                prix = prix
             )
+             
+        elif plan =="FREEREADER":
+            prix = 7000
+            p = Plan.objects.create(
+                nom = f"PL-{type}-{plan}-{membre.login}",
+                nbcommunautes = 0,
+                nbadministrateurs = 0,
+                nbfamilles = 0,
+                nblivres = 0,
+                nbcagnotes = 0,
+                nblibrairies = 0,
+                prix = prix
+            )
+
+        elif plan == "PROREADER":
+            prix = 12000
+            p = Plan.objects.create(
+                nom = f"PL-{type}-{plan}-{membre.login}",
+                nbcommunautes = 0,
+                nbadministrateurs = 0,
+                nbfamilles = 0,
+                nblivres = 0,
+                nbcagnotes = 0,
+                nblibrairies = 0,
+                prix = prix
+            )
+
+        elif plan == "PROLIBRAIRE":
+            prix = 29000 
+            p = Plan.objects.create(
+                nom = f"PL-{type}-{plan}-{membre.login}",
+                nbcommunautes = 0,
+                nbadministrateurs = 0,
+                nbfamilles = 0,
+                nblivres = 100,
+                nbcagnotes = 0,
+                nblibrairies = 1,
+                prix = prix
+            )      
             
         wallet = membre.wallet
-
         if wallet.solde < prix:
-            # raise Exception("Solde insuffisant")
             response["message"] = "Solde insuffisant pour souscrire à ce plan d'abonnement."
             response["status"] = False
             return JsonResponse(response)
+        
+        # je cree l'abonnement correspondant 
+        abonnement = Abonnement.objects.create(
+            membre=membre,
+            plan = p,
+            debut=date.today(),
+            plan_appli=plan,
+            prix=prix,
+            type=type,
+            is_active=True,
+            duree=365
+        )
 
         wallet.solde -= Decimal(prix)
         wallet.save() 

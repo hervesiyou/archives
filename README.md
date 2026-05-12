@@ -2,19 +2,32 @@
 
 - connecter la mediatheques des communautés avec google photos et google drive
 - ajouter la geographie lors de la creation et l'update d'une communauté
+
+- gerer la recommandation des livres
+- controller qu'on ne cree pas plus de communauté et de famille que notre plan d'abonnement
+- controller qu'on ne cree pas plus de librairie et de livre que notre plan d'abonnement
+- controller qu'on ne cree pas plus de cagnote que notre plan
+- permettre l'envoi des message groupés aux membres d'une meme famille
+- ajouter la monetisation des librairies par l'affichage des publicités,
+- ajouter la monetisation des communautés par l'affichage des publicité
+- reconcevoir l'achat d'un livre, soit on achete un livre soit on est abonné juste pour le lire
+- debiter le prix du livre quand on se le procure et alerte le vendeur, puis envoyer le livre par mail
+
+        - gerer les abonnements aux librairies, à chaque abonnement je cree le plan tarifaire ayant son nbfamille, nbcommunauté, nblibrairie, nblivres, supporth24/7, nbcagnotte le debut et la fin de l'abonnement
      
 - gerer les arbres genealogiques, les generations et les exports 
-        - ne charger que les familles concernées et les personnes conerncés lors de la creation
 - verifie qu'on ne fasse pas les CRUD si on a pas le droit ni l'abonnemnet pour le faire
+- ajouter les notifications sur les projets en cours et les donneurs avec les CTA
+- tester le paiement d'un livre qui debite mon compte
+- si on a deja payé un livre on signale et liste les livres acheté
+
+        - ne pas permettre qu'on note un livre si on ne l'a pas acheté, 
+
+        - ne charger que les familles concernées et les personnes conerncés lors de la creation
         - on va donner des types de badges aux meilleurs contributeurs
         - sur richbook on peut creer des cagnottes et les gens cotisent, 
         - ajouter le DOULA et sa convertion, 
-- ajouter les notifications sur les projets en cours et les donneurs avec les CTA
-- creer ma monnaie communautaire
-- tester le paiement d'un livre qui debite mon compte
-- ne pas permettre qu'on note un livre si on ne l'a pas acheté, 
-- si on a deja payé un livre on signale et liste les livres acheté
-
+        - creer ma monnaie communautaire
         - l'ajout des galeries ne sauvegarde pas les images  
         - L'edition de l'image d'un livre et d'une librairie ne marche pas
         - le chargement des images ne marche pas, 

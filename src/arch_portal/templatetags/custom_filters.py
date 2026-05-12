@@ -2,6 +2,19 @@ from django import template
 
 register = template.Library()
 
+EXCHANGE_RATE = {
+    "XAF":1,
+    "DC":5
+}
+
+@register.filter(name="convertXAFDC")
+def convertXAFToDC(somme:float):
+    return round((somme / EXCHANGE_RATE.get("DC")))
+
+@register.filter(name="convertDCXAF")
+def convertDCToXAF(somme:float):
+    return round((somme * EXCHANGE_RATE.get("DC")))
+
 @register.filter(name='appartient')
 def appartient(liv, user_id):
     return liv.userid_appartient(user_id)

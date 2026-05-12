@@ -1,7 +1,7 @@
 
 from django.db import models
-from decimal import Decimal
-from django.utils import timezone
+# from decimal import Decimal
+# from django.utils import timezone
 from datetime import timedelta, date 
 
 class Abonnement(models.Model):
@@ -15,6 +15,8 @@ class Abonnement(models.Model):
     membre = models.ForeignKey("Membre", on_delete=models.CASCADE, related_name='abonnements')
     plan = models.ForeignKey("Plan", on_delete=models.CASCADE, null=True, blank=True, related_name='abonnements')
     plan_appli = models.CharField(max_length=10, blank=True)
+    # garde si on est obonement de librairie ou communauté
+    type = models.CharField(max_length=10, blank=True) 
     duree =  models.IntegerField(default=365)
 
     def __str__(self):

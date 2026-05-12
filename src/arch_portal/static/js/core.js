@@ -25,10 +25,12 @@ $(document).ready(function(){
         e.preventDefault();
         let plan = $(this).data("plan")
         let user = $(this).data("user")
+        let type = $(this).data("type")
        
         var data = {                      
             "membre": user,
             "plan": plan, 
+            "type": type, 
         };
  
         if( data.membre != undefined && data.plan.length > 0 ){
@@ -41,7 +43,7 @@ $(document).ready(function(){
                 headers: { "X-CSRFToken": getCookie("csrftoken") },
 
                 beforeSend      : function(){
-                    // alert(JSON.stringify(data) + ", url: " + this.url)
+                    alert(JSON.stringify(data) + ", url: " + this.url)
                 },
                 error: function(error) {
                     console.error(error);

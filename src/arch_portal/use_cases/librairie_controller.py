@@ -472,13 +472,13 @@ def show_book(request,id):
     else:
         librairie = Librairie.objects.get(id=librairieid)
 
-    abos = achat=connecte=False
+    abos = achat= connecte = False
     userid = request.session.get("userid","")
     if( isinstance(userid, int) and userid !="" ):
         user = Membre.objects.get(id=userid)
         abos = user.abonnements.all()
         for a in abos :
-            if a.is_active and a.plan.appli == "LIB":
+            if a.is_active and  a.plan != None and a.plan.appli == "LIB":
                 achat = True
         
         connecte = True

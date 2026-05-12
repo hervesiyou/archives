@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}{{ livre.nom }} – {{ librairie.nom }}{% endblock %}
 
@@ -94,7 +95,7 @@
 
             <div class="mt-4">
                 <h3 class="price-badge bg-danger text-white">
-                    Prix: {{ livre.prix }} DOULAS<i class="fa fa-money"></i> 
+                    Prix: {{ livre.prix|convertXAFDC }} DOULARS<i class="fa fa-money"></i> 
                 </h3>
                 <p class="mt-3">
                     <span class="badge bg-secondary fs-6">
@@ -135,15 +136,17 @@
                                 <button class="btn btn-lg btn-success action-btn" data-bs-toggle="modal" data-bs-target="#paiementModal">
                                     <i class="fa fa-download me-2"></i>Télécharger maintenant
                                 </button>
+                                <button class="btn btn-lg btn-outline-warning action-btn" data-bs-toggle="modal" data-bs-target="#notationModal">
+                                    <i class="fa fa-star-half-alt me-2"></i>Noter ce livre
+                                </button>
                             {% else %}
-                                <a href="{% url 'abonement_librairie' %}" class="btn btn-lg btn-warning action-btn">
+                                <a href="{% url 'tarifs' %}#aboBook" class="btn btn-lg btn-warning action-btn">
+                                {% comment %} <a href="{% url 'abonement_librairie' %}" class="btn btn-lg btn-warning action-btn"> {% endcomment %}
                                     <i class="fa fa-star me-2"></i>S’abonner pour lire
                                 </a>
                             {% endif %}
 
-                            <button class="btn btn-lg btn-outline-warning action-btn" data-bs-toggle="modal" data-bs-target="#notationModal">
-                                <i class="fa fa-star-half-alt me-2"></i>Noter ce livre
-                            </button>
+                            
                         {% else %}
                             <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-lg btn-outline-primary action-btn">
                                 <i class="fa fa-sign-in-alt me-2"></i>Se connecter pour acheter
@@ -293,7 +296,7 @@
                                                 </a>
                                             {% endif %}
 
-                                            <span class="text-bold text-danger "> Prix: {{livre.prix}} DOULAS </span>
+                                            <span class="text-bold text-danger "> Prix: {{livre.prix|convertXAFDC}} DOULARS </span>
                                             </td>
                                             <td class="text-end"> {{livre.auteur}} </td>
                                         </tr>
@@ -307,7 +310,7 @@
                         <div class="col-md-12">
                         
                             <div class="pull-right mt-4 text-end">
-                                <h3>Prix: :<b> {{livre.prix}} DOULAS</b></h3>
+                                <h3>Prix: :<b> {{livre.prix|convertXAFDC}} DOULARS</b></h3>
                             </div>
                             
                             <hr>                   
@@ -322,10 +325,10 @@
                                     {% if connecte %}
                                             {% if achat %}
                                                 <a class="btn btn-success text-white"  data-bs-toggle="modal"  data-bs-target="#paiementModal">Acheter directement</a>
+                                                <button class="btn btn-warning"  data-bs-toggle="modal"    data-bs-target="#notationModal">
+                                                    Noter ce livre ⭐
+                                                </button>
                                             {% endif %}
-                                            <button class="btn btn-warning"  data-bs-toggle="modal"    data-bs-target="#notationModal">
-                                                Noter ce livre ⭐
-                                            </button>
                                             {% if achat %}
                                                 <div class="text-success"> Votre abonnement vous permet de directement telecharger ce livre </div>
                                             {% else %}
@@ -353,8 +356,14 @@
                                         <h5 class="modal-title " id="exampleModalLabel"> Commande de {{ livre.nom}} </h5>
                                         <button type="button" class="btn-close clos" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
+
+                                        <div class="alert alert-danger mt-2">
+                                            <p>
+                                                Votre compte sera debité de  <span class="bg-danger text-white p-2"> {{livre.prix|convertXAFDC}} Doulars </span>  representant le  prix de ce livre 
+                                            </p>
+                                        </div>
                             
-                                        <form    method="post" >
+                                        <form method="post" >
                                             <div class="modal-body"> 
                                                 {% csrf_token %}
                                                 <label class="form_label"> Proprietaire</label>
@@ -374,12 +383,9 @@
                                                 <textarea id="message" placeholder="Laissez un message au Proprietaire ..." class="form-control"></textarea> 
                                                 
                                                 <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
-                                            </div>
-
-                                            
+                                            </div>                                          
 
                                             <div class="modal-footer">
-
                                             <input type="button" class="btn btn-primary" id="addOrderID" 
                                             disabled 
                                             value="Enregistrer" />
@@ -412,7 +418,7 @@
             </div>
             <div class="modal-body">
                 <p><strong>Livre :</strong> {{ livre.nom }}</p>
-                <p><strong>Prix :</strong> <span class="text-danger fs-5">{{ livre.prix }} DOULAS</span></p>
+                <p><strong>Prix :</strong> <span class="text-danger fs-5">{{ livre.prix|convertXAFDC }} DOULARS</span></p>
                 <p class="text-muted">Votre abonnement permet le téléchargement direct.</p>
                 <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
             </div>

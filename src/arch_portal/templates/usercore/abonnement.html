@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %} Rechargement de compte - Mobile Money{% endblock %}
 
@@ -186,23 +187,25 @@
 
             <div class="text-center mb-5">
                 <h2 class="fw-bold text-dark">Recharger votre compte - {{user.nomcomplet}} </h2>
-                <h6 class="fw-bold text-dark">SOLDE ACTUEL: <span class="badge bg-primary">{{user.wallet.solde}}  DOULAS </span></h6>
+                <h6 class="fw-bold text-dark m-3">SOLDE ACTUEL: 
+                    <span class="badge bg-success p-2">{{user.wallet.solde|convertXAFDC}}  DOULARS </span>
+                 </h6>
                 <p class="text-muted">Ajoutez des crédits à votre compte via Mobile Money</p>
             </div>
 
             <!-- Sélection du montant -->
             <div class="card payment-card mb-5">
                 <div class="payment-header bg-primary text-white">
-                    <h4 class="mb-0">Faite le dépot à notre numero et nous créditerons votre compte en Unités ( <strong> DOULAS</strong> ) pour vous permettre de faire 
+                    <h4 class="mb-0">Faite le dépot à notre numero et nous créditerons votre compte en Unités ( <strong> DOULARS</strong> ) pour vous permettre de faire 
                         vos differents achats sur notre plateforme.
                     </h4>
                 </div>
                 <div class="payment-body text-center"> 
                     <p>
-                       Le DOULA ( DOULAS au pluriel ) est l'unité de valeur permettant les echanges sur RichBook et sur plusieurs autres plateforme.
+                       Le DOULAR ( DOULARS au pluriel ) est l'unité de valeur permettant les echanges sur RichBook et sur plusieurs autres plateformes.
                        <br/>
                        <br/>
-                       <a class="btn btn-outline-info"> 1 DOULA = 1 XAF</a>
+                       <a class="btn btn-outline-danger"> 1 DOULAR = 5 XAF</a>
                     </p>
                 </div>
             </div>
@@ -294,18 +297,18 @@
     <div class="row">
         <div class="col-12">
             <div class="pricing-section">
-                <h3 class="pricing-title">Nos Forfaits Richbook</h3>
+                <h3 class="pricing-title">Nos Forfaits Communautaire Richbook</h3>
                 
                 <div class="pricing-grid">
                     <!-- FREE -->
                     <div class="plan-card">
                         <div class="plan-name">FREE</div>
-                        <div class="plan-price">0 F (Doulas)</div>
+                        <div class="plan-price">0 F (Doulars)</div>
                         <div class="plan-duration">Pour toujours</div>
                         <ul class="plan-features list-unstyled">
                             <li>✓ 1 Famille gratuite</li>
-                            <li>✓ 1 Librairie gratuite</li>
-                            <li>✓ 5 livres par librairie</li>
+                            <li>✓ Possibilité de créer une cagnote</li>
+                            {% comment %} <li>✓ 5 livres par librairie</li> {% endcomment %}
                             <li>✓ 1 Communauté gratuite</li>
                         </ul>
                         <a class="aboPlanID" data-plan="FREE" data-user="{{ user.id }}"  >
@@ -319,12 +322,15 @@
                     <!-- BASIC -->
                     <div class="plan-card">
                         <div class="plan-name">BASIC</div>
-                        <div class="plan-price">19 000 F (Doulas) </div>
+                        <div class="plan-price">19 000 F </div>
+                        <div class="text-white text-bold bg-success"> {{ 19000|convertXAFDC}} (Doulars) </div>
                         <div class="plan-duration">par AN</div>
                         <ul class="plan-features list-unstyled">
                             <li>✓ 3 Communautés</li>
-                            <li>✓ 3 Librairies</li>
-                            <li>✓ 30 livres au total</li>
+                            <li>✓ 3 Cagnotes possible </li>
+                            <li>✓ Ajout des administrateurs pour vous aider à gerer la bibliothèque </li>
+                            <li>✓ Pas de contenu exclusif </li>
+                            <li>✓ Possibilité de créer jusqu'à 30 Familles au total</li>
                         </ul>
                         <a class="aboPlanID" data-plan="BASIC" data-user="{{ user.id }}">
                             <button class="btn btn-outline-primary amount-btn mt-3 "> Souscrire </button>
@@ -336,12 +342,18 @@
                     <!-- PRO (recommandé) -->
                     <div class="plan-card featured">
                         <div class="plan-name">PRO</div>
-                        <div class="plan-price">29 000 F (Doulas)</div>
+                        <div class="plan-price">29 000 F</div>
+                        <div class="text-white text-bold bg-success"> {{ 29000|convertXAFDC}} (Doulars) </div>
                         <div class="plan-duration">par AN</div>
                         <ul class="plan-features list-unstyled">
                             <li>✓ 5 Communautés</li>
-                            <li>✓ 6 Librairies</li>
-                            <li>✓ 60 livres au total</li>
+                            <li>✓ 5 cagnottes</li>
+                            <li>✓ Monetisation de vos communautés</li>
+                            <li>✓ Newsletter pour envoyer les messages groupés aux membres de vos familles </li>
+                            <li>✓ Possibilité d'acceder aux statistiques familliales </li>
+                            <li>✓ Ajout des administrateurs pour vous aider à gerer les communautés </li>
+                            <li>✓ Possibilité de creer plus de 60 familles au total</li>
+                            <li>✓ Support dedié 24/7</li>
                         </ul>
                         <a class="aboPlanID" data-plan="PRO" data-user="{{ user.id }}">
                             <button class="btn btn-outline-primary amount-btn mt-3 "> Souscrire </button>
@@ -353,12 +365,20 @@
                     <!-- DIAMOND -->
                     <div class="plan-card">
                         <div class="plan-name">DIAMOND</div>
-                        <div class="plan-price">50 000 F (Doulas)</div>
+                        <div class="plan-price">50 000 F</div>
+                        <div class="text-white text-bold bg-success"> {{ 50000|convertXAFDC}} (Doulars) </div>
                         <div class="plan-duration">par AN</div>
                         <ul class="plan-features list-unstyled">
-                            <li>✓ 7 Communautés</li>
-                            <li>✓ 10 Librairies</li>
-                            <li>✓ 150 livres au total</li>
+                            <li>✓ 8 Communautés</li>                             
+                             <li>✓ 8 cagnottes</li>
+                            <li>✓ Possibilité de créer 150 familles au total</li>
+                            <li>✓ Possibilité d'augmenter votre quota de familles et de communautés</li>
+                            <li>✓ Monetisation de vos communautés</li>
+                            <li>✓ Newsletter pour envoyer les messages groupés aux membres de vos familles </li>
+                            <li>✓ Possibilité d'acceder aux statistiques familliales </li>
+                            <li>✓ Ajout des administrateurs pour vous aider à gerer les communautés </li>
+                            {% comment %} <li>✓ Possibilité de créer plus de 60 familles au total</li> {% endcomment %}
+                            <li>✓ Support dedié 24/7</li>
                         </ul>
                         <a class="aboPlanID" data-plan="DIAMOND" data-user="{{ user.id }}">
                             <button class="btn btn-outline-primary amount-btn mt-3 "> Souscrire </button>
@@ -370,6 +390,10 @@
             </div>
             <!-- Fin section tarifs -->
         </div>
+    </div>
+    
+    <div id="aboBook">
+    {% include "usercore/partials/abonnement_livres.html" %}
     </div>
 </div>
 
