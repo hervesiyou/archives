@@ -30,6 +30,8 @@ import os
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404 
 
+from django.core.exceptions import PermissionDenied
+from arch_portal.use_cases.services.subscription_service import check_abonnement_permission, get_membre_from_session
 
 import qrcode
 from io import BytesIO
@@ -221,7 +223,6 @@ def verifier_facture(request, reference):
     paiement = get_object_or_404(PaiementLivre, reference=reference)
     return render(request, "libcore/verifier.html", {"paiement": paiement})
 
-
 def facture_pdf(request, paiement_id):
     if not request.session.get("userid"):
         return redirect("login")
@@ -307,7 +308,6 @@ def facture_pdf(request, paiement_id):
     p.save()
 
     return response
-
 
 def edit_librairie(request, id):
     librairie = get_object_or_404(Librairie, pk=id)
@@ -499,42 +499,51 @@ def add_book(request):
         return  redirect("listlibs")
     
     if request.method == "POST":
-        form = LivreForm(request.POST, request.FILES)
-        image_formset = ImageFormSet(request.POST, request.FILES) 
-        if form.is_valid(): 
-            livre = form.save(commit=False)
 
-            if not livre.isbn:
-                livre.isbn = livre.generer_isbn()
+        try:
 
-            livre.save()
-            
-            if( livre.type == "Numerique"):
-                livre.stock = 1000 
-            try:
-                librairie = Librairie.objects.filter(id=librairieid).first()
-                if librairie:
-                    livre.librairies.add(librairie)
-                    # livre.save()
-            
-            except Librairie.DoesNotExist:
-                # print("Librairie introuvable")
-                messages.error(request, "La librairie sélectionnée n'existe pas.")
-                return redirect("listlibs")
+            check_abonnement_permission(request, 'livre')
 
-            if image_formset.is_valid():
+            form = LivreForm(request.POST, request.FILES)
+            image_formset = ImageFormSet(request.POST, request.FILES) 
+            if form.is_valid(): 
+                livre = form.save(commit=False)
+
+                if not livre.isbn:
+                    livre.isbn = livre.generer_isbn()
+
+                livre.save()
                 
-                for image_form in image_formset:
-                    if image_form.has_changed(): 
-                        image = image_form.save(commit=False)
-                        image.sonlivre = livre 
-                        image.save()
-                        livre.images.add(image) 
+                if( livre.type == "Numerique"):
+                    livre.stock = 1000 
+                try:
+                    librairie = Librairie.objects.filter(id=librairieid).first()
+                    if librairie:
+                        livre.librairies.add(librairie)
+                        # livre.save()
+                
+                except Librairie.DoesNotExist:
+                    # print("Librairie introuvable")
+                    messages.error(request, "La librairie sélectionnée n'existe pas.")
+                    return redirect("listlibs")
 
-            messages.success(request, "Livre ajouté avec succès !")
-            return redirect("show_book",livre.id )
-        else:
-            messages.error(request, f"Veuillez corriger les erreurs suivantes.{form.errors}") 
+                if image_formset.is_valid():
+                    
+                    for image_form in image_formset:
+                        if image_form.has_changed(): 
+                            image = image_form.save(commit=False)
+                            image.sonlivre = livre 
+                            image.save()
+                            livre.images.add(image) 
+
+                messages.success(request, "Livre ajouté avec succès !")
+                return redirect("show_book",livre.id )
+            else:
+                messages.error(request, f"Veuillez corriger les erreurs suivantes.{form.errors}") 
+
+        except PermissionDenied as e:
+            messages.error(request, str(e))
+            return redirect("show_librarie",{"id" : librairieid})
     else:
         form = LivreForm()
         image_formset = ImageFormSet(queryset=Image.objects.none())  
@@ -601,12 +610,19 @@ def show_librairie(request,id):
 
 def add_librairie(request):
     if request.method == "POST": 
-        form = LibrairieForm(request.POST)
+        try:
 
-        if form.is_valid():  
-            com = form.save() 
-            com.save()
-            return redirect("show_librairie",com.id )
+            check_abonnement_permission(request, 'librairie')
+            form = LibrairieForm(request.POST)
+
+            if form.is_valid():  
+                com = form.save() 
+                com.save()
+                return redirect("show_librairie",com.id )
+            
+        except PermissionDenied as e:
+            messages.error(request, str(e))
+            return redirect("listlibs")
     else: 
         form = LibrairieForm()
         image_form = ImageForm()

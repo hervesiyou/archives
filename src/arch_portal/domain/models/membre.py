@@ -1,5 +1,6 @@
 from django.db import models
-# from .wallet import Wallet
+from django.utils import timezone
+from django.core.exceptions import PermissionDenied
 from arch_portal.domain.models.CONST_DATA import SEX_CHOICES, ETATCIVIL_CHOICES, TYPE_MEMBER_CHOICES, GENERATIONS
 from .famille import Famille
 from .association import Association
@@ -59,7 +60,6 @@ class Membre(models.Model):
     datedeces = models.CharField(max_length=50, null=True, blank=True)
 
     role = models.ManyToManyField(  Role, null=True, blank=True )
-
     badges = models.ManyToManyField(  Badge, blank=True,  related_name="membres")
        
     def save(self, *args, **kwargs): 
@@ -119,3 +119,41 @@ class Membre(models.Model):
         return self.associations.filter(id=ass_or_id.id).exists()
 
 
+    def get_abonnement_actif(self):
+        return self.abonnements.filter( is_active=True, fin__gte=timezone.now().date()).order_by("-debut").first()
+    
+    def peut_creer( self, entite_type) ->bool:
+        abo = self.get_abonnement_actif()
+        if not abo or not abo.plan:
+            return False
+        
+        plan = abo.plan
+        current_count = 0
+        if entite_type =="communaute":
+            current_count = self.communautes.count()
+            max_allowed =  int(plan.nbcommunautes or 0)
+        elif entite_type == 'famille':
+            current_count = self.familles.count()
+            max_allowed = int(plan.nbfamilles or 0)
+        elif entite_type == 'librairie':
+            # Adaptez selon votre modèle Librairie
+            current_count = getattr(self, 'librairies', []).count() if hasattr(self, 'librairies') else 0
+            max_allowed = int(plan.nblibrairies or 0)
+        elif entite_type == 'cagnotte':
+            current_count = self.cagnottes.count() if hasattr(self, 'cagnottes') else 0
+            max_allowed = int(plan.nbcagnotes or 0)
+        else:
+            return False
+
+        return current_count < max_allowed
+    
+    def check_creation_permission(self, entite_type:str):
+        if not self.peut_creer(entite_type):
+            abo = self.get_abonnement_actif()
+            if not abo:
+                raise PermissionDenied("Vous devez avoir un abonnement actif pour effectuer cette action.")
+            
+            raise PermissionDenied(
+                f"Vous avez atteint la limite de {entite_type}s pour votre plan ({abo.plan.nom}). "
+                f"Veuillez passer à un plan supérieur."
+            )

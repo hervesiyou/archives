@@ -39,8 +39,12 @@ from arch_portal.domain.models.don import Don
 from arch_portal.domain.models.evenementlike import EvenementLike
 from arch_portal.domain.models.transaction import Transaction
 from arch_portal.domain.models.invitationadminfamille import InvitationAdminFamille
+from arch_portal.domain.models.prestataire import Prestataire
+from arch_portal.domain.models.projetcommunautaire import Projetcommunautaires
 
 
+admin.site.register(Prestataire)
+admin.site.register(Projetcommunautaires)
 admin.site.register(Communaute)
 admin.site.register(Transaction)
 admin.site.register(EvenementLike)

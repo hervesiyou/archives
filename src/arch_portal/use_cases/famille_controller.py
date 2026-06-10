@@ -14,6 +14,8 @@ import json
 from django.http import HttpResponseForbidden, JsonResponse 
 from collections import defaultdict
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
+from arch_portal.use_cases.services.subscription_service import check_abonnement_permission, get_membre_from_session
 
 
 def page_famille(request, id):
@@ -259,21 +261,29 @@ def add_admin_fam(request):
 def add_famille(request):
     # celui qui cree une famille est son administrateur par defaut        
     if request.method == "POST":
-        form = FamilleForm(request.POST)
-        if form.is_valid():  
 
-            if not request.session.get("userid","") :
-                return redirect("login" )
+        try:
 
-            com = form.save() 
+            check_abonnement_permission(request, 'famille')
 
-            userid = request.session.get("userid","")
-            user = Membre.objects.get(id=userid)
-            com.administrateurs.add(user)
-            # print(user.get_rights())
-            com.save()
+            form = FamilleForm(request.POST)
+            if form.is_valid():  
 
-            return redirect("show_famille",com.id )
+                if not request.session.get("userid","") :
+                    return redirect("login" )
+
+                com = form.save() 
+
+                userid = request.session.get("userid","")
+                user = Membre.objects.get(id=userid)
+                com.administrateurs.add(user)
+                # print(user.get_rights())
+                com.save()
+
+                return redirect("show_famille",com.id )
+        except PermissionDenied as e:
+                messages.error(request, str(e))
+                # return redirect("show_librarie",{})
     else:
         form = FamilleForm()
 

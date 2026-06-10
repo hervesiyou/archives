@@ -12,7 +12,7 @@ class Librairie(models.Model):
    
     type = models.CharField(max_length=50, choices=LIB_CHOICES,blank=True)
     lieu = models.CharField(max_length=250, null=True)    
-    possesseur = models.ForeignKey("Membre", on_delete=models.CASCADE, null=True)
+    possesseur = models.ForeignKey("Membre", on_delete=models.CASCADE, related_name="librairies", null=True)
     image = models.ForeignKey("Image",on_delete=models.SET_NULL, null=True, blank=True)
     # livres = models.ManyToManyField("Livre",related_name="mes_livres",  blank=True)
     

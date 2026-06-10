@@ -41,6 +41,8 @@ APP_HCAPTCHA = os.getenv("APP_HCAPTCHA")
 DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 ALLOWED_HOSTS = ['richbook.net', 'www.richbook.net', '127.0.0.1',"192.168.43.193"]
 # ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
  
 
 # Application definition
@@ -52,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
     "arch_portal.apps.ArchPortalConfig",
     'crispy_forms',
     "crispy_bootstrap5",

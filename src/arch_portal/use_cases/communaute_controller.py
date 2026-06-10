@@ -29,6 +29,9 @@ from django.views.decorators.http import require_http_methods
 from django.forms import inlineformset_factory
 from arch_portal.domain.forms.sets import MiniHistoireFormSet, RoiFormSet , RoiForm, MiniHistoireForm
 
+from django.core.exceptions import PermissionDenied
+from arch_portal.use_cases.services.subscription_service import check_abonnement_permission, get_membre_from_session
+
 import json
 from datetime import date
 
@@ -42,7 +45,6 @@ from arch_portal.domain.forms.personnecle   import PersonneCleForm
  
 def personnecle_create(request, type_entite, entite_id):
     """Créer une personne clé pour une Communauté ou une Famille"""
-
     if type_entite == 'communaute':
         entite = get_object_or_404(Communaute, pk=entite_id)
         redirect_url = entite.get_absolute_url()
@@ -697,52 +699,61 @@ def add_communaute(request):
     # image_instance = com.image if hasattr(com, 'image') else None   
 
     if request.method == "POST":
-        form = CommunauteForm(request.POST)
 
-        # Créer les formsets avec une instance temporaire vide au début
-        histoires_formset = MiniHistoireFormSet(request.POST, instance=Communaute(), prefix='mini_histoire')
-        rois_formset      = RoiFormSet(request.POST, instance=Communaute(), prefix='rois_communaute')
-        personnes_formset = PersonneFormSet(request.POST, instance=Communaute(), prefix='personnes')
-        lieux_formset     = LieuFormSet(request.POST, instance=Communaute(), prefix='lieux')  
+        try:
 
-        image_form = ImageForm(request.POST, request.FILES)      
+            check_abonnement_permission(request, 'communaute')
+            form = CommunauteForm(request.POST)
 
-        # Validation complète
-        if (form.is_valid() and 
-            histoires_formset.is_valid() and 
-            rois_formset.is_valid() and 
-            personnes_formset.is_valid() and 
-            lieux_formset.is_valid() and
-            image_form.is_valid()) :
+            # Créer les formsets avec une instance temporaire vide au début
+            histoires_formset = MiniHistoireFormSet(request.POST, instance=Communaute(), prefix='mini_histoire')
+            rois_formset      = RoiFormSet(request.POST, instance=Communaute(), prefix='rois_communaute')
+            personnes_formset = PersonneFormSet(request.POST, instance=Communaute(), prefix='personnes')
+            lieux_formset     = LieuFormSet(request.POST, instance=Communaute(), prefix='lieux')  
 
-            # Sauvegarde principale d'abord → on obtient un ID !
-            com = form.save()
+            image_form = ImageForm(request.POST, request.FILES)      
 
-            # Ré-associer les formsets à l’objet réel sauvegardé
-            histoires_formset.instance = com
-            rois_formset.instance      = com
+            # Validation complète
+            if (form.is_valid() and 
+                histoires_formset.is_valid() and 
+                rois_formset.is_valid() and 
+                personnes_formset.is_valid() and 
+                lieux_formset.is_valid() and
+                image_form.is_valid()
+            ) :
 
-            personnes_formset.instance = com
-            lieux_formset.instance     = com
-            # Sauvegarde des inline maintenant que l’instance parent existe
-            histoires_formset.save()
-            rois_formset.save()
+                # Sauvegarde principale d'abord → on obtient un ID !
+                com = form.save()
+                # Ré-associer les formsets à l’objet réel sauvegardé
+                histoires_formset.instance = com
+                rois_formset.instance      = com
 
-            # sauvegarde de l'image de la communauté
-            image = image_form.save(commit=False)
-            com.image =  image
-            image.save()
-            com.save()
+                personnes_formset.instance = com
+                lieux_formset.instance     = com
+                # Sauvegarde des inline maintenant que l’instance parent existe
+                histoires_formset.save()
+                rois_formset.save()
 
-            personnes_formset.save()
-            lieux_formset.save()
+                # sauvegarde de l'image de la communauté et ajout de l'actuel ccreateur comme administrateur
+                membre = get_membre_from_session(request)
+                com.administrateurs.add(membre)  # Ajouter le créateur comme admin
+                image = image_form.save(commit=False)
+                com.image =  image
+                image.save()
+                com.save()
 
-            messages.success(request, "Communauté créée avec succès.")
-            return redirect("show_communaute", com.id)
+                personnes_formset.save()
+                lieux_formset.save()
 
-        else:
-            
-            messages.error(request, "Erreur lors de la création. Vérifiez les champs.")
+                messages.success(request, "Communauté créée avec succès.")
+                return redirect("show_communaute", com.id)
+
+            else:            
+                messages.error(request, "Erreur lors de la création. Vérifiez les champs.")
+
+        except PermissionDenied as e:
+            messages.error(request, str(e))
+            return redirect('upgrade_abonnement')  # ou 'dashboard'
 
     else:
         # GET : formulaires vides
@@ -845,7 +856,6 @@ def upload_image(request):
     return JsonResponse({"error": "Erreur upload"}, status=400)
 
 def show_galerie(request, id):
-
     galerie = get_object_or_404(Galerie, pk=id)
     return render(request, "usercore/show_galerie.html", { "galerie":galerie  })
 

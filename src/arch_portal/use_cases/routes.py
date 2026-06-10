@@ -8,8 +8,34 @@ import arch_portal.use_cases.famille_controller as famille
 import arch_portal.use_cases.core_controller as core
 import arch_portal.use_cases.evenement_controller as evenement
 import arch_portal.use_cases.cagnotte_controller as cagnotte
+import arch_portal.use_cases.prestataire_controller as prestataire
+import arch_portal.use_cases.projet_controller as projet
+from django.views.generic import TemplateView
 
-urlpatterns = [ 
+from django.contrib.sitemaps.views import sitemap
+from arch_portal.use_cases.sitemaps import StaticViewSitemap, CommunauteSitemap, AssociationSitemap, LivreSitemap
+from django.views.static import serve
+import os
+ 
+sitemaps = {
+    'static': StaticViewSitemap,
+    'communautes': CommunauteSitemap,
+    'associations': AssociationSitemap,
+    'livres': LivreSitemap, 
+}
+ 
+urlpatterns = [
+
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('google-site-verification.html', TemplateView.as_view(template_name='google-site-verification.html', content_type='text/html'), 
+         name='google_verification'), 
+    path('robots.txt', TemplateView.as_view(
+        template_name='robots.txt', 
+        content_type='text/plain'
+    ), name='robots_txt'),
+]
+
+urlpatterns += [ 
     path('lfam/<int:id>.<int:mode>', famille.listfamilles, name="listfamilles"),
     path('sf/<int:id>', famille.show_famille, name="show_famille"),
     path('spages/<int:id>', famille.page_famille, name="page_famille"),
@@ -36,6 +62,25 @@ urlpatterns += [
     path( "cag/<int:id>/",  cagnotte.show_cagnotte, name="show_cagnotte" ),
     path( "cag/<int:id>/con/",  cagnotte.contribute_cagnotte,  name="contribute_cagnotte"   ),
     path(  "cag/<int:id>/clo/", cagnotte.close_cagnotte,  name="close_cagnotte"  ),
+]
+
+urlpatterns += [
+    path('pro/', projet.projet_list, name='projet_list'),
+    path('pro/sha.<int:id>', projet.projets, name='allprojets'),
+    path('pro/crea/', projet.projet_create, name='add_projet'),
+    path('pro/<int:pk>/', projet.projet_detail, name='projet_detail'),
+    path('pro/sh/<int:pk>/', projet.show_detail, name='show_detail'),
+    path('pro/<int:pk>/ed/', projet.projet_update, name='projet_update'),
+    path('pro/<int:pk>/del/', projet.projet_delete, name='projet_delete'),
+] 
+
+urlpatterns += [
+    path('pres', prestataire.prestataire_list, name='prestataire_list'),
+    path('pres/sh.<int:id>', prestataire.prestataires, name='allprestataires'),
+    path('pres/create/', prestataire.prestataire_create, name='add_prestataire'),
+    path('pres/<int:pk>/', prestataire.prestataire_detail, name='prestataire_detail'),
+    path('pres/<int:pk>/ed/', prestataire.prestataire_update, name='prestataire_update'),
+    path('pres/<int:pk>/del/', prestataire.prestataire_delete, name='prestataire_delete'),
 ]
 
 urlpatterns += [ 

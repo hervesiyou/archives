@@ -1,28 +1,52 @@
 ## A Verifier
 
 - connecter la mediatheques des communautés avec google photos et google drive
-- ajouter la geographie lors de la creation et l'update d'une communauté
-
+- afficher les publicités dans les communautés et dans les librairies
+- integrer les cartes automatique des villages
+- liste des webinaires communautaires sur googlemeet
+- liste des opportunites economiques d'une communautés avec le bouton contribuer economiquement
+- tableau de bord communautaire
+- on doit aussi controller le nombre d'association, d'evenements, etc
 - gerer la recommandation des livres
-- controller qu'on ne cree pas plus de communauté et de famille que notre plan d'abonnement
-- controller qu'on ne cree pas plus de librairie et de livre que notre plan d'abonnement
-- controller qu'on ne cree pas plus de cagnote que notre plan
 - permettre l'envoi des message groupés aux membres d'une meme famille
 - ajouter la monetisation des librairies par l'affichage des publicités,
 - ajouter la monetisation des communautés par l'affichage des publicité
-- reconcevoir l'achat d'un livre, soit on achete un livre soit on est abonné juste pour le lire
-- debiter le prix du livre quand on se le procure et alerte le vendeur, puis envoyer le livre par mail
-
-        - gerer les abonnements aux librairies, à chaque abonnement je cree le plan tarifaire ayant son nbfamille, nbcommunauté, nblibrairie, nblivres, supporth24/7, nbcagnotte le debut et la fin de l'abonnement
-     
-- gerer les arbres genealogiques, les generations et les exports 
-- verifie qu'on ne fasse pas les CRUD si on a pas le droit ni l'abonnemnet pour le faire
 - ajouter les notifications sur les projets en cours et les donneurs avec les CTA
+- emission des tokens dans la communauté et gestion des micro credits à gerer avec BOS
+- numerisation des actes et documents dans la communauté a gerer avec BOS
+- api cinet pay et paymetrust, 
+
+        - ndoubock.pages.dev/mewahou-hall.eco2africa.workers.dev
+        - leaflet.js, gerer la sauvegarde automatique des données
+        - espace de soumission des projets communautaires, les projets on des contributions
+        - market place communautaire qui redirige sur kondashop( chaque prestataire à plutot sa boutique sur abelaa ou kondashop)
+
+
+        - afficher les partenaires dans une communautés
+        - annuaire des prestataires communautaires
+        - controller qu'on ne cree pas plus de communauté et de famille que notre plan d'abonnement
+        - controller qu'on ne cree pas plus de librairie et de livre que notre plan d'abonnement
+        - controller qu'on ne cree pas plus de cagnote que notre plan
+
+- ajouter la geographie lors de la creation et l'update d'une communauté
+- ajouter l'ecole de la communauté dans sekoo
+- integrer les articles avec commentaires
+- espace des programmes de formation communautaires avec explication des modules et cours sur sekoo
+- reconcevoir l'achat d'un livre, soit on achete un livre soit on est abonné juste pour le lire
+- ajouter les loader lors des ajax 
+- gerer l'arbre genealogique
+- envoyer des mails lors de l'inscription a la communauté et la famille
+- verifie qu'on ne fasse pas les CRUD si on a pas le droit ni l'abonnemnet pour le faire
+- debiter le prix du livre quand on se le procure et alerte le vendeur, puis envoyer le livre par mail
+- gerer les arbres genealogiques, les generations et les exports 
 - tester le paiement d'un livre qui debite mon compte
 - si on a deja payé un livre on signale et liste les livres acheté
 
-        - ne pas permettre qu'on note un livre si on ne l'a pas acheté, 
 
+        - gerer les abonnements aux librairies, à chaque abonnement je cree le plan tarifaire ayant son nbfamille, nbcommunauté, nblibrairie, nblivres, supporth24/7, nbcagnotte le debut et la fin de l'abonnement
+     
+
+        - ne pas permettre qu'on note un livre si on ne l'a pas acheté, 
         - ne charger que les familles concernées et les personnes conerncés lors de la creation
         - on va donner des types de badges aux meilleurs contributeurs
         - sur richbook on peut creer des cagnottes et les gens cotisent, 

@@ -246,6 +246,9 @@
         margin-bottom:10px;
     }
 }
+
+
+
     </style>
 </head>
 
@@ -258,13 +261,11 @@
                     <div class="lds-pos"></div>
                     <div class="lds-pos"></div>
                     <div class="lds-pos"></div>
-                    <div class="lds-pos"></div>
-                    <div class="lds-pos"></div>
+                    {% comment %} <div class="lds-pos"></div> {% endcomment %}
+                    {% comment %} <div class="lds-pos"></div> {% endcomment %}
                 </div>
             </div>  
-            
-            {% comment %} <div class="row"  >                 {% endcomment %}
-                {% comment %} <div class="col-12"> {% endcomment %}
+             
                     <nav class="navbar navbar-expand-lg navbar-light  shadow-sm fixed-top">
                         <div class="container-fluid px-3 px-md-4">
                             
@@ -323,6 +324,16 @@
                                         {% if 'ADD_CAGNOTTE' in request.session.userrights %}
                                             <a class="p-2 col-1" href="{% url 'add_cagnotte' %}">
                                                 <i class="fa-solid fa-coins me-2 text-success"></i> Cagnotte
+                                            </a>
+                                        {% endif %}
+                                        {% if 'ADD_PRESTATAIRE' in request.session.userrights %}
+                                            <a class="p-2 col-1" href="{% url 'add_prestataire' %}">
+                                                <i class="fa-solid fa-coins me-2 text-success"></i> Prestataires
+                                            </a>
+                                        {% endif %}
+                                        {% if 'ADD_PROJET' in request.session.userrights %}
+                                            <a class="p-2 col-1" href="{% url 'add_projet' %}">
+                                                <i class="fa-solid fa-coins me-2 text-success"></i> Projets
                                             </a>
                                         {% endif %}
                                     </div>
@@ -395,11 +406,7 @@
                                 </div>
                             </div>
                         </div>
-                    </nav>
-                {% comment %} </div> {% endcomment %}
-            {% comment %} </div> {% endcomment %}
-
-            
+                    </nav> 
 
             <div class="row" style="margin-top:70px;">                
                 <div class="col-12">
