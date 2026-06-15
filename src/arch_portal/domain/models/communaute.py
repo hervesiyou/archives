@@ -46,7 +46,13 @@ class  Communaute(models.Model):
 
     def get_associations(self):
         return modeles.Association.objects.filter(communaute=self.id)
-
         # Optionnel : méthode pratique
+
     def get_rois_chronologiques(self):
-        return self.rois.order_by('annee_debut')  # du plus ancien au plus récent
+        return self.rois.order_by('annee_debut')  
+    
+    def get_formations(self):
+        return self.formations.all()
+
+    def get_articles(self):
+        return self.articles.all().order_by('-dateajout')

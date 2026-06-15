@@ -3,10 +3,9 @@
 - connecter la mediatheques des communautés avec google photos et google drive
 - afficher les publicités dans les communautés et dans les librairies
 - integrer les cartes automatique des villages
-- liste des webinaires communautaires sur googlemeet
 - liste des opportunites economiques d'une communautés avec le bouton contribuer economiquement
 - tableau de bord communautaire
-- on doit aussi controller le nombre d'association, d'evenements, etc
+- on doit aussi controller le nombre d'association, d'evenements, selon le forfait de l'abonnement etc
 - gerer la recommandation des livres
 - permettre l'envoi des message groupés aux membres d'une meme famille
 - ajouter la monetisation des librairies par l'affichage des publicités,
@@ -20,8 +19,6 @@
         - leaflet.js, gerer la sauvegarde automatique des données
         - espace de soumission des projets communautaires, les projets on des contributions
         - market place communautaire qui redirige sur kondashop( chaque prestataire à plutot sa boutique sur abelaa ou kondashop)
-
-
         - afficher les partenaires dans une communautés
         - annuaire des prestataires communautaires
         - controller qu'on ne cree pas plus de communauté et de famille que notre plan d'abonnement
@@ -30,15 +27,15 @@
 
 - ajouter la geographie lors de la creation et l'update d'une communauté
 - ajouter l'ecole de la communauté dans sekoo
+- liste des webinaires communautaires sur googlemeet
 - integrer les articles avec commentaires
 - espace des programmes de formation communautaires avec explication des modules et cours sur sekoo
 - reconcevoir l'achat d'un livre, soit on achete un livre soit on est abonné juste pour le lire
 - ajouter les loader lors des ajax 
-- gerer l'arbre genealogique
 - envoyer des mails lors de l'inscription a la communauté et la famille
 - verifie qu'on ne fasse pas les CRUD si on a pas le droit ni l'abonnemnet pour le faire
 - debiter le prix du livre quand on se le procure et alerte le vendeur, puis envoyer le livre par mail
-- gerer les arbres genealogiques, les generations et les exports 
+- gerer les arbres genealogiques, les generations et les exports - gerer l'arbre genealogique
 - tester le paiement d'un livre qui debite mon compte
 - si on a deja payé un livre on signale et liste les livres acheté
 

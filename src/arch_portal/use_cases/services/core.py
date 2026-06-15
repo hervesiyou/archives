@@ -5,7 +5,6 @@ from django.core.mail import send_mail
 import re
 import unicodedata
 from django.conf import settings
-
 from arch_portal.domain.models.badge import Badge
 
 
@@ -80,8 +79,7 @@ def send_email(subject, message, recipient_list):
         return True
     except Exception as e:
         # Optionnel : logger l'erreur
-        print(f"Erreur envoi email : {e}")
-       
+        print(f"Erreur envoi email : {e}")       
         raise
         # return False
 

@@ -10,6 +10,7 @@ import arch_portal.use_cases.evenement_controller as evenement
 import arch_portal.use_cases.cagnotte_controller as cagnotte
 import arch_portal.use_cases.prestataire_controller as prestataire
 import arch_portal.use_cases.projet_controller as projet
+import arch_portal.use_cases.formart_controller as formationarticle
 from django.views.generic import TemplateView
 
 from django.contrib.sitemaps.views import sitemap
@@ -25,14 +26,26 @@ sitemaps = {
 }
  
 urlpatterns = [
-
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
-    path('google-site-verification.html', TemplateView.as_view(template_name='google-site-verification.html', content_type='text/html'), 
-         name='google_verification'), 
-    path('robots.txt', TemplateView.as_view(
-        template_name='robots.txt', 
-        content_type='text/plain'
-    ), name='robots_txt'),
+    path('google-site-verification.html', TemplateView.as_view(template_name='google-site-verification.html', content_type='text/html'), name='google_verification'), 
+    path('robots.txt', TemplateView.as_view( template_name='robots.txt',  content_type='text/plain' ), name='robots_txt'),
+]
+ 
+
+urlpatterns += [
+    # Formations
+    path('com/<int:communaute_id>/form/', formationarticle.liste_formations, name='liste_formations'),
+    path('formations/<int:pk>/', formationarticle.detail_formation, name='detail_formation'),
+    path('cf/<int:communaute_id>/form/add/', formationarticle.ajouter_formation, name='ajouter_formation'),
+    path('form/<int:pk>/upd/', formationarticle.modifier_formation, name='modifier_formation'),
+    path('form/<int:pk>/del/', formationarticle.supprimer_formation, name='supprimer_formation'),
+
+    # Articles
+    path('com/<int:communaute_id>/art/', formationarticle.liste_articles, name='liste_articles'),
+    path('art/<slug:slug>/', formationarticle.detail_article, name='detail_article'),
+    path('c/<int:communaute_id>/art/add/', formationarticle.ajouter_article, name='ajouter_article'),
+    path('art/<slug:slug>/upd/', formationarticle.modifier_article, name='modifier_article'),
+    path('art/<slug:slug>/del/', formationarticle.supprimer_article, name='supprimer_article'),
 ]
 
 urlpatterns += [ 
