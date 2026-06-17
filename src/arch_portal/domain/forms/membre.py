@@ -180,8 +180,7 @@ class UsersSubscribeForm(forms.ModelForm):
         self.helper.form_tag = False
         self.helper.layout = Layout(
             Row(
-                Column('nomcomplet', css_class='col-md-12'), 
-               
+                Column('nomcomplet', css_class='col-md-12'),                
                 # Column(
                 #     Field('pwd', type='password', css_class='form-control'),
                 #     css_class='col-md-6',

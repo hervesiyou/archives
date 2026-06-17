@@ -1,5 +1,6 @@
 from django.db import models 
 from arch_portal.domain.models.CONST_DATA import LIB_CHOICES
+from arch_portal.domain.models.publicite import Tag
 
 class Librairie(models.Model):
     class Meta:
@@ -9,7 +10,9 @@ class Librairie(models.Model):
     db_table ="librairies"
     nom = models.CharField(max_length=250)
     description = models.TextField()
-   
+    
+    tags = models.ManyToManyField( Tag, related_name="librairies", blank=True, help_text=( "Centres d'intérêt / types de librairies ciblés. "  "Laisser vide = publicité générique affichée en l'absence de correspondance."  ),  )
+
     type = models.CharField(max_length=50, choices=LIB_CHOICES,blank=True)
     lieu = models.CharField(max_length=250, null=True)    
     possesseur = models.ForeignKey("Membre", on_delete=models.CASCADE, related_name="librairies", null=True)

@@ -39,8 +39,10 @@ def show_subscriptions(request, user_id):
     return render(request, "usercore/show_user_abonnements.html", {"abonnements": abonnements, "user": user})
 
 @transaction.atomic
+@csrf_exempt
 def souscrire_abonnement(request):
     # les plan_appli sont FREE BASIC PRO DIAMOND
+    
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     if is_ajax :
         if request.method == "POST" :

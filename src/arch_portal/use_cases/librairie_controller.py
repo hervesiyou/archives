@@ -29,7 +29,7 @@ import uuid
 import os
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404 
-
+from arch_portal.use_cases.services.subscription_service import get_membre_from_session
 from django.core.exceptions import PermissionDenied
 from arch_portal.use_cases.services.subscription_service import check_abonnement_permission, get_membre_from_session
 
@@ -465,6 +465,7 @@ def edit_book(request, id):
     )
 
 def show_book(request,id):
+
     liv = Livre.objects.get(id=id)
     librairieid = request.session.get('librairieid',None)
     if librairieid == None :
@@ -472,8 +473,10 @@ def show_book(request,id):
     else:
         librairie = Librairie.objects.get(id=librairieid)
 
-    abos = achat= connecte = False
+    abos = achat = connecte = False
     userid = request.session.get("userid","")
+    livres_payes = []
+
     if( isinstance(userid, int) and userid !="" ):
         user = Membre.objects.get(id=userid)
         abos = user.abonnements.all()
@@ -482,12 +485,38 @@ def show_book(request,id):
                 achat = True
         
         connecte = True
+
+        livres_payes = Livre.objects.filter(
+            paiements__acheteur=user,
+            paiements__statut="PAYE"
+        ).distinct() 
+    
+    #  je recupere la liste des livres deja achetés par l'utilisateur pour ne pas lui permettre de racheter le même livre
+    if connecte:
+        paiement = PaiementLivre.objects.filter( acheteur=user, livre=liv ).first()
+        if paiement:
+            achat = True
+
+    # paiements_valides = PaiementLivre.objects.filter(
+    #     acheteur=user,
+    #     statut="PAYE"
+    # )
+
+    
+
     
     if librairieid is None and liv.librairies.count() < 1:
         messages.error(request, "La librairie de ce livre n'existe pas , merci de choisir un autre  livre .")
         return  redirect("listlibs")
     
-    return render(request, "libcore/showbook.html", {"livre" : liv,"librairie" : librairie, "connecte":connecte, "abonnements":abos , "achat":achat } )
+    return  render(request, "libcore/showbook.html", 
+                {
+                    "livre" : liv,"librairie" : librairie,
+                    "connecte":connecte, 
+                    "livres_achetes":livres_payes if connecte else [],
+                    "abonnements":abos , "achat":achat
+                } 
+            )
 
 def add_book(request):
 
@@ -543,7 +572,7 @@ def add_book(request):
 
         except PermissionDenied as e:
             messages.error(request, str(e))
-            return redirect("show_librarie",{"id" : librairieid})
+            return redirect("show_librairie",id = librairieid )
     else:
         form = LivreForm()
         image_formset = ImageFormSet(queryset=Image.objects.none())  
@@ -663,6 +692,7 @@ def noter_livre(request, livre_id):
 
 
 @csrf_exempt
+@transaction.atomic
 def api_add_order(request):
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     if is_ajax :
@@ -675,18 +705,36 @@ def api_add_order(request):
             if data.get("possesseur") is None:
                 return JsonResponse({'status': False ,"message": "Proprietaire incorrect"})
             
+            # je recupere d'abord le membre et le livre pour eviter les erreurs d'integrité referentielle
+            user = get_membre_from_session(request)
             proprietaire=Membre.objects.get(id=data.get("possesseur"))
             livre=Livre.objects.get(id=data.get("livre"))
-            com,already = CommandeLivre.objects.get_or_create(
+
+            if user is None:
+                return JsonResponse({'status': False ,"message": "Utilisateur non connecté"})
+            #  au cas ou j'ai deja commandé ce livre 
+            com = CommandeLivre.objects.filter( 
+                # telephone=data.get("telephone"),
+                livre=livre,
+                proprietaire=proprietaire,
+                acheteur=user,
+            ).first()
+
+            if com is not None:
+                return JsonResponse({'status': False, "message": f"Vous avez dejà commandé {com.livre.nom} "})
+
+            
+            com,nouveau = CommandeLivre.objects.get_or_create(
                 nom=data.get("nom"),
                 telephone=data.get("telephone"),
                 livre=livre,
                 # date=datetime.datetime.now(),
                 proprietaire=proprietaire, 
                 message=data.get("message"),
+                acheteur=user,
             )
             # print( already )
-            if already:
+            if nouveau:
                 com.save()
                 # envoi du mail au propriotaire
                 sujet = f'Commande de {livre.nom} par {proprietaire.nomcomplet} '

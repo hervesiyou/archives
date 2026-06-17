@@ -43,7 +43,7 @@ $(document).ready(function(){
                 headers: { "X-CSRFToken": getCookie("csrftoken") },
 
                 beforeSend      : function(){
-                    alert(JSON.stringify(data) + ", url: " + this.url)
+                    // alert(JSON.stringify(data) + ", url: " + this.url)
                 },
                 error: function(error) {
                     console.error(error);
@@ -168,7 +168,7 @@ $(document).ready(function(){
  				"comid": $(this).data("com"), 
  				"userid": $(this).data("user"), 
 			} 
-            alert(BASEURL)
+            // alert(BASEURL)
             if( parseInt(data.userid) > 0 && data.comid != undefined   ){
 
                 $.ajax({
@@ -464,7 +464,7 @@ $(document).ready(function(){
                     },
                     error: function(error) {
                         console.error(error);
-                        alert(JSON.stringify(error))
+                        // alert(JSON.stringify(error))
                     },
                     success  : function(returnedData){
                             console.log(returnedData);
@@ -603,7 +603,7 @@ $(document).ready(function(){
                     url         : BASEURL+"/add_ad_asso",  
                     dataType    : "JSON",
                     beforeSend      : function(){
-                        alert(JSON.stringify(data))
+                        // alert(JSON.stringify(data))
                     },
                     error: function(error) {
                         console.error(error);
@@ -669,8 +669,8 @@ $(document).ready(function(){
 				"possesseur": $("#possesseur").data("id"),
 				"message": $("#message").val(),
 			};
-            // console.log(data)
-			if( data.nom.length > 2 && data.telephone.length > 7 && data.message.length > 5 ){
+            // console.log(data) + JSON.stringify(data)
+			if( data.nom.length > 2 && data.telephone.length > 7 && data.message.length > 3 ){
 
                 $.ajax({
                     method      : "POST",
@@ -682,7 +682,7 @@ $(document).ready(function(){
                     },
                     error: function(error) {
                         console.error(error);
-                        alert(JSON.stringify(error))
+                        // alert(JSON.stringify(error))
                     },
                     success  : function(returnedData){
                             console.log(returnedData);
@@ -727,7 +727,7 @@ $(document).ready(function(){
                 Swal.fire({
                     icon: "error",
                     title: " Oupps !" ,
-                    text:   " Merci de fournir toutes les informations requises!!!" ,
+                    text:   " Merci de fournir toutes les informations requises!!!"  ,
                     timer: 4000,
                     showConfirmButton: false
                 });

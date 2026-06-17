@@ -25,6 +25,8 @@ class CommandeLivre(models.Model):
         on_delete=models.SET_NULL,
         blank=True,null=1
     )
+
+    acheteur = models.ForeignKey("Membre", on_delete=models.SET_NULL, blank=True,null=1, related_name="livres_achetes")
     def __str__(self):
         return f"{self.nom} ,{self.livre.nom}"
     

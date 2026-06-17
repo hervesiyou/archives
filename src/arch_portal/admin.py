@@ -43,9 +43,13 @@ from arch_portal.domain.models.prestataire import Prestataire
 from arch_portal.domain.models.projetcommunautaire import Projetcommunautaires
 from arch_portal.domain.models.article import Article
 from arch_portal.domain.models.formation import Formation
+# from arch_portal.domain.models. import Formation
+from arch_portal.domain.models.publicite import Publicite, Tag
 
 
 admin.site.register(Prestataire)
+admin.site.register(Publicite)
+admin.site.register(Tag)
 admin.site.register(Formation)
 admin.site.register(Article)
 admin.site.register(Projetcommunautaires)

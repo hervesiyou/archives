@@ -410,13 +410,19 @@
             btn.addEventListener('click', function() {
                 amountButtons.forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                customInput.value = '';
+                if (customInput) {
+                    customInput.value = '';
+                }
+               // customInput.value = '';
             });
         });
 
-        customInput.addEventListener('input', function() {
-            amountButtons.forEach(b => b.classList.remove('active'));
-        });
+        if (customInput) {
+            customInput.addEventListener('input', function() {
+                amountButtons.forEach(b => b.classList.remove('active'));
+            });
+        }
+        
     });
 </script>
 {% endblock %}

@@ -11,6 +11,7 @@ import arch_portal.use_cases.cagnotte_controller as cagnotte
 import arch_portal.use_cases.prestataire_controller as prestataire
 import arch_portal.use_cases.projet_controller as projet
 import arch_portal.use_cases.formart_controller as formationarticle
+import arch_portal.use_cases.publicite_controller as publicite
 from django.views.generic import TemplateView
 
 from django.contrib.sitemaps.views import sitemap
@@ -29,8 +30,19 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('google-site-verification.html', TemplateView.as_view(template_name='google-site-verification.html', content_type='text/html'), name='google_verification'), 
     path('robots.txt', TemplateView.as_view( template_name='robots.txt',  content_type='text/plain' ), name='robots_txt'),
-]
+] 
  
+urlpatterns += [
+    # Back-office prestataire
+    path("pres/cam/", publicite.liste_publicites, name="liste"),
+    path("pres/cam/nou/", publicite.creer_publicite, name="creer"),
+    path("pres/cam/<int:pk>/mod/", publicite.modifier_publicite, name="modifier"),
+    path("pres/cam/<int:pk>/sup/", publicite.supprimer_publicite, name="supprimer"),
+    # Endpoints consommés par les pages Communauté / Librairie
+    path("api/bandeau/<str:type_contexte>/<int:contexte_id>/", publicite.bandeau_publicites, name="api_bandeau"),
+    path("api/popup/<str:type_contexte>/<int:contexte_id>/", publicite.popup_publicite, name="api_popup"),
+    path("api/even/<int:publicite_id>/", publicite.enregistrer_evenement, name="api_evenement"),
+]
 
 urlpatterns += [
     # Formations

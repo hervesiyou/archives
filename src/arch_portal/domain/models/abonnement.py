@@ -16,7 +16,7 @@ class Abonnement(models.Model):
     plan = models.ForeignKey("Plan", on_delete=models.CASCADE, null=True, blank=True, related_name='abonnements')
     plan_appli = models.CharField(max_length=10, blank=True)
     # garde si on est obonement de librairie ou communauté
-    type = models.CharField(max_length=10, blank=True) 
+    type = models.CharField(max_length=10, blank=True, null=True) 
     duree =  models.IntegerField(default=365)
 
     def __str__(self):

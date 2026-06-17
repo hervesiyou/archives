@@ -5,6 +5,7 @@ from arch_portal.domain import models as modeles
 from .geographie import LieuGeographique
 from .histoire import MiniHistoire
 from .roi import Rois
+from arch_portal.domain.models.publicite import Tag
 
 
 class  Communaute(models.Model):
@@ -34,6 +35,9 @@ class  Communaute(models.Model):
     chef = models.ForeignKey("Membre",on_delete=models.CASCADE, blank=True, null=True)
     administrateurs = models.ManyToManyField("Membre", related_name="com_admins", blank=True, null=True)
     rois = models.ManyToManyField(Rois, related_name="com_rois", blank=True, null=True)
+
+    tags = models.ManyToManyField( Tag, related_name="communautes", blank=True, help_text=( "Centres d'intérêt / types de librairies ciblés. "  "Laisser vide = publicité générique affichée en l'absence de correspondance."  ),  )
+
 
     def __str__(self):
         return self.nom
