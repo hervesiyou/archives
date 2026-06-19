@@ -44,11 +44,12 @@ from arch_portal.domain.models.projetcommunautaire import Projetcommunautaires
 from arch_portal.domain.models.article import Article
 from arch_portal.domain.models.formation import Formation
 # from arch_portal.domain.models. import Formation
-from arch_portal.domain.models.publicite import Publicite, Tag
+from arch_portal.domain.models.publicite import Publicite, Tag, PubliciteEvent
 
 
 admin.site.register(Prestataire)
 admin.site.register(Publicite)
+admin.site.register(PubliciteEvent)
 admin.site.register(Tag)
 admin.site.register(Formation)
 admin.site.register(Article)

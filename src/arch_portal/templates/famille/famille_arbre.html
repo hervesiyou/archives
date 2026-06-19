@@ -4,7 +4,7 @@
     <div class="container mt-4">
 
         <h1 class="mb-2" >Arbre généalogique –   <a href="{% url 'show_famille' famille.id %}" class="text-center text-primary"> {{ famille.nom }} </a> </h1>
-
+ {% comment %} <p>ARBRES: {{ arbres|length }}</p> {% endcomment %}
         <div class="div-info">
             <ul class="mt-5">
                 {% for arbre in arbres %}
@@ -12,8 +12,206 @@
                 {% endfor %}
             </ul>
         </div>
-    </div>
 
  
+        <div class="tree-container">
+
+            {% for niveau in niveaux %}
+                <div class="tree-level">
+                    {% for node in niveau %}
+                        <div class="tree-node">
+                            
+                            {% if node.photo %}
+                                <img src="{{ node.photo }}" class="avatar">
+                            {% else %}
+                                <div class="avatar-placeholder"></div>
+                            {% endif %}
+
+                            <div class="name">{{ node.nom }}</div>
+
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+        </div>
+
+        {% comment %} <div id="tree"></div> {% endcomment %}
+
+
+
+    </div>
+/*
+{% comment %} <script src="https://d3js.org/d3.v7.min.js"></script> {% endcomment %}
+<script>
+
+const width = window.innerWidth;
+const height = window.innerHeight;
+
+const svg = d3.select("#tree")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .call(
+        d3.zoom()
+            .scaleExtent([0.3, 3])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            })
+    );
+
+const g = svg.append("g");
+
+const treeLayout = d3.tree().nodeSize([120, 180]);
+
+fetch(window.location.href + "json/")
+    .then(res => res.json())
+    .then(data => {
+
+        const root = d3.hierarchy(data, d => d.children);
+
+        root.x0 = height / 2;
+        root.y0 = 0;
+
+        update(root);
+
+        function update(source) {
+
+            const treeData = treeLayout(root);
+
+            const nodes = treeData.descendants();
+            const links = treeData.links();
+
+            // LINKS
+            const link = g.selectAll(".link")
+                .data(links, d => d.target.data.id);
+
+            link.enter()
+                .append("path")
+                .attr("class", "link")
+                .merge(link)
+                .attr("fill", "none")
+                .attr("stroke", "#ccc")
+                .attr("stroke-width", 2)
+                .attr("d", d3.linkHorizontal()
+                    .x(d => d.y)
+                    .y(d => d.x)
+                );
+
+            link.exit().remove();
+
+            // NODES
+            const node = g.selectAll(".node")
+                .data(nodes, d => d.data.id);
+
+            const nodeEnter = node.enter()
+                .append("g")
+                .attr("class", "node")
+                .attr("transform", d => `translate(${source.y0},${source.x0})`)
+                .on("click", (event, d) => {
+                    toggle(d);
+                    update(d);
+                });
+
+            nodeEnter.append("circle")
+                .attr("r", 20)
+                .attr("fill", "#fff")
+                .attr("stroke", "#2c3e50")
+                .attr("stroke-width", 2);
+
+            nodeEnter.append("text")
+                .attr("dy", 5)
+                .attr("x", 30)
+                .style("font-size", "12px")
+                .text(d => d.data.name);
+
+            const nodeUpdate = nodeEnter.merge(node);
+
+            nodeUpdate.transition()
+                .duration(300)
+                .attr("transform", d => `translate(${d.y},${d.x})`);
+
+            node.exit().remove();
+
+            nodes.forEach(d => {
+                d.x0 = d.x;
+                d.y0 = d.y;
+            });
+        }
+
+        function toggle(d) {
+            if (d.children) {
+                d._children = d.children;
+                d.children = null;
+            } else {
+                d.children = d._children;
+                d._children = null;
+            }
+        }
+    });
+
+ </script>
+ */
+
+<style>
+
+ .tree-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: auto;
+    padding: 20px;
+}
+
+.tree-level {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 30px 0;
+    position: relative;
+}
+
+.tree-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    min-width: 120px;
+    position: relative;
+}
+
+.avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #ddd;
+}
+
+.name {
+    margin-top: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.tree-level::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 20px;
+    background: #ccc;
+    top: -20px;
+}
+</style>
 
 {% endblock %}

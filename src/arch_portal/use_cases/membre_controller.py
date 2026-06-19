@@ -94,6 +94,8 @@ def log_user(request):
                 pwd=compute_sha1(form.cleaned_data["pwd"]),
             ).first()
 
+ 
+
             if user != None:
 
                 if user.etatvalidation != True:

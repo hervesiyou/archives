@@ -16,7 +16,7 @@ from collections import defaultdict
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from arch_portal.use_cases.services.subscription_service import check_abonnement_permission, get_membre_from_session
-
+from collections import defaultdict, deque
 
 def page_famille(request, id):
     famille = get_object_or_404(Famille, pk=id)
@@ -133,6 +133,104 @@ def build_family_tree(membre):
         "mere": build_family_tree(membre.nommere) if membre.nommere else None,
     }
 
+def build_family_tree_levels(famille):
+
+    membres = Membre.objects.filter( familles=famille ).select_related("nompere", "nommere")
+
+    nodes = {}
+    children_map = defaultdict(list)
+
+    # 1. nodes
+    for m in membres:
+        nodes[m.id] = {
+            "id": m.id,
+            "nom": m.nomcomplet,
+            "photo": m.photo.url if m.photo else None,
+            "enfants": []
+        }
+
+    # 2. relations parent -> enfants
+    for m in membres:
+        if m.nompere_id and m.nompere_id in nodes:
+            children_map[m.nompere_id].append(m.id)
+
+        if m.nommere_id and m.nommere_id in nodes:
+            children_map[m.nommere_id].append(m.id)
+
+    # 3. injecter enfants
+    for parent_id, enfants_ids in children_map.items():
+        nodes[parent_id]["enfants"] = enfants_ids
+
+    # 4. trouver racines (pas de parent dans famille)
+    all_children = set()
+    for v in children_map.values():
+        all_children.update(v)
+
+    roots = [m.id for m in membres if m.id not in all_children]
+
+    # fallback
+    if not roots:
+        roots = list(nodes.keys())
+
+    # 5. BFS par niveaux
+    levels = []
+    visited = set()
+    queue = deque([(r, 0) for r in roots])
+
+    while queue:
+        node_id, level = queue.popleft()
+
+        if node_id in visited:
+            continue
+        visited.add(node_id)
+
+        if len(levels) <= level:
+            levels.append([])
+
+        levels[level].append(nodes[node_id])
+
+        for child_id in nodes[node_id]["enfants"]:
+            queue.append((child_id, level + 1))
+
+    return levels
+
+def build_family(famille):
+    # 1. Charger tous les membres de la famille en une seule requête
+    membres = Membre.objects.filter( familles=famille ).select_related("nompere", "nommere")
+    # 2. Indexation rapide
+    nodes = {}
+    enfants_map = defaultdict(list)
+
+    for m in membres:
+        nodes[m.id] = {
+            "membre": m,
+            "enfants": []
+        }
+
+    # 3. Construire relations parent -> enfants
+    for m in membres:
+        if m.nompere_id and m.nompere_id in nodes:
+            enfants_map[m.nompere_id].append(nodes[m.id])
+
+        if m.nommere_id and m.nommere_id in nodes:
+            enfants_map[m.nommere_id].append(nodes[m.id])
+
+    # 4. Injecter enfants dans nodes
+    for parent_id, enfants in enfants_map.items():
+        nodes[parent_id]["enfants"] = enfants
+
+    # 5. Trouver les racines (sans parents dans la famille)
+    racines = []
+    for m in membres:
+        if (m.nompere_id not in nodes) and (m.nommere_id not in nodes):
+            racines.append(nodes[m.id])
+
+    # fallback si racines mal définies
+    if not racines:
+        racines = list(nodes.values())
+
+    return racines
+
 def build_tree(membre):
 
     children = []
@@ -158,17 +256,23 @@ def build_tree(membre):
     #     ]
     # }
 
+ 
 def famille_arbre(request, famille_id):
+    
+        famille = get_object_or_404(Famille, id=famille_id)
+        # racines = Membre.objects.filter( familles=famille,  nompere__isnull=True,  nommere__isnull=True  )
+        # arbres = [build_family_tree(m) for m in racines]
+        arbres = build_family(famille)
+        niveaux = build_family_tree_levels(famille)
 
-    famille = get_object_or_404(Famille, id=famille_id)
-    racines = Membre.objects.filter( familles=famille,  nompere__isnull=True,  nommere__isnull=True  )
-    arbres = [build_family_tree(m) for m in racines]
-
-    context = {
-        "famille": famille,
-        "arbres": arbres
-    }
-    return render(request, "famille/famille_arbre.html", context)
+        context = {
+            "famille": famille,
+            "arbres": arbres, 
+            "niveaux": niveaux,
+        }
+        return render(request, "famille/famille_arbre.html", context)
+    
+      
 
 def famille_arbre_graphique(request, famille_id):
 
@@ -181,7 +285,6 @@ def famille_arbre_graphique(request, famille_id):
         "tree_data": json.dumps(arbres)
     }
     return render(request, "famille/arbre_graphique.html", context)
-
 def listfamilles(request, id, mode=0):
    
     familles = Famille.objects.filter(communaute=id)

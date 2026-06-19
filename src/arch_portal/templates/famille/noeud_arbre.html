@@ -11,5 +11,17 @@
                 {% include "famille/noeud_arbre.html" with node=node.mere %}
             </li>
         {% endif %}
+
+        <li>
+            {{ node.membre.nomcomplet }}
+            {% if node.enfants %}
+                {% comment %} <ul> {% endcomment %}
+                    {% for enfant in node.enfants %}
+                        {% include "famille/noeud_arbre.html" with node=enfant %}
+                    {% endfor %}
+                {% comment %} </ul> {% endcomment %}
+            {% endif %}
+        </li>
+
     </ul>
 </li>

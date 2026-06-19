@@ -90,7 +90,7 @@ def send_email_information_nouveau_inscrit(email, nom, tel, sexe):
             subject="NOUVELLE INSCRIPTION SUR RICHBOOK",
             message=f"Bonjour EQUIPE RICHBOOK,\n\n Un nouveau membre s'est inscrit\n\n {email} , {nom}, {tel}, {sexe} \n\nCordialement , le Robot RICHBOOK\n \n. ",
             from_email="service@richbook.net",
-            recipient_list=[mail,"bookrich4@gmail.com"],
+            recipient_list=[mail,"bookrich4@gmail.com","hervesiyou@gmail.com"],
             fail_silently=False
         )
         return True

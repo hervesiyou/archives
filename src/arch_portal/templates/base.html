@@ -9,9 +9,17 @@
 
     <title>{% block title %} RICHBOOK – Archives {% endblock %}</title>
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/logo.png' %}">
-    <!-- Bootstrap 5 + Font Awesome -->
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+
+    
+    {% block css %} {% endblock %}
+    <link rel="stylesheet" href="{% static 'css/style.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/core.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/sweetalert.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/toastr.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'fa/css/all.min.css' %}" />
 
     <style>
         :root {
@@ -29,8 +37,7 @@
             --muted:    #7A6F64;
             --border:   rgba(168,120,42,0.18);
         }
-
-            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         html { scroll-behavior: smooth; }
 
@@ -137,18 +144,7 @@
             h1, .display-5 {
                 font-size: 1.8rem;
             }
-        }
-    </style>
-
-    {% block css %} {% endblock %}
-    <link rel="stylesheet" href="{% static 'css/style.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/core.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/sweetalert.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/toastr.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'fa/css/all.min.css' %}" />
-
-    <style>
+        } 
 
         .breadcrumb {
             background: transparent;
@@ -228,239 +224,90 @@
         }
 
 
-.navbar .nav-link{
-    font-size:14px;
-}
+        .navbar .nav-link{
+            font-size:14px;
+        }
 
-@media (max-width: 991px){
+        @media (max-width: 991px){
 
-    .navbar-collapse{
-        padding:15px 0;
+            .navbar-collapse{
+                padding:15px 0;
+            }
+
+            .navbar .card{
+                width:100%;
+            }
+
+            .navbar .nav-item{
+                margin-bottom:10px;
+            }
+        }
+
+    </style>
+    <style>
+    /* Ligne séparatrice visible seulement sur desktop */
+    .navbar{
+        background-color: var(--gold-lt) !important;
+       /*  background-color: #1a1410 !important; */
     }
-
-    .navbar .card{
-        width:100%;
+    @media (min-width: 992px) {
+        .border-lg-0 { border: none !important; }
+        /* Les icônes seules sur lg (pas xl) pour économiser l'espace) */
+        .navbar .nav-link .d-inline { display: none !important; }
+        .navbar .nav-link .d-xl-inline { display: inline !important; }
     }
-
-    .navbar .nav-item{
-        margin-bottom:10px;
+    /* Panneau collapse sur mobile : fond blanc, lisible */
+    @media (max-width: 991.98px) {
+        #navbarMain {
+        /* background: #6b0909;*/
+        border-top: 1px solid #dee2e6;
+        padding: 1rem;
+        border-radius: 0 0 12px 12px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+        }
+        /* Actions rapides : grille 4 colonnes sur mobile */
+        #navbarMain .navbar-nav.flex-wrap {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.25rem;
+        }
+        #navbarMain .navbar-nav.flex-wrap .nav-link {
+        text-align: center;
+        font-size: 0.78rem;
+        padding: 0.5rem 0.25rem;
+        border-radius: 8px;
+        /* background: #f8f9fa;*/
+        }
+        #navbarMain .navbar-nav.flex-wrap .nav-link span {
+        display: block !important;
+        font-size: 0.7rem;
+        margin-top: 2px;
+        margin-left: 0 !important;
+        }
+        #navbarMain .navbar-nav.flex-wrap .nav-link i {
+        font-size: 1rem;
+        display: block;
+        }
     }
-}
-
-
-
     </style>
 </head>
 
 <body data-url="{{URL}}"> 
-
     <!-- Barre supérieure fixe -->
     <div class="main-wrapper"> 
             <div class="preloader">
                 <div class="lds-ripple">
                     <div class="lds-pos"></div>
-                    <div class="lds-pos"></div>
-                    <div class="lds-pos"></div>
-                    {% comment %} <div class="lds-pos"></div> {% endcomment %}
-                    {% comment %} <div class="lds-pos"></div> {% endcomment %}
+                    <div class="lds-pos"></div> 
                 </div>
             </div>  
              
-                    <nav class="navbar navbar-expand-lg navbar-light  shadow-sm fixed-top">
-                        <div class="container-fluid px-3 px-md-4">
-                            
-                            <div class="row w-100"  >
-                                <div class="col-lg-2 col-xs-4 d-flex align-items-center">
-                                    <a class="navbar-brand d-flex align-items-center" href="{% url 'index' %}">
-                                        <img src="{% static 'images/logo.png' %}" alt="RICHBOOK" height="42">
-                                        <span class="ms-2 d-xs-none d-sm-block fw-bold text-success">RICHBOOK</span>
-                                    </a>
-
-                                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-                                        <span class="navbar-toggler-icon"></span>
-                                    </button>
-                                </div>
-                                <div class="col-lg-4 col-xs-12 pt-3">
-                                    {% if request.session.userrights %}
-                                    <div class="row">
-                                        {% if 'ADD_COMMUNAUTE' in request.session.userrights %}
-                                            <a class="p-2 col-1" href="{% url 'add_communaute' %}">
-                                                <i class="fa-solid fa-users me-2 text-success"></i> Communauté
-                                            </a>
-                                            <a class="p-2 col-1" href="{% url 'add_galerie' %}">
-                                                <i class="fa-solid fa-users me-2 text-success"></i> Galerie
-                                            </a>
-                                        {% endif %}
-                                        {% if  'ADD_EVENEMENT' in request.session.userrights %}
-                                            <a class="p-2 col-1" href="{% url 'add_evenement' %}">
-                                                <i class="fa-solid fa-calendar-plus me-2 text-success"></i> Evenement
-                                            </a>
-                                        {% endif %}
-                                        {% if 'ADD_FAMILLE' in request.session.userrights %}
-                                            <a class="p-2 col-1" href="{% url 'add_famille' %}">
-                                                <i class="fa-solid fa-users me-2 text-success"></i> Famille
-                                            </a>
-                                        {% endif %}
-                                        {% if 'ADD_MEMBRE' in request.session.userrights %}
-                                            <a class="p-2 col-1" href="{% url 'add_user' %}">
-                                                <i class="fa-solid fa-user-plus me-2 text-success"></i> Membre
-                                            </a>
-                                        {% endif %}
-                                        {% if 'ADD_LIBRAIRIE' in request.session.userrights %}
-                                            <a class="p-2 col-1" href="{% url 'add_librairie' %}">
-                                                <i class="fa-solid fa-book me-2 text-success"></i> Librairie
-                                            </a>
-                                        {% endif %}
-                                        {% if 'ADD_ASSOCIATION' in request.session.userrights %}
-                                            <a class="p-2 col-1" href="{% url 'add_association' %}">
-                                                <i class="fa-solid fa-users-rectangle me-2 text-success"></i> Association
-                                            </a>
-                                        {% endif %}
-                                        {% if 'ADD_GALERIE' in request.session.userrights %}
-                                            <a class="p-2 col-1" href="{% url 'add_galerie' %}">
-                                                <i class="fa-solid fa-images me-2 text-success"></i> Galerie
-                                            </a>
-                                        {% endif %}
-                                        {% if 'ADD_CAGNOTTE' in request.session.userrights %}
-                                            <a class="p-2 col-1" href="{% url 'add_cagnotte' %}">
-                                                <i class="fa-solid fa-coins me-2 text-success"></i> Cagnotte
-                                            </a>
-                                        {% endif %}
-                                        {% if 'ADD_PRESTATAIRE' in request.session.userrights %}
-                                            <a class="p-2 col-1" href="{% url 'add_prestataire' %}">
-                                                <i class="fa-solid fa-coins me-2 text-success"></i> Prestataires
-                                            </a>
-                                        {% endif %}
-                                        {% if 'ADD_PROJET' in request.session.userrights %}
-                                            <a class="p-2 col-1" href="{% url 'add_projet' %}">
-                                                <i class="fa-solid fa-coins me-2 text-success"></i> Projets
-                                            </a>
-                                        {% endif %}
-                                    </div>
-                                    {% endif %}
-                                </div>
-                                <div class="col-lg-3 col-xs-12">
-                                    <div class="row my-2 align-items-center ">
-                                        <div class="col-6">
-                                            <a href="{% url 'listcom' %}" class="text-decoration-none">
-                                                <div class="card card-hover text-center " style="border-radius: 16px;">
-                                                    <div class="my-2">
-                                                        <span style="background:#28a745; border-radius:50%; width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center;">
-                                                            <i class="fa fa-archive fa-1x text-white"></i>
-                                                        </span>
-                                                    <span class="text-uppercase fw-bold text-success" style="font-size:11px;"> Communautés</span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-
-                                        <div class="col-6 ">
-                                            <a href="{% url 'listlibs' %}" class="text-decoration-none">
-                                                <div class="card card-hover text-center border-0 shadow-sm" style="border-radius: 16px;">
-                                                    <div class="m-2">
-                                                        <span style="background:#dc3545; border-radius:50%; width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center;">
-                                                            <i class="fa fa-book fa-1x text-white"></i>
-                                                        </span>
-                                                    <span class="text-uppercase fw-bold text-danger" style="font-size:11px;">Librairies</span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div> 
-                                </div>
-                                <div class="col-lg-3 col-xs-12  d-none d-md-block">
-                                    <div class="pt-3" id="navbarMain">
-                                        <ul class="navbar-nav ms-auto align-items-center"> 
-                                            <li class="nav-item">
-                                                {% if not request.session.username %}
-                                                    <a class="nav-link btn btn-outline-success rounded-pill px-4" href="{% url 'login' %}">
-                                                        <i class="fa fa-right-to-bracket "></i> Connexion 
-                                                    </a>
-                                                {% else %}
-                                                    <div class="d-flex align-items-center gap-3">
-                                                        {% comment %} <a href="{% url 'home' %}" class="text-success fw-bold text-decoration-none"> {% endcomment %}
-                                                            {% comment %} <i class="fa-solid fa-user-circle me-1"></i>{{ request.session.username }} {% endcomment %}
-                                                        {% comment %} </a> {% endcomment %}
-
-                                                        <a href="{% url 'home' %}" class="text-success fw-bold text-decoration-none d-flex align-items-center gap-2">
-                                                            <div class="rounded-circle bg-success text-white fw-bold d-flex align-items-center justify-content-center"
-                                                                 style="width: 36px; height: 36px; font-size: 15px;">
-                                                                 {{ request.session.username|make_initials }}
-                                                            </div>
-                                                            <span class="d-none d-xs-inline">{{ request.session.username }}</span>
-                                                        </a>
-
-                                                        <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger rounded-pill px-3">
-                                                            Déconnexion
-                                                        </a>
-                                                    </div>
-                                                {% endif %}
-                                            </li> 
-                                            <li class="nav-item">
-                                                <a class="nav-link text-warning fw-medium" href="{% url 'home_abonnement' %}">
-                                                    <i class="fa-solid fa-coins me-1"></i> Recharger
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </nav> 
-
+                {% include "includes/navbar.html" %}  
+            
             <div class="row" style="margin-top:70px;">                
                 <div class="col-12">
                     
-                    <div class="card-body">
-                        <!-- <div class="row"> 
-                            <div class="col-8 pull-left">
-                                <a href="{% url 'index' %}"> <i class="fa-solid fa-home"></i> Accueil </a> 
-                                {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
-                                    {% comment %} {{ request.session.userrights}} {% endcomment %}
-                                    <a href="{% url 'add_communaute' %}">| + Communauté </a> |
-                                {% endif %}
-                                {% if  'ADD_FAMILLE' in request.session.userrights %}
-                                <a href="{% url 'add_famille' %}"> + Famille </a> |
-                                {% endif %}
-                                {% if  'ADD_MEMBRE' in request.session.userrights %}
-                                <a href="{% url 'add_user' %}"> + Membre </a> |
-                                {% endif %}
-                                {% if  'ADD_LIBRAIRIE' in request.session.userrights %}
-                                <a href="{% url 'add_librairie' %}"> + Librairie </a> |
-                                {% endif %}
-                                {% if  'ADD_LIVRE' in request.session.userrights %}
-                                <a href="{% url 'addbook' %}"> + Livre  </a> |
-                                {% endif %}
-                                {% if  'ADD_ASSOCIATION' in request.session.userrights %}
-                                <a href="{% url 'add_association' %}"> + Association </a> |
-                                {% endif %}
-                                {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
-                                <a href="{% url 'add_galerie' %}"> + Galerie  </a> |
-                                {% endif %}
-                                {% if  'ADD_EVENEMENT' in request.session.userrights %}
-                                <a href="{% url 'add_evenement' %}"> + Evenement  </a>
-                                {% endif %}
-
-                            </div>
-                            <div class="col-4 pull-right">
-                                {% if not request.session.username %}
-                                    <a href="{% url 'login' %}"> <i class="fa-solid fa-arrow-right-to-bracket"></i> Login </a> |  
-                                {% else %}
-                                    
-                                    <a href="{% url 'home' %}" class="text-success text-uppercase"> 
-                                        <i class="fa-solid fa-gauge"></i>
-                                        {{ request.session.username}} 
-                                    </a> | 
-                                    <a href="{% url 'logout' %}" class="text-danger text-uppercase"> X </a> | 
-                                {% endif %}
-                                <a href="{% url 'home_abonnement' %}" > 
-                                <i class="fa-solid fa-money-bill"></i> 
-                                 Recharger mon compte </a>
-                                {% comment %} <a href="{% url 'abonement_librairie' %}"> Abonements Librairies </a> | 
-                                <a href="{% url 'abonement_archive' %}"> Abonements Archives </a>  {% endcomment %}
-                                
-                            </div>
-                        </div>  -->
+                    <div class="card-body"> 
 
                         <div class="row g-3 my-2">
 

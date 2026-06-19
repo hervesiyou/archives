@@ -33,11 +33,10 @@ urlpatterns = [
 ] 
  
 urlpatterns += [
-    # Back-office prestataire
-    path("pres/cam/", publicite.liste_publicites, name="liste"),
-    path("pres/cam/nou/", publicite.creer_publicite, name="creer"),
-    path("pres/cam/<int:pk>/mod/", publicite.modifier_publicite, name="modifier"),
-    path("pres/cam/<int:pk>/sup/", publicite.supprimer_publicite, name="supprimer"),
+    path("pres/cam/", publicite.liste_publicites, name="liste_publicite"),
+    path("pres/cam/nou/", publicite.creer_publicite, name="creer_publicite"),
+    path("pres/cam/<int:pk>/mod/", publicite.modifier_publicite, name="modifier_publicite"),
+    path("pres/cam/<int:pk>/sup/", publicite.supprimer_publicite, name="supprimer_publicite"),
     # Endpoints consommés par les pages Communauté / Librairie
     path("api/bandeau/<str:type_contexte>/<int:contexte_id>/", publicite.bandeau_publicites, name="api_bandeau"),
     path("api/popup/<str:type_contexte>/<int:contexte_id>/", publicite.popup_publicite, name="api_popup"),

@@ -1,19 +1,10 @@
 ## A Verifier 00237697956649 eze lambert
 
 - connecter la mediatheques des communautés avec google photos et google drive
-- afficher les publicités dans les communautés et dans les librairies
 - on doit aussi controller le nombre d'association, d'evenements, selon le forfait de l'abonnement etc
-- corriger l navbar en version tablette et mobile
 - ajouter les livres avec liens externes
 - lire les livre en local 
-          
-          - ajouter la monetisation des communautés par l'affichage des publicité
-          - ajouter la monetisation des librairies par l'affichage des publicités,
-          - debiter le prix du livre quand on se le procure et alerte le vendeur, puis envoyer le livre par mail
-          - tester le paiement d'un livre qui debite mon compte
-          - si on a deja payé un livre on signale et liste les livres acheté
-
-- envoyer des mails lors de l'inscription a la communauté et la famille
+- gerer le fait que si je suis sur la page X apres le login je redirige vers X
 - gerer la recommandation des livres
 - permettre l'envoi des message groupés aux membres d'une meme famille
 - integrer les cartes automatique des villages
@@ -22,12 +13,22 @@
 - emission des tokens dans la communauté et gestion des micro credits à gerer avec BOS
 - numerisation des actes et documents dans la communauté a gerer avec BOS
 - api cinet pay et paymetrust, 
-- ajouter la geographie lors de la creation et l'update d'une communauté
 - ajouter les loader lors des ajax 
 - verifie qu'on ne fasse pas les CRUD si on a pas le droit ni l'abonnemnet pour le faire
-- gerer les arbres genealogiques, les generations et les exports - gerer l'arbre genealogique
 
+          
+          - afficher les publicités dans les communautés et dans les librairies
+          - corriger l navbar en version tablette et mobile
+          - ajouter la monetisation des communautés par l'affichage des publicité
+          - ajouter la monetisation des librairies par l'affichage des publicités,
+          - debiter le prix du livre quand on se le procure et alerte le vendeur, puis envoyer le livre par mail
+          - tester le paiement d'un livre qui debite mon compte
+          - si on a deja payé un livre on signale et liste les livres acheté
+          - envoyer des mails lors de l'inscription a la communauté et la famille
+
+          - gerer les arbres genealogiques, les generations et les exports - gerer l'arbre genealogique
           - reconcevoir l'achat d'un livre, soit on achete un livre soit on est abonné juste pour le lire
+          - ajouter la geographie lors de la creation et l'update d'une communauté
 
         - liste des opportunites economiques d'une communautés avec le bouton contribuer economiquement
         - ndoubock.pages.dev/mewahou-hall.eco2africa.workers.dev

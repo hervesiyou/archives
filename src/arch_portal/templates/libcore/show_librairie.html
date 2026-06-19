@@ -279,6 +279,9 @@
     </div>
 </div>
 
+{% include "ads/bandeau_publicite.html" with type_contexte="librairie" contexte_id=librairie.id %}
+{% include "ads/popup_publicite.html" with type_contexte="librairie" contexte_id=librairie.id %}
+
 {% endblock %}
 
 {% block js %}

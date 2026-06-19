@@ -9,600 +9,599 @@
 
 {% block content %}
 
-<div class="container ">
-    <div class="my-4">
-        <a href="{% url 'home' %}" class="my-2"> <i class="fa fa-home"></i> Accueil </a>  >
-        <a href="{% url 'listcom' %}" class="my-2"> <i class="fas fa-users"></i> Communautés </a> > {{ communaute.nom }}
+    <div class="container ">
+        <div class="my-4">
+            <a href="{% url 'home' %}" class="my-2"> <i class="fa fa-home"></i> Accueil </a>  >
+            <a href="{% url 'listcom' %}" class="my-2"> <i class="fas fa-users"></i> Communautés </a> > {{ communaute.nom }}
 
-        {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
-             <a href="{% url 'edit_communaute' communaute.id %}" title="Editer"><i class="fa fa-edit"></i>  </a> 
-        {% endif %}
-    </div>
-    <div class="row">
-
-        <div class="col-md-3 col-lg-4 col-xlg-3">
-            <div class="card card-hover">
-                <div class="box bg-danger text-center">
-                    <h1 class="font-light text-white"><i class="mdi mdi-receipt"></i></h1>
-                    <h6 class="text-white">{{communaute.nom}}</h6>
-                </div>
-            </div>
-        </div>
-        <!-- Column -->
-        <div class="col-md-3 col-lg-2 col-xlg-3">
-            <div class="card card-hover">
-                <div class="box bg-info text-center">
-                    <h1 class="font-light text-white"><i class="mdi mdi-relative-scale"></i></h1>
-                    <h6 class="text-white">{{communaute.type}}</h6>
-                </div>
-            </div>
-        </div>
-        <!-- Column -->
-        <div class="col-md-3 col-lg-2 col-xlg-3">
-            <div class="card card-hover">
-                <div class="box bg-cyan text-center">
-                    <h1 class="font-light text-white"><i class="mdi mdi-pencil"></i></h1>
-                    <h6 class="text-white">
-                     {{communaute.superficie}} Km<sup>2</sup>
-                    </h6>
-                </div>
-            </div>
-        </div>
-        <!-- Column -->
-        <div class="col-md-3 col-lg-2 col-xlg-3">
-            <div class="card card-hover">
-                <div class="box bg-success text-center">
-                    <h1 class="font-light text-white"><i class="mdi mdi-calendar-check"></i></h1>
-                    <h6 class="text-white">{{communaute.origine}}</h6>
-                </div>
-            </div>
-        </div>
-        <!-- Column -->
-        <div class="col-md-3 col-lg-2 col-xlg-3">
-            <div class="card card-hover">
-                <div class="box bg-warning text-center">
-                    <h1 class="font-light text-white"><i class="mdi mdi-alert"></i></h1>
-                    <h6 class="text-white">{{communaute.region}}</h6>
-                </div>
-            </div>
-        </div>
-        <!-- Column -->
-    </div>
-        <div class="row my-5">
-            {% if communaute.listerois %}
-                <div class=" col-md-4 col-lg-4">
-                        <h5 class="text-success text-bold"> <a href="{% url 'kings_list' communaute.id %}"> Liste des rois</a> </h5>
-                        <ul class="list">
-                            <li class="list-item"> {{communaute.listerois}} </li>
-                        </ul>
-                </div>
-
-                <div class="col-md-4 col-lg-4">
-            {% else %}
-                <div class="col-md-8 col-lg-6">
+            {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                <a href="{% url 'edit_communaute' communaute.id %}" title="Editer"><i class="fa fa-edit"></i>  </a> 
             {% endif %}
-            {% if communaute.histoire %}
-                    <h5 class="text-success text-bold text-center"> <a href="{% url 'com_histoire' communaute.id %}"> Histoire</a> </h5>
-                    
-                    <div class="text-container">
-                        <div class="short-text">
-                            {{ communaute.histoire }}
-                        </div>
+        </div>
+        <div class="row">
 
-                        <label for="expand1" class="plus">Voir plus</label>
-                        <label for="expand1" class="moins">Voir moins</label>
-                        <input type="checkbox" class="expand-toggle" id="expand1">
+            <div class="col-md-3 col-lg-4 col-xlg-3">
+                <div class="card card-hover">
+                    <div class="box bg-danger text-center">
+                        <h1 class="font-light text-white"><i class="mdi mdi-receipt"></i></h1>
+                        <h6 class="text-white">{{communaute.nom}}</h6>
                     </div>
-            {% endif %}
                 </div>
-
-            <div class=" col-lg-4">
-                <h5 class="text-success text-bold">
-                    <a href="{% url 'don_list' communaute.id %}" class="btn btn-outline-success" > Gestion des Dons</a>
-                        <button class=""  
-                        data-bs-toggle="modal"  data-bs-target="#infosModal"
-                        title="Cliquer ici pour plus d'informations">
-                            <i class="fa fa-info"></i>
-                        </button>
-                </h5>
             </div>
+            <!-- Column -->
+            <div class="col-md-3 col-lg-2 col-xlg-3">
+                <div class="card card-hover">
+                    <div class="box bg-info text-center">
+                        <h1 class="font-light text-white"><i class="mdi mdi-relative-scale"></i></h1>
+                        <h6 class="text-white">{{communaute.type}}</h6>
+                    </div>
+                </div>
+            </div>
+            <!-- Column -->
+            <div class="col-md-3 col-lg-2 col-xlg-3">
+                <div class="card card-hover">
+                    <div class="box bg-cyan text-center">
+                        <h1 class="font-light text-white"><i class="mdi mdi-pencil"></i></h1>
+                        <h6 class="text-white">
+                        {{communaute.superficie}} Km<sup>2</sup>
+                        </h6>
+                    </div>
+                </div>
+            </div>
+            <!-- Column -->
+            <div class="col-md-3 col-lg-2 col-xlg-3">
+                <div class="card card-hover">
+                    <div class="box bg-success text-center">
+                        <h1 class="font-light text-white"><i class="mdi mdi-calendar-check"></i></h1>
+                        <h6 class="text-white">{{communaute.origine}}</h6>
+                    </div>
+                </div>
+            </div>
+            <!-- Column -->
+            <div class="col-md-3 col-lg-2 col-xlg-3">
+                <div class="card card-hover">
+                    <div class="box bg-warning text-center">
+                        <h1 class="font-light text-white"><i class="mdi mdi-alert"></i></h1>
+                        <h6 class="text-white">{{communaute.region}}</h6>
+                    </div>
+                </div>
+            </div>
+            <!-- Column -->
         </div>
+            <div class="row my-5">
+                {% if communaute.listerois %}
+                    <div class=" col-md-4 col-lg-4">
+                            <h5 class="text-success text-bold"> <a href="{% url 'kings_list' communaute.id %}"> Liste des rois</a> </h5>
+                            <ul class="list">
+                                <li class="list-item"> {{communaute.listerois}} </li>
+                            </ul>
+                    </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-md-flex align-items-center">
+                    <div class="col-md-4 col-lg-4">
+                {% else %}
+                    <div class="col-md-8 col-lg-6">
+                {% endif %}
+                {% if communaute.histoire %}
+                        <h5 class="text-success text-bold text-center"> <a href="{% url 'com_histoire' communaute.id %}"> Histoire</a> </h5>
+                        
+                        <div class="text-container">
+                            <div class="short-text">
+                                {{ communaute.histoire }}
+                            </div>
+
+                            <label for="expand1" class="plus">Voir plus</label>
+                            <label for="expand1" class="moins">Voir moins</label>
+                            <input type="checkbox" class="expand-toggle" id="expand1">
+                        </div>
+                {% endif %}
+                    </div>
+
+                <div class=" col-lg-4">
+                    <h5 class="text-success text-bold">
+                        <a href="{% url 'don_list' communaute.id %}" class="btn btn-outline-success" > Gestion des Dons</a>
+                            <button class=""  
+                            data-bs-toggle="modal"  data-bs-target="#infosModal"
+                            title="Cliquer ici pour plus d'informations">
+                                <i class="fa fa-info"></i>
+                            </button>
+                    </h5>
+                </div>
+            </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-md-flex align-items-center">
+                            <div class="row my-3">
+                                <div class="col-lg-12">
+                                    <h4 class="card-title mb-3">{{communaute.nom}}</h4>
+                                    <h5 class="card-subtitle">{{communaute.description}}</h5>
+                                    {% if not appartient %} 
+                                        <a href="#" data-com="{{communaute.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partComID"> Je souhaite être {{ communaute.nom }}</a>
+                                    
+                                    {% endif %}
+                                </div>                        
+                                <div class="col-lg-12 my-3">
+                                    <a href="{% url 'com_geographie' communaute.id %}" title="Détail geographique">
+                                        <span> Carte géographique </span>
+                                    </a>
+                                    <a class="btn btn-sm btn-outline-success text-success"  data-bs-toggle="modal"  data-bs-target="#messageModal">  
+                                        <span> Laisser une message </span>
+                                    </a>
+
+                                    {% comment %} data-bs-toggle="modal"  data-bs-target="#donModal" {% endcomment %}
+                                    <a class="btn btn-sm btn-outline-info text-success" 
+                                    href="{% url 'don_create' communaute.id %}"
+                                    >  
+                                        <span> Faire un Don </span>
+                                    </a>
+                                    {% if  'VOIR_MESSAGES_COMMUNAUTES' in request.session.userrights %}  - 
+                                        <a href="{% url 'community_messages' communaute.id %}" title="" class="btn btn-sm btn-success" >
+                                            <span> Voir les messages  </span>
+                                        </a>
+                                    {% endif %}
+
+                                    <a href="{% url 'list_cagnottes' %}" title="" class="btn btn-sm btn-outline-warning" >
+                                            <span> Voir les cagnottes  </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row my-3">
-                            <div class="col-lg-12">
-                                <h4 class="card-title mb-3">{{communaute.nom}}</h4>
-                                <h5 class="card-subtitle">{{communaute.description}}</h5>
-                                {% if not appartient %} 
-                                    <a href="#" data-com="{{communaute.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partComID"> Je souhaite être {{ communaute.nom }}</a>
-                                
-                                {% endif %}
-                            </div>                        
-                            <div class="col-lg-12 my-3">
-                                <a href="{% url 'com_geographie' communaute.id %}" title="Détail geographique">
+                            <div class="col-lg-8">
+                                {% comment %} <a href="{% url 'com_geographie' communaute.id %}" title="Détail geographique">
                                     <span> Carte géographique </span>
                                 </a>
                                 <a class="btn btn-sm btn-outline-success text-success"  data-bs-toggle="modal"  data-bs-target="#messageModal">  
                                     <span> Laisser une message </span>
                                 </a>
 
-                                 {% comment %} data-bs-toggle="modal"  data-bs-target="#donModal" {% endcomment %}
-                                <a class="btn btn-sm btn-outline-info text-success" 
-                                href="{% url 'don_create' communaute.id %}"
-                                >  
+                                <a class="btn btn-sm btn-outline-info text-success"  data-bs-toggle="modal"  data-bs-target="#donModal">  
                                     <span> Faire un Don </span>
                                 </a>
                                 {% if  'VOIR_MESSAGES_COMMUNAUTES' in request.session.userrights %}  - 
                                     <a href="{% url 'community_messages' communaute.id %}" title="" class="btn btn-sm btn-success" >
                                         <span> Voir les messages  </span>
                                     </a>
+                                {% endif %} {% endcomment %}
+                                <div class="flot-chart mt-2">
+        
+                                {%  if communaute.image %}
+                                    {% with first_image=communaute.image %}
+                                        <div class="my-2 text-center">
+                                            <img src="{{ first_image.fichier.url }}"  style="width: 100%; max-height: 400px;" alt="{{ communaute.description|default:'Couverture de la communauté' }}">
+                                        </div>
+                                    {% endwith %}
+                                {% else %}
+                                    <div class="my-4">
+                                        <img src="{% static 'images/com.jpg' %} " alt="user" style="max-width: 100%; max-height: 400px;" >
+                                    </div>                            
                                 {% endif %}
 
-                                 <a href="{% url 'list_cagnottes' %}" title="" class="btn btn-sm btn-outline-warning" >
-                                        <span> Voir les cagnottes  </span>
-                                  </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row my-3">
-                        <div class="col-lg-8">
-                            {% comment %} <a href="{% url 'com_geographie' communaute.id %}" title="Détail geographique">
-                                <span> Carte géographique </span>
-                            </a>
-                            <a class="btn btn-sm btn-outline-success text-success"  data-bs-toggle="modal"  data-bs-target="#messageModal">  
-                                <span> Laisser une message </span>
-                            </a>
-
-                            <a class="btn btn-sm btn-outline-info text-success"  data-bs-toggle="modal"  data-bs-target="#donModal">  
-                                <span> Faire un Don </span>
-                            </a>
-                            {% if  'VOIR_MESSAGES_COMMUNAUTES' in request.session.userrights %}  - 
-                                <a href="{% url 'community_messages' communaute.id %}" title="" class="btn btn-sm btn-success" >
-                                    <span> Voir les messages  </span>
-                                </a>
-                            {% endif %} {% endcomment %}
-                            <div class="flot-chart mt-2">
-    
-                            {%  if communaute.image %}
-                                {% with first_image=communaute.image %}
-                                    <div class="my-2 text-center">
-                                        <img src="{{ first_image.fichier.url }}"  style="width: 100%; max-height: 400px;" alt="{{ communaute.description|default:'Couverture de la communauté' }}">
-                                    </div>
-                                {% endwith %}
-                            {% else %}
-                                <div class="my-4">
-                                    <img src="{% static 'images/com.jpg' %} " alt="user" style="max-width: 100%; max-height: 400px;" >
-                                </div>                            
-                            {% endif %}
-
-                                
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="row">
-                                <div class="col-4">
-                                    <div class="bg-dark p-10 text-white text-center">
-                                        
-                                        <a href="{% url 'listfamilles' id=communaute.id mode=1 %}">
-                                        <h6 class="mb-0 mt-1">
-                                            <i class="fa fa-users mb-1 font-16"></i> 
-                                            <span class="badge bg-white text-dark">{{communaute.get_familles|length }}</span> 
-                                            Familles
-                                        </h6>
-                                        </a>
-                                        {% if appartient %}
-                                        <small class="font-light"><a href="{% url 'listfamilles' id=communaute.id mode=1  %}"><i class="fa fa-eye"></i> Consulter </a></small>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="bg-dark p-10 text-white text-center">
-                                         
-                                        <h6 class="mb-0 mt-1" title="Merci d'adhérer à cette communauté pour avoir le droit de consulter les associations"> 
-                                        <span class="badge bg-white text-dark" >{{communaute.get_associations|length }}</span> Associations</h6>
-                                        
-                                        {% if appartient %}
-                                        <small class="font-light">
-                                            <a href="{% url 'listassociations' id=communaute.id mode=1  %}"><i class="fa fa-eye"></i> Consulter </a>
-                                        </small> 
-                                        {% else %}
-                                        <span class="text-small text-xs"> </span>
-                                        {% endif %}
-                                    </div>
-                                </div> 
-                                <div class="col-4">
-                                    <div class="bg-dark p-10 text-white text-center">
-                                        {% comment %} <i class="fa fa-tag mb-1 font-16"></i> {% endcomment %}
-                                        <h6 class="mb-0 mt-1">
-                                        <span class="badge bg-white text-dark">{{communaute.get_evenements|length }}</span> Evenements</h6>
-                                        {% comment %} 'VOIR_COMMUNAUTE' in request.session.userrights or communaute.publique or {% endcomment %}
-                                         
-                                        {% if appartient %}
-                                        <small class="font-light">
-                                        <a href="{% url 'listevenements' id=communaute.id mode=1 %}"><i class="fa fa-eye"></i> Consulter</a> 
-                                        </small>
-                                        {% endif %}
-                                    </div>
+                                    
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-4 mt-3">
-                                    <div class="bg-dark p-10 text-white text-center">
-                                        
-                                        <h6 class="mb-0 mt-1"> 
-                                        <a href="{% url 'allprestataires' communaute.id %}">Prestataires</a>
-                                        </h6>
-                                        <small class="font-light"><i class="fa fa-table mb-1 font-16"></i> {{ communaute.origine }} </small>
-                                    </div>
-                                </div>
-                                <div class="col-4 mt-3">
-                                    <div class="bg-dark p-10 text-white text-center">
-                                        
-                                        <h6 class="mb-0 mt-1"> 
-                                        <a href="{% url 'allprojets' communaute.id %}">Projets</a>
-                                        </h6>
-                                        <small class="font-light"><i class="fa fa-table mb-1 font-16"></i> {{ communaute.origine }} </small>
-                                    </div>
-                                </div>
-                                <div class="col-4 mt-3">
-                                    <div class="bg-dark p-10 text-white text-center">
-                                        {% comment %} <i class="fa fa-globe mb-1 font-16"></i> {% endcomment %}
-                                        <h6 class="mb-0 mt-1">
-                                        <a href="{% url 'listlibs' %}"  > Mediathèque </a> </h6> 
-
-                                        {{galerie}}
-                                        {% if galerie  is not None and galerie.id is not None %}
-                                            <a class="btn btn-outline-success" href="{% url 'show_galerie' galerie.id %}"> Photos de {{ communaute.nom}} </a>
-                                        {% endif %}
-                                        {% if 'ADD_GALERIE' in request.session.userrights %}
-                                            <a class="d-block badge bg-info" href="{% url 'add_galerie' %}" alt="Ajouter une galerie" title="Ajouter une galerie">
-                                                <i class="fa-solid fa-plus me-2 text-success"></i>
-                                                <i class="fa-solid fa-images me-2 text-success"></i>                                       
+                            <div class="col-lg-4">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="bg-dark p-10 text-white text-center">
+                                            
+                                            <a href="{% url 'listfamilles' id=communaute.id mode=1 %}">
+                                            <h6 class="mb-0 mt-1">
+                                                <i class="fa fa-users mb-1 font-16"></i> 
+                                                <span class="badge bg-white text-dark">{{communaute.get_familles|length }}</span> 
+                                                Familles
+                                            </h6>
                                             </a>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4">
-                                     <div class="bg-dark p-10 text-white text-center"> 
-                                        <h6 class="mb-0 mt-1">
-                                        <a href="{% url 'liste_articles' communaute.id %}"  > Articles de {{ communaute.nom}} </a> </h6>  
-                                        {% comment %} {% if galerie  is not None and galerie.id is not None %}
-                                            <a class="btn btn-outline-success" href="{% url 'show_galerie' galerie.id %}"> Article de {{ communaute.nom}} </a>
-                                        {% endif %} {% endcomment %}
-                                        {% if 'ADD_ARTICLE' in request.session.userrights %}
-                                            <a class="d-block badge bg-info" href="{% url 'ajouter_article' communaute.id %}" alt="Ajouter un article" title="Ajouter un article">
-                                                <i class="fa-solid fa-plus me-2 text-success"></i>
-                                                <i class="fa-solid fa-images me-2 text-success"></i>                                       
-                                            </a>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="bg-dark p-10 text-white text-center"> 
-                                        <h6 class="mb-0 mt-1">
-                                        <a href="{% url 'liste_formations' communaute.id %}"  > Formations de {{ communaute.nom}}</a> </h6>  
-                                        {% comment %} {% if galerie  is not None and galerie.id is not None %}
-                                            <a class="btn btn-outline-success" href="{% url 'show_galerie' galerie.id %}"> Formation de {{ communaute.nom}} </a>
-                                        {% endif %} {% endcomment %}
-                                        {% if 'ADD_FORMATION' in request.session.userrights %}
-                                            <a class="d-block badge bg-info" href="{% url 'ajouter_formation' communaute.id %}" alt="Ajouter une formation" title="Ajouter une formation">
-                                                <i class="fa-solid fa-plus me-2 text-success"></i>
-                                                <i class="fa-solid fa-images me-2 text-success"></i>                                       
-                                            </a>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="col-4"> ..</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 mt-3">
-                                    <div class="bg-dark p-10 text-white text-center">
-                                        {% comment %} <i class="fa fa-globe mb-1 font-16"></i> {% endcomment %}
-                                        <h6 class="mb-0 mt-1"> 
-                                             <span class="badge bg-white text-dark">{{ communaute.administrateurs.all|length }}</span> Administrateurs
-                                        </h6>
-                                        <div >
-                                            {% if  'ADD_COMMUNAUTE_ADMIN' in request.session.userrights %}
-                                            <a href="{% url 'show_admin_com' communaute.id %}" 
-                                                class=" btn btn-outline-success text-success my-3"
-                                                title="Voir les Administrateurs  de {{communaute.nom}}"
-                                            > 
-                                                <i class="fa fa-eye"></i> Les lister  </a> 
-
+                                            {% if appartient %}
+                                            <small class="font-light"><a href="{% url 'listfamilles' id=communaute.id mode=1  %}"><i class="fa fa-eye"></i> Consulter </a></small>
                                             {% endif %}
                                         </div>
-                                        <small class="font-light"> 
-                                         {% if  'ADD_COMMUNAUTE_ADMIN' in request.session.userrights %}
-                                            <div class=" text-end pull-right">
-                                                <a class=" btn btn-outline-danger text-white" 
-                                                      title=" Ajouter un Administrateur à cette communauté"
-                                                      data-bs-toggle="modal" 
-                                                      data-bs-target="#adminModal" 
-                                                      type="button"> <i class="fa fa-plus"></i> Ajouter  </a>
-                                            </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="bg-dark p-10 text-white text-center">
                                             
-                                        {% endif %}
-                                        </small>
+                                            <h6 class="mb-0 mt-1" title="Merci d'adhérer à cette communauté pour avoir le droit de consulter les associations"> 
+                                            <span class="badge bg-white text-dark" >{{communaute.get_associations|length }}</span> Associations</h6>
+                                            
+                                            {% if appartient %}
+                                            <small class="font-light">
+                                                <a href="{% url 'listassociations' id=communaute.id mode=1  %}"><i class="fa fa-eye"></i> Consulter </a>
+                                            </small> 
+                                            {% else %}
+                                            <span class="text-small text-xs"> </span>
+                                            {% endif %}
+                                        </div>
+                                    </div> 
+                                    <div class="col-4">
+                                        <div class="bg-dark p-10 text-white text-center">
+                                            {% comment %} <i class="fa fa-tag mb-1 font-16"></i> {% endcomment %}
+                                            <h6 class="mb-0 mt-1">
+                                            <span class="badge bg-white text-dark">{{communaute.get_evenements|length }}</span> Evenements</h6>
+                                            {% comment %} 'VOIR_COMMUNAUTE' in request.session.userrights or communaute.publique or {% endcomment %}
+                                            
+                                            {% if appartient %}
+                                            <small class="font-light">
+                                            <a href="{% url 'listevenements' id=communaute.id mode=1 %}"><i class="fa fa-eye"></i> Consulter</a> 
+                                            </small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4 mt-3">
+                                        <div class="bg-dark p-10 text-white text-center">
+                                            
+                                            <h6 class="mb-0 mt-1"> 
+                                            <a href="{% url 'allprestataires' communaute.id %}">Prestataires</a>
+                                            </h6>
+                                            <small class="font-light"><i class="fa fa-table mb-1 font-16"></i> {{ communaute.origine }} </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-3">
+                                        <div class="bg-dark p-10 text-white text-center">
+                                            
+                                            <h6 class="mb-0 mt-1"> 
+                                            <a href="{% url 'allprojets' communaute.id %}">Projets</a>
+                                            </h6>
+                                            <small class="font-light"><i class="fa fa-table mb-1 font-16"></i> {{ communaute.origine }} </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 mt-3">
+                                        <div class="bg-dark p-10 text-white text-center">
+                                            {% comment %} <i class="fa fa-globe mb-1 font-16"></i> {% endcomment %}
+                                            <h6 class="mb-0 mt-1">
+                                            <a href="{% url 'listlibs' %}"  > Mediathèque </a> </h6> 
+
+                                            {{galerie}}
+                                            {% if galerie  is not None and galerie.id is not None %}
+                                                <a class="btn btn-outline-success" href="{% url 'show_galerie' galerie.id %}"> Photos de {{ communaute.nom}} </a>
+                                            {% endif %}
+                                            {% if 'ADD_GALERIE' in request.session.userrights %}
+                                                <a class="d-block badge bg-info" href="{% url 'add_galerie' %}" alt="Ajouter une galerie" title="Ajouter une galerie">
+                                                    <i class="fa-solid fa-plus me-2 text-success"></i>
+                                                    <i class="fa-solid fa-images me-2 text-success"></i>                                       
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="bg-dark p-10 text-white text-center"> 
+                                            <h6 class="mb-0 mt-1">
+                                            <a href="{% url 'liste_articles' communaute.id %}"  > Articles de {{ communaute.nom}} </a> </h6>  
+                                            {% comment %} {% if galerie  is not None and galerie.id is not None %}
+                                                <a class="btn btn-outline-success" href="{% url 'show_galerie' galerie.id %}"> Article de {{ communaute.nom}} </a>
+                                            {% endif %} {% endcomment %}
+                                            {% if 'ADD_ARTICLE' in request.session.userrights %}
+                                                <a class="d-block badge bg-info" href="{% url 'ajouter_article' communaute.id %}" alt="Ajouter un article" title="Ajouter un article">
+                                                    <i class="fa-solid fa-plus me-2 text-success"></i>
+                                                    <i class="fa-solid fa-images me-2 text-success"></i>                                       
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="bg-dark p-10 text-white text-center"> 
+                                            <h6 class="mb-0 mt-1">
+                                            <a href="{% url 'liste_formations' communaute.id %}"  > Formations de {{ communaute.nom}}</a> </h6>  
+                                            {% comment %} {% if galerie  is not None and galerie.id is not None %}
+                                                <a class="btn btn-outline-success" href="{% url 'show_galerie' galerie.id %}"> Formation de {{ communaute.nom}} </a>
+                                            {% endif %} {% endcomment %}
+                                            {% if 'ADD_FORMATION' in request.session.userrights %}
+                                                <a class="d-block badge bg-info" href="{% url 'ajouter_formation' communaute.id %}" alt="Ajouter une formation" title="Ajouter une formation">
+                                                    <i class="fa-solid fa-plus me-2 text-success"></i>
+                                                    <i class="fa-solid fa-images me-2 text-success"></i>                                       
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-4"> ..</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 mt-3">
+                                        <div class="bg-dark p-10 text-white text-center">
+                                            {% comment %} <i class="fa fa-globe mb-1 font-16"></i> {% endcomment %}
+                                            <h6 class="mb-0 mt-1"> 
+                                                <span class="badge bg-white text-dark">{{ communaute.administrateurs.all|length }}</span> Administrateurs
+                                            </h6>
+                                            <div >
+                                                {% if  'ADD_COMMUNAUTE_ADMIN' in request.session.userrights %}
+                                                <a href="{% url 'show_admin_com' communaute.id %}" 
+                                                    class=" btn btn-outline-success text-success my-3"
+                                                    title="Voir les Administrateurs  de {{communaute.nom}}"
+                                                > 
+                                                    <i class="fa fa-eye"></i> Les lister  </a> 
+
+                                                {% endif %}
+                                            </div>
+                                            <small class="font-light"> 
+                                            {% if  'ADD_COMMUNAUTE_ADMIN' in request.session.userrights %}
+                                                <div class=" text-end pull-right">
+                                                    <a class=" btn btn-outline-danger text-white" 
+                                                        title=" Ajouter un Administrateur à cette communauté"
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#adminModal" 
+                                                        type="button"> <i class="fa fa-plus"></i> Ajouter  </a>
+                                                </div>
+                                                
+                                            {% endif %}
+                                            </small>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-12">
-                            <ul class="nav nav-tabs nav-justified mb-4" id="commTabs" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" 
-                                                data-bs-target="#overview" type="button" role="tab">
-                                            Aperçu
-                                        </button>
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="personnes-tab" data-bs-toggle="tab" 
-                                                data-bs-target="#personnes" type="button" role="tab">
-                                            Personnes Clés <span class="badge bg-success ms-1">{{ personnes_cles.count }}</span>
-                                       
+                        <div class="row">
+                            <div class="col-12">
+                                <ul class="nav nav-tabs nav-justified mb-4" id="commTabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" 
+                                                    data-bs-target="#overview" type="button" role="tab">
+                                                Aperçu
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="personnes-tab" data-bs-toggle="tab" 
+                                                    data-bs-target="#personnes" type="button" role="tab">
+                                                Personnes Clés <span class="badge bg-success ms-1">{{ personnes_cles.count }}</span>
+                                        
+                                            {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                                                
+                                                <span type="button" class="btn btn-success btn-sm" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#addPersonneModal">
+                                                    <i class="fa-solid fa-plus me-2"></i>Ajouter une personne clé
+                                                </span>
+                                            {% endif %}
+                                            </button>
+
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="lieux-tab" data-bs-toggle="tab" 
+                                                    data-bs-target="#lieux" type="button" role="tab">
+                                                Lieux Clés <span class="badge bg-success ms-1">{{ lieux_cles.count }}</span>
+                                            
+                                            {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                                                
+                                                <span type="button" class="btn btn-success btn-sm" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#addLieuModal">
+                                                    <i class="fa-solid fa-plus me-2"></i>Ajouter un lieu clé
+                                                </span>
+                                            {% endif %}
+                                            </button>
+                                        </li>
+                                    </ul>
+                            </div>
+
+                            <div class="tab-content" id="commTabContent">
+                            
+                                <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                                    
+                                    <div class="card shadow-sm">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Description détaillée</h4>
+                                            <p>{{ communaute.histoire_detaillee|linebreaks }}</p>
+                                            <!-- ... autres infos existantes -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Onglet Personnes Clés -->
+                                <div class="tab-pane fade" id="personnes" role="tabpanel">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <h3 class="mb-0">Personnes Clés
+                                        {% comment %} {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                                            <a href="{% url 'personnecle_create' communaute.id %}" 
+                                            class="btn btn-success btn-sm">
+                                                <i class="fa-solid fa-plus me-2"></i>Ajouter une personne
+                                            </a>
+                                        {% endif %} {% endcomment %}
                                         {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
-                                             
-                                            <span type="button" class="btn btn-success btn-sm" 
+                                                
+                                            <button type="button" class="btn btn-success btn-sm"  title="Ajouter une personne clé"
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#addPersonneModal">
-                                                <i class="fa-solid fa-plus me-2"></i>Ajouter une personne clé
-                                            </span>
+                                                <i class="fa-solid fa-plus me-2"></i>
+                                            </button>
                                         {% endif %}
-                                         </button>
+                                        </h3>
+                                    </div>
 
-                                    </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="lieux-tab" data-bs-toggle="tab" 
-                                                data-bs-target="#lieux" type="button" role="tab">
-                                            Lieux Clés <span class="badge bg-success ms-1">{{ lieux_cles.count }}</span>
-                                        
+                                    {% if personnes_cles %}
+                                        <div class="row g-4">
+                                            {% for p in personnes_cles %}
+                                                <div class="col-md-6 col-lg-4">
+                                                    <div class="card h-100 shadow-sm hover-lift">
+                                                        {% if p.photo %}
+                                                            <img src="{{ p.photo.url }}" class="card-img-top" 
+                                                                alt="{{ p.nom }}" style="height: 180px; object-fit: cover;">
+                                                        {% endif %}
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">{{ p.nom }}</h5>
+                                                            <h6 class="card-subtitle mb-2 text-muted">{{ p.role }}</h6>
+                                                            <p class="card-text text-muted small">
+                                                                {{ p.description|truncatewords:25 }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="card-footer bg-transparent border-0">
+                                                            <a href="{% url 'personnecle_detail' p.pk %}" class="btn btn-outline-primary btn-sm">
+                                                                Voir détails
+                                                            </a>
+                                                            {% if can_change_personne %}
+                                                                <a href="{% url 'personnecle_edit' p.pk %}" class="btn btn-outline-warning btn-sm ms-2">
+                                                                    Modifier
+                                                                </a>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="alert alert-info text-center">
+                                            Aucune personne clé enregistrée pour le moment.
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Onglet Lieux Clés -->
+                                <div class="tab-pane fade" id="lieux" role="tabpanel">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <h3 class="mb-0">Lieux Clés</h3>
+                                        {% comment %} {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                                            <a href="{% url 'lieucle_create' communaute.id %}" 
+                                            class="btn btn-success btn-sm">
+                                                <i class="fa-solid fa-plus me-2"></i>Ajouter un lieu
+                                            </a>
+                                        {% endif %} {% endcomment %}
                                         {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
-                                             
-                                            <span type="button" class="btn btn-success btn-sm" 
+                                                
+                                            <button type="button" class="btn btn-success btn-sm" 
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#addLieuModal">
                                                 <i class="fa-solid fa-plus me-2"></i>Ajouter un lieu clé
-                                            </span>
+                                            </button>
                                         {% endif %}
-                                        </button>
-                                    </li>
-                                </ul>
-                        </div>
-
-                        <div class="tab-content" id="commTabContent">
-                        
-                            <div class="tab-pane fade show active" id="overview" role="tabpanel">
-                                
-                                <div class="card shadow-sm">
-                                    <div class="card-body">
-                                        <h4 class="card-title">Description détaillée</h4>
-                                        <p>{{ communaute.histoire_detaillee|linebreaks }}</p>
-                                        <!-- ... autres infos existantes -->
                                     </div>
-                                </div>
-                            </div>
 
-                            <!-- Onglet Personnes Clés -->
-                            <div class="tab-pane fade" id="personnes" role="tabpanel">
-                                <div class="d-flex justify-content-between align-items-center mb-4">
-                                    <h3 class="mb-0">Personnes Clés
-                                    {% comment %} {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
-                                        <a href="{% url 'personnecle_create' communaute.id %}" 
-                                        class="btn btn-success btn-sm">
-                                            <i class="fa-solid fa-plus me-2"></i>Ajouter une personne
-                                        </a>
-                                    {% endif %} {% endcomment %}
-                                    {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
-                                             
-                                        <button type="button" class="btn btn-success btn-sm"  title="Ajouter une personne clé"
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#addPersonneModal">
-                                            <i class="fa-solid fa-plus me-2"></i>
-                                        </button>
-                                    {% endif %}
-                                    </h3>
-                                </div>
-
-                                {% if personnes_cles %}
-                                    <div class="row g-4">
-                                        {% for p in personnes_cles %}
-                                            <div class="col-md-6 col-lg-4">
-                                                <div class="card h-100 shadow-sm hover-lift">
-                                                    {% if p.photo %}
-                                                        <img src="{{ p.photo.url }}" class="card-img-top" 
-                                                            alt="{{ p.nom }}" style="height: 180px; object-fit: cover;">
-                                                    {% endif %}
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">{{ p.nom }}</h5>
-                                                        <h6 class="card-subtitle mb-2 text-muted">{{ p.role }}</h6>
-                                                        <p class="card-text text-muted small">
-                                                            {{ p.description|truncatewords:25 }}
-                                                        </p>
-                                                    </div>
-                                                    <div class="card-footer bg-transparent border-0">
-                                                        <a href="{% url 'personnecle_detail' p.pk %}" class="btn btn-outline-primary btn-sm">
-                                                            Voir détails
-                                                        </a>
-                                                        {% if can_change_personne %}
-                                                            <a href="{% url 'personnecle_edit' p.pk %}" class="btn btn-outline-warning btn-sm ms-2">
-                                                                Modifier
-                                                            </a>
+                                    {% if lieux_cles %}
+                                        <div class="row g-4">
+                                            {% for l in lieux_cles %}
+                                                <div class="col-md-6 col-lg-4">
+                                                    <div class="card h-100 shadow-sm hover-lift">
+                                                        {% if l.photo %}
+                                                            <img src="{{ l.photo.url }}" class="card-img-top" 
+                                                                alt="{{ l.nom }}" style="height: 180px; object-fit: cover;">
                                                         {% endif %}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    <div class="alert alert-info text-center">
-                                        Aucune personne clé enregistrée pour le moment.
-                                    </div>
-                                {% endif %}
-                            </div>
-
-                            <!-- Onglet Lieux Clés -->
-                            <div class="tab-pane fade" id="lieux" role="tabpanel">
-                                <div class="d-flex justify-content-between align-items-center mb-4">
-                                    <h3 class="mb-0">Lieux Clés</h3>
-                                    {% comment %} {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
-                                        <a href="{% url 'lieucle_create' communaute.id %}" 
-                                        class="btn btn-success btn-sm">
-                                            <i class="fa-solid fa-plus me-2"></i>Ajouter un lieu
-                                        </a>
-                                    {% endif %} {% endcomment %}
-                                    {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
-                                             
-                                        <button type="button" class="btn btn-success btn-sm" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#addLieuModal">
-                                            <i class="fa-solid fa-plus me-2"></i>Ajouter un lieu clé
-                                        </button>
-                                    {% endif %}
-                                </div>
-
-                                {% if lieux_cles %}
-                                    <div class="row g-4">
-                                        {% for l in lieux_cles %}
-                                            <div class="col-md-6 col-lg-4">
-                                                <div class="card h-100 shadow-sm hover-lift">
-                                                    {% if l.photo %}
-                                                        <img src="{{ l.photo.url }}" class="card-img-top" 
-                                                            alt="{{ l.nom }}" style="height: 180px; object-fit: cover;">
-                                                    {% endif %}
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">{{ l.nom }}</h5>
-                                                        <h6 class="card-subtitle mb-2 text-muted">{{ l.type_lieu }}</h6>
-                                                        <p class="card-text text-muted small">
-                                                            {{ l.description|truncatewords:25 }}
-                                                        </p>
-                                                        {% if l.coordonnees %}
-                                                            <p class="text-muted small mb-0">
-                                                                <i class="fa-solid fa-location-dot me-1"></i>{{ l.coordonnees }}
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">{{ l.nom }}</h5>
+                                                            <h6 class="card-subtitle mb-2 text-muted">{{ l.type_lieu }}</h6>
+                                                            <p class="card-text text-muted small">
+                                                                {{ l.description|truncatewords:25 }}
                                                             </p>
-                                                        {% endif %}
-                                                    </div>
-                                                    <div class="card-footer bg-transparent border-0">
-                                                        <a href="{% url 'lieucle_detail' l.pk %}" class="btn btn-outline-primary btn-sm">
-                                                            Voir détails
-                                                        </a>
-                                                        {% if can_change_lieu %}
-                                                            <a href="{% url 'lieucle_edit' l.pk %}" class="btn btn-outline-warning btn-sm ms-2">
-                                                                Modifier
+                                                            {% if l.coordonnees %}
+                                                                <p class="text-muted small mb-0">
+                                                                    <i class="fa-solid fa-location-dot me-1"></i>{{ l.coordonnees }}
+                                                                </p>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="card-footer bg-transparent border-0">
+                                                            <a href="{% url 'lieucle_detail' l.pk %}" class="btn btn-outline-primary btn-sm">
+                                                                Voir détails
                                                             </a>
-                                                        {% endif %}
+                                                            {% if can_change_lieu %}
+                                                                <a href="{% url 'lieucle_edit' l.pk %}" class="btn btn-outline-warning btn-sm ms-2">
+                                                                    Modifier
+                                                                </a>
+                                                            {% endif %}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    <div class="alert alert-info text-center">
-                                        Aucun lieu clé enregistré pour le moment.
-                                    </div>
-                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="alert alert-info text-center">
+                                            Aucun lieu clé enregistré pour le moment.
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    {% if  'ADD_COMMUNAUTE_ADMIN' in request.session.userrights %} 
+        {% if  'ADD_COMMUNAUTE_ADMIN' in request.session.userrights %} 
 
-        <div class="modal fade" id="adminModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white ">
-                <h5 class="modal-title " id="exampleModalLabel"> Ajout d'un administrateur à  {{ communaute.nom}} </h5>
-                <button type="button" class="btn-close clos" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal fade" id="adminModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white ">
+                    <h5 class="modal-title " id="exampleModalLabel"> Ajout d'un administrateur à  {{ communaute.nom}} </h5>
+                    <button type="button" class="btn-close clos" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+        
+                    <form  method="post" >
+                        <div class="modal-body"> 
+                            {% csrf_token %}
+                            <h3 class=""> Choisir l'administrateur</h3><br/>
+                            <select name="admin" class="form-control">
+                                <option value="">--------</option>
+                                {% for membre in communaute.membre_set.all %}
+                                    <option value="{{membre.id}}">{{membre.nomcomplet}}</option>
+                                {% endfor %}
+                            </select> 
+                            {% comment %} <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div> {% endcomment %}
+                        </div>
+
+                        <div class="modal-footer">
+
+                        {% comment %} disabled  {% endcomment %}
+                        <input type="button" data-com="{{communaute.id}}" class="btn btn-primary" id="addAdminComID" 
+                        value="Enregistrer" />
+                        </div>
+        
+                    </form>
                 </div>
-    
-                <form  method="post" >
-                    <div class="modal-body"> 
-                        {% csrf_token %}
-                        <h3 class=""> Choisir l'administrateur</h3><br/>
-                        <select name="admin" class="form-control">
-                            <option value="">--------</option>
-                            {% for membre in communaute.membre_set.all %}
-                                <option value="{{membre.id}}">{{membre.nomcomplet}}</option>
-                            {% endfor %}
-                        </select> 
-                        {% comment %} <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div> {% endcomment %}
-                    </div>
-
-                    <div class="modal-footer">
-
-                    {% comment %} disabled  {% endcomment %}
-                    <input type="button" data-com="{{communaute.id}}" class="btn btn-primary" id="addAdminComID" 
-                    value="Enregistrer" />
-                    </div>
-    
-                </form>
-            </div>
-            </div>
-        </div> 
-     
-    {% endif %}
-
-    <div class="modal fade" id="messageModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title">Envoi du message aux gestionnaires de <span class=""> {{communaute.nom}} </span> </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-             <div class="form-section">
-                <h3>Poster un Message</h3> 
-
-                {% comment %} <div class="error-message" id="errorMessage"></div> {% endcomment %}
-
-                <form method="post"  >
-                    <div class="modal-body">
-                          {% csrf_token %}
-                        <div class="form-group">
-                            <label for="username" class="form_label" >Votre Nom *</label>
-                            <input type="text" id="username" name="username"  class="form-control" required placeholder="Entrez votre nom">
-                        </div>
-
-                        <div class="form-group">
-                            <input type="hidden" id="idcom" value="{{communaute.id}}" />
-                            <label for="message" class="form_label">Votre Message *</label>
-                            <textarea id="message" name="message" class="form-control"  required placeholder="Écrivez votre message ici..."></textarea>
-                            <div class="char-count">
-                                <span id="charCount">0</span>/5000
-                            </div>
-                        </div>
-                        <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <input type="button" id="addMessageComID"  class="submit-btn btn btn-success" value="Envoyer le Message"/>
-                    </div>
-                </form>
+                </div>
             </div> 
+        
+        {% endif %}
 
+        <div class="modal fade" id="messageModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Envoi du message aux gestionnaires de <span class=""> {{communaute.nom}} </span> </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="form-section">
+                    <h3>Poster un Message</h3> 
+
+                    {% comment %} <div class="error-message" id="errorMessage"></div> {% endcomment %}
+
+                    <form method="post"  >
+                        <div class="modal-body">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="username" class="form_label" >Votre Nom *</label>
+                                <input type="text" id="username" name="username"  class="form-control" required placeholder="Entrez votre nom">
+                            </div>
+
+                            <div class="form-group">
+                                <input type="hidden" id="idcom" value="{{communaute.id}}" />
+                                <label for="message" class="form_label">Votre Message *</label>
+                                <textarea id="message" name="message" class="form-control"  required placeholder="Écrivez votre message ici..."></textarea>
+                                <div class="char-count">
+                                    <span id="charCount">0</span>/5000
+                                </div>
+                            </div>
+                            <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="button" id="addMessageComID"  class="submit-btn btn btn-success" value="Envoyer le Message"/>
+                        </div>
+                    </form>
+                </div> 
+
+                </div>
             </div>
-        </div>
-    </div>   
+        </div>   
 
-</div>
+    </div>
 
    <div class="modal fade" id="donModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
-
                 <div class="modal-header bg-success text-white">
                     <h5 class="modal-title ">Faire un don <span class=""> {{communaute.nom}} </span> </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -611,15 +610,12 @@
                     <h3 class="text-success" >Partager pour un developpement commun </h3> 
                     {% include "archcore/don_form.html" %}                 
                 </div> 
-
             </div>
         </div>
     </div>
 
-
     {% include 'archcore/includes/add_pers_cle.html' with form=form_personne %}
     {% include 'archcore/includes/add_lieu_cle.html' with form=form_lieu %}
-
  
     <div class="modal fade" id="infosModal" tabindex="-1" aria-labelledby="addInfosModalLabel" aria-hidden="true">
         <div class="modal-dialog ">
@@ -629,8 +625,11 @@
         </div>
     </div>
 
+    {% include "ads/bandeau_publicite.html" with type_contexte="communaute" contexte_id=communaute.id %}
+    {% include "ads/popup_publicite.html" with type_contexte="communaute" contexte_id=communaute.id %}
 
 {% endblock %} 
+
 
 {% block js %}
 
