@@ -37,7 +37,13 @@ class  Communaute(models.Model):
     rois = models.ManyToManyField(Rois, related_name="com_rois", blank=True, null=True)
 
     tags = models.ManyToManyField( Tag, related_name="communautes", blank=True, help_text=( "Centres d'intérêt / types de librairies ciblés. "  "Laisser vide = publicité générique affichée en l'absence de correspondance."  ),  )
+    createur = models.ForeignKey("Membre", on_delete=models.SET_NULL,blank=True, null=True, related_name="communautes_cree")
 
+    marche_url = models.URLField(blank=True, null=True)
+    ecole_url = models.URLField(blank=True, null=True)
+
+    marche_description = models.CharField(max_length=255, blank=True, null=True)
+    ecole_description = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.nom

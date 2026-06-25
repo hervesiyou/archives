@@ -5,8 +5,30 @@ from django.core.mail import send_mail
 import re
 import unicodedata
 from django.conf import settings
+from arch_portal.domain.models.famille import Famille
+from arch_portal.domain.models.communaute import Communaute
+from arch_portal.domain.models.livre import Livre
 from arch_portal.domain.models.badge import Badge
 
+
+@staticmethod
+def get_usage(membre):
+    return {
+        "familles": Famille.objects.filter(chef=membre).count(),
+        "communautes": Communaute.objects.filter(createur=membre).count(),
+        "livres": Livre.objects.filter(auteur=membre).count(),
+    }
+
+@staticmethod
+def get_reste(plan, usage):
+    if not plan:
+        return {}
+
+    return {
+        "familles": max(int(plan.nbfamilles) - usage["familles"], 0),
+        "communautes": max(int(plan.nbcommunautes) - usage["communautes"], 0),
+        "livres": max(int(plan.nblivres) - usage["livres"], 0),
+    }
 
 def update_member_badges(membre):
 

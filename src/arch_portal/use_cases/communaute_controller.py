@@ -473,16 +473,36 @@ def listassociations(request, id, mode = 0):
 
 def add_association(request):
 
+    user = get_membre_from_session(request)
     if request.method == "POST":
-        form = AssociationForm(request.POST)
-        if form.is_valid():  
-            com = form.save() 
-            com.save()
+        try:
+
+            check_abonnement_permission(request, 'association')             
+            form = AssociationForm(request.POST)
             
-            return redirect("show_association", com.id )
+            if form.is_valid(): 
+                association = form.save(commit=False)
+                association.createur = user
+                association.save()
+
+                form.save_m2m()
+                # ajouter le créateur comme membre
+                user.associations.add(association)
+                # ajouter le créateur comme admin
+                association.administrateurs.add(user)
+
+                # com = form.save() 
+                # com.save()
+                
+                return redirect("show_association", association.id )
+        except PermissionDenied as e:
+            form = AssociationForm(user=user)
+            messages.error(request, f"Vous n'avez pas les droits nécessaires {str(e)}")
+            # return redirect('upgrade_abonnement')  
+    
     else:
-        user = request.session['userid']
-        user = get_object_or_404(Membre, pk=user)
+        # user = request.session['userid']
+        # user = get_object_or_404(Membre, pk=user)
         form = AssociationForm(user=user)
 
     return render(request, "archcore/new_association.html", { "form":form  })
@@ -703,6 +723,7 @@ def add_communaute(request):
         try:
 
             check_abonnement_permission(request, 'communaute')
+            user = get_membre_from_session(request)
             form = CommunauteForm(request.POST)
 
             # Créer les formsets avec une instance temporaire vide au début
@@ -710,7 +731,6 @@ def add_communaute(request):
             rois_formset      = RoiFormSet(request.POST, instance=Communaute(), prefix='rois_communaute')
             personnes_formset = PersonneFormSet(request.POST, instance=Communaute(), prefix='personnes')
             lieux_formset     = LieuFormSet(request.POST, instance=Communaute(), prefix='lieux')  
-
             image_form = ImageForm(request.POST, request.FILES)      
 
             # Validation complète
@@ -724,6 +744,7 @@ def add_communaute(request):
 
                 # Sauvegarde principale d'abord → on obtient un ID !
                 com = form.save()
+                com.createur = user
                 # Ré-associer les formsets à l’objet réel sauvegardé
                 histoires_formset.instance = com
                 rois_formset.instance      = com
@@ -752,8 +773,10 @@ def add_communaute(request):
                 messages.error(request, "Erreur lors de la création. Vérifiez les champs.")
 
         except PermissionDenied as e:
-            messages.error(request, str(e))
-            return redirect('upgrade_abonnement')  # ou 'dashboard'
+            # messages.error(request, str(e))
+            # form = AssociationForm(user=user)
+            messages.error(request, f"Vous n'avez pas les droits nécessaires {str(e)} ")
+            # return redirect('upgrade_abonnement')   
 
     else:
         # GET : formulaires vides
@@ -762,7 +785,6 @@ def add_communaute(request):
         rois_formset      = RoiFormSet(instance=Communaute(), prefix='rois_communaute')
         personnes_formset = PersonneFormSet(instance=Communaute(), prefix='personnes')
         lieux_formset     = LieuFormSet(instance=Communaute(), prefix='lieux')
-
         image_form = ImageForm()
 
     context = {
@@ -823,8 +845,7 @@ def add_communaute0(request):
         form = CommunauteForm()
         form = CommunauteForm()
         histoires_formset = MiniHistoireFormSet(instance=Communaute())
-        rois_formset = RoiFormSet(instance=Communaute())
-        
+        rois_formset = RoiFormSet(instance=Communaute())        
 
         personnes_formset = PersonneFormSet(instance=Communaute(), prefix='personnes')
         lieux_formset = LieuFormSet(instance=Communaute(), prefix='lieux')
@@ -833,10 +854,8 @@ def add_communaute0(request):
         'form': form,
         'histoires_formset': histoires_formset,
         'rois_formset': rois_formset,
-
         'personnes_formset': personnes_formset,
         'lieux_formset': lieux_formset,
-
         'titre': "Créer une nouvelle communauté",
         'action': "Créer",
     }
@@ -883,6 +902,7 @@ def update_galerie(request, id):
             "images": galerie.images.all()
         }
     )
+
 def add_galerie(request):
     
     if request.method == "POST":
@@ -891,8 +911,7 @@ def add_galerie(request):
 
         if form.is_valid():  
             galerie = form.save() 
-            galerie.save()
-            
+            galerie.save()            
             galerie.images.set(images_ids)
             
             return redirect("show_galerie",galerie.id )

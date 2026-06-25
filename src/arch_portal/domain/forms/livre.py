@@ -43,7 +43,7 @@ class LivreForm(ModelForm):
                 Column('auteur', css_class='col-md-4'),
                 Column('categorie', css_class='col-md-4'),
                 Column('description', css_class='col-md-12'),
-                # Column('librairies', css_class='col-md-12'),
+                Column('url_externe', css_class='col-md-12'),
                 css_class='row'
             ),
             

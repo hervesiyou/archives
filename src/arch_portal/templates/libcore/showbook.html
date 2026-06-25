@@ -176,16 +176,23 @@
                         </span>
                     {% endif %}
 
-                     
-                    {% if livre.file.url and achat or livre.prix < 1 %}
+                    {% if livre.url_externe %}
+                        <a href="{{ livre.url_externe }}" target="_blank" class="btn btn-lg btn-outline-info action-btn">
+                            <i class="fa fa-external-link-alt me-2"></i>Voir sur le site externe
+                        </a>
+                    {% endif %} 
+                    {% if livre.file   %}
+                    {% if livre.file and  livre.file.url and achat or livre.prix < 1 %}
                         <div class="">
                             <a href="{{ livre.file.url }}" target="_blank" class="btn btn-lg action-btn btn-outline-success">
                                 <i class="fa fa-file-download me-2"></i>Télécharger le fichier
                             </a>
-                            <a href="{% url 'show_book_file' livre.id %}" target="_blank" class="btn btn-lg action-btn btn-outline-info ms-2">
+                            <a href="{{ livre.file.url }}" target="_blank" class="btn btn-lg action-btn btn-outline-info ms-2">
+                            {% comment %} <a href="{% url 'show_book_file' livre.id %}" target="_blank" class="btn btn-lg action-btn btn-outline-info ms-2"> {% endcomment %}
                                 <i class="fa fa-eye me-2"></i> Lire en ligne
                             </a>
                         </div>
+                    {% endif %}
                     {% endif %}
                  
                 </div>
@@ -351,7 +358,7 @@
                                         {% endif %}
                             
                                 {% else %}
-                                    <a href="{% url 'login' %}" class="div-error"> Merci de vous connecter pour commander directement ce livre </a> 
+                                    <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="div-error"> Merci de vous connecter pour commander directement ce livre </a> 
                                 {% endif %}
                             {% else %}
                                 <span class="text-info"> Ce livre est disponible en format physique. Merci de contacter le propriétaire pour plus de details </span>
@@ -412,7 +419,7 @@
                             </div> 
 
                         {% else %}
-                            <a href="{% url 'login' %}"> <div class="div-info"> Merci de vous connecter pour commander ce livre </div></a>
+                            <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" > <div class="div-info"> Merci de vous connecter pour commander ce livre </div></a>
                         {% endif %}
                     </div>
                     

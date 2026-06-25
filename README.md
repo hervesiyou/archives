@@ -1,22 +1,15 @@
 ## A Verifier 00237697956649 eze lambert
-
-- connecter la mediatheques des communautés avec google photos et google drive
-- on doit aussi controller le nombre d'association, d'evenements, selon le forfait de l'abonnement etc
-- ajouter les livres avec liens externes
-- lire les livre en local 
-- gerer le fait que si je suis sur la page X apres le login je redirige vers X
 - gerer la recommandation des livres
-- permettre l'envoi des message groupés aux membres d'une meme famille
-- integrer les cartes automatique des villages
-- tableau de bord communautaire
-- ajouter les notifications sur les projets en cours et les donneurs avec les CTA
-- emission des tokens dans la communauté et gestion des micro credits à gerer avec BOS
-- numerisation des actes et documents dans la communauté a gerer avec BOS
-- api cinet pay et paymetrust, 
 - ajouter les loader lors des ajax 
-- verifie qu'on ne fasse pas les CRUD si on a pas le droit ni l'abonnemnet pour le faire
 
-          
+          - un membre doit voir ses informations d'abonnement et de plan
+          - ajouter les espaces de formations (sekoo) et de marché(communautaire)
+
+          - verifie qu'on ne fasse pas les CRUD si on a pas le droit ni l'abonnemnet pour le faire
+          - on doit aussi controller le nombre d'association, d'evenements, selon le forfait de l'abonnement etc
+          - ajouter les livres avec liens externes
+          - lire les livre en local 
+          - gerer le fait que si je suis sur la page X apres le login je redirige vers X
           - afficher les publicités dans les communautés et dans les librairies
           - corriger l navbar en version tablette et mobile
           - ajouter la monetisation des communautés par l'affichage des publicité
@@ -130,9 +123,17 @@
         - ajouter les données de fixtures, familles, communautés, librairies, marchés, chef, emails , telephone par defaut
 
 
+- connecter la mediatheques des communautés avec google photos et google drive
+- integrer les cartes automatique des villages
+- tableau de bord communautaire
+- ajouter les notifications sur les projets en cours et les donneurs avec les CTA
+- emission des tokens dans la communauté et gestion des micro credits à gerer avec BOS
+- numerisation des actes et documents dans la communauté a gerer avec BOS
+- api cinet pay et paymetrust, 
+- permettre l'envoi des message groupés aux membres d'une meme famille
+
 #FONCIONALITES pour les familles et les communautés
-- - enjoliver toutes les pages
-- pour le moment l'arbre genealogique est un fichier lié à la famille
+        - enjoliver toutes les pages 
 - mettre les videos dans youtube et les images dans googlephotos privé
 - les communautés et les familles ont les NFT qui appartiennent aux membres
 - le marché communautaire est redirigé dans kondashop dans la boutique de la communaute

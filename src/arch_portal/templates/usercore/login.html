@@ -109,6 +109,7 @@
                 {% csrf_token %}
 
                 {{ form|crispy }}
+                <input type="hidden" name="next" value="{{ next }}">
 
                 <div class="d-grid mt-4">
                     <button type="submit" class="btn btn-success btn-login fw-bold">

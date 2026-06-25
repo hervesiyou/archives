@@ -7,6 +7,7 @@ from crispy_forms.layout import Layout, Row, Column,Field
 from arch_portal.domain.models.membre import Membre 
 
 class MembreForm(forms.ModelForm):
+   
     pwd = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Mot de passe'}),
         label="Mot de passe"
@@ -32,9 +33,14 @@ class MembreForm(forms.ModelForm):
                 'placeholder': 'Décrivez le membre...'
             })
         }
+
+        labels = {
+            "login":"Login ou Pseudonyme",
+        }
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
         self.helper = FormHelper()
         self.helper.form_tag = False 
         self.helper.layout = Layout(
@@ -138,26 +144,64 @@ class UsersLoginForm(forms.ModelForm):
             Field('pwd',type='password', css_class='form-control'),
         )
 
-
 class UsersSubscribeForm(forms.ModelForm):
     
-    # pwd = forms.CharField(
-    #     widget=forms.PasswordInput(render_value=False),
-    #     label="Mot de passe"
-    # )
+    pwd = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control', 
+            'placeholder': 'Mot de passe'
+        }),
+        label="Mot de passe"
+    ) 
+
+    password_confirm = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Confirmer le mot de passe'
+        }),
+        label="Confirmer le mot de passe",
+    )
+    
+    class Meta:
+        model = Membre
+        fields = ["nomcomplet", "email", "telephone", "sexe", "datenaissance", "lieunaissance", "residence", "login", "pwd", "password_confirm"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)        
+        # Labels et help_text
+        self.fields["login"].label = 'Login ou Pseudonyme'
+        self.fields['login'].help_text = "Le login ou pseudonyme que vous allez utiliser pour vous connecter."
+
+        # Configuration Crispy Forms
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.form_class = 'row g-3'          # Très important
+        
+        self.helper.layout = Layout(
+            Row(
+                Column(Field('nomcomplet'), css_class='col-12'),
+                Column(Field('email'), css_class='col-12 col-md-6'),
+                Column(Field('telephone'), css_class='col-12 col-md-6'),
+                Column(Field('sexe'), css_class='col-12 col-md-4'),
+                Column(Field('datenaissance'), css_class='col-12 col-md-4'),
+                Column(Field('lieunaissance'), css_class='col-12 col-md-4'),
+                css_class='row'
+            ),
+            Row(
+                Column(Field('login'), css_class='col-12'),
+                Column(Field('pwd'), css_class='col-12 col-md-6'),
+                Column(Field('password_confirm'), css_class='col-12 col-md-6'),
+                css_class='row'
+            ),
+        )
+
+"""
+class UsersSubscribeForm(forms.ModelForm):
+    
     pwd = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Mot de passe'}),
         label="Mot de passe"
-    )
-
-    # password = forms.CharField(
-    #     widget=forms.PasswordInput(attrs={
-    #         'class': 'form-control',
-    #         'placeholder': 'Mot de passe (minimum 6 caractères)'
-    #     }),
-    #     label="Mot de passe",
-    #     min_length=6,
-    # )
+    ) 
 
     password_confirm = forms.CharField(
         widget=forms.PasswordInput(attrs={
@@ -176,30 +220,44 @@ class UsersSubscribeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # self.fields['pwd'].widget = forms.PasswordInput(render_value=False)
+        self.fields["login"].label = 'Login ou Pseudonyme'
+        self.fields['login'].help_text = "Le login ou pseudonyme que vous allez utiliser  pour vous connecter ."
+
         self.helper = FormHelper()
         self.helper.form_tag = False
+        self.helper.form_class = 'row g-3'
         self.helper.layout = Layout(
             Row(
-                Column('nomcomplet', css_class='col-md-12'),                
-                # Column(
-                #     Field('pwd', type='password', css_class='form-control'),
-                #     css_class='col-md-6',
-                # ), 
-
-                Column('email', css_class='col-md-6'),
-                Column('telephone', css_class='col-md-6'),
-                # Column('type', css_class='col-md-2'), 
-                Column('sexe', css_class='col-md-4'), 
-                Column('datenaissance', css_class='col-md-4'), 
-                Column('lieunaissance', css_class='col-md-4'),  
+                Column('nomcomplet', css_class='col-12 col-md-12'),
+                Column('email', css_class='col-12 col-md-6'),
+                Column('telephone', css_class='col-12 col-md-6'),
+                Column('sexe', css_class='col-12 col-md-4'),
+                Column('datenaissance', css_class='col-12 col-md-4'),
+                Column('lieunaissance', css_class='col-12 col-md-4'),
                 css_class='row'
             ),
             Row(
-                Column('login', css_class='col-md-12'),
-                Column('pwd', css_class='col-md-6'),
-                Column('password_confirm', css_class='col-md-6'),
-                css_class='row g-3'
+                Column('login', css_class='col-12'),
+                Column('pwd', css_class='col-12 col-md-6'),
+                Column('password_confirm', css_class='col-12 col-md-6'),
+                css_class='row'
             ),
+            # Row(
+            #     Column('nomcomplet', css_class='col-md-12'),   
+            #     Column('email', css_class='col-md-6'),
+            #     Column('telephone', css_class='col-md-6'),
+            #     # Column('type', css_class='col-md-2'), 
+            #     Column('sexe', css_class='col-md-4'), 
+            #     Column('datenaissance', css_class='col-md-4'), 
+            #     Column('lieunaissance', css_class='col-md-4'),  
+            #     css_class='row'
+            # ),
+            # Row(
+            #     Column('login', css_class='col-md-12'),
+            #     Column('pwd', css_class='col-md-6'),
+            #     Column('password_confirm', css_class='col-md-6'),
+            #     css_class='row g-3'
+            # ),
             
         )
 
@@ -228,3 +286,4 @@ class UsersSubscribeForm(forms.ModelForm):
             user.save()
         return user
     
+"""

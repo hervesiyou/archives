@@ -45,6 +45,13 @@ class CommunauteForm(forms.ModelForm):
                 css_class='row'
             ),
             Row(
+                Column('marche_url', css_class='col-md-3'),
+                Column('marche_description', css_class='col-md-3'),
+                Column('ecole_url', css_class='col-md-3'),
+                Column('ecole_description', css_class='col-md-3'),
+                css_class='row'
+            ),
+            Row(
                 Column('legende_fondatrice', css_class='col-md-6'),
                 Column('histoire_detaillee', css_class='col-md-6'),
                 # Column('superficie', css_class='col-md-3'),

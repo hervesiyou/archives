@@ -177,7 +177,7 @@
                     <span class="icon">▼</span>
                 </div>
                 <div class="answer">
-                    <p>Utilisez le lien <a href="{% url 'login' %}"> Login </a>  pour vous connecter ou créer un compte.</p>
+                    <p>Utilisez le lien <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" > Login </a>  pour vous connecter ou créer un compte.</p>
                     <p>Les formulaires incluent des controles pour la sécurité. Une fois inscrit, accédez à votre tableau de bord personnalisé.</p>
                 </div>
             </div>

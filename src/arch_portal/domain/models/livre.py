@@ -33,6 +33,8 @@ class Livre(models.Model):
     anciens_proprietaires = models.ManyToManyField(  Membre, blank=True,  related_name="livres_deja_possedes" )
     categorie = models.ForeignKey( Categorie,   on_delete=models.SET_NULL,  null=True,  blank=True,  related_name="livres")
 
+    url_externe = models.URLField( blank=True,  null=True,  help_text="Lien Google Drive, Dropbox ou autre" )
+
     def __str__(self):
         return f"{self.nom}, {self.auteur}  (ISBN: {self.isbn})"
     

@@ -6,7 +6,7 @@ from crispy_forms.helper import FormHelper
 class EvenementForm(ModelForm):
     class Meta:
         model = Evenement
-        exclude = [""]
+        exclude = ["createur", "datecreation", "dateevenement", "ev_galerie"]
 
     def clean(self):
         cleaned_data = super().clean()

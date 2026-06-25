@@ -36,13 +36,14 @@ NO_SARA=237687329239
 # ALLOWED_HOSTS = []
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 APP_HCAPTCHA = os.getenv("APP_HCAPTCHA")
-
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 ALLOWED_HOSTS = ['richbook.net', 'www.richbook.net', '127.0.0.1',"192.168.43.193"]
 # ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+CRISPY_ALLOWED_TEMPLATE_PACKS = ["bootstrap5", "bootstrap4"]
  
 
 # Application definition

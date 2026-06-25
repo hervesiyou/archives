@@ -8,6 +8,8 @@ from arch_portal.domain.models.membre import Membre
 from django.contrib.auth.decorators import login_required 
 from arch_portal.domain.models.evenementlike import EvenementLike
 from django.contrib  import messages
+from arch_portal.use_cases.services.subscription_service import check_abonnement_permission, get_membre_from_session
+from django.core.exceptions import PermissionDenied
 
 def listevenements(request, id, mode=0):
     events = Evenement.objects.filter(communaute=id)
@@ -59,7 +61,6 @@ def show_evenement(request, id):
         }
     )
 
-
 @login_required
 def mes_evenements_likes(request):
   
@@ -71,7 +72,6 @@ def mes_evenements_likes(request):
         return redirect("login")
 
     return render(request, "archcore/evenement_likes.html", {"likes": likes })
-
 
 @login_required
 def toggle_like_evenement(request, id):
@@ -91,14 +91,24 @@ def toggle_like_evenement(request, id):
 
     return render(request, "archcore/showevenement.html", {"evenement": event, "deja_like": like })
 
-
 def add_evenement(request):
     if request.method == "POST":
-        form = EvenementForm(request.POST)
-        if form.is_valid():
-            event = form.save()
-            event.save()
-            return redirect("show_evenement", event.id)
+
+        try:
+
+            check_abonnement_permission(request, 'evenement')  
+            # Vérifie les droits d'abonnement pour créer un événement
+            user = get_membre_from_session(request)
+            form = EvenementForm(request.POST)
+            if form.is_valid():
+                event = form.save(commit=False)
+                event.createur = user
+                event.save()
+                return redirect("show_evenement", event.id)
+            
+        except PermissionDenied as e:
+            form = EvenementForm()
+            messages.error(request, f"Vous n'avez pas les droits nécessaires {str(e)}, veuillez vérifier votre abonnement.")
     else:
         form = EvenementForm()
 

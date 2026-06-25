@@ -10,6 +10,7 @@
 {% block content %}
 
     <div class="container ">
+
         <div class="my-4">
             <a href="{% url 'home' %}" class="my-2"> <i class="fa fa-home"></i> Accueil </a>  >
             <a href="{% url 'listcom' %}" class="my-2"> <i class="fas fa-users"></i> Communautés </a> > {{ communaute.nom }}
@@ -68,45 +69,45 @@
             </div>
             <!-- Column -->
         </div>
-            <div class="row my-5">
-                {% if communaute.listerois %}
-                    <div class=" col-md-4 col-lg-4">
-                            <h5 class="text-success text-bold"> <a href="{% url 'kings_list' communaute.id %}"> Liste des rois</a> </h5>
-                            <ul class="list">
-                                <li class="list-item"> {{communaute.listerois}} </li>
-                            </ul>
-                    </div>
-
-                    <div class="col-md-4 col-lg-4">
-                {% else %}
-                    <div class="col-md-8 col-lg-6">
-                {% endif %}
-                {% if communaute.histoire %}
-                        <h5 class="text-success text-bold text-center"> <a href="{% url 'com_histoire' communaute.id %}"> Histoire</a> </h5>
-                        
-                        <div class="text-container">
-                            <div class="short-text">
-                                {{ communaute.histoire }}
-                            </div>
-
-                            <label for="expand1" class="plus">Voir plus</label>
-                            <label for="expand1" class="moins">Voir moins</label>
-                            <input type="checkbox" class="expand-toggle" id="expand1">
-                        </div>
-                {% endif %}
-                    </div>
-
-                <div class=" col-lg-4">
-                    <h5 class="text-success text-bold">
-                        <a href="{% url 'don_list' communaute.id %}" class="btn btn-outline-success" > Gestion des Dons</a>
-                            <button class=""  
-                            data-bs-toggle="modal"  data-bs-target="#infosModal"
-                            title="Cliquer ici pour plus d'informations">
-                                <i class="fa fa-info"></i>
-                            </button>
-                    </h5>
+        <div class="row my-5">
+            {% if communaute.listerois %}
+                <div class=" col-md-4 col-lg-4">
+                        <h5 class="text-success text-bold"> <a href="{% url 'kings_list' communaute.id %}"> Liste des rois</a> </h5>
+                        <ul class="list">
+                            <li class="list-item"> {{communaute.listerois}} </li>
+                        </ul>
                 </div>
+
+                <div class="col-md-4 col-lg-4">
+            {% else %}
+                <div class="col-md-8 col-lg-6">
+            {% endif %}
+            {% if communaute.histoire %}
+                    <h5 class="text-success text-bold text-center"> <a href="{% url 'com_histoire' communaute.id %}"> Histoire</a> </h5>
+                    
+                    <div class="text-container">
+                        <div class="short-text">
+                            {{ communaute.histoire }}
+                        </div>
+
+                        <label for="expand1" class="plus">Voir plus</label>
+                        <label for="expand1" class="moins">Voir moins</label>
+                        <input type="checkbox" class="expand-toggle" id="expand1">
+                    </div>
+            {% endif %}
+                </div>
+
+            <div class=" col-lg-4">
+                <h5 class="text-success text-bold">
+                    <a href="{% url 'don_list' communaute.id %}" class="btn btn-outline-success" > Gestion des Dons</a>
+                        <button class=""  
+                        data-bs-toggle="modal"  data-bs-target="#infosModal"
+                        title="Cliquer ici pour plus d'informations">
+                            <i class="fa fa-info"></i>
+                        </button>
+                </h5>
             </div>
+        </div>
 
         <div class="row">
             <div class="col-md-12">
@@ -597,6 +598,51 @@
             </div>
         </div>   
 
+        <div class="row">
+            <div class="col-6">
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="text-success">
+                            🛒 Marché communautaire
+                        </h4>
+
+                        {% if communaute.marche_url %}
+                            <p>{{ communaute.marche_description|default:"Accédez au marché de la communauté" }}</p>
+
+                            <a href="{{ communaute.marche_url }}" target="_blank" class="btn btn-success">
+                                Accéder au marché
+                            </a>
+                        {% else %}
+                            <p class="text-muted">
+                                Aucun marché disponible pour cette communauté
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="text-primary">
+                            🎓 École de formation communautaire
+                        </h4>
+
+                        {% if communaute.ecole_url %}
+                            <p>{{ communaute.ecole_description|default:"Accédez à l'école de formation de la communauté" }}</p>
+
+                            <a href="{{ communaute.ecole_url }}" target="_blank" class="btn btn-primary">
+                                Accéder à l'école
+                            </a>
+                        {% else %}
+                            <p class="text-muted">
+                                Aucune école de formation disponible
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>            
+        </div>
+
     </div>
 
    <div class="modal fade" id="donModal" tabindex="-1">
@@ -623,7 +669,7 @@
             {% include "archcore/includes/infodons.html" %}
             </div>
         </div>
-    </div>
+    </div>   
 
     {% include "ads/bandeau_publicite.html" with type_contexte="communaute" contexte_id=communaute.id %}
     {% include "ads/popup_publicite.html" with type_contexte="communaute" contexte_id=communaute.id %}

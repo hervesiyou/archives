@@ -136,100 +136,90 @@
 
     <!-- Grille des familles -->
     <div class="row g-4">
+    {% if request.session.userid  %}
         {% for fam in familles %}
-           
-            {% appartient_a_famille request.session.userid fam.id as est_membre %}
+            {% if  fam.id is not None %}
+                {% appartient_a_famille request.session.userid fam.id as est_membre %}
 
-            <div class="col-sm-6 col-lg-4 col-xl-3">
-                <div class="card family-card h-100">
-             {% comment %} <i class="fa fa-shield"></i> {% endcomment %}
+                <div class="col-sm-6 col-lg-4 col-xl-3">
+                    <div class="card family-card h-100"> 
+                            
+                        <div class="family-header text-center">
                         
-                    <div class="family-header text-center">
-                      
-                        {%  if fam.image %}
-                            {% with first_image=fam.image %}
-                                <div class="book-image">
-                                    <img src="{{ first_image.fichier.url }}" alt="{{ fam.description|default:'Couverture de la famille' }}" style="width: 100%; max-height: 200px;">
-                                </div>
-                            {% endwith %}
-                        {% else %}
-                            <img src="{% static 'images/com.jpg' %} " alt="{{fam.description}}" style="width: 100%; max-height: 200px;">
-                        {% endif %}                       
+                            {%  if fam.image %}
+                                {% with first_image=fam.image %}
+                                    <div class="book-image">
+                                        <img src="{{ first_image.fichier.url }}" alt="{{ fam.description|default:'Couverture de la famille' }}" style="width: 100%; max-height: 200px;">
+                                    </div>
+                                {% endwith %}
+                            {% else %}
+                                <img src="{% static 'images/com.jpg' %} " alt="{{fam.description}}" style="width: 100%; max-height: 200px;">
+                            {% endif %}                       
 
-                        {% comment %} {% if fam|appartient_a_famille:request.session.userid %}
-                            <a href="{% url 'show_famille' fam.id %}" class=" fw-bold text-success"    >
-                                {{ fam.nom }} 
-                            </a>
-                        {% else %}
-                            <i class="fa fa-lock text-danger"></i> {{ fam.nom }}
-                        {% endif %} {% endcomment %}
-                    </div>
-
-                    <div class="family-body d-flex flex-column">
-                        <div class="family-desc flex-grow-1">
-                            <h6 class="card-title mb-2">
-                                {% if fam|appartient_a_famille:request.session.userid or fam.publique %}
-                                    <a href="{% url 'show_famille' fam.id %}" class=" fw-bold text-success"  >
-                                        {{ fam.nom }}
-                                    </a>
-                                {% else %}
-                                    <span title="Vous avez pas accès à cette famille">
-                                        <i class="fa fa-shield text-danger"  ></i> {{ fam.nom }}
-                                    </span>
-                                {% endif %}
-                            </h6>
-                            {% if fam|appartient_a_famille:request.session.userid or fam.publique %}
-                                <a href="{% url 'show_famille' fam.id %}">
-                                    {{ fam.description|truncatechars:180 }}
+                            {% comment %} {% if fam|appartient_a_famille:request.session.userid %}
+                                <a href="{% url 'show_famille' fam.id %}" class=" fw-bold text-success"    >
+                                    {{ fam.nom }} 
                                 </a>
                             {% else %}
-                                {{ fam.description|truncatechars:180 }}
+                                <i class="fa fa-lock text-danger"></i> {{ fam.nom }}
+                            {% endif %} {% endcomment %}
+                        </div>
+
+                        <div class="family-body d-flex flex-column">
+                            <div class="family-desc flex-grow-1">
+                                <h6 class="card-title mb-2">
+                                    {% if fam|appartient_a_famille:request.session.userid or fam.publique %}
+                                        <a href="{% url 'show_famille' fam.id %}" class=" fw-bold text-success"  >
+                                            {{ fam.nom }}
+                                        </a>
+                                    {% else %}
+                                        <span title="Vous avez pas accès à cette famille">
+                                            <i class="fa fa-shield text-danger"  ></i> {{ fam.nom }}
+                                        </span>
+                                    {% endif %}
+                                </h6>
+                                {% if fam|appartient_a_famille:request.session.userid or fam.publique %}
+                                    <a href="{% url 'show_famille' fam.id %}">
+                                        {{ fam.description|truncatechars:180 }}
+                                    </a>
+                                {% else %}
+                                    {{ fam.description|truncatechars:180 }}
+                                {% endif %}
+                            </div>
+                            {% comment %}  si je suis membre de cette famille ou elle est une famille publique {% endcomment %}
+                            {% if est_membre %}
+                                <a href="{% url 'show_famille' fam.id %}" class="btn btn-outline-success mt-2">
+                                    <i class="fa fa-eye"></i> Voir la famille
+                                </a>
+                            {% elif fam.publique %}
+                                <a href="{% url 'show_famille' fam.id %}" class="btn btn-outline-info mt-2">
+                                    <i class="fa fa-eye"></i> Voir cette famille publique
+                                </a>
+                            {% else %}
+                            {% comment %}  sinon je demande l'accès  {% endcomment %}
+                                <a href="#" 
+                                data-fam="{{ fam.id }}" 
+                                data-user="{{ request.session.userid }}" 
+                                class="btn btn-sm btn-danger btn-request mt-2 partFamID">
+                                    <i class="fa fa-handshake-angle"></i> Demander à rejoindre
+                                </a>
                             {% endif %}
                         </div>
-                        {% comment %}  si je suis membre de cette famille ou elle est une famille publique {% endcomment %}
-                        {% if est_membre %}
-                            <a href="{% url 'show_famille' fam.id %}" class="btn btn-outline-success mt-2">
-                                <i class="fa fa-eye"></i> Voir la famille
-                            </a>
-                        {% elif fam.publique %}
-                            <a href="{% url 'show_famille' fam.id %}" class="btn btn-outline-info mt-2">
-                                <i class="fa fa-eye"></i> Voir cette famille publique
-                            </a>
-                        {% else %}
-                        {% comment %}  sinon je demande l'accès  {% endcomment %}
-                            <a href="#" 
-                               data-fam="{{ fam.id }}" 
-                               data-user="{{ request.session.userid }}" 
-                               class="btn btn-sm btn-danger btn-request mt-2 partFamID">
-                                <i class="fa fa-handshake-angle"></i> Demander à rejoindre
-                            </a>
-                        {% endif %}
+
+                        <div class="family-footer d-flex justify-content-between align-items-center">
+                            <div class="text-muted">
+                                <i class="fa-solid fa-person-military-pointing me-1"></i>
+                                <span class="badge bg-info text-dark">{{ fam.chef.nomcomplet|default:"" }}</span>
+                            </div>
+                            <span class="badge bg-secondary">
+                                <i class="fa fa-users me-1"></i> {{ fam.membres.count }} membres
+                            </span>
+                        
+                        </div> 
+
                     </div>
-
-                    <div class="family-footer d-flex justify-content-between align-items-center">
-                        <div class="text-muted">
-                            <i class="fa-solid fa-person-military-pointing me-1"></i>
-                            <span class="badge bg-info text-dark">{{ fam.chef.nomcomplet|default:"" }}</span>
-                        </div>
-                        <span class="badge bg-secondary">
-                            <i class="fa fa-users me-1"></i> {{ fam.membres.count }} membres
-                        </span>
-                    
-                    </div>
-
-                    {% comment %} <div class="family-footer ">
-                       
-
-                        {% if est_membre %}
-                        <h5>{{ request.session.username }} appartient à fam.nom !</h5>
-                        {% else %}
-                         <a class="btn btn-outline-danger"> Demander l'accès à cette famille</a>
-                        {% endif %}
-        
-                    </div> {% endcomment %}
-
                 </div>
-            </div>
+            {% endif %}
         {% empty %}
             <div class="col-12 text-center py-5">
                 <h4 class="text-muted">Aucune famille trouvée pour le moment</h4>
@@ -240,6 +230,15 @@
                 {% endif %}
             </div>
         {% endfor %}
+    {% else %}
+        <div class="col-12 text-center py-5">
+            <h4 class="text-muted">Veuillez vous connecter pour voir les familles</h4>
+            <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="btn btn-primary mt-3">
+                Se connecter
+            </a>
+        </div>
+    {% endif %}
+
     </div>
 
 </div>

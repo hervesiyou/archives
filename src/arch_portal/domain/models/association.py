@@ -13,17 +13,15 @@ class Association(models.Model):
     description = models.TextField( blank=True)
     adhesion = models.TextField( blank=True)
     contact = models.TextField( blank=True)
+
+    createur = models.ForeignKey("Membre", on_delete=models.SET_NULL,blank=True, null=True, related_name="associations_cree")
+
     famille = models.ForeignKey("Famille", on_delete=models.SET_NULL,blank=True, null=True)
     communaute = models.ForeignKey("Communaute", on_delete=models.SET_NULL,blank=True, null=True)
     localisation = models.TextField( blank=True)
 
     administrateurs = models.ManyToManyField("Membre", related_name="asso_admins", blank=True, null=True)
-
-    type = models.CharField(
-        max_length=50, 
-        choices=ASSO_CHOICES,
-        blank=True,null=1
-    )
+    type = models.CharField( max_length=50, choices=ASSO_CHOICES, blank=True,null=1 )
 
     def __str__(self):
         return self.nom

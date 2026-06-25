@@ -603,8 +603,7 @@ def show_book_file(request,id):
         #    return redirect("show_book",livre.id ) 
 
 def search_book_lib(request,id):
-    name = request.POST.get("rechLivre","")
-    
+    name = request.POST.get("rechLivre","")    
     lib = Librairie.objects.get(id=id)
 
     livres = lib.livres.filter(

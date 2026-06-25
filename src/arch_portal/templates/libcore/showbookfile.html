@@ -19,8 +19,28 @@
     <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-8">
-        <h3> {{livre.nom }} -  {{ livre.isbn }} </h3>
+        <h3> {{livre.nom }} -  {{ livre.isbn }}  {{ livre.file.url }}</h3>
+        {% comment %} {{ livre.file.url|cut:"/arch_portal/templates/static" }} {% endcomment %}
+        <a href="{{ livre.file.url }}" target="_blank">
+    Ouvrir le PDF
+</a>
             <div class="  card printableArea">
+            <div class="card p-3">
+            <iframe
+    src="{% static livre.file.url %}"
+    width="100%"
+    height="900">
+</iframe>
+
+                <iframe
+                    src='{{ livre.file.url }}'
+                    width="100%"
+                    height="800"
+                    style="border:none;">
+                </iframe>
+
+            </div>
+           
 
                 {% comment %} <iframe 
                 src="{{livre.file.url}}" 

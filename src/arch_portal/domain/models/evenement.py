@@ -15,6 +15,8 @@ class Evenement(models.Model):
     famille = models.ForeignKey("Famille", on_delete=models.CASCADE, blank=True, null=True, related_name="fam_evenement")
 
     periodicite=models.CharField(max_length=50)
+    createur = models.ForeignKey("Membre", on_delete=models.SET_NULL,blank=True, null=True, related_name="evenements_cree")
+
 
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)

@@ -4,6 +4,7 @@ import json
 # from django.core.serializers import serialize
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
+from django.urls import reverse
 from arch_portal.domain.models.abonnement import Abonnement
 from arch_portal.domain.models.wallet import Wallet
 from arch_portal.domain.exceptions.membre_exception import MembreException
@@ -13,9 +14,10 @@ from arch_portal.domain.models.membre import Membre
 from arch_portal.domain.models.histoire import MiniHistoire
 from arch_portal.use_cases.services.core import generate_token, send_email_inscription, send_email_information_nouveau_inscrit
 from arch_portal.domain.models.image import Image
-from django.http import  JsonResponse
+from django.http import  JsonResponse, request
 import threading
 from arch_portal.domain.forms.membre import MembreEditForm
+from arch_portal.use_cases.services.core import get_reste, get_usage
 # from arch_portal.domain.serializers import MembreSerializer
 
 def subscribe(request):
@@ -82,9 +84,12 @@ def log_out(request):
     del request.session["userid"]
     del request.session["nomcomplet"]
     request.session.flush()
-    return redirect("login")
+    # return redirect("login")
+    return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
 def log_user(request):
+    next_url = request.GET.get("next") or request.POST.get("next")
+
     if request.method == "POST":
         form = UsersLoginForm(request.POST)
         if form.is_valid():
@@ -92,15 +97,14 @@ def log_user(request):
             user = Membre.objects.filter(
                 login=form.cleaned_data["login"],
                 pwd=compute_sha1(form.cleaned_data["pwd"]),
-            ).first()
-
- 
+            ).first() 
 
             if user != None:
 
                 if user.etatvalidation != True:
                     messages.info(request,f" Desolé { form.cleaned_data['login']}  votre adresse email n'a pas été  validée ! Un lien vous a été envoyé dans  votre email pour valider votre compte, merci de cliquer dessus .")
-                    return redirect("login")
+                    # return redirect("login")
+                    return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
                 request.session["username"] = user.login 
                 request.session["userrights"] =  user.get_rights()
@@ -109,7 +113,10 @@ def log_user(request):
                 request.session["userid"] = user.id
                 request.session.modified = True
                 messages.info(request,f"Bienvenue { user.nomcomplet }")
-                return redirect("home" )
+                # return redirect("home" )
+                if next_url != None and next_url != "" and next_url != "None":
+                    return redirect(next_url)
+                return redirect("home")
             else:
                 messages.error(request,f" Desolé { form.cleaned_data['login']}  nous est inconnu !")
     else:
@@ -117,7 +124,7 @@ def log_user(request):
         request.session.get("userid1",0) 
         form = UsersLoginForm()
 
-    return render(request, "usercore/login.html", {"form":form})
+    return render(request, "usercore/login.html", {"form":form, "next": next_url })
 
 def show_user_messages(request):
     if(request.session["userid"]!=None):
@@ -147,9 +154,17 @@ def show_user_home(request):
     if(userid is not  None):
         user = Membre.objects.get(id=request.session["userid"])
         if(user != None):
+
             wallet = Wallet.objects.filter(membre_id=user.id ).first()
-            # print( user.id , wallet)
-            return render(request, "usercore/home.html", {"user":user, "wallet":wallet})
+            abonnement = Abonnement.objects.filter( membre=user,is_active=True ).select_related("plan").first()
+            plan = abonnement.plan if abonnement else None
+            usage = get_usage(user)
+            reste = get_reste(plan, usage)
+            
+            return render(request, "usercore/home.html", 
+            {
+                "user":user, "wallet":wallet , "abonnement": abonnement, "plan": plan, "usage": usage, "reste": reste
+            })
         else:
             raise MembreException( f" Membre {request.session['userid']} introuvable ")  
     else:
