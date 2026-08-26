@@ -29,7 +29,9 @@ def subscribe(request):
             return redirect("subscribe")    
         
         if form.is_valid():  
-            user = form.save()
+            user = form.save(commit=False)
+            user.pwd = compute_sha1(user.pwd)
+            user.save()
             # je genere le token et je cree l'invitaition
             token = generate_token(user.login)
 
@@ -80,12 +82,17 @@ def user_valide_inscription(request, token):
         return redirect("subscribe")
     
 def log_out(request):
-    del request.session["username"]
-    del request.session["userid"]
-    del request.session["nomcomplet"]
+    """
+    if request.session["username"] is not None:
+        del request.session["username"]
+    if request.session["userid"] is not None:
+        del request.session["userid"]
+    if request.session["nomcomplet"] is not None:
+        del request.session["nomcomplet"]
+    """
     request.session.flush()
-    # return redirect("login")
-    return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    return redirect("login")
+    # return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
 def log_user(request):
     next_url = request.GET.get("next") or request.POST.get("next")
@@ -113,6 +120,7 @@ def log_user(request):
                 request.session["userid"] = user.id
                 request.session.modified = True
                 messages.info(request,f"Bienvenue { user.nomcomplet }")
+                # messages.error(request,f"next { next_url }")
                 # return redirect("home" )
                 if next_url != None and next_url != "" and next_url != "None":
                     return redirect(next_url)
@@ -135,7 +143,8 @@ def show_user_messages(request):
         else:
             raise MembreException( f" Membre {request.session['userid']} introuvable ")  
     else:
-        return redirect("login")
+        # return redirect("login")
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
 def user_abonnement(request):
     userid = request.session.get("userid", None)
@@ -147,7 +156,7 @@ def user_abonnement(request):
         else:
             raise MembreException( f" Membre {request.session['userid']} introuvable ")  
     else:
-        return redirect("login")
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
 def show_user_home(request):
     userid = request.session.get("userid", None)
@@ -168,7 +177,7 @@ def show_user_home(request):
         else:
             raise MembreException( f" Membre {request.session['userid']} introuvable ")  
     else:
-        return redirect("login")
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
 def show_user_famadmin(request):
     if(request.session["userid"]!=None):
@@ -180,7 +189,7 @@ def show_user_famadmin(request):
         else:
             raise MembreException( f" Membre {request.session['userid']} introuvable ")  
     else:
-        return redirect("login")
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
 def show_user_comadmin(request):
     if(request.session["userid"]!=None):
@@ -192,7 +201,7 @@ def show_user_comadmin(request):
         else:
             raise MembreException( f" Membre {request.session['userid']} introuvable ")  
     else:
-        return redirect("login")
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
 def show_user_assoadmin(request):
     if(request.session["userid"] != None):
@@ -204,7 +213,7 @@ def show_user_assoadmin(request):
         else:
             raise MembreException( f" Membre {request.session['userid']} introuvable ")  
     else:
-        return redirect("login")
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
 def show_user(request,id):
     # membre = Membre.objects.get(id=id)

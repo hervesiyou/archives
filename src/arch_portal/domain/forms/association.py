@@ -40,6 +40,7 @@ class AssociationForm(ModelForm):
                 Column('adhesion', css_class='col-md-3'),
                 Column('localisation', css_class='col-md-3'),
                 Column('contact', css_class='col-md-3'), 
+                Column('urlyoutube', css_class='col-md-12'), 
                 css_class='row'
             ),
             Row(

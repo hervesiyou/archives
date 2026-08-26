@@ -16,111 +16,119 @@
     
     <div class="container card-body">
         
-        <div class="row">
-            
+        <div class="row">            
             <div class="col-lg-12">
-            <h2> {{ titre }}</h1>
-            {% comment %} <h3> Nouvelle Communauté</h3> {% endcomment %}
-                <h5 class="bg-info text-center">.{{id}}</h5>
-                <form method="post" enctype="multipart/form-data"  >
-                    {% csrf_token %}
-                    {% crispy form %}
 
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="card mt-4 mb-4">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5>Histoires associées</h5>
-                                    <button type="button" class="btn btn-success btn-sm" id="btn-add-histoire">
-                                        + Ajouter une histoire
-                                    </button>
-                                </div>
-                                <div class="card-body" id="histoires-forms">
-                                    {% comment %} {% crispy histoires_formset %} {% endcomment %}
-                                    {{ histoires_formset.management_form }}
-                                    {% for form in histoires_formset %}
-                                        <div class="form-row">
-                                            {% crispy form %}
-                                        </div>
-                                    {% endfor %}
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Ajout d'une nouvelle communauté</h4>
+                    </div>
 
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="card mt-4 mb-4">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5>Rois / Chefs traditionnels</h5>
-                                    <button type="button" class="btn btn-success btn-sm" id="btn-add-roi">
-                                        + Ajouter un roi
-                                    </button>
-                                </div>
-                                <div class="card-body" id="rois-forms">
-                                    {% comment %} {% crispy rois_formset %} {% endcomment %}
-                                    {{ rois_formset.management_form }}
+                    <div class="card-body">
 
-                                    {% for form in rois_formset %}
-                                        <div class="form-row">
-                                            {% crispy form %}
-                                        </div>
-                                    {% endfor %}
+                        <h2> {{ titre }}</h1>
+                    
+                        <h5 class="bg-info text-center">.{{id}}</h5>
+                        <form method="post" enctype="multipart/form-data"  >
+                        {% csrf_token %}
+                        {% crispy form %}
 
-                                </div>
-                            </div>
-                        </div>
-                    </div> 
-
-                   
-
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card mb-4">
-                                <div class="card-header">Images associée</div>
-                                    <div class="card-body">
-            
-                                        {% if communaute.image %}
-                                            <div class="mb-3 text-center">
-                                                <img src="{{ communaute.image.fichier.url }}" alt="Image actuelle" class="img-thumbnail" style="max-height: 250px;">
-                                                {% if communaute.image.legende %}
-                                                    <p class="mt-2"><small>{{ communaute.image.legende }}</small></p>
-                                                {% endif %}
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card mt-4 mb-4">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5>Histoires associées</h5>
+                                        <button type="button" class="btn btn-success btn-sm" id="btn-add-histoire">
+                                            + Ajouter une histoire
+                                        </button>
+                                    </div>
+                                    <div class="card-body" id="histoires-forms">
+                                        {% comment %} {% crispy histoires_formset %} {% endcomment %}
+                                        {{ histoires_formset.management_form }}
+                                        {% for form in histoires_formset %}
+                                            <div class="form-row">
+                                                {% crispy form %}
                                             </div>
-                                        {% else %}
-                                            <p class="text-muted">Aucune image pour le moment.</p>
-                                        {% endif %}
+                                        {% endfor %}
 
-                                        <hr>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="card mt-4 mb-4">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5>Rois / Chefs traditionnels</h5>
+                                        <button type="button" class="btn btn-success btn-sm" id="btn-add-roi">
+                                            + Ajouter un roi
+                                        </button>
+                                    </div>
+                                    <div class="card-body" id="rois-forms">
+                                        {% comment %} {% crispy rois_formset %} {% endcomment %}
+                                        {{ rois_formset.management_form }}
 
-                                        <div class="mb-3">
-                                            <label class="form-label">
-                                                {% if communaute.image %}Remplacer l'image{% else %}Ajouter une image{% endif %}
-                                            </label>
-                                            {{ image_form.fichier }}
-                                            {{ image_form.fichier.errors }}
-                                        </div>
+                                        {% for form in rois_formset %}
+                                            <div class="form-row">
+                                                {% crispy form %}
+                                            </div>
+                                        {% endfor %}
 
-                                        <div class="mb-3">
-                                            <label class="form-label">Légende (optionnel)</label>
-                                            {{ image_form.legende }}
-                                            {{ image_form.legende.errors }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                    
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card mb-4">
+                                    <div class="card-header">Images associée</div>
+                                        <div class="card-body">
+                
+                                            {% if communaute.image %}
+                                                <div class="mb-3 text-center">
+                                                    <img src="{{ communaute.image.fichier.url }}" alt="Image actuelle" class="img-thumbnail" style="max-height: 250px;">
+                                                    {% if communaute.image.legende %}
+                                                        <p class="mt-2"><small>{{ communaute.image.legende }}</small></p>
+                                                    {% endif %}
+                                                </div>
+                                            {% else %}
+                                                <p class="text-muted">Aucune image pour le moment.</p>
+                                            {% endif %}
+
+                                            <hr>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">
+                                                    {% if communaute.image %}Remplacer l'image{% else %}Ajouter une image{% endif %}
+                                                </label>
+                                                {{ image_form.fichier }}
+                                                {{ image_form.fichier.errors }}
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">Légende (optionnel)</label>
+                                                {{ image_form.legende }}
+                                                {{ image_form.legende.errors }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
+                        <input type="submit" class="btn btn-success" value=" {{ action }} la communauté" />
+                    </form>
                     </div>
-                    
-                    <input type="submit" class="btn btn-success" value=" {{ action }} la communauté" />
-                </form>
+
+                </div>
+
             </div> 
         </div>
-
         
     </div>
-        <br/>
- {% endblock %}
+    <br/>
+{% endblock %}
 
- {% block js %}
+{% block js %}
 
     <script>
         $(document).ready(function() {

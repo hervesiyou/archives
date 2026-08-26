@@ -165,11 +165,19 @@ class UsersSubscribeForm(forms.ModelForm):
     class Meta:
         model = Membre
         fields = ["nomcomplet", "email", "telephone", "sexe", "datenaissance", "lieunaissance", "residence", "login", "pwd", "password_confirm"]
-
+        widgets = {
+            "datenaissance":forms.DateInput(attrs={
+                "type":"date",
+                "class":"form-control",
+            })
+        }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        
         # Labels et help_text
         self.fields["login"].label = 'Login ou Pseudonyme'
+        self.fields["datenaissance"].label = 'Date de naissance'
+        self.fields["lieunaissance"].label = 'Lieu de naissance'
+        self.fields["nomcomplet"].label = 'Nom complet'
         self.fields['login'].help_text = "Le login ou pseudonyme que vous allez utiliser pour vous connecter."
 
         # Configuration Crispy Forms

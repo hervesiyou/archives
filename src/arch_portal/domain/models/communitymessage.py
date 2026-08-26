@@ -30,6 +30,8 @@ class CommunauteMessage(models.Model):
 
     class Meta:
         db_table = 'community_messages'
+        verbose_name = "Messages d'une communauté"
+        verbose_name_plural = "Messages - Communautaires"
         ordering = ['-created_at']
         indexes = [
             models.Index(fields=['communaute', 'created_at']),

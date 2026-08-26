@@ -19,10 +19,18 @@ EMAIL_HOST_PASSWORD = 'oHPZJaGbFI9iLgGr'
 EMAIL = 'contact@richbook.net'
 # EMAIL = 'contact@richbook.net'
 URL_SITE = 'http://127.0.0.1:8000'
-
 NO_ORANGE=237687329239
 NO_MTN=237687329239
 NO_SARA=237687329239
+
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+ADMINURL = "dqdfeg/"
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SESSION_COOKIE_AGE = 1800
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -44,11 +52,10 @@ ALLOWED_HOSTS = ['richbook.net', 'www.richbook.net', '127.0.0.1',"192.168.43.193
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 CRISPY_ALLOWED_TEMPLATE_PACKS = ["bootstrap5", "bootstrap4"]
- 
-
 # Application definition
 
 INSTALLED_APPS = [
+    "unfold",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -60,6 +67,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     "crispy_bootstrap5",
     'debug_toolbar',
+    "axes",
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -77,8 +85,21 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 
     "arch_portal.use_cases.middleware.coremiddleware.CoreMiddleware",
+    "axes.middleware.AxesMiddleware",
     
 ]
+
+AUTHENTICATION_BACKENDS = [
+    "axes.backends.AxesStandaloneBackend", 
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+UNFOLD = {
+    "SITE_TITLE": "Richbook",
+    "SITE_HEADER": "Richbook Administration",
+    "SITE_SUBHEADER": "Gestion de la plateforme",
+    "SITE_SYMBOL": "RBK",
+}
 
 
 MESSAGE_TAGS = {

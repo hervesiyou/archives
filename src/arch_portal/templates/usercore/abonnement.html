@@ -87,10 +87,12 @@
         color: #e74c3c;
         font-weight: 600;
     }
+    .text-muted{
+        color: #024816d0 !important;
+    }
 </style>
 
 <style>
-
 
     .pricing-section {
         margin: 4rem 0 3rem;
@@ -182,8 +184,8 @@
     <div class="row justify-content-center mt-5">
         <div class="col-lg-10 col-xl-12">
 
-            <a href="#" class="btn btn-outline-primary amount-btn"> Abonements Librairies </a> 
-            <a href="#" class="btn btn-outline-primary amount-btn"> Abonements Archives </a>
+            <a href="#abCOM" class="btn btn-outline-primary amount-btn"> Abonements Librairies </a> 
+            <a href="#abLIV" class="btn btn-outline-primary amount-btn"> Abonements Archives </a>
 
             <div class="text-center mb-5">
                 <h2 class="fw-bold text-dark">Recharger votre compte - {{user.nomcomplet}} </h2>
@@ -297,19 +299,21 @@
     <div class="row">
         <div class="col-12">
             <div class="pricing-section">
-                <h3 class="pricing-title">Nos Forfaits Communautaire Richbook</h3>
+                <h3 class="pricing-title" id="abCOM" >Nos Forfaits Communautaire Richbook</h3>
                 
                 <div class="pricing-grid">
                     <!-- FREE -->
                     <div class="plan-card">
                         <div class="plan-name">FREE</div>
-                        <div class="plan-price">0 F (Doulars)</div>
+                        <div class="plan-price"> 0 F (Doulars)</div>
                         <div class="plan-duration">Pour toujours</div>
                         <ul class="plan-features list-unstyled">
-                            <li>✓ 1 Famille gratuite</li>
-                            <li>✓ Possibilité de créer une cagnote</li>
-                            {% comment %} <li>✓ 5 livres par librairie</li> {% endcomment %}
-                            <li>✓ 1 Communauté gratuite</li>
+                            <li>✓ <span class="badge bg-default"> 01 </span> Famille gratuite</li>
+                            <li>✓ Possibilité de consulter les cagnotes</li>
+                            <li>✓ Possibilité de consulter les communautés</li>
+                            <li>✓ Possibilité de consulter les associations</li>
+                            <li>✓ Possibilité de consulter les évenements</li>
+                         
                         </ul>
                         <a class="aboPlanID" data-plan="FREE" data-user="{{ user.id }}"  >
                             <button class="btn btn-outline-primary amount-btn mt-3 " href="#" >
@@ -326,11 +330,18 @@
                         <div class="text-white text-bold bg-success"> {{ 19000|convertXAFDC}} (Doulars) </div>
                         <div class="plan-duration">par AN</div>
                         <ul class="plan-features list-unstyled">
-                            <li>✓ 3 Communautés</li>
-                            <li>✓ 3 Cagnotes possible </li>
-                            <li>✓ Ajout des administrateurs pour vous aider à gerer la bibliothèque </li>
+                            <li>✓ <span class="badge bg-default"> 01 </span> Communauté </li>
+                            <li>✓ <span class="badge bg-default"> 01</span>  Association</li>
+                            <li>✓ <span class="badge bg-default"> 01</span>  Evenement </li>
+                            <li>✓ <span class="badge bg-default"> 03</span>  Cagnotes </li>
+
+                            <li>✓ <span class="badge bg-default"> 01 </span> Projets</li>                            
+                            <li>✓ <span class="badge bg-default"> 02 </span> Prestataires</li>                            
+                            <li>✓ <span class="badge bg-default"> 02 </span> Publicités</li>    
+
+                            <li>✓ Ajout des administrateurs pour vous aider à gerer la communauté </li>
                             <li>✓ Pas de contenu exclusif </li>
-                            <li>✓ Possibilité de créer jusqu'à 30 Familles au total</li>
+                            <li>✓ Possibilité de créer jusqu'à 10 Familles au total</li>
                         </ul>
                         <a class="aboPlanID" data-plan="BASIC" data-user="{{ user.id }}">
                             <button class="btn btn-outline-primary amount-btn mt-3 "> Souscrire </button>
@@ -346,13 +357,20 @@
                         <div class="text-white text-bold bg-success"> {{ 29000|convertXAFDC}} (Doulars) </div>
                         <div class="plan-duration">par AN</div>
                         <ul class="plan-features list-unstyled">
-                            <li>✓ 5 Communautés</li>
-                            <li>✓ 5 cagnottes</li>
-                            <li>✓ Monetisation de vos communautés</li>
+                            <li>✓ <span class="badge bg-default"> 02 </span>  Communautés</li>
+                            <li>✓ <span class="badge bg-default"> 05 </span>  Associations </li>
+                            <li>✓ <span class="badge bg-default"> 05 </span>  Evenements </li>
+                            <li>✓ <span class="badge bg-default"> 06 </span> Cagnottes</li>
+
+                            <li>✓ <span class="badge bg-default"> 03 </span> Projets</li>                            
+                            <li>✓ <span class="badge bg-default"> 05 </span> Prestataires</li>                            
+                            <li>✓ <span class="badge bg-default"> 05 </span> Publicités</li>    
+
+                            <li>✓ Monetisation de vos communautés </li>
                             <li>✓ Newsletter pour envoyer les messages groupés aux membres de vos familles </li>
                             <li>✓ Possibilité d'acceder aux statistiques familliales </li>
                             <li>✓ Ajout des administrateurs pour vous aider à gerer les communautés </li>
-                            <li>✓ Possibilité de creer plus de 60 familles au total</li>
+                            <li>✓ Possibilité de créer plus de 20 familles au total </li>
                             <li>✓ Support dedié 24/7</li>
                         </ul>
                         <a class="aboPlanID" data-plan="PRO" data-user="{{ user.id }}">
@@ -369,15 +387,20 @@
                         <div class="text-white text-bold bg-success"> {{ 50000|convertXAFDC}} (Doulars) </div>
                         <div class="plan-duration">par AN</div>
                         <ul class="plan-features list-unstyled">
-                            <li>✓ 8 Communautés</li>                             
-                             <li>✓ 8 cagnottes</li>
-                            <li>✓ Possibilité de créer 150 familles au total</li>
+                            <li>✓ <span class="badge bg-default"> 05 </span> Communautés</li> 
+                            <li>✓ <span class="badge bg-default"> 10 </span> Associations </li>
+                            <li>✓ <span class="badge bg-default"> 10 </span> Evenements </li>
+                            <li>✓ <span class="badge bg-default"> 10 </span> Cagnottes</li>                            
+                            <li>✓ <span class="badge bg-default"> 10 </span> Projets</li>                            
+                            <li>✓ <span class="badge bg-default"> 10 </span> Prestataires</li>                            
+                            <li>✓ <span class="badge bg-default"> 10 </span> Publicités</li>                            
+                            
+                            <li>✓ Possibilité de créer 50 familles au total</li>
                             <li>✓ Possibilité d'augmenter votre quota de familles et de communautés</li>
                             <li>✓ Monetisation de vos communautés</li>
                             <li>✓ Newsletter pour envoyer les messages groupés aux membres de vos familles </li>
                             <li>✓ Possibilité d'acceder aux statistiques familliales </li>
-                            <li>✓ Ajout des administrateurs pour vous aider à gerer les communautés </li>
-                            {% comment %} <li>✓ Possibilité de créer plus de 60 familles au total</li> {% endcomment %}
+                            <li>✓ Ajout des administrateurs pour vous aider à gerer les communautés </li> 
                             <li>✓ Support dedié 24/7</li>
                         </ul>
                         <a class="aboPlanID" data-plan="DIAMOND" data-user="{{ user.id }}">
@@ -388,7 +411,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Fin section tarifs -->
+            
         </div>
     </div>
     

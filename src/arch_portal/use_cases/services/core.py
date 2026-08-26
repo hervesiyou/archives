@@ -132,6 +132,7 @@ def send_email_inscription(email, nom,token):
             recipient_list=[email,"bookrich4@gmail.com"],
             fail_silently=False
         )
+        print(f"Email de validation envoyé à {email} avec le lien : {url}")
         return True
     except Exception as e:        
         print(f"Erreur envoi email : {e}")       

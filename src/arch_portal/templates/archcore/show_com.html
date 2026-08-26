@@ -144,7 +144,7 @@
                                     {% endif %}
 
                                     <a href="{% url 'list_cagnottes' %}" title="" class="btn btn-sm btn-outline-warning" >
-                                            <span> Voir les cagnottes  </span>
+                                        <span> Voir les cagnottes  </span>
                                     </a>
                                 </div>
                             </div>
@@ -186,7 +186,7 @@
                             <div class="col-lg-4">
                                 <div class="row">
                                     <div class="col-4">
-                                        <div class="bg-dark p-10 text-white text-center">
+                                        <div class="bg-dark p-10 my-2 text-white text-center">
                                             
                                             <a href="{% url 'listfamilles' id=communaute.id mode=1 %}">
                                             <h6 class="mb-0 mt-1">
@@ -196,19 +196,19 @@
                                             </h6>
                                             </a>
                                             {% if appartient %}
-                                            <small class="font-light"><a href="{% url 'listfamilles' id=communaute.id mode=1  %}"><i class="fa fa-eye"></i> Consulter </a></small>
+                                            <small class="font-light"><a href="{% url 'listfamilles' id=communaute.id mode=1  %}" class="text-green"><i class="fa fa-eye"></i> Consulter </a></small>
                                             {% endif %}
                                         </div>
                                     </div>
                                     <div class="col-4">
-                                        <div class="bg-dark p-10 text-white text-center">
+                                        <div class="bg-dark p-10 my-2 text-white text-center">
                                             
                                             <h6 class="mb-0 mt-1" title="Merci d'adhérer à cette communauté pour avoir le droit de consulter les associations"> 
                                             <span class="badge bg-white text-dark" >{{communaute.get_associations|length }}</span> Associations</h6>
-                                            
-                                            {% if appartient %}
+                                            {% comment %} {{ request.session.userrights }} {% endcomment %}
+                                            {% if appartient or 'ADD_ASSOCIATION' in request.session.userrights  %}
                                             <small class="font-light">
-                                                <a href="{% url 'listassociations' id=communaute.id mode=1  %}"><i class="fa fa-eye"></i> Consulter </a>
+                                                <a href="{% url 'listassociations' id=communaute.id mode=1  %}" class="text-green" ><i class="fa fa-eye"></i> Consulter </a>
                                             </small> 
                                             {% else %}
                                             <span class="text-small text-xs"> </span>
@@ -216,15 +216,15 @@
                                         </div>
                                     </div> 
                                     <div class="col-4">
-                                        <div class="bg-dark p-10 text-white text-center">
+                                        <div class="bg-dark p-10  my-2 text-white text-center">
                                             {% comment %} <i class="fa fa-tag mb-1 font-16"></i> {% endcomment %}
                                             <h6 class="mb-0 mt-1">
                                             <span class="badge bg-white text-dark">{{communaute.get_evenements|length }}</span> Evenements</h6>
                                             {% comment %} 'VOIR_COMMUNAUTE' in request.session.userrights or communaute.publique or {% endcomment %}
                                             
-                                            {% if appartient %}
+                                            {% if appartient or 'ADD_EVENEMENT' in request.session.userrights  %}
                                             <small class="font-light">
-                                            <a href="{% url 'listevenements' id=communaute.id mode=1 %}"><i class="fa fa-eye"></i> Consulter</a> 
+                                            <a href="{% url 'listevenements' id=communaute.id mode=1 %}" class="text-green" ><i class="fa fa-eye"></i> Consulter</a> 
                                             </small>
                                             {% endif %}
                                         </div>
@@ -241,16 +241,25 @@
                                         </div>
                                     </div>
                                     <div class="col-4 mt-3">
-                                        <div class="bg-dark p-10 text-white text-center">
+                                        <div class="bg-dark p-10 my-2 text-white text-center">
                                             
-                                            <h6 class="mb-0 mt-1"> 
-                                            <a href="{% url 'allprojets' communaute.id %}">Projets</a>
-                                            </h6>
+                                            <h6 class="mb-0 mt-1">  <a href="{% url 'allprojets' communaute.id %}">Projets</a></h6>
                                             <small class="font-light"><i class="fa fa-table mb-1 font-16"></i> {{ communaute.origine }} </small>
                                         </div>
                                     </div>
+                                     <div class="col-4 mt-3">
+                                        <div class="bg-dark p-10 my-2 text-white text-center">
+                                            
+                                            <h6 class="mb-0 mt-1"> 
+                                            <a href="{% url 'informations_list_com' communaute.id %}">Informations</a>
+                                            </h6>
+                                            <small class="font-light"><i class="fa fa-table mb-1 font-16"></i> {{ communaute.nom }} </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-4 mt-3">
-                                        <div class="bg-dark p-10 text-white text-center">
+                                        <div class="bg-dark p-10 my-2 text-white text-center">
                                             {% comment %} <i class="fa fa-globe mb-1 font-16"></i> {% endcomment %}
                                             <h6 class="mb-0 mt-1">
                                             <a href="{% url 'listlibs' %}"  > Mediathèque </a> </h6> 
@@ -266,13 +275,13 @@
                                                 </a>
                                             {% endif %}
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row">
+                                    </div>                                
                                     <div class="col-4">
-                                        <div class="bg-dark p-10 text-white text-center"> 
+                                        <div class="bg-dark p-10 my-2 text-white text-center"> 
                                             <h6 class="mb-0 mt-1">
-                                            <a href="{% url 'liste_articles' communaute.id %}"  > Articles de {{ communaute.nom}} </a> </h6>  
+                                            <a href="{% url 'liste_articles' communaute.id %}"  > Articles  </a> </h6>  
+                                            <small class="font-light"><i class="fa fa-table mb-1 font-16"></i> {{ communaute.nom }} </small>
+
                                             {% comment %} {% if galerie  is not None and galerie.id is not None %}
                                                 <a class="btn btn-outline-success" href="{% url 'show_galerie' galerie.id %}"> Article de {{ communaute.nom}} </a>
                                             {% endif %} {% endcomment %}
@@ -285,7 +294,7 @@
                                         </div>
                                     </div>
                                     <div class="col-4">
-                                        <div class="bg-dark p-10 text-white text-center"> 
+                                        <div class="bg-dark p-10 my-2 text-white text-center"> 
                                             <h6 class="mb-0 mt-1">
                                             <a href="{% url 'liste_formations' communaute.id %}"  > Formations de {{ communaute.nom}}</a> </h6>  
                                             {% comment %} {% if galerie  is not None and galerie.id is not None %}
@@ -299,11 +308,11 @@
                                             {% endif %}
                                         </div>
                                     </div>
-                                    <div class="col-4"> ..</div>
+                                   
                                 </div>
                                 <div class="row">
                                     <div class="col-6 mt-3">
-                                        <div class="bg-dark p-10 text-white text-center">
+                                        <div class="bg-dark p-10 my-2 text-white text-center">
                                             {% comment %} <i class="fa fa-globe mb-1 font-16"></i> {% endcomment %}
                                             <h6 class="mb-0 mt-1"> 
                                                 <span class="badge bg-white text-dark">{{ communaute.administrateurs.all|length }}</span> Administrateurs
@@ -320,7 +329,7 @@
                                             </div>
                                             <small class="font-light"> 
                                             {% if  'ADD_COMMUNAUTE_ADMIN' in request.session.userrights %}
-                                                <div class=" text-end pull-right">
+                                                <div class=" ">
                                                     <a class=" btn btn-outline-danger text-white" 
                                                         title=" Ajouter un Administrateur à cette communauté"
                                                         data-bs-toggle="modal" 

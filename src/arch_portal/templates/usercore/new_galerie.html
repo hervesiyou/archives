@@ -3,28 +3,37 @@
 {% block title %} Nouvelle Galerie {% endblock %}
 {% block content %}
     <div class="container card-body">
-    <div class="my-4">
-        <a href="{% url 'home' %}" class="my-2"> <i class="fa fa-home"></i> Accueil </a>  >
-        <a href="{% url 'listcom' %}" class="my-2"> <i class="fas fa-users"></i> Communautés </a> > {{ communaute.nom }}
-                 
-    </div>
-        <h3> Nouvelle Galerie </h3>
+        <div class="my-4">
+            <a href="{% url 'home' %}" class="my-2"> <i class="fa fa-home"></i> Accueil </a>  >
+            <a href="{% url 'listcom' %}" class="my-2"> <i class="fas fa-users"></i> Communautés </a> > {{ communaute.nom }}
+                    
+        </div> 
         <div class="row">
             
             <div class="col-lg-12">
-                <h5 class="bg-info text-center">.{{id}}</h5>
-                <form method="post"  enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {% crispy form %}
-                    <button type="button" class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#imageModal">
-                        Ajouter une image
-                    </button>
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Créer une nouvelle Galerie </h4>
+                    </div>
 
-                    <div id="preview-images" class="row m-3"></div>
-                    <div id="hidden-inputs"></div>
+                    <div class="card-body">
 
-                    <input type="submit" class="btn btn-success" value="Ajouter cette Galerie" />
-                </form>
+                        <h5 class="bg-info text-center">.{{id}}</h5>
+                        <form method="post"  enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% crispy form %}
+                            <button type="button" class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#imageModal">
+                                Ajouter une image
+                            </button>
+
+                            <div id="preview-images" class="row m-3"></div>
+                            <div id="hidden-inputs"></div>
+
+                            <input type="submit" class="btn btn-success" value="Ajouter cette Galerie" />
+                        </form>
+
+                    </div>
+                </div> 
             </div> 
         </div>
     </div>

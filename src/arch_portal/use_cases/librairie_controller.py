@@ -46,11 +46,13 @@ def show_commandes(request):
     if not userid:
         return redirect("login")
     coms = CommandeLivre.objects.filter(proprietaire=userid)
+    user = get_object_or_404(Membre, id=request.session["userid"])
     # print(f"{coms} total")
-    return render(request, "usercore/home.html", { "commandes" : coms} )
+    return render(request, "usercore/home.html", { "commandes" : coms, "user":user} )
 
 def faq(request):
     return render(request, "libcore/faq.html", {} )
+
 def listlibs(request):
     libs = Librairie.objects.all()
     return render(request, "libcore/listlibrairies.html", { "librairies" : libs, } )

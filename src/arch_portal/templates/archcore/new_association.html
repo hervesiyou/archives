@@ -1,21 +1,29 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-{% block title %}Nouvelle Association {% endblock %}
+{% block title %} Nouvelle Association {% endblock %}
 {% block content %}
     <div class="container card-body">
-        <h3> Nouvelle Association</h3>
+         
         <div class="row">
             
             <div class="col-lg-12">
-                <h5 class="bg-info text-center">.{{id}}</h5>
-                <form method="post">
-                    {% csrf_token %}
-                    {% crispy form %}
-                    <input type="submit" class="btn btn-success" value="Ajouter cette Association" />
-                </form>
-            </div> 
-            
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Créer une nouvelle association</h4>
+                    </div>
+
+                    <div class="card-body">
+
+                        <h5 class="bg-info text-center">.{{id}}</h5>
+                        <form method="post">
+                            {% csrf_token %}
+                            {% crispy form %}
+                            <input type="submit" class="btn btn-success" value="Ajouter cette Association" />
+                        </form>
+                    </div>
+                </div> 
+            </div>
         </div>
     </div>
-        <br/>
+    <br/>
  {% endblock %}

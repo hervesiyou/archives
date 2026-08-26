@@ -33,11 +33,14 @@
                                 <a class="btn btn-outline-success my-2" href="{% url 'show_galerie' galerie.0.id %}"> Photos de {{ association.nom }} </a>
                             {% endif %}
                             <a href="{% url 'list_cagnottes' %}" title="" class="btn my-1 btn-outline-warning" >
-                                        <span> Voir les cagnottes  </span>
-                                  </a>
-                             
+                                <span> Voir les cagnottes  </span>
+                            </a>
+                            <a href="{% url 'informations_list_asso' association.id %}"  class="btn my-1 btn-outline-success" title="Informations de {{ association.nom }}">Informations</a>
+                            <a href="{% url 'show_galerie_asso' association.id %}" title="" class="btn my-1 btn-outline-warning" >
+                                <span> Galeries images de {{ association.nom }}  </span>
+                            </a>
                             {% if 'ADD_GALERIE' in request.session.userrights %}
-                                <a class=" badge bg-info" href="{% url 'add_galerie' %}" alt="Ajouter une galerie" title="Ajouter une galerie">
+                                <a class=" btn btn-outline-info" href="{% url 'add_galerie' %}" alt="Ajouter une galerie" title="Ajouter une galerie">
                                     <i class="fa-solid fa-plus me-2 text-success"></i>
                                     <i class="fa-solid fa-images me-2 text-success"></i>                                       
                                 </a>
@@ -47,6 +50,15 @@
                             <span class="text-muted">
                                 <a  class="btn btn-outline-info my-2" href="{% url 'listassociations' id=association.communaute.id mode=1 %}"> Autres associations</a>
                             </span>
+                            {% endif %}
+                            <a class="btn btn-outline-info my-2" href="{% url 'liste_articles_asso' association.id %}" alt="Consulter les articles" title="Consulter les articles">
+                                <i class="fa-solid fa-regular fa-newspaper me-2 text-success"></i>
+                                Publications de {{ association.nom }}'                         
+                            </a>
+                            {% if 'ADD_ARTICLE' in request.session.userrights %}
+                                <a class="btn btn-outline-danger my-2" href="{% url 'ajouter_article_asso' association.id %}" alt="Ajouter un article" title="Ajouter un article">
+                                    <i class="fa-solid fa-plus me-2 text-success"></i>                               
+                                </a>
                             {% endif %}
                         </div>
                     </div>

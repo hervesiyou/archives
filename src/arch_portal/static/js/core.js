@@ -44,13 +44,19 @@ $(document).ready(function(){
 
                 beforeSend      : function(){
                     // alert(JSON.stringify(data) + ", url: " + this.url)
+                    AjaxLoader.show(
+                        "Souscription à votre abonnement en cours..."
+                    );
                 },
                 error: function(error) {
                     console.error(error);
                     // alert(JSON.stringify(error))
                 },
                 success  : function(returnedData){
-                    // console.log(returnedData);             
+                    // console.log(returnedData);  
+                    AjaxLoader.update(
+                        "Traitement terminé..."
+                    );           
                     if (returnedData.status) {
                         Swal.fire({
                             icon: "success",
@@ -75,6 +81,9 @@ $(document).ready(function(){
 
                         }); 
                     }
+                },
+                complete: function(){
+                    AjaxLoader.hide();
                 }
 
             })

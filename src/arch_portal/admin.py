@@ -43,10 +43,17 @@ from arch_portal.domain.models.prestataire import Prestataire
 from arch_portal.domain.models.projetcommunautaire import Projetcommunautaires
 from arch_portal.domain.models.article import Article
 from arch_portal.domain.models.formation import Formation
+from arch_portal.domain.models.information import Information
+from arch_portal.domain.models.facture import Facture
 # from arch_portal.domain.models. import Formation
 from arch_portal.domain.models.publicite import Publicite, Tag, PubliciteEvent
 
+admin.site.site_header = "Richbook Administration"
+admin.site.site_title = "Administration - RICHBOOK"
+admin.site.index_title = "Tableau de bord"
 
+admin.site.register(Facture)
+admin.site.register(Information)
 admin.site.register(Prestataire)
 admin.site.register(Publicite)
 admin.site.register(PubliciteEvent)

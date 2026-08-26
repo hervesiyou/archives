@@ -9,6 +9,7 @@ from arch_portal.domain.models.membre import Membre
 from arch_portal.domain.models.livre import Livre
 # from arch_portal.domain.models.image import Image
 from arch_portal.domain.models.plantarifaire import Plan
+from arch_portal.domain.models.facture import Facture
 from arch_portal.domain.models.message import Message
 from arch_portal.domain.models.marche import Marche
 from arch_portal.domain.models.invitationadminfamille import InvitationAdminFamille
@@ -26,12 +27,21 @@ from django.http import HttpResponseForbidden, JsonResponse
 from datetime import date, datetime
 from django.contrib import messages
 from arch_portal.use_cases.services.core import generate_token, send_invitation_adminfamille_mail
+from arch_portal.use_cases.services.facture_service import generer_facture_pdf, envoyer_facture_email
 
 from decimal import Decimal
 from django.db import transaction
+from django.db.transaction import on_commit
 from arch_portal.domain.models.abonnement import Abonnement
 from arch_portal.domain.models.transaction import Transaction
 import threading
+
+
+def about(request):
+    # user = get_object_or_404(Membre, id=user_id)
+    # abonnements = Abonnement.objects.filter(membre=user, is_active=True)
+ 
+    return render(request, "includes/about.html" )
 
 def show_subscriptions(request, user_id):
     user = get_object_or_404(Membre, id=user_id)
@@ -66,8 +76,15 @@ def souscrire_abonnement(request):
             response["message"] = "Membre et plan sont requis pour souscrire à un abonnement.."
             response["status"] = False
             return JsonResponse(response)
-        #  pour le moment les plans sont en dur, mais à terme ils seront dans la base de données et on pourra faire un switch case sur le nom du plan pour appliquer des règles spécifiques à chaque plan
-        membre = Membre.objects.get(id=membre)
+        try:
+            #  pour le moment les plans sont en dur, mais à terme ils seront dans la base de données et on pourra faire un switch case sur le nom du plan pour appliquer des règles spécifiques à chaque plan
+            membre = Membre.objects.get(id=membre)
+        except Membre.DoesNotExist:
+            # raise MembreException(f"Membre avec id {membre} introuvable.")
+            response["message"] = f"Membre avec id {membre} introuvable."
+            response["status"] = False
+            return JsonResponse(response)
+        
         if membre is None:
             # raise MembreException(f"Membre avec id {membre} introuvable.")
             response["message"] = f"Membre avec id {membre} introuvable."
@@ -187,7 +204,7 @@ def souscrire_abonnement(request):
         wallet.save() 
         abonnement.save()
 
-        Transaction.objects.create(
+        transaction_paiement =  Transaction.objects.create(
             code=f"TRX-ABO-{abonnement.id}",
             wallet=wallet,
             montant=Decimal(prix),
@@ -196,11 +213,32 @@ def souscrire_abonnement(request):
             description=f"Abonnement au plan {abonnement.plan_appli} pour le membre {membre.nomcomplet}"
         )
 
+        facture = Facture.objects.create(
+            membre=membre,
+            abonnement=abonnement,
+            transaction=transaction_paiement,
+            montant=Decimal(prix),
+            devise="XAF",
+            status="PAYEE"
+        )
+
+        def traiter_facture():
+            try:
+                facture.refresh_from_db()
+                generer_facture_pdf(facture)
+                envoyer_facture_email(facture)
+
+            except Exception as e:
+                print( f"Erreur facture {facture.numero} : {str(e)}" )
+                
+        transaction.on_commit(traiter_facture)
+
         response["status"] = True
         response["message"] = "Abonnement souscrit avec succès."
         return JsonResponse(response)
 
     return HttpResponseForbidden()
+
 
 
 def temoignages(request): 

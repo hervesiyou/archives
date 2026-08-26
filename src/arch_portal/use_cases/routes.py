@@ -12,6 +12,7 @@ import arch_portal.use_cases.prestataire_controller as prestataire
 import arch_portal.use_cases.projet_controller as projet
 import arch_portal.use_cases.formart_controller as formationarticle
 import arch_portal.use_cases.publicite_controller as publicite
+import arch_portal.use_cases.information_controller as info
 from django.views.generic import TemplateView
 
 from django.contrib.sitemaps.views import sitemap
@@ -53,8 +54,11 @@ urlpatterns += [
 
     # Articles
     path('com/<int:communaute_id>/art/', formationarticle.liste_articles, name='liste_articles'),
+    path('comasso/<int:association_id>/art/', formationarticle.liste_articles_asso, name='liste_articles_asso'),
     path('art/<slug:slug>/', formationarticle.detail_article, name='detail_article'),
+    path('artasso/<slug:slug>/', formationarticle.detail_article_asso, name='detail_article_asso'),
     path('c/<int:communaute_id>/art/add/', formationarticle.ajouter_article, name='ajouter_article'),
+    path('casso/<int:association_id>/art/add/', formationarticle.ajouter_article_asso, name='ajouter_article_asso'),
     path('art/<slug:slug>/upd/', formationarticle.modifier_article, name='modifier_article'),
     path('art/<slug:slug>/del/', formationarticle.supprimer_article, name='supprimer_article'),
 ]
@@ -79,6 +83,17 @@ urlpatterns += [
     path('edev/<int:id>', evenement.edit_evenement, name="edit_evenement"),
     path('nev/', evenement.add_evenement, name="add_evenement"),
 ]
+urlpatterns += [
+    path( "info/",  info.information_list,  name="list_informations" ),
+    path( "infocom/<int:pk>/",  info.informations_list_com,  name="informations_list_com" ),
+    path( "infoasso/<int:pk>/",  info.informations_list_asso,  name="informations_list_asso" ),
+    path( "infolib/<int:pk>/",  info.informations_list_lib,  name="informations_list_lib" ),
+    path( "info/<int:pk>/",  info.information_detail,  name="detail_information" ),
+    path( "info/crea/",  info.information_create,  name="create_information" ),
+    path( "info/<int:pk>/ed/",  info.information_update,  name="update_information" ),
+    path( "info/<int:pk>/del/",  info.information_delete,  name="delete_information" ),
+
+]
 
 urlpatterns += [
     path( "cag/",  cagnotte.list_cagnottes,  name="list_cagnottes" ),
@@ -101,7 +116,7 @@ urlpatterns += [
 urlpatterns += [
     path('pres', prestataire.prestataire_list, name='prestataire_list'),
     path('pres/sh.<int:id>', prestataire.prestataires, name='allprestataires'),
-    path('pres/create/', prestataire.prestataire_create, name='add_prestataire'),
+    path('pres/crea/', prestataire.prestataire_create, name='add_prestataire'),
     path('pres/<int:pk>/', prestataire.prestataire_detail, name='prestataire_detail'),
     path('pres/<int:pk>/ed/', prestataire.prestataire_update, name='prestataire_update'),
     path('pres/<int:pk>/del/', prestataire.prestataire_delete, name='prestataire_delete'),
@@ -109,6 +124,7 @@ urlpatterns += [
 
 urlpatterns += [ 
     path('', core.index, name="index"),
+    path('about', core.about, name="about"),
     path('admcr/<int:id>', core.admin_create, name="admin_create"),
    
     path('admaccinv/<str:token>', core.admin_accept_invitation, name="admin_accept_invitation"),
@@ -128,9 +144,9 @@ urlpatterns += [
     path('cont', core.contact, name="contact"),
 
     path('com/<int:community_id>/messages', core.community_messages, name='community_messages'),
-    path('com/mess/create', core.create_community_message, name='create_community_message'),
+    path('com/mess/crea', core.create_community_message, name='create_community_message'),
     path('lib/<int:library_id>/messages/', core.library_messages, name='library_messages'),
-    path('lib/mess/create', core.create_library_message, name='create_library_message'),
+    path('lib/mess/crea', core.create_library_message, name='create_library_message'),
     # path('lib/<int:library_id>/mess/create', core.create_library_message, name='create_library_message'),
 ]
 urlpatterns += [ 
@@ -154,6 +170,7 @@ urlpatterns += [
     path('ugal/<int:id>', communaute.update_galerie, name="update_galerie"),
     path('upim/', communaute.upload_image, name="upload_image"),
     path('ga/<int:id>', communaute.show_galerie, name="show_galerie"),
+    path('gaasso/<int:id>', communaute.show_galerie_asso, name="show_galerie_asso"),
     path('c/faq', communaute.faq, name="faq_communaute"),
 
     path('com/<int:community_id>/his', communaute.community_history, name='com_histoire'),
@@ -162,11 +179,11 @@ urlpatterns += [
     path('com/<int:community_id>/kings', communaute.kings_list, name='kings_list'),
 
     # Liste des dons d'une communauté
-    path('com/<int:communaute_id>/dons',  communaute.don_list, name='don_list'),    
-    path('com/<int:communaute_id>/dons/no',  communaute.don_create, name='don_create'),    
-    path('com/<int:communaute_id>/dons/<int:don_id>', communaute.don_detail,  name='don_detail'), 
-    path('com/<int:communaute_id>/dons/<int:don_id>/mod', communaute.don_update,  name='don_update'),    
-    path('com/<int:communaute_id>/dons/<int:don_id>/sup', communaute.don_delete,   name='don_delete'),
+    path('com/<int:communaute_id>/do',  communaute.don_list, name='don_list'),    
+    path('com/<int:communaute_id>/do/no',  communaute.don_create, name='don_create'),    
+    path('com/<int:communaute_id>/do/<int:don_id>', communaute.don_detail,  name='don_detail'), 
+    path('com/<int:communaute_id>/do/<int:don_id>/mod', communaute.don_update,  name='don_update'),    
+    path('com/<int:communaute_id>/do/<int:don_id>/sup', communaute.don_delete,   name='don_delete'),
 
     path('com/<int:communaute_id>/pc/ad', communaute.personnecle_create, name='personnecle_create_com'),
     path('fam/<int:famille_id>/pc/ad', communaute.personnecle_create, name='personnecle_create_fam'),

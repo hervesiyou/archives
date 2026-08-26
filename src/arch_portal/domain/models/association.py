@@ -9,6 +9,7 @@ class Association(models.Model):
     
     db_table = "associations"
     nom = models.CharField(max_length=150)
+    urlyoutube = models.CharField(max_length=150, blank=True, null=True)
     publique = models.BooleanField(default=True)
     description = models.TextField( blank=True)
     adhesion = models.TextField( blank=True)

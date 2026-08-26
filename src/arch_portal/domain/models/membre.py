@@ -11,6 +11,8 @@ from .message import Message
 from .communaute import Communaute
 from .badge import Badge
 
+# from arch_portal.use_cases.services.core import compute_sha1
+
 class Membre(models.Model):
     class Meta:
         verbose_name = " Membre"
@@ -64,6 +66,7 @@ class Membre(models.Model):
        
     def save(self, *args, **kwargs): 
 
+        # self.pwd = compute_sha1(self.pwd)  # Hash the password before saving
         if self.pere != None and self.mere != None:
             if len(self.pere)<3 and len(self.mere)<3:
                 if len(self.nompere.nomcomplet)<3 and len(self.nommere.nomcomplet)<3:

@@ -22,7 +22,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
+    path(settings.ADMINURL, admin.site.urls),
     path('', include("arch_portal.use_cases.routes")),
     path('__debug__/', include(debug_toolbar.urls)),
 ]

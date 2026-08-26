@@ -28,7 +28,7 @@ from django.views.decorators.http import require_http_methods
 # from django.db import models
 from django.forms import inlineformset_factory
 from arch_portal.domain.forms.sets import MiniHistoireFormSet, RoiFormSet , RoiForm, MiniHistoireForm
-
+from django.urls import reverse 
 from django.core.exceptions import PermissionDenied
 from arch_portal.use_cases.services.subscription_service import check_abonnement_permission, get_membre_from_session
 
@@ -213,7 +213,8 @@ def don_create(request, communaute_id):
 
                 return redirect('don_list', communaute_id=communaute.id)
         else:
-            return redirect("login")
+            # return redirect("login")
+            return redirect(f"{reverse('login')}?next={request.get_full_path()}")
         
     else:
         form = DonForm()
@@ -249,7 +250,7 @@ def don_update(request, communaute_id, don_id):
         if don.donateur != user and user not in communaute.administrateurs.all():
             return HttpResponseForbidden("Vous n'êtes pas autorisé à modifier ce don.")
     else:
-            return redirect("login")
+            return redirect(f"{reverse('login')}?next={request.get_full_path()}")
     
     if request.method == 'POST':
         form = DonForm(request.POST, instance=don)
@@ -280,7 +281,7 @@ def don_delete(request, communaute_id, don_id):
         if don.donateur != user and user not in communaute.administrateurs.all():
             return HttpResponseForbidden("Vous n'êtes pas autorisé à supprimer ce don.")
     else:
-            return redirect("login")
+            return redirect(f"{reverse('login')}?next={request.get_full_path()}")
     
     if request.method == 'POST':
         don.delete()
@@ -432,7 +433,8 @@ def edit_association(request,id):
     user = get_object_or_404(Membre, pk=user)
     if not user:
         messages.error(request, "Merci de vous connecter au prealable.")
-        return redirect("login")
+        # return redirect("login")
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
     
     if user in association.administrateurs.all():
         admin = True
@@ -559,7 +561,8 @@ def show_communaute(request, id):
     userid = request.session.get("userid","")
     if not userid :
         # print(f" user id { userid } ")
-        return redirect("login" )
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+        # return redirect("login" )
 
     user = Membre.objects.get(id=userid)
     try:
@@ -877,6 +880,15 @@ def upload_image(request):
 def show_galerie(request, id):
     galerie = get_object_or_404(Galerie, pk=id)
     return render(request, "usercore/show_galerie.html", { "galerie":galerie  })
+
+def show_galerie_asso(request, id):
+    asso = get_object_or_404(Association, pk=id)
+    galerie = Galerie.objects.filter(association=asso).first()
+    if galerie is None:
+        messages.warning(request, "Aucune galerie n'est associée à cette association.")
+        return redirect("show_association", id=asso.id)
+    
+    return render(request, "usercore/show_galerie_asso.html", { "galerie":galerie, "association": asso })
 
 def update_galerie(request, id):
 

@@ -1,7 +1,10 @@
 ## A Verifier 00237697956649 eze lambert
 - gerer la recommandation des livres
-- ajouter les loader lors des ajax 
+- adapter le controle des droits de creation selon le forfait payé
+- la gestion des images des galeries ne marchent pas bien 
+- verifier que l'on peut incrementer les forfaits et les droits dynamiquement
 
+          - ajouter les loader lors des ajax 
           - un membre doit voir ses informations d'abonnement et de plan
           - ajouter les espaces de formations (sekoo) et de marché(communautaire)
 
@@ -24,8 +27,7 @@
           - ajouter la geographie lors de la creation et l'update d'une communauté
 
         - liste des opportunites economiques d'une communautés avec le bouton contribuer economiquement
-        - ndoubock.pages.dev/mewahou-hall.eco2africa.workers.dev
-        - leaflet.js, gerer la sauvegarde automatique des données
+        
         - espace de soumission des projets communautaires, les projets on des contributions
         - market place communautaire qui redirige sur kondashop( chaque prestataire à plutot sa boutique sur abelaa ou kondashop)
         - afficher les partenaires dans une communautés
@@ -131,6 +133,10 @@
 - numerisation des actes et documents dans la communauté a gerer avec BOS
 - api cinet pay et paymetrust, 
 - permettre l'envoi des message groupés aux membres d'une meme famille
+
+- ndoubock.pages.dev/mewahou-hall.eco2africa.workers.dev
+- leaflet.js, gerer la sauvegarde automatique des données
+
 
 #FONCIONALITES pour les familles et les communautés
         - enjoliver toutes les pages 
