@@ -2,21 +2,19 @@
 {% load static %}
 {% block title %} {{parent}} Detail - {{ association.nom }} {% endblock %}
 {% block css %}  
-    <style>
-      
-    </style>
+    <style>  </style>
 {% endblock %}
 {% block content %}
 <div class="container">
     <div class="my-3">
             
         <div class="card-body">
-        <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a> >
-        <a href="{% url 'listcom' %}" class=" "> Communautés </a> >  
-        {% if association.communaute  is not None %}
-        <a href="{% url 'show_communaute' association.communaute.id %}" class="text-center"> {{ association.communaute.nom }} </a> >
-        {% endif %}
-            Associations
+            <a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a> >
+            <a href="{% url 'listcom' %}" class=" "> Communautés </a> >  
+            {% if association.communaute  is not None %}
+                <a href="{% url 'show_communaute' association.communaute.id %}" class="text-center"> {{ association.communaute.nom }} </a> >
+            {% endif %}
+                Associations
         </div>
     </div>
 
@@ -107,13 +105,13 @@
                                     <span class="badge bg-white text-dark">{{ association.administrateurs.all|length }}</span> Administrateurs
                             </h6>
                             <div >
-                                {% if  'ADD_ASSOCIATION_ADMIN' in request.session.userrights %}
+                                {% if  'ADD_ASSOCIATION_ADMIN' in request.session.userrights or gestionnaire %}
                                     <a href="{% url 'show_admin_asso' association.id %}" class="text-success py-3" >Voir les Administrateurs  de {{association.nom}}</a> 
 
                                 {% endif %}
                             </div>
                             <small class="font-light"> 
-                                {% if  'ADD_ASSOCIATION_ADMIN' in request.session.userrights %}
+                                {% if  'ADD_ASSOCIATION_ADMIN' in request.session.userrights or gestionnaire %}
                                     <div class=" ">
                                         <button class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#adminModal"type="button"> Ajouter un Administrateur à cette association </button>
                                     </div>
@@ -129,7 +127,7 @@
     </div>
 </div>
 
-    {% if  'ADD_ASSOCIATION_ADMIN' in request.session.userrights %} 
+    {% if  'ADD_ASSOCIATION_ADMIN' in request.session.userrights or gestionnaire %} 
 
         <div class="modal fade" id="adminModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">

@@ -108,7 +108,15 @@
                 <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa fa-home"></i> Accueil</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'listcom' %}">Communautés</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'show_communaute' communaute.id %}">{{ communaute.nom }}</a></li>
-                <li class="breadcrumb-item active">Familles</li>
+                <li class="breadcrumb-item active"> <i class="fa-solid fa-users text-success"></i> Familles</li> 
+                <li class="breadcrumb-item">
+                {% if 'ADD_FAMILLE' in request.session.userrights or peut_creer_famille  %} 
+                    <a  href="{% url 'add_famille' %}" title="Ajouter une famille" >
+                    <i class="fa-solid fa-plus text-success"></i>
+                    <span class="ms-1 d-inline d-lg-none d-xl-inline"> Ajouter une Famille</span>
+                    </a>
+                {% endif %}
+                </li>
             </ol>
         </div>
 

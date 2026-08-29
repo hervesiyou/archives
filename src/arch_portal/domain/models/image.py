@@ -20,13 +20,14 @@ class Image(models.Model):
         # Appeler la méthode save() du parent
         super().save(*args, **kwargs)
         # Ouvrir l'image avec Pillow
-        img = PILImage.open(self.fichier.path)
+        if( self.fichier ):
+            img = PILImage.open(self.fichier.path)
 
-        # Redimensionner l'image (par exemple, 800x800)
-        if img.height > 2800 or img.width > 2800:
-            output_size = (1024, 800)
-            img.thumbnail(output_size, PIL.Image.LANCZOS)
+            # Redimensionner l'image (par exemple, 800x800)
+            if img.height > 2800 or img.width > 2800:
+                output_size = (1024, 800)
+                img.thumbnail(output_size, PIL.Image.LANCZOS)
 
-        # Compresser l'image (qualité de 85%)
-        img.save(self.fichier.path, quality=85)
+            # Compresser l'image (qualité de 85%)
+            img.save(self.fichier.path, quality=85)
     

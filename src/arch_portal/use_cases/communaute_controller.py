@@ -210,7 +210,6 @@ def don_create(request, communaute_id):
 
                  # je met a jour le badge du membre
                 update_member_badges(user)
-
                 return redirect('don_list', communaute_id=communaute.id)
         else:
             # return redirect("login")
@@ -322,8 +321,7 @@ def add_abonnement(request):
                         return JsonResponse({'status': False ,"message": "Merci de vous connecter avant tout abonnement !"})
                     else:
                         user = Membre.objects.get(id=userid)
-                        plan = Plan.objects.get(code=data.get("code"))
-                        
+                        plan = Plan.objects.get(code=data.get("code"))                        
 
                         ab = Abonnement.objects.filter(plan=plan, membre=user)
                         # print(ab, plan, user)
@@ -415,13 +413,34 @@ def faq(request):
     return render(request, "archcore/faqcom.html", {} )
 
 def listcom(request):
+
+    membre = get_membre_from_session(request)
+    if not membre:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    # si par defaut il n'a pas encore crée sa famille gratuite
+    abo = membre.get_abonnement_actif()
+    coms = membre.communautes_creees.count()
+    peut_creer_communaute= False
+    if abo and abo.plan is not None:
+        peut_creer_communaute = ( int(coms) < int(abo.plan.nbcommunautes))    
+
     communautes = Communaute.objects.all()
-    return render(request, "archcore/listcom.html", { "communautes":communautes, })
+    return render(request, "archcore/listcom.html", { "communautes":communautes, "peut_creer_communaute": peut_creer_communaute ,"user_connecte":membre})
  
 def show_association(request,id):
     asso = Association.objects.get(id=id)
     galerie = Galerie.objects.filter(association=asso)
-    return render(request, "archcore/showassociation.html", {"association": asso, "galerie": galerie})
+
+    
+    membre = get_membre_from_session(request)
+    if not membre:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    
+    createur_ou_admin=False
+    if (asso.createur == membre or (membre in asso.administrateurs.all()) ):
+        createur_ou_admin = True
+    
+    return render(request, "archcore/showassociation.html", {"association": asso, "galerie": galerie, "gestionnaire": createur_ou_admin})
 
 def edit_association(request,id):
     association= get_object_or_404(Association, pk=id)
@@ -464,14 +483,38 @@ def listassociationsfam(request, id):
 
 def listmembresassociation(request, id): 
     com = Association.objects.get(id=id)
-    return render(request, "archcore/listmembresassociation.html", { "association": com})
+
+    membre = get_membre_from_session(request) 
+    if not membre:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    # 
+    abo = membre.get_abonnement_actif()
+    fam = membre.associations_creees.count()
+    peut_creer_asso = False
+    if abo and abo.plan is not None:
+        peut_creer_asso= ( int(fam) < int(abo.plan.nbassociations))
+
+    return render(request, "archcore/listmembresassociation.html",  { "association": com, "peut_creer_association": peut_creer_asso } )
 
 def listassociations(request, id, mode = 0):
     assos = Association.objects.filter(communaute=id)
     com = Communaute.objects.get(id=id)
+    
+    membre = get_membre_from_session(request) 
+    if not membre:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    # 
+    abo = membre.get_abonnement_actif()
+    fam = membre.associations_creees.count()
+    peut_creer_asso = False
+
+    if abo and abo.plan is not None:
+        peut_creer_asso = ( int(fam) < int(abo.plan.nbassociations))
+
     if not mode:
-        return render(request, "archcore/listassociations_tab.html", {"associations": assos, "communaute": com})
-    return render(request, "archcore/listassociations.html", {"associations": assos, "communaute": com})
+        return render(request, "archcore/listassociations_tab.html", {"associations": assos, "communaute": com , "peut_creer_association": peut_creer_asso})
+    
+    return render(request, "archcore/listassociations.html", {"associations": assos, "communaute": com, "peut_creer_association": peut_creer_asso})
 
 def add_association(request):
 
@@ -490,12 +533,12 @@ def add_association(request):
                 form.save_m2m()
                 # ajouter le créateur comme membre
                 user.associations.add(association)
+                user.associations_creees.add(association)
                 # ajouter le créateur comme admin
                 association.administrateurs.add(user)
 
-                # com = form.save() 
-                # com.save()
-                
+                user.save()
+                # com.save()                
                 return redirect("show_association", association.id )
         except PermissionDenied as e:
             form = AssociationForm(user=user)
@@ -569,10 +612,14 @@ def show_communaute(request, id):
         galerie = Galerie.objects.get(id=com.id)
     except Galerie.DoesNotExist:
         galerie = None
-        
-    appartient=False
-    if ( user in com.membres_communaute.all()):
-        appartient = True
+
+    est_createur=False
+    if (com.createur == user):
+        est_createur=True,
+    appartient=True
+    # JE DOIS VERIFIER QUE CELUI QUI N'A PAS LE DROIT DE VOIR UNE ASSOCIATION OU UN EVENDMENT D UNE COMMUNAUTE SOIT DESACTIVE ICI
+    # if ( user in com.membres_communaute.all()):
+    #     appartient = True
 
     return render(request, "archcore/show_com.html", 
         {
@@ -582,6 +629,7 @@ def show_communaute(request, id):
             'personnes_cles': com.personnescles_communaute.all().order_by('nom'),
             'lieux_cles': com.lieucles_communaute.all().order_by('nom'),
 
+            "est_createur":est_createur,
             'form_personne': form_personne,
             'form_lieu': form_lieu
         }
@@ -737,12 +785,14 @@ def add_communaute(request):
             image_form = ImageForm(request.POST, request.FILES)      
 
             # Validation complète
-            if (form.is_valid() and 
-                histoires_formset.is_valid() and 
-                rois_formset.is_valid() and 
-                personnes_formset.is_valid() and 
-                lieux_formset.is_valid() and
-                image_form.is_valid()
+            if (
+                form.is_valid()
+                #   and 
+                # histoires_formset.is_valid() and 
+                # rois_formset.is_valid() and 
+                # personnes_formset.is_valid() and 
+                # lieux_formset.is_valid() and
+                # image_form.is_valid()
             ) :
 
                 # Sauvegarde principale d'abord → on obtient un ID !
@@ -758,13 +808,21 @@ def add_communaute(request):
                 histoires_formset.save()
                 rois_formset.save()
 
-                # sauvegarde de l'image de la communauté et ajout de l'actuel ccreateur comme administrateur
+                # sauvegarde de l'image de la communauté et ajout de l'actuel ccreateur comme administrateur et je l'ajoute comme membre de la communaute
                 membre = get_membre_from_session(request)
                 com.administrateurs.add(membre)  # Ajouter le créateur comme admin
+                com.membres_communaute.add(membre)
+                # com.createur = membre
+                membre.communautes.add(com)  # Ajouter la communauté à ce membre dans cette communauté
+
                 image = image_form.save(commit=False)
                 com.image =  image
-                image.save()
+
+                # si on a chargé l'image de la communauté
+                if image is not None :
+                    image.save()
                 com.save()
+                membre.save()
 
                 personnes_formset.save()
                 lieux_formset.save()
@@ -773,13 +831,14 @@ def add_communaute(request):
                 return redirect("show_communaute", com.id)
 
             else:            
-                messages.error(request, "Erreur lors de la création. Vérifiez les champs.")
+                messages.error(request, f"Erreur lors de la création. Vérifiez les champs. {form.errors}")
+                return redirect('add_communaute')   
 
         except PermissionDenied as e:
             # messages.error(request, str(e))
             # form = AssociationForm(user=user)
             messages.error(request, f"Vous n'avez pas les droits nécessaires {str(e)} ")
-            # return redirect('upgrade_abonnement')   
+            return redirect('add_communaute')   
 
     else:
         # GET : formulaires vides
@@ -790,18 +849,18 @@ def add_communaute(request):
         lieux_formset     = LieuFormSet(instance=Communaute(), prefix='lieux')
         image_form = ImageForm()
 
-    context = {
-        'form': form,
-        'histoires_formset': histoires_formset,
-        'rois_formset': rois_formset,
-        'personnes_formset': personnes_formset,
-        'lieux_formset': lieux_formset,
-        'image_form': image_form,
-        'titre': "Créer une nouvelle communauté",
-        'action': "Créer",
-    }
+        context = {
+            'form': form,
+            'histoires_formset': histoires_formset,
+            'rois_formset': rois_formset,
+            'personnes_formset': personnes_formset,
+            'lieux_formset': lieux_formset,
+            'image_form': image_form,
+            'titre': "Créer une nouvelle communauté",
+            'action': "Créer",
+        }
 
-    return render(request, "archcore/new_communaute.html", context)
+        return render(request, "archcore/new_communaute.html", context)
 
 def add_communaute0(request):
 

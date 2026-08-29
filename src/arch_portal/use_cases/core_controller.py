@@ -21,6 +21,8 @@ from arch_portal.domain.models.salleattentecommunaute import SalleAttenteCommuna
 from arch_portal.domain.models.salleattenteassociation import SalleAttenteAssociation
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from arch_portal.use_cases.services.subscription_service import get_membre_from_session
+
 import json
 from arch_portal.use_cases.services.core import send_email
 from django.http import HttpResponseForbidden, JsonResponse
@@ -28,7 +30,7 @@ from datetime import date, datetime
 from django.contrib import messages
 from arch_portal.use_cases.services.core import generate_token, send_invitation_adminfamille_mail
 from arch_portal.use_cases.services.facture_service import generer_facture_pdf, envoyer_facture_email
-
+from django.urls import reverse
 from decimal import Decimal
 from django.db import transaction
 from django.db.transaction import on_commit
@@ -81,7 +83,7 @@ def souscrire_abonnement(request):
             membre = Membre.objects.get(id=membre)
         except Membre.DoesNotExist:
             # raise MembreException(f"Membre avec id {membre} introuvable.")
-            response["message"] = f"Membre avec id {membre} introuvable."
+            response["message"] = f"Membre avec  {membre} introuvable."
             response["status"] = False
             return JsonResponse(response)
         
@@ -108,12 +110,17 @@ def souscrire_abonnement(request):
             prix = 19000  
             p = Plan.objects.create(
                 nom = f"PL-{type}-{plan}-{membre.login}",
-                nbcommunautes = 3,
+                nbcommunautes = 1,
                 nbadministrateurs = 5,
-                nbfamilles = 30,
+                nbfamilles = 10,
                 nblivres = 0,
-                nbcagnotes =3,
+                nbcagnotes = 3,
                 nblibrairies = 0,
+
+                nbassociations = 1,
+                nbprojets = 1,
+                nbevenements = 1,
+
                 prix = prix
             ) 
             
@@ -121,12 +128,17 @@ def souscrire_abonnement(request):
             prix = 29000
             p = Plan.objects.create(
                 nom = f"PL-{type}-{plan}-{membre.login}",
-                nbcommunautes = 5,
+                nbcommunautes = 2,
                 nbadministrateurs = 10,
-                nbfamilles = 60,
+                nbfamilles = 20,
                 nblivres = 0,
-                nbcagnotes =5,
+                nbcagnotes = 6,
                 nblibrairies = 0,
+
+                nbassociations=5,
+                nbprojets = 3,
+                nbevenements = 5,
+
                 prix = prix
             ) 
             
@@ -134,12 +146,17 @@ def souscrire_abonnement(request):
             prix = 50000
             p = Plan.objects.create(
                 nom = f"PL-{type}-{plan}-{membre.login}",
-                nbcommunautes = 8,
+                nbcommunautes = 5,
                 nbadministrateurs = 15,
-                nbfamilles = 150,
+                nbfamilles = 50,
                 nblivres = 0,
-                nbcagnotes =8,
+                nbcagnotes = 10,
                 nblibrairies = 0,
+
+                nbassociations=10,
+                nbprojets = 10,
+                nbevenements = 10,
+
                 prix = prix
             )
              
@@ -355,43 +372,50 @@ def contact(request):
     # return render(request, "includes/contact.html" )
 
 def show_com_salle(request,id):
-    if(request.session["userid"]!=None):
-        user = Membre.objects.get(id=request.session["userid"])
-        if(user != None):
-            com = Communaute.objects.get(id=id)
+    user = get_membre_from_session(request)
+# if(request.session["userid"]!=None):
+    # user = Membre.objects.get(id=request.session["userid"])
+    if(user != None):
+        com = Communaute.objects.get(id=id)
 
-            users = SalleAttenteCommunaute.objects.filter(communaute=com)
-            return render(request, "usercore/salleattentecom.html", { "communaute": com, "users":users})
-        else:
-            raise MembreException( f" Membre {request.session['userid']} introuvable ")  
+        users = SalleAttenteCommunaute.objects.filter(communaute=com)
+        return render(request, "usercore/salleattentecom.html", { "communaute": com, "users":users,"user":user})
     else:
-        return redirect("login")
+        # raise MembreException( f" Membre {request.session['userid']} introuvable ")  
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    # else:
+        # return redirect("login")
 
 def show_fam_salle(request,id):
-    if(request.session["userid"]!=None):
-        user = Membre.objects.get(id=request.session["userid"])
-        if(user != None):
-            com = Famille.objects.get(id=id)
+    user = get_membre_from_session(request)
+    # if(request.session["userid"]!=None):
+    # user = Membre.objects.get(id=request.session["userid"])
+    if(user != None):
+        com = Famille.objects.get(id=id)
 
-            users = SalleAttenteFamille.objects.filter(famille=com)
-            return render(request, "usercore/salleattentefam.html", { "famille": com, "users":users})
-        else:
-            raise MembreException( f" Membre {request.session['userid']} introuvable ")  
+        users = SalleAttenteFamille.objects.filter(famille=com)
+        return render(request, "usercore/salleattentefam.html", { "famille": com, "users":users, "user":user})
     else:
-        return redirect("login")
+        # raise MembreException( f" Membre {request.session['userid']} introuvable ")  
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    # else:
+        # return redirect("login")
 
 def show_asso_salle(request,id):
-    if(request.session["userid"]!=None):
-        user = Membre.objects.get(id=request.session["userid"])
-        if(user != None):
-            com = Association.objects.get(id=id)
+    user = get_membre_from_session(request)
 
-            users = SalleAttenteAssociation.objects.filter(association=com)
-            return render(request, "usercore/salleattenteasso.html", { "association": com, "users":users})
-        else:
-            raise MembreException( f" Membre {request.session['userid']} introuvable ")  
+    # if(request.session["userid"]!=None):
+    user = Membre.objects.get(id=request.session["userid"])
+    if(user != None):
+        com = Association.objects.get(id=id)
+
+        users = SalleAttenteAssociation.objects.filter(association=com)
+        return render(request, "usercore/salleattenteasso.html", { "association": com, "users":users, "user":user})
     else:
-        return redirect("login")
+        # raise MembreException( f" Membre {request.session['userid']} introuvable ") 
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}") 
+# else:
+        # return redirect("login")
 
 def admin_accept_invitation(request,token):
     

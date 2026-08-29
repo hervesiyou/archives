@@ -3,7 +3,7 @@
 {% block title %} {{ request.session.nomcomplet }} {% endblock %}
 {% block body %}
  
-<div class="row mt-5"> 
+<div class="row mt-5 p-3 shadow "> 
         {% if familles %}
             <div class="col-lg-8">
             <h3 class="text-success"> Mes familles </h3>
@@ -49,9 +49,8 @@
                             {% for com in adfamilles %}
                                 <tr>
                                     <td>
-                                        <a href="{% url 'show_famille' com.id %}" class="text-center">  {{com.nom}}  </a>
-                                   
-                                      {% if not  com.publique %} <span class="badge bg-danger"> privée</span>{% endif %} 
+                                        <a href="{% url 'show_famille' com.id %}" class="text-center">  {{com.nom}}  </a>                                   
+                                        {% if not  com.publique %} <span class="badge bg-danger"> privée</span>{% endif %} 
                                     </td>
                                     <td>{{com.description}}
                                     <br/>

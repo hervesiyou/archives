@@ -19,7 +19,7 @@ class Wallet(models.Model):
     bankno = models.CharField( max_length=255, null=True,  blank=True  )
 
     def __str__(self):
-        return f"{self.code} {self.solde}"
+        return f"{self.code} {self.solde} -- {self.membre.nomcomplet}"
 
     def save(self, *args, **kwargs):
         if not self.code:

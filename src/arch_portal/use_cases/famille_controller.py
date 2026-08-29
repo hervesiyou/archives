@@ -11,6 +11,7 @@ from arch_portal.domain.models.role import Role
 from arch_portal.domain.models.membre import Membre
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.urls import reverse
 from django.http import HttpResponseForbidden, JsonResponse 
 from collections import defaultdict
 from django.contrib import messages
@@ -271,8 +272,7 @@ def famille_arbre(request, famille_id):
             "niveaux": niveaux,
         }
         return render(request, "famille/famille_arbre.html", context)
-    
-      
+   
 
 def famille_arbre_graphique(request, famille_id):
 
@@ -288,21 +288,21 @@ def famille_arbre_graphique(request, famille_id):
 def listfamilles(request, id, mode=0):
    
     familles = Famille.objects.filter(communaute=id)
-    lib = Communaute.objects.get(id=id) 
-
-    # userid = request.session.get("userid","")
-    # if not userid :
-    #     # print(f" user id { userid } ")
-    #     return redirect("login" )
-
-    # user = Membre.objects.get(id=userid)
-    # appartient=False
-    # if ( user in com.membres_communaute.all()):
-    #     appartient = True
+    lib = Communaute.objects.get(id=id)
+    
+    membre = get_membre_from_session(request) 
+    if not membre:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    # si par defaut il n'a pas encore crée sa famille gratuite
+    abo = membre.get_abonnement_actif()
+    fam = membre.familles_creees.count()
+    peut_creer_famille= False
+    if abo and abo.plan is not None:
+        peut_creer_famille= ( int(fam) < int(abo.plan.nbfamilles))
 
     if not mode: 
-        return render(request, "archcore/listfamilles_tab.html", { "familles" : familles, "communaute" : lib } )
-    return render(request, "archcore/listfamilles.html", { "familles" : familles, "communaute" : lib } )
+        return render(request, "archcore/listfamilles_tab.html", { "familles" : familles, "communaute" : lib , "peut_creer_famille":peut_creer_famille } )
+    return render(request, "archcore/listfamilles.html", { "familles" : familles, "communaute" : lib , "peut_creer_famille":peut_creer_famille } )
 
 def show_famille(request,id):
     fam = Famille.objects.get(id=id)
@@ -318,12 +318,16 @@ def show_famille(request,id):
     appartient=False
     if ( user in fam.membres_famille.all()):
         appartient = True
+
+    #  je check si c'est le createur ou un admin 
+    gestionnaire=False
+    if fam.createur == user or (user in fam.administrateurs.all()):
+        gestionnaire = True
     
-    return render(request, "archcore/showfamille.html", {"famille" : fam, "appartient" : appartient, "galerie" : galerie} )
+    return render(request, "archcore/showfamille.html", {"famille" : fam, "appartient" : appartient, "galerie" : galerie, "gestionnaire":gestionnaire } )
 
 
-def show_admin_fam(request,id):
-    
+def show_admin_fam(request,id):    
     com = Famille.objects.get(id=id) 
     return render(request, "archcore/listadminfam.html", {"admins": com.administrateurs.all(), "famille": com})
 
@@ -364,30 +368,30 @@ def add_admin_fam(request):
 def add_famille(request):
     # celui qui cree une famille est son administrateur par defaut        
     if request.method == "POST":
-
         try:
-
             check_abonnement_permission(request, 'famille')
 
             form = FamilleForm(request.POST)
             if form.is_valid():  
-
                 if not request.session.get("userid","") :
                     return redirect("login" )
 
                 com = form.save() 
-
                 userid = request.session.get("userid","")
                 user = Membre.objects.get(id=userid)
                 com.administrateurs.add(user)
-                # print(user.get_rights())
+                #  je le met comme createur de la famille
+                com.createur = user
+                # je met cet utilisateur comme membre de cette famille
+                user.familles.add(com)
+                user.save()
                 com.save()
 
                 return redirect("show_famille",com.id )
         except PermissionDenied as e:
                 messages.error(request, str(e))
-                # return redirect("show_librarie",{})
+                return redirect("add_famille")
     else:
         form = FamilleForm()
 
-    return render(request, "archcore/new_famille.html", { "form":form  })
+        return render(request, "archcore/new_famille.html", { "form":form  })

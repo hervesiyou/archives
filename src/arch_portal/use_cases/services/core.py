@@ -3,6 +3,8 @@ import time
 import hashlib
 from django.core.mail import send_mail 
 import re
+import uuid
+from django.utils.text import slugify
 import unicodedata
 from django.conf import settings
 from arch_portal.domain.models.famille import Famille
@@ -158,6 +160,12 @@ def send_invitation_adminfamille_mail(email, token, nomfamille,emnom, nom,messag
 
 def generate_code(string):
     return "".join( random.sample(string,len(string)//2) )+str(int(time.time())).replace(" ","-")
+
+def generate_code_membre_abo(nom, plan):
+    nom = slugify(nom)
+    plan = slugify(plan)
+    unique = uuid.uuid4().hex[:4].upper()
+    return f"{nom}{plan}-{unique}"
 
 def generate_token(string):
     return "".join( random.sample(string,len(string)) )+str(int(time.time()))

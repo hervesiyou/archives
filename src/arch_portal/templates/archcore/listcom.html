@@ -11,6 +11,13 @@
 
                 <div class="card-body">
                     <h3 class="card-title my-4">  Nos Communautés   </h3>
+                    
+                    {% if 'ADD_COMMUNAUTE' in request.session.userrights or peut_creer_communaute  %} 
+                        <a class=" my-3 btn btn-outline-warning"  href="{% url 'add_communaute' %}" title="Ajouter une Communauté" >
+                        <i class="fa-solid fa-plus text-success"></i>
+                        <span class="ms-1 d-inline d-lg-none d-xl-inline"> Ajouter une Communauté</span>
+                        </a>
+                    {% endif %}
                     {% comment %} {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
                             <a href="{% url 'add_communaute' %}" class="btn btn-success btn-xs"> Nouvelle Communaté </a>
                     {% endif %} {% endcomment %}
@@ -44,9 +51,7 @@
                                                 alt="{{ com.nom}}" 
                                                 style="height: 220px; object-fit: cover;">
                                         </div>                            
-                                    {% endif %}
-
-                                    
+                                    {% endif %}                                    
 
                                     <div class="card-body d-flex flex-column">
                                         <h5 class="card-title fw-bold mb-3">{{ com.nom}}</h5>
@@ -57,9 +62,24 @@
                                             </a>
                                         </p>                                       
                                         <div class="mt-auto">
-                                            <a href="{% url 'show_communaute' com.id %}" class="btn btn-primary w-100">
-                                            Découvrir la communauté →
-                                            </a>
+                                    
+                                            {% if not com.publique %}
+                                            
+                                                {% if com.createur == user_connecte %}
+                                                    <a href="{% url 'show_communaute' com.id %}" class="btn btn-outline-success w-100">
+                                                    Découvrir la communauté →
+                                                    </a>
+                                                {% else %}
+                                                    <a href="#" data-com="{{com.id}}" data-user="{{request.session.userid}}" class="btn btn-outline-danger w-100 partComID"> Je souhaite être {{ com.nom }}</a>
+                                                {% endif %}
+
+                                            {% else %}
+                                                
+                                                    <a href="{% url 'show_communaute' com.id %}" class="btn btn-primary w-100">
+                                                    Découvrir la communauté →
+                                                    </a>
+                                                    
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>

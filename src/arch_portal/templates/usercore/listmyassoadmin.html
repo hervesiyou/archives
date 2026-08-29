@@ -53,7 +53,8 @@
                                    
                                         {% if not  com.publique %} <span class="badge bg-danger"> privée</span> {% endif %} 
                                     </td>
-                                    <td>{{com.description}}
+                                    <td>
+                                    {% comment %} {{com.description}} {% endcomment %}
                                     <br/>
                                     {{com.adhesion}}  - {{com.type}} </td>
                                     <td>

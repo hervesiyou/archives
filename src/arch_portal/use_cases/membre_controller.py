@@ -1,17 +1,20 @@
 from datetime import date
 import json
+from webbrowser import get
 
 # from django.core.serializers import serialize
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
 from arch_portal.domain.models.abonnement import Abonnement
+from arch_portal.domain.models.plantarifaire import Plan
 from arch_portal.domain.models.wallet import Wallet
 from arch_portal.domain.exceptions.membre_exception import MembreException
 from arch_portal.use_cases.services.core import compute_sha1
 from arch_portal.domain.forms.membre import MembreForm,UsersLoginForm,UsersSubscribeForm
 from arch_portal.domain.models.membre import Membre
 from arch_portal.domain.models.histoire import MiniHistoire
+from arch_portal.use_cases.services.subscription_service import get_membre_from_session
 from arch_portal.use_cases.services.core import generate_token, send_email_inscription, send_email_information_nouveau_inscrit
 from arch_portal.domain.models.image import Image
 from django.http import  JsonResponse, request
@@ -50,6 +53,7 @@ def subscribe(request):
                 membre=user ,
                 debut=date.today(),
                 plan_appli="FREE",
+                plan=Plan.plan_default(),
                 prix=0,
                 is_active=True,
                 duree=365
@@ -180,16 +184,20 @@ def show_user_home(request):
         return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
 def show_user_famadmin(request):
-    if(request.session["userid"]!=None):
-        user=Membre.objects.get(id=request.session["userid"])
-        if(user != None):
-            adfamilles = user.familles.all()
-            fams = user.fam_admins.all()
-            return render(request, "usercore/listmyfamadmin.html", {"user":user, "familles":fams, "adfamilles": adfamilles})
-        else:
-            raise MembreException( f" Membre {request.session['userid']} introuvable ")  
+    user = get_membre_from_session(request)
+    # if(request.session["userid"] != None):
+    # user = Membre.objects.get(id=request.session["userid"])
+    if(user != None):
+        #  les familles que j'ai cree et celle que j'administre
+        adfamilles = user.familles_creees.union(user.fam_admins.all())
+        # les familles dans lesquelles je suis membre
+        fams = user.familles.all()
+        return render(request, "usercore/listmyfamadmin.html", {"user":user, "familles":fams, "adfamilles": adfamilles})
     else:
+        # raise MembreException( f" Membre {request.session['userid']} introuvable ")  
         return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    # else:
+        # return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
 def show_user_comadmin(request):
     if(request.session["userid"]!=None):

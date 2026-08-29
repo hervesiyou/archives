@@ -15,7 +15,7 @@ class Association(models.Model):
     adhesion = models.TextField( blank=True)
     contact = models.TextField( blank=True)
 
-    createur = models.ForeignKey("Membre", on_delete=models.SET_NULL,blank=True, null=True, related_name="associations_cree")
+    createur = models.ForeignKey("Membre", on_delete=models.SET_NULL,blank=True, null=True, related_name="associations_creees")
 
     famille = models.ForeignKey("Famille", on_delete=models.SET_NULL,blank=True, null=True)
     communaute = models.ForeignKey("Communaute", on_delete=models.SET_NULL,blank=True, null=True)

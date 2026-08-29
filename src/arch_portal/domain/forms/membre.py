@@ -31,7 +31,12 @@ class MembreForm(forms.ModelForm):
                 'cols': 50,
                 'class': 'form-control',
                 'placeholder': 'Décrivez le membre...'
+            }),
+            "datenaissance":forms.DateInput(attrs={
+                "type":"date",
+                "class":"form-control",
             })
+             
         }
 
         labels = {
@@ -169,7 +174,12 @@ class UsersSubscribeForm(forms.ModelForm):
             "datenaissance":forms.DateInput(attrs={
                 "type":"date",
                 "class":"form-control",
+            }) ,           
+            "datenaissance":forms.DateInput(attrs={
+                "type":"date",
+                "class":"form-control",
             })
+                
         }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)        

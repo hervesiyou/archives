@@ -170,9 +170,11 @@
         
                                 {%  if communaute.image %}
                                     {% with first_image=communaute.image %}
+                                    {% comment %} {% if first_image.fichier is not None %} {% endcomment %}
                                         <div class="my-2 text-center">
                                             <img src="{{ first_image.fichier.url }}"  style="width: 100%; max-height: 400px;" alt="{{ communaute.description|default:'Couverture de la communauté' }}">
                                         </div>
+                                    {% comment %} {% endif %} {% endcomment %}
                                     {% endwith %}
                                 {% else %}
                                     <div class="my-4">
@@ -318,7 +320,7 @@
                                                 <span class="badge bg-white text-dark">{{ communaute.administrateurs.all|length }}</span> Administrateurs
                                             </h6>
                                             <div >
-                                                {% if  'ADD_COMMUNAUTE_ADMIN' in request.session.userrights %}
+                                                {% if  'ADD_COMMUNAUTE_ADMIN' in request.session.userrights or est_createur  %}
                                                 <a href="{% url 'show_admin_com' communaute.id %}" 
                                                     class=" btn btn-outline-success text-success my-3"
                                                     title="Voir les Administrateurs  de {{communaute.nom}}"
@@ -328,7 +330,7 @@
                                                 {% endif %}
                                             </div>
                                             <small class="font-light"> 
-                                            {% if  'ADD_COMMUNAUTE_ADMIN' in request.session.userrights %}
+                                            {% if  'ADD_COMMUNAUTE_ADMIN' in request.session.userrights or est_createur %}
                                                 <div class=" ">
                                                     <a class=" btn btn-outline-danger text-white" 
                                                         title=" Ajouter un Administrateur à cette communauté"
@@ -528,7 +530,7 @@
             </div>
         </div>
 
-        {% if  'ADD_COMMUNAUTE_ADMIN' in request.session.userrights %} 
+        {% if  'ADD_COMMUNAUTE_ADMIN' in request.session.userrights or est_createur %} 
 
             <div class="modal fade" id="adminModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
@@ -544,7 +546,8 @@
                             <h3 class=""> Choisir l'administrateur</h3><br/>
                             <select name="admin" class="form-control">
                                 <option value="">--------</option>
-                                {% for membre in communaute.membre_set.all %}
+                                {% for membre in communaute.membres_communaute.all %}
+                                {% comment %} {% for membre in communaute.membre_set.all %} {% endcomment %}
                                     <option value="{{membre.id}}">{{membre.nomcomplet}}</option>
                                 {% endfor %}
                             </select> 

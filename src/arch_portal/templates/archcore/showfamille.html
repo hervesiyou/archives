@@ -164,8 +164,8 @@
                     <h5 class="mb-1 text-info">Famille Mère</h5>
                 {% endif %}
                 <small>{{ famille.administrateurs.all|length }} administrateur{{ famille.administrateurs.all|length|pluralize }}</small>
-
-                {% if 'ADD_FAMILLE_ADMIN' in request.session.userrights %}
+{% comment %} {{fam.createur}} {{ gestionnaire}} {% endcomment %}
+                {% if 'ADD_FAMILLE_ADMIN' in request.session.userrights or gestionnaire %}
                     <div class="mt-3">
                         <a href="{% url 'show_admin_fam' famille.id %}" class="btn btn-sm btn-outline-success me-2">
                             <i class="fas fa-user-check"></i> Administrateurs

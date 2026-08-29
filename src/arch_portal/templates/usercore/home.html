@@ -6,15 +6,12 @@
     
     <div class="row m-3">
         <a href="{% url 'commandes_livres' %}" class="badge bg-info col-lg-2 col-5 m-1"> <i class="fas fa-book"></i> Livres commandés</a>
-        {% if  'ADD_COMMUNAUTE' in request.session.userrights %} 
             <a href="{% url 'home_comadmin' %}" class="badge bg-success col-lg-2 col-5 m-1"> <i class="fas fa-users"></i> Mes communautés </a>
-        {% endif %}
-         {% if  'ADD_FAMILLE' in request.session.userrights %} 
+        {% comment %} {% if  'ADD_COMMUNAUTE' in request.session.userrights %}    {% endif %} {% endcomment %}
             <a href="{% url 'home_famadmin' %}" class="badge bg-warning col-lg-2 col-5 m-1"> <i class="fas fa-home"></i>   Mes familles </a>
-        {% endif %}
-         {% if  'ADD_ASSOCIATION' in request.session.userrights %} 
+         {% comment %} {% if  'ADD_FAMILLE' in request.session.userrights %}       {% endif %} {% endcomment %}
             <a href="{% url 'home_assoadmin' %}" class="badge bg-primary col-lg-2 col-5 m-1"> <i class="fas fa-building"></i> Mes associations </a>
-        {% endif %}
+         {% comment %} {% if  'ADD_ASSOCIATION' in request.session.userrights %}     {% endif %} {% endcomment %}
         <a href="{% url 'home_messageadmin' %}" class="badge bg-info col-lg-2 col-5 m-1"> <i class="fas fa-envelope"></i> Mes messages </a>
         <a href="{% url 'home_abonnement' %}" class="badge bg-success col-lg-2 col-5 m-1"> <i class="fas fa-receipt"></i> Recharger mon compte </a>
         <a href="{% url 'historique_paiements' %}" class="badge bg-info col-lg-2 col-5 m-1"> <i class="fas fa-history"></i> Historique des paiements </a>

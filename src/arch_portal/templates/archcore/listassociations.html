@@ -105,6 +105,14 @@
                 <li class="breadcrumb-item"><a href="{% url 'listcom' %}">Communautés</a></li>
                 <li class="breadcrumb-item"><a href="{% url 'show_communaute' communaute.id %}">{{ communaute.nom }}</a></li>
                 <li class="breadcrumb-item active">Associations</li>
+                <li class="breadcrumb-item ">
+                {% if 'ADD_ASSOCIATION' in request.session.userrights or peut_creer_association %}
+                <a class=" py-1 px-2" href="{% url 'add_association' %}">
+                    <i class="fa-solid fa-plus text-success"></i>
+                    <span class="ms-1 d-inline d-lg-none d-xl-inline">Association</span>
+                </a>
+                {% endif %}
+                </li>
             </ol>
         </div>
 
@@ -145,6 +153,7 @@
 
                     <div class="asso-body d-flex flex-column">
                         <div class="asso-desc flex-grow-1">
+                         {% comment %} {{asso|appartient:request.session.userid}},{{ asso.publique }} {% endcomment %}
                             {% if asso.publique or asso|appartient:request.session.userid or 'VOIR_ASSOCIATION' in request.session.userrights %}
                                 <a href="{% url 'show_association' asso.id %}" class="text-dark text-decoration-none">
                                     {{ asso.description|truncatechars:160 }}
@@ -153,6 +162,7 @@
                                 {{ asso.description|truncatechars:160 }}
                             {% endif %}
                         </div>
+                        {% comment %} {{ request.session.userrights }}, {% endcomment %}
 
                         {% if asso.publique or asso|appartient:request.session.userid or 'VOIR_ASSOCIATION' in request.session.userrights %}
                             <a href="{% url 'show_association' asso.id %}" 
