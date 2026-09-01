@@ -1,6 +1,7 @@
 
 from django.shortcuts import redirect, render, get_object_or_404
 from arch_portal.domain.forms.famille import FamilleForm
+from arch_portal.domain.forms.membre import MembreFamilleForm
 from arch_portal.domain.forms.image import ImageForm
 from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.galerie import Galerie
@@ -9,6 +10,8 @@ from arch_portal.domain.models.famille import Famille
 from arch_portal.domain.models.pagefamille import Pagefamille
 from arch_portal.domain.models.role import Role
 from arch_portal.domain.models.membre import Membre
+from arch_portal.domain.models.image import Image
+
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.urls import reverse
@@ -60,7 +63,9 @@ def add_page(request, id):
 def edit_famille(request, id):
     
     if not request.session.get("userid","") :
-        return redirect("login" )
+        # return redirect("login" )
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    
     
     user = request.session['userid']
     user = get_object_or_404(Membre, pk=user)
@@ -316,11 +321,12 @@ def show_famille(request,id):
 
     galerie = Galerie.objects.filter(famille=fam).first()
     appartient=False
-    if ( user in fam.membres_famille.all()):
+    # j'appartient si je suis membre ou administrateur ou createur
+    if ( user in fam.membres_famille.all() or user in fam.administrateurs.all() or user == fam.createur ):
         appartient = True
 
     #  je check si c'est le createur ou un admin 
-    gestionnaire=False
+    gestionnaire = False
     if fam.createur == user or (user in fam.administrateurs.all()):
         gestionnaire = True
     
@@ -330,6 +336,52 @@ def show_famille(request,id):
 def show_admin_fam(request,id):    
     com = Famille.objects.get(id=id) 
     return render(request, "archcore/listadminfam.html", {"admins": com.administrateurs.all(), "famille": com})
+
+def add_membre_famille(request,idfam):
+
+    membre = get_membre_from_session(request)
+    if not membre:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    
+    famille = get_object_or_404(Famille, pk=idfam)    
+
+    if famille is None:
+        messages.success(request, "Probleme sur cette famille")
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+
+    if request.method == "POST":
+        form = MembreFamilleForm(request.POST, request.FILES)
+        # print(form.errors)
+        if form.is_valid():  
+            com = form.save(commit=False) 
+
+            if form.cleaned_data.get("delete_photo"):
+                if com.photo:
+                    com.photo.delete()
+                com.photo = None
+
+            # sauvegarde de la photo
+            if 'fichier_image' in request.FILES:
+                image = Image.objects.create(fichier=request.FILES["fichier_image"])
+                com.photo = image
+
+            com.save()
+            # j'initialise sa communauté, sa famille et son association
+            com.familles.add(famille)
+            com.communautes.add(famille.communaute)
+            # com.associations.add(famille.communaute.associations_communautaire)
+
+            # form.save_m2m() 
+            messages.success(request, "✅ Membre ajouté avec succès")
+            return redirect("show_famille",famille.id )
+        
+        else:
+            messages.error(request, f"❌ Veuillez corriger les erreurs {form.errors} du formulaire.")
+    else:
+        form = MembreFamilleForm(famille_id=famille.id)
+
+    return render(request, "famille/newmembrefamille.html", {"form":form, "famille":famille })
+
 
 
 @csrf_exempt

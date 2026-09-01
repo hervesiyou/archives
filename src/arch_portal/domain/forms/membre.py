@@ -92,6 +92,105 @@ class MembreForm(forms.ModelForm):
             ),
         )
 
+class MembreFamilleForm(forms.ModelForm):
+   
+    pwd = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Mot de passe'}),
+        label="Mot de passe"
+    )
+    fichier_image = forms.ImageField(
+        required=False,
+        label="Photo de profil",
+        widget=forms.FileInput(attrs={
+            'class':'form-control',
+            "accept":'image/*'
+        }),
+        
+    )
+    class Meta:
+        model = Membre
+        exclude = ["familles", "communautes","associations", "etatvalidation","dateinscription","approbateurs","galeries", "token" ]
+        
+        widgets = {
+            'description': forms.Textarea(attrs={
+                'rows': 4,
+                'cols': 50,
+                'class': 'form-control',
+                'placeholder': 'Décrivez le membre...'
+            }),
+            "datenaissance":forms.DateInput(attrs={
+                "type":"date",
+                "class":"form-control",
+            })
+             
+        }
+
+        labels = {
+            "login":"Login ou Pseudonyme",
+        }
+    
+    def __init__(self, *args, **kwargs):
+        self.famille_id = kwargs.pop("famille_id",None)
+        super().__init__(*args, **kwargs)
+
+        if self.famille_id:
+        
+            membres = Membre.objects.filter( familles__id = self.famille_id).distinct()
+            self.fields["nompere"].queryset = membres
+            self.fields["nommere"].queryset = membres
+        else :
+            
+            self.fields["nompere"].queryset = Membre.objects.none()
+            self.fields["nommere"].queryset = Membre.objects.none()
+
+        
+        self.helper = FormHelper()
+        self.helper.form_tag = False 
+        self.helper.layout = Layout(
+            Row(
+                Column('nomcomplet', css_class='col-md-8'),
+                Column('generation', css_class='col-md-4'),
+                
+                Column('fichier_image', css_class='col-md-12'), 
+                Column('description', css_class='col-md-12'),
+                Column('login', css_class='col-md-6'),
+                Column(
+                    Field('pwd', type='password', css_class='form-control'),
+                    css_class='col-md-6',
+                ),
+                # Column('pwd', css_class='col-md-6'),
+
+                Column('email', css_class='col-md-6'),
+                Column('telephone', css_class='col-md-6'),
+                Column('type', css_class='col-md-2'), 
+                Column('sexe', css_class='col-md-2'), 
+                Column('etatcivil', css_class='col-md-2'), 
+                Column('nbenfant', css_class='col-md-2'), 
+                Column('vivant', css_class='col-md-2'), 
+                Column('datedeces', css_class='col-md-2'), 
+                Column('datenaissance', css_class='col-md-3'), 
+                Column('lieunaissance', css_class='col-md-3'), 
+                Column('residence', css_class='col-md-3'), 
+                Column('notabilite', css_class='col-md-3'), 
+                css_class='row'
+            ),
+            Row(
+                Column('education', css_class='col-md-3'), 
+                Column('diplomes', css_class='col-md-3'), 
+                Column('profession', css_class='col-md-6'), 
+                # Column('associations', css_class='col-md-3'), 
+                # Column('familles', css_class='col-md-8'), 
+                # Column('communautes', css_class='col-md-4'), 
+                Column('pere', css_class='col-md-3'), 
+                Column('mere', css_class='col-md-3'), 
+                Column('nompere', css_class='col-md-3'), 
+                Column('nommere', css_class='col-md-3'), 
+                
+                css_class='row'
+            ),
+        )
+
+
 class MembreEditForm(forms.ModelForm):
 
     fichier_image = forms.ImageField(

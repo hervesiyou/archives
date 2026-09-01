@@ -5,6 +5,9 @@ from arch_portal.domain.models.CONST_DATA import SEX_CHOICES, ETATCIVIL_CHOICES,
 from .famille import Famille
 from .association import Association
 from .image import Image
+import uuid
+import secrets
+import string
 from .galerie import Galerie
 from .role import Role
 from .message import Message
@@ -63,8 +66,23 @@ class Membre(models.Model):
 
     role = models.ManyToManyField(  Role, null=True, blank=True )
     badges = models.ManyToManyField(  Badge, blank=True,  related_name="membres")
+
+    code_unique = models.CharField(
+        max_length=40,
+        # unique=True,
+        editable=False,
+        db_index=True,
+        blank=True,
+        null=True
+    )
        
     def save(self, *args, **kwargs): 
+
+        if not self.code_unique:
+            code = self._generer_code_unique()
+            while Membre.objects.filter(code_unique=code).exists():
+                code = self._generer_code_unique()
+            self.code_unique = code
 
         # self.pwd = compute_sha1(self.pwd)  # Hash the password before saving
         if self.pere != None and self.mere != None:
@@ -74,6 +92,42 @@ class Membre(models.Model):
                     raise ValueError("Merci de fournir les parents de ce membre")
 
         super().save(*args, **kwargs)
+
+
+    def _generer_code_unique(self):
+        """
+        Génère un code humainement lisible tout en garantissantune très forte unicité.
+        Format :INITIALS-ANNEE-SEXE-SUFFIXE
+        Exemple :  JD-1990-M-A7K92P4X
+        """
+
+        nom = (self.nomcomplet or "").strip()
+        morceaux = nom.split()
+        if len(morceaux) >= 2:
+            initiales = (  morceaux[0][0] +  morceaux[-1][0]  ).upper()
+
+        elif len(morceaux) == 1:
+            initiales = morceaux[0][:2].upper()
+        else:
+            initiales = "MB"
+
+        annee = "0000"
+
+        if self.datenaissance:
+            valeur = str(self.datenaissance).strip()
+            # Recherche d'une année dans la date
+            import re
+            match = re.search(r"\b(19|20)\d{2}\b", valeur)
+            if match:
+                annee = match.group(0)
+
+        sexe = (self.sexe or "X").strip().upper()
+        # On évite les valeurs trop longues
+        sexe = sexe[:1] if sexe else "X"
+        alphabet = string.ascii_uppercase + string.digits
+        suffixe = "".join(  secrets.choice(alphabet) for _ in range(10) )
+
+        return f"{initiales}-{annee}-{sexe}-{suffixe}"
 
     def __str__(self):
         return self.nomcomplet

@@ -9,9 +9,10 @@ from django.urls import reverse
 from arch_portal.domain.models.abonnement import Abonnement
 from arch_portal.domain.models.plantarifaire import Plan
 from arch_portal.domain.models.wallet import Wallet
+from arch_portal.domain.models.famille import Famille
 from arch_portal.domain.exceptions.membre_exception import MembreException
 from arch_portal.use_cases.services.core import compute_sha1
-from arch_portal.domain.forms.membre import MembreForm,UsersLoginForm,UsersSubscribeForm
+from arch_portal.domain.forms.membre import MembreForm,UsersLoginForm,UsersSubscribeForm, MembreFamilleForm
 from arch_portal.domain.models.membre import Membre
 from arch_portal.domain.models.histoire import MiniHistoire
 from arch_portal.use_cases.services.subscription_service import get_membre_from_session
@@ -257,6 +258,7 @@ def add_user(request):
         form = MembreForm()
 
     return render(request, "usercore/newuser.html", {"form":form})
+
 
 def upload_image_histoire(request):
     if request.method == "POST" and request.FILES.get("image"):

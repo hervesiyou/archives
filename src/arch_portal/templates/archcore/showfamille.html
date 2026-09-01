@@ -121,7 +121,21 @@
                 {% if famille.communaute is not None and famille.communaute.id is not None %}
                 <li class="breadcrumb-item"><a href="{% url 'show_communaute' famille.communaute.id %}"><i class="fas fa-users me-1"></i>{{ famille.communaute.nom }}</a></li>
                 {% endif %}
-                <li class="breadcrumb-item active">{{ famille.nom }}</li>
+                {% comment %} <li class="breadcrumb-item active">{{ famille.nom }} </li> {% endcomment %}
+                <li class="breadcrumb-item">
+                    {% if appartient %}
+                        {{ famille.nom }} 
+                    {% else %}
+                    {% comment %}  sinon je demande l'accès  {% endcomment %}
+                        <a href="#" 
+                            data-fam="{{ famille.id }}" 
+                            data-user="{{ request.session.userid }}" 
+                            class="btn btn-sm btn-outline-danger btn-request mt-2 partFamID">
+                            <i class="fa fa-handshake-angle"></i> Demander à rejoindre
+                        </a>
+                    {% endif %}
+
+                </li>
             </ol>
         </div>
     </div>
@@ -238,9 +252,9 @@
                 
 
                     <div class="text-end">
-                        {% if 'ADD_MEMBRE' in request.session.userrights %}
-                            <a href="{% url 'add_user' %}" class="btn btn-success">
-                                <i class="fa fa-user-plus me-2"></i>Ajouter un membre
+                        {% if 'ADD_MEMBRE' in request.session.userrights or gestionnaire %}
+                            <a href="{% url 'add_membre_famille' famille.id %}" class="btn btn-success">
+                                <i class="fa fa-user-plus me-2"></i> Ajouter un membre
                             </a>
                         {% endif %}
                     </div>

@@ -65,6 +65,9 @@ urlpatterns += [
 
 urlpatterns += [ 
     path('lfam/<int:id>.<int:mode>', famille.listfamilles, name="listfamilles"),
+
+    path('newm/<int:idfam>', famille.add_membre_famille, name="add_membre_famille"),
+
     path('sf/<int:id>', famille.show_famille, name="show_famille"),
     path('spages/<int:id>', famille.page_famille, name="page_famille"),
     path('adpa/<int:id>', famille.add_page, name="add_page"),
@@ -207,6 +210,7 @@ urlpatterns += [
 urlpatterns += [ 
     path('u/<int:id>', membre.show_user, name="show_user"),
     path('upimhis/', membre.upload_image_histoire, name="upload_image_histoire"),
+    
     path('new/', membre.add_user, name="add_user"),
     path('ed/<int:id>', membre.edit_user, name="edit_membre"),
     path('nemhis/<int:id>', membre.add_histoire_membre, name="add_histoire_membre"),

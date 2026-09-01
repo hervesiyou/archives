@@ -18,7 +18,7 @@ class Association(models.Model):
     createur = models.ForeignKey("Membre", on_delete=models.SET_NULL,blank=True, null=True, related_name="associations_creees")
 
     famille = models.ForeignKey("Famille", on_delete=models.SET_NULL,blank=True, null=True)
-    communaute = models.ForeignKey("Communaute", on_delete=models.SET_NULL,blank=True, null=True)
+    communaute = models.ForeignKey("Communaute", on_delete=models.SET_NULL,blank=True, null=True,related_name="associations_communautaire")
     localisation = models.TextField( blank=True)
 
     administrateurs = models.ManyToManyField("Membre", related_name="asso_admins", blank=True, null=True)

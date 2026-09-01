@@ -3,7 +3,10 @@ from django.db import models
 from arch_portal.domain.models.galerie import Galerie
 from arch_portal.domain.models.association import Association
 from arch_portal.domain import models as mod
-
+import uuid
+import secrets
+import string
+from django.utils.text import slugify
 
 class Famille(models.Model):
     class Meta:
@@ -30,9 +33,39 @@ class Famille(models.Model):
     galeries = models.ManyToManyField(Galerie, related_name="galeries_famille", null=True, blank=True)
     administrateurs = models.ManyToManyField("Membre", related_name="fam_admins", blank=True, null=True)
 
+    code_unique = models.CharField( 
+        max_length=40, 
+        # unique=True, 
+        editable=False, 
+        db_index=True, 
+        null=True, 
+        blank=True
+    )
+
     def __str__(self):
         return self.nom
-    
+
+    def _generer_code_unique(self): 
+        """ Génère un code lisible : NOM-XXXXXXXX Exemple : DUPONT-A7K92P4X Le nom permet d'identifier rapidement la famille. Le suffixe aléatoire garantit l'unicité pratique. """
+        nom = (self.nom or "FAMILLE").strip()  
+        nom_code = slugify(nom).replace("-", "").upper() 
+        nom_code = nom_code[:12] 
+        if not nom_code: 
+            nom_code = "FAMILLE" 
+        
+        alphabet = string.ascii_uppercase + string.digits 
+        suffixe = "".join( secrets.choice(alphabet) for _ in range(10) )  
+        return f"{nom_code}-{suffixe}"
+
+    def save(self, *args, **kwargs):
+        if not self.code_unique:
+            code = self._generer_code_unique()
+            while Famille.objects.filter(code_unique=code).exists():
+                code = self._generer_code_unique()
+            self.code_unique = code
+
+        super().save(*args, **kwargs)
+
     @property
     def membres(self):
         return self.membres_famille.all()
