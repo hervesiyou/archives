@@ -334,8 +334,16 @@ def show_famille(request,id):
 
 
 def show_admin_fam(request,id):    
-    com = Famille.objects.get(id=id) 
-    return render(request, "archcore/listadminfam.html", {"admins": com.administrateurs.all(), "famille": com})
+    fam = Famille.objects.get(id=id) 
+    membre = get_membre_from_session(request)
+    if not membre:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+
+    createur = False
+    if membre == fam.createur:
+        createur = True
+    
+    return render(request, "archcore/listadminfam.html", {"admins": fam.administrateurs.all(), "famille": fam, "createur":createur })
 
 def add_membre_famille(request,idfam):
 
@@ -382,6 +390,33 @@ def add_membre_famille(request,idfam):
 
     return render(request, "famille/newmembrefamille.html", {"form":form, "famille":famille })
 
+@csrf_exempt
+def delete_admin(request):
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    if is_ajax :
+        if request.method == "POST" :
+            data = json.loads(request.body.decode('utf-8'))
+            if not request.session.get("userid","") :
+                # return redirect("login" )
+                return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+
+            
+            membre = get_membre_from_session(request)
+            if not membre:
+                 return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+            
+            if data.get('idfam') is None:
+                return JsonResponse({'status': False ,"message": "Famille incorrecte !"})
+            else:
+                famille = Famille.objects.get(id=data.get("idfam"))
+                if membre == famille.createur:
+                    admin = Membre.objects.get(id=data.get("idad"))                   
+                   
+                    famille.administrateurs.remove(admin)
+                    return JsonResponse({'status': True ,"message": f"{admin.nomcomplet} a été supprimé comme administrateur à la Famille {famille.nom}"})
+                else:
+                    return JsonResponse({'status': False ,"message": f"Désolé, tu n'as pas le droit de supprimer un administrateur à la Famille {famille.nom}"})
+
 
 
 @csrf_exempt
@@ -391,11 +426,11 @@ def add_admin_fam(request):
         if request.method == "POST" :
             data = json.loads(request.body.decode('utf-8'))
             if not request.session.get("userid","") :
-                return redirect("login" )
+                # return redirect("login" )
+                return redirect(f"{reverse('login')}?next={request.get_full_path()}")
     
             userid = request.session.get("userid","")
-            # user = f' un: {request.session.get("username","")} ,id: {request.session.get("userid","")},n: {request.session.get("nomocomplet","")}'
-             
+            
             if data.get('famid') is None:
                 return JsonResponse({'status': False ,"message": "Famille incorrecte !"})
             else:
@@ -407,8 +442,9 @@ def add_admin_fam(request):
                     else:
                         user = Membre.objects.get(id=data.get("adminid"))
                         com = Famille.objects.get(id=data.get("famid"))
-                        role = Role.objects.get(nom="ADMIN")
-                        # print(role, user)
+                        #  je dois m'assurer d'avoir ces roles crée au prealable
+                        role = Role.objects.get(nom="ADMINFAMILLE")
+                       
                         user.role.add(role)
                         user.save()
                         com.administrateurs.add(user)

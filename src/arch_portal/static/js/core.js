@@ -1,5 +1,4 @@
 (function($) {
-    // ton code core.js
 
 
 $(document).ready(function(){
@@ -101,6 +100,237 @@ $(document).ready(function(){
         }
     })
 
+    
+    $(".delADFAMID").on('click', function(e){                         
+        e.preventDefault();
+              
+        var data = {                      
+            "idfam": $(this).data("idfam") , 
+            "idad": $(this).data("idad") , 
+        };
+ 
+        if( data.idad != undefined   ){
+
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : BASEURL+"/delADF/",  
+                dataType    : "JSON",
+                headers: { "X-CSRFToken": getCookie("csrftoken") },
+
+                beforeSend      : function(){
+                    // alert(JSON.stringify(data) + ", url: " + this.url)
+                    AjaxLoader.show(
+                        "Traitement en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error);
+                    // alert(JSON.stringify(error))
+                },
+                success  : function(returnedData){
+                    // console.log(returnedData);  
+                    AjaxLoader.update(
+                        "Traitement terminé..."
+                    );           
+                    if (returnedData.status) {
+                        Swal.fire({
+                            icon: "success",
+                            title: " Merci !" ,
+                            text:   "Retrait de cet administrateur reussi ! " ,
+                            timer: 4000,
+                            showConfirmButton: false
+
+                        }).then(
+                            ()=>{
+                                $("#payMessage").html(` <div class="alert alert-info messageDiv">${returnedData.message} </div>`  )
+                            }
+                        ); 
+
+                    }else{
+                        Swal.fire({
+                            icon: "error",
+                            title: " Oups !" ,
+                            text:   " " + returnedData.message ,
+                            timer: 4000,
+                            showConfirmButton: true
+
+                        }); 
+                    }
+                },
+                complete: function(){
+                    AjaxLoader.hide();
+                    window.location.reload();
+                }
+
+            })
+
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de fournir toutes les informations requises pour cette action !!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
+    });
+
+
+    $(".delADASSOID").on('click', function(e){                         
+        e.preventDefault();
+              
+        var data = {                      
+            "idasso": $(this).data("idasso") , 
+            "idad": $(this).data("idad") , 
+        };
+ 
+        if( data.idad != undefined   ){
+
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : BASEURL+"/delADASSO/",  
+                dataType    : "JSON",
+                headers: { "X-CSRFToken": getCookie("csrftoken") },
+
+                beforeSend      : function(){ 
+                    AjaxLoader.show(
+                        "Traitement en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error); 
+                },
+                success  : function(returnedData){
+                    
+                    AjaxLoader.update(
+                        "Traitement terminé..."
+                    );           
+                    if (returnedData.status) {
+                        Swal.fire({
+                            icon: "success",
+                            title: " Merci !" ,
+                            text:   "Retrait de cet administrateur reussi ! " ,
+                            timer: 4000,
+                            showConfirmButton: false
+
+                        }).then(
+                            ()=>{
+                                $("#payMessage").html(` <div class="alert alert-info messageDiv">${returnedData.message} </div>`  )
+                            }
+                        ); 
+
+                    }else{
+                        Swal.fire({
+                            icon: "error",
+                            title: " Oups !" ,
+                            text:   " " + returnedData.message ,
+                            timer: 4000,
+                            showConfirmButton: true
+
+                        }); 
+                    }
+                },
+                complete: function(){
+                    AjaxLoader.hide();
+                    window.location.reload();
+                }
+
+            })
+
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de fournir toutes les informations requises pour cette action !!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
+    })
+
+    $(".delADCOMID").on('click', function(e){                         
+        e.preventDefault();
+              
+        var data = {                      
+            "idcom": $(this).data("idcom") , 
+            "idad": $(this).data("idad") , 
+        };
+ 
+        if( data.idad != undefined   ){
+
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : BASEURL+"/delADCO/",  
+                dataType    : "JSON",
+                headers: { "X-CSRFToken": getCookie("csrftoken") },
+
+                beforeSend      : function(){
+                    // alert(JSON.stringify(data) + ", url: " + this.url)
+                    AjaxLoader.show(
+                        "Traitement en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error);
+                    // alert(JSON.stringify(error))
+                },
+                success  : function(returnedData){
+                    // console.log(returnedData);  
+                    AjaxLoader.update(
+                        "Traitement terminé..."
+                    );           
+                    if (returnedData.status) {
+                        Swal.fire({
+                            icon: "success",
+                            title: " Merci !" ,
+                            text:   "Retrait de cet administrateur reussi ! " ,
+                            timer: 4000,
+                            showConfirmButton: false
+
+                        }).then(
+                            ()=>{
+                                $("#payMessage").html(` <div class="alert alert-info messageDiv">${returnedData.message} </div>`  )
+                            }
+                        ); 
+
+                    }else{
+                        Swal.fire({
+                            icon: "error",
+                            title: " Oups !" ,
+                            text:   " " + returnedData.message ,
+                            timer: 4000,
+                            showConfirmButton: true
+
+                        }); 
+                    }
+                },
+                complete: function(){
+                    AjaxLoader.hide();
+                    window.location.reload();
+                }
+
+            })
+
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de fournir toutes les informations requises pour cette action !!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
+    })
+
 
     $(".abClass").on('click', function(e){                         
         e.preventDefault();
@@ -187,12 +417,21 @@ $(document).ready(function(){
                     dataType    : "JSON",
                     beforeSend      : function(){
                         // alert(JSON.stringify(data))
+                        AjaxLoader.show(
+                            "Traitement en cours..."
+                        );
                     },
                     error: function(error) {
                         console.error(error); 
                     },
+                    complete: function(){
+                        AjaxLoader.hide();
+                        // window.location.reload();
+                    },
                     success  : function(returnedData){
-                            console.log(returnedData);
+                            AjaxLoader.update(
+                                "Traitement terminé..."
+                            ); 
                             // alert(JSON.stringify(returnedData))
                     
                             if (returnedData.status) {
@@ -219,7 +458,7 @@ $(document).ready(function(){
                                     showConfirmButton: false
         
                                 }).then((result) => {
-                                    window.location.reload()
+                                    // window.location.reload()
                                      
                                   });
                                  
@@ -237,7 +476,7 @@ $(document).ready(function(){
                     timer: 4000,
                     showConfirmButton: false
                 });
-                console.table( data )
+                
 			}
     })
 
@@ -525,6 +764,7 @@ $(document).ready(function(){
 			}
 
     });
+
     $("#addAdminComID").on('click', function(e){                         
         e.preventDefault();
        
@@ -596,6 +836,7 @@ $(document).ready(function(){
 			}
 
     });
+
     $("#addAdminAssoID").on('click', function(e){                         
         e.preventDefault();
        

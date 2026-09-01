@@ -45,9 +45,9 @@
                             {% endif %}
 
                             {% if association.communaute  is not None %}
-                            <span class="text-muted">
-                                <a  class="btn btn-outline-info my-2" href="{% url 'listassociations' id=association.communaute.id mode=1 %}"> Autres associations</a>
-                            </span>
+                                <span class="text-muted">
+                                    <a  class="btn btn-outline-info my-2" href="{% url 'listassociations' id=association.communaute.id mode=1 %}"> Autres associations</a>
+                                </span>
                             {% endif %}
                             <a class="btn btn-outline-info my-2" href="{% url 'liste_articles_asso' association.id %}" alt="Consulter les articles" title="Consulter les articles">
                                 <i class="fa-solid fa-regular fa-newspaper me-2 text-success"></i>
@@ -75,12 +75,19 @@
     <div class="row">
         <div class="col-md-12">
             <div class="  card-body printableArea">
-                <h3><b> {{association.nom}} </b> <span class="pull-right"> 
-                
-               
-                {% if 'ADD_ASSOCIATION' in request.session.userrights  or admin %}
-                    <a href="{% url 'edit_association' association.id %}"> <i class="fa fa-edit"></i> </a>
-                {% endif %}
+                <h3><b> {{association.nom}} </b> 
+                <span class="pull-right">                
+                    {% if 'ADD_ASSOCIATION' in request.session.userrights  or admin %}
+                        <a href="{% url 'edit_association' association.id %}"> <i class="fa fa-edit"></i> </a>
+                    {% endif %}
+                </span>
+
+                <a href="#" 
+                    data-asso="{{ association.id }}" 
+                    data-user="{{ request.session.userid }}" 
+                    class="btn btn-sm btn-outline-danger  partAssoID">
+                    <i class="fa fa-handshake-angle me-1"></i>Demander à rejoindre
+                </a>
                                 
                 </h3>
                 <hr>

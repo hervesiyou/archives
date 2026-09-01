@@ -364,7 +364,8 @@ def add_admin_com(request):
                     else:
                         user = Membre.objects.get(id=data.get("adminid"))
                         com = Communaute.objects.get(id=data.get("comid"))
-                        role = Role.objects.get(nom="ADMIN")
+                        #  je dois m'assurer d'avoir ces roles crée au prealable
+                        role = Role.objects.get(nom="ADMINCOMUNAUTE")
                         # print(role, user)
                         user.role.add(role)
                         user.save()
@@ -394,8 +395,9 @@ def add_admin_asso(request):
                     else:
                         user = Membre.objects.get(id=data.get("adminid"))
                         asso = Association.objects.get(id=data.get("assoid"))
-                        role = Role.objects.get(nom="ADMIN")
-                        # print(role, user)
+                        #  je dois m'assurer d'avoir ces roles crée au prealable
+                        role = Role.objects.get(nom="ADMINASSOCIATION")
+                       
                         user.role.add(role)
                         user.save()
                         asso.administrateurs.add(user)
@@ -603,7 +605,6 @@ def show_communaute(request, id):
     #  ce utilisateur ne peut voir les info detaillée de la famille que si il appartient à la famille ou a des droits
     userid = request.session.get("userid","")
     if not userid :
-        # print(f" user id { userid } ")
         return redirect(f"{reverse('login')}?next={request.get_full_path()}")
         # return redirect("login" )
 
@@ -616,10 +617,11 @@ def show_communaute(request, id):
     est_createur=False
     if (com.createur == user):
         est_createur=True,
-    appartient=True
+    
+    appartient=False
     # JE DOIS VERIFIER QUE CELUI QUI N'A PAS LE DROIT DE VOIR UNE ASSOCIATION OU UN EVENDMENT D UNE COMMUNAUTE SOIT DESACTIVE ICI
-    # if ( user in com.membres_communaute.all()):
-    #     appartient = True
+    if ( user in com.membres_communaute.all()):
+        appartient = True
 
     return render(request, "archcore/show_com.html", 
         {
@@ -637,8 +639,15 @@ def show_communaute(request, id):
 
 def show_admin_com(request,id):
     com = Communaute.objects.get(id=id)
-    # print(com.administrateurs.all())
-    return render(request, "archcore/listadmincom.html", {"admins": com.administrateurs.all(), "communaute": com})
+    membre = get_membre_from_session(request)
+    if not membre:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+
+    createur = False
+    if membre == com.createur:
+        createur = True
+
+    return render(request, "archcore/listadmincom.html", {"admins": com.administrateurs.all(), "communaute": com, "createur": createur })
 
 def show_admin_asso(request,id):
     com = Association.objects.get(id=id)
@@ -861,6 +870,32 @@ def add_communaute(request):
         }
 
         return render(request, "archcore/new_communaute.html", context)
+
+
+@csrf_exempt
+def delete_admin(request):
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    if is_ajax :
+        if request.method == "POST" :
+            data = json.loads(request.body.decode('utf-8')) 
+
+            membre = get_membre_from_session(request)
+            if not membre:
+                 return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+            
+            if data.get('idcom') is None:
+                return JsonResponse({'status': False ,"message": "Communauté incorrecte !"})
+            else:
+                com = Communaute.objects.get(id=data.get("idcom"))
+                if membre == com.createur:
+                    admin = Membre.objects.get(id=data.get("idad"))                   
+                   
+                    com.administrateurs.remove(admin)
+                    return JsonResponse({'status': True ,"message": f"{admin.nomcomplet} a été supprimé comme administrateur à la Communauté {com.nom}"})
+                else:
+                    return JsonResponse({'status': False ,"message": f"Désolé, tu n'as pas le droit de supprimer un administrateur à la communauté {com.nom}"})
+
+
 
 def add_communaute0(request):
 

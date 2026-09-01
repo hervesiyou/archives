@@ -7,6 +7,7 @@ import arch_portal.use_cases.communaute_controller as communaute
 import arch_portal.use_cases.famille_controller as famille
 import arch_portal.use_cases.core_controller as core
 import arch_portal.use_cases.evenement_controller as evenement
+import arch_portal.use_cases.association_controller as association
 import arch_portal.use_cases.cagnotte_controller as cagnotte
 import arch_portal.use_cases.prestataire_controller as prestataire
 import arch_portal.use_cases.projet_controller as projet
@@ -67,6 +68,9 @@ urlpatterns += [
     path('lfam/<int:id>.<int:mode>', famille.listfamilles, name="listfamilles"),
 
     path('newm/<int:idfam>', famille.add_membre_famille, name="add_membre_famille"),
+    path('delADF/', famille.delete_admin, name="delete_admin_famille"),
+    path('delADCO/', communaute.delete_admin, name="delete_admin_communaute"),
+    path('delADASSO/', association.delete_admin, name="delete_admin_association"),
 
     path('sf/<int:id>', famille.show_famille, name="show_famille"),
     path('spages/<int:id>', famille.page_famille, name="page_famille"),
@@ -155,7 +159,7 @@ urlpatterns += [
 urlpatterns += [ 
     path('lcom', communaute.listcom, name="listcom"),
     path('sh_ad_co/<int:id>', communaute.show_admin_com, name="show_admin_com"),
-    path('sh_ad_asso/<int:id>', communaute.show_admin_asso, name="show_admin_asso"),
+    path('sh_ad_asso/<int:id>', association.show_admin_asso, name="show_admin_asso"),
     path('comab', communaute.abonement_archive, name="abonement_archive"),
     path('add_ad_com', communaute.add_admin_com, name="add_admin_com"),
     path('add_ad_asso', communaute.add_admin_asso, name="add_admin_asso"),
