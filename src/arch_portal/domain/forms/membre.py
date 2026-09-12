@@ -48,6 +48,16 @@ class MembreForm(forms.ModelForm):
         
         self.helper = FormHelper()
         self.helper.form_tag = False 
+
+        self.fields["nompere"].label = 'Nom du père'
+        self.fields["nommere"].label = 'Nom de la mère'
+        self.fields["nomcomplet"].label = 'Nom & prenoms'
+        self.fields["etatcivil"].label = 'Etat civil'
+        self.fields["nbenfant"].label = "Nombre d'enfants"
+        self.fields["datenaissance"].label = 'Date de naissance'
+        self.fields["lieunaissance"].label = 'Lieu de naissance'
+        self.fields["datedeces"].label = 'Date de décès'
+
         self.helper.layout = Layout(
             Row(
                 Column('nomcomplet', css_class='col-md-8'),
@@ -132,6 +142,15 @@ class MembreFamilleForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.famille_id = kwargs.pop("famille_id",None)
         super().__init__(*args, **kwargs)
+
+        self.fields["nompere"].label = 'Nom du père'
+        self.fields["nommere"].label = 'Nom de la mère'
+        self.fields["nomcomplet"].label = 'Nom & prenoms'
+        self.fields["etatcivil"].label = 'Etat civil'
+        self.fields["nbenfant"].label = "Nombre d'enfants"
+        self.fields["datenaissance"].label = 'Date de naissance'
+        self.fields["lieunaissance"].label = 'Lieu de naissance'
+        self.fields["datedeces"].label = 'Date de décès'
 
         if self.famille_id:
         

@@ -1,5 +1,5 @@
-<!-- Profil membre -->
-
+ 
+{% load custom_filters %}
 <div class="container">
 
     <!-- En-tête profil -->
@@ -10,13 +10,8 @@
                 <i class="fa-solid fa-user-circle fa-4x text-success"></i>
             </div>
 
-            <h4 class="mb-1 text-uppercase">
-                {{ membre }}
-            </h4>
-
-            <span class="badge bg-success">
-                {{ membre.profession }}
-            </span>
+            <h4 class="mb-1 text-uppercase"> {{ membre }}  </h4>
+            <span class="badge bg-success">  {{ membre.profession }}  </span>
 
             <div class="mt-3">
 
@@ -25,6 +20,7 @@
                     <i class="fa-solid fa-wallet text-success"></i>
                     {{ wallet.solde }} {{ wallet.devise }}
                 </span>
+                <span class="badge bg-success p-2">{{wallet.solde|convertXAFDC}}  DOULARS </span>
 
                 <span class="badge bg-light text-dark">
                     <i class="fa-solid fa-building-columns text-primary"></i>
@@ -40,7 +36,7 @@
     <div class="row">
 
         <!-- Infos personnelles -->
-        <div class="col-lg-6 mb-4">
+        <div class="col-lg-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-header bg-success text-white">
                     <i class="fa-solid fa-id-card me-2"></i>
@@ -69,12 +65,12 @@
                             <span>Lieu de naissance</span>
                             <strong>{{ membre.lieunaissance }}</strong>
                         </li>
-
+                        {% if membre.residence %}
                         <li class="list-group-item d-flex justify-content-between">
                             <span>Résidence</span>
                             <strong>{{ membre.residence }}</strong>
                         </li>
-
+                        {% endif %}
                         <li class="list-group-item d-flex justify-content-between">
                             <span>Nombre d’enfants</span>
                             <strong>{{ membre.nbenfant }}</strong>
@@ -86,7 +82,7 @@
         </div>
 
         <!-- Situation socio-professionnelle -->
-        <div class="col-lg-6 mb-4">
+        <div class="col-lg-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-header bg-secondary text-white">
                     <i class="fa-solid fa-briefcase me-2"></i>
@@ -94,23 +90,28 @@
                 </div>
 
                 <div class="card-body">
+                {% if membre.profession %}
                     <p><i class="fa-solid fa-user-tie me-2 text-secondary"></i>
                         <strong>Profession :</strong> {{ membre.profession }}</p>
-
+                {% endif %}
+                {% if membre.education %}
                     <p><i class="fa-solid fa-graduation-cap me-2 text-secondary"></i>
                         <strong>Niveau d’éducation :</strong> {{ membre.education }}</p>
-
+                {% endif %}
+                {% if membre.diplomes %}
                     <p><i class="fa-solid fa-award me-2 text-secondary"></i>
                         <strong>Diplômes :</strong> {{ membre.diplomes }}</p>
-
+                {% endif %}
+                {% if membre.notabilite %}
                     <p><i class="fa-solid fa-star me-2 text-secondary"></i>
                         <strong>Notabilité :</strong> {{ membre.notabilite }}</p>
+                {% endif %}
                 </div>
             </div>
         </div>
 
         <!-- Filiation -->
-        <div class="col-lg-6 mb-4">
+        <div class="col-lg-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-header bg-warning">
                     <i class="fa-solid fa-people-roof me-2"></i>
@@ -119,8 +120,10 @@
 
                 <div class="card-body">
 
-                    <p><strong>Père :</strong> {{ membre.pere }}</p>
-                    <p><strong>Mère :</strong> {{ membre.mere }}</p>
+                    {% if membre.pere %}<p><strong>Père :</strong> {{ membre.pere }}</p> {% endif %}
+                    {% if membre.mere %}<p><strong>Mère :</strong> {{ membre.mere }}</p> {% endif %}
+                    {% if membre.nompere %}<p><strong>Père :</strong> {{ membre.nompere.nomcomplet }}</p> {% endif %}
+                    {% if membre.nommere %}<p><strong>Mère :</strong> {{ membre.nommere.nomcomplet }}</p> {% endif %}
 
                     <p>
                         <strong>Statut :</strong>
@@ -187,19 +190,20 @@
             </div>
         </div>
 
-        <div class="col-lg-12 mb-4">
+        <div class="col-lg-6 mb-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-header bg-info text-white">
                     <i class="fa-solid fa-network-wired me-2"></i>
-                    Abonnement 
+                   Utilisation de mes abonnements
+                <a href="{% url 'show_subscriptions' user.id %}" 
+                    class="badge bg-info   m-1"> <i class="fas fa-user"></i> Voir mes abonnements </a>
                 </div>
 
-                <div class="card-body">
-                                                       
-                    <h3>Utilisation de votre plan</h3>
+                <div class="card-body">                                                       
+                    <h3 class="text-success" >Utilisation de votre plan</h3>
 
                     <table class="table">
-                        <tr>
+                        <tr class="bg-primary text-white text-center">
                             <th>Module</th>
                             <th>Utilisé</th>
                             <th>Limite</th>
@@ -207,21 +211,21 @@
                         </tr>
 
                         <tr>
-                            <td>Familles</td>
+                            <td class="text-bold text-primary"> <b> Familles</b> </td>
                             <td>{{ usage.familles }}</td>
                             <td>{{ plan.nbfamilles }}</td>
                             <td>{{ reste.familles }}</td>
                         </tr>
 
                         <tr>
-                            <td>Communautés</td>
+                            <td class="text-bold text-primary"> <b>Communautés </b></td>
                             <td>{{ usage.communautes }}</td>
                             <td>{{ plan.nbcommunautes }}</td>
                             <td>{{ reste.communautes }}</td>
                         </tr>
 
                         <tr>
-                            <td>Livres</td>
+                            <td class="text-bold text-primary"> <b>Livres </b></td>
                             <td>{{ usage.livres }}</td>
                             <td>{{ plan.nblivres }}</td>
                             <td>{{ reste.livres }}</td>

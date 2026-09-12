@@ -61,7 +61,7 @@ def show_evenement(request, id):
         }
     )
 
-@login_required
+ 
 def mes_evenements_likes(request):
   
     userid = request.session.get("userid","") 
@@ -73,7 +73,7 @@ def mes_evenements_likes(request):
 
     return render(request, "archcore/evenement_likes.html", {"likes": likes })
 
-@login_required
+ 
 def toggle_like_evenement(request, id):
 
     event = get_object_or_404(Evenement, id=id)  

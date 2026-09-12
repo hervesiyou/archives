@@ -25,9 +25,9 @@ class Membre(models.Model):
 
     description = models.CharField(max_length=1000, null=True, blank=True)
     nomcomplet = models.CharField(max_length=100)
-    login = models.CharField(max_length=50)
-    pwd = models.CharField(max_length=300)
-    email = models.CharField(max_length=50)
+    login = models.CharField(max_length=50, blank=True)
+    pwd = models.CharField(max_length=300, blank=True)
+    email = models.CharField(max_length=50, blank=True)
     telephone = models.CharField(max_length=50, null=True, blank=True)
     etatvalidation = models.BooleanField(default=False,null=True)
     token = models.CharField( blank=True,null=True,max_length=100, default="")

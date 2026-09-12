@@ -117,17 +117,23 @@
                             <div class="row my-3">
                                 <div class="col-lg-12">
                                     <h4 class="card-title mb-3">{{communaute.nom}} 
-                                    <a href="#" 
-                                        data-com="{{communaute.id}}"
-                                        data-user="{{ request.session.userid }}" 
-                                        class="btn btn-sm btn-outline-danger btn-request mt-2 partComID">
-                                        <i class="fa fa-handshake-angle"></i> Demander à rejoindre
-                                    </a>
+                                    {% if not appartient %}
+                                        <a href="#" 
+                                            data-com="{{communaute.id}}"
+                                            data-user="{{ request.session.userid }}" 
+                                            class="btn btn-sm btn-outline-danger btn-request mt-2 partComID">
+                                            <i class="fa fa-handshake-angle"></i> Demander à rejoindre
+                                        </a>
+                                    {% endif %}
+                                    {% if est_createur %} 
+                                        <div class="badge bg-success text-white">CREATEUR</div>
+                                    {% endif %}
                                     </h4>
                                     <h5 class="card-subtitle">{{communaute.description}}</h5>
+                              
+                                   
                                     {% if not appartient %} 
                                         <a href="#" data-com="{{communaute.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partComID"> Je souhaite être {{ communaute.nom }}</a>
-                                    
                                     {% endif %}
                                 </div>                        
                                 <div class="col-lg-12 my-3">

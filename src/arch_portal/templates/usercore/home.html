@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+ 
+
 {% block title %} {{ request.session.nomcomplet }} {% endblock %}
 {% block content %}
 <div class="container">
     
     <div class="row m-3">
-        <a href="{% url 'commandes_livres' %}" class="badge bg-info col-lg-2 col-5 m-1"> <i class="fas fa-book"></i> Livres commandés</a>
-            <a href="{% url 'home_comadmin' %}" class="badge bg-success col-lg-2 col-5 m-1"> <i class="fas fa-users"></i> Mes communautés </a>
+        <a href="{% url 'commandes_livres' %}" class="badge bg-info col-lg-2   m-1"> <i class="fas fa-book"></i> Livres commandés</a>
+            <a href="{% url 'home_comadmin' %}" class="badge bg-success col-lg-2  m-1"> <i class="fas fa-users"></i> Mes communautés </a>
         {% comment %} {% if  'ADD_COMMUNAUTE' in request.session.userrights %}    {% endif %} {% endcomment %}
             <a href="{% url 'home_famadmin' %}" class="badge bg-warning col-lg-2 col-5 m-1"> <i class="fas fa-home"></i>   Mes familles </a>
          {% comment %} {% if  'ADD_FAMILLE' in request.session.userrights %}       {% endif %} {% endcomment %}

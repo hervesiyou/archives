@@ -330,7 +330,7 @@ def show_famille(request,id):
     if fam.createur == user or (user in fam.administrateurs.all()):
         gestionnaire = True
     
-    return render(request, "archcore/showfamille.html", {"famille" : fam, "appartient" : appartient, "galerie" : galerie, "gestionnaire":gestionnaire } )
+    return render(request, "famille/showfamille.html", {"famille" : fam, "appartient" : appartient, "galerie" : galerie, "gestionnaire":gestionnaire } )
 
 
 def show_admin_fam(request,id):    

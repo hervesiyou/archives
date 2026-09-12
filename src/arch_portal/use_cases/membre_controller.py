@@ -201,14 +201,15 @@ def show_user_famadmin(request):
         # return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
 def show_user_comadmin(request):
-    if(request.session["userid"]!=None):
-        user=Membre.objects.get(id=request.session["userid"])
+    if(request.session["userid"] != None):
+        user = Membre.objects.get(id=request.session["userid"])
         if(user != None):
-            coms = user.com_admins.all()
-            adcoms = user.communautes.all()
+            adcoms = user.com_admins.all()
+            coms = user.communautes.all()
             return render(request, "usercore/listmycomadmin.html", {"user":user , "communautes": coms, "adcommunautes":adcoms})
         else:
-            raise MembreException( f" Membre {request.session['userid']} introuvable ")  
+            # raise MembreException( f" Membre {request.session['userid']} introuvable ")  
+            return redirect(f"{reverse('login')}?next={request.get_full_path()}")
     else:
         return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 

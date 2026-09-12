@@ -1,17 +1,14 @@
  
  
 from arch_portal.use_cases.services.core import update_member_badges
-from arch_portal.domain.models.galerie import Galerie
 from django.contrib  import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from django.conf import settings
 # from arch_portal.domain.models import communaute
 from arch_portal.domain.forms.don import DonForm
 from arch_portal.domain.forms.galerie import GalerieForm
-from arch_portal.domain.forms.association import AssociationForm
 from arch_portal.domain.forms.communaute import CommunauteForm 
 from arch_portal.domain.models.communaute import Communaute
-from arch_portal.domain.models.famille import Famille
 from arch_portal.domain.forms.image import ImageForm
 from arch_portal.domain.models.abonnement import Abonnement
 from arch_portal.domain.models.plantarifaire import Plan
@@ -23,13 +20,18 @@ from arch_portal.domain.models.histoire import MiniHistoire
 from arch_portal.domain.models import *
 from django.contrib.auth.decorators import login_required , permission_required
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+
+from arch_portal.domain.forms.association import AssociationForm
+from arch_portal.domain.models.galerie import Galerie
+from arch_portal.domain.models.famille import Famille
 from arch_portal.domain.models import Association
+from django.core.exceptions import PermissionDenied
+
 from django.views.decorators.http import require_http_methods
 # from django.db import models
 from django.forms import inlineformset_factory
 from arch_portal.domain.forms.sets import MiniHistoireFormSet, RoiFormSet , RoiForm, MiniHistoireForm
 from django.urls import reverse 
-from django.core.exceptions import PermissionDenied
 from arch_portal.use_cases.services.subscription_service import check_abonnement_permission, get_membre_from_session
 
 import json
@@ -375,36 +377,6 @@ def add_admin_com(request):
                         
                         return JsonResponse({'status': True ,"message": f"{user.nomcomplet} a été ajouté comme administrateur à la communauté {com.nom}"})
 
-@csrf_exempt
-def add_admin_asso(request):
-    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-    if is_ajax :
-        if request.method == "POST" :
-            data = json.loads(request.body.decode('utf-8'))
-            userid = request.session.get("userid","")
-            # user = f' un: {request.session.get("username","")} ,id: {request.session.get("userid","")},n: {request.session.get("nomocomplet","")}'
-             
-            if data.get('assoid') is None:
-                return JsonResponse({'status': False ,"message": "Association incorrecte !"})
-            else:
-                if data.get("adminid") is None:
-                    return JsonResponse({'status': False ,"message": "Identification utilisateur incorrecte"})
-                else:
-                    if userid is None:
-                        return JsonResponse({'status': False ,"message": "Merci de vous connecter avant tout abonnement !"})
-                    else:
-                        user = Membre.objects.get(id=data.get("adminid"))
-                        asso = Association.objects.get(id=data.get("assoid"))
-                        #  je dois m'assurer d'avoir ces roles crée au prealable
-                        role = Role.objects.get(nom="ADMINASSOCIATION")
-                       
-                        user.role.add(role)
-                        user.save()
-                        asso.administrateurs.add(user)
-                        asso.save()
-
-                        
-                        return JsonResponse({'status': True ,"message": f"{user.nomcomplet} a été ajouté comme administrateur à l'association {asso.nom}"})
  
 def abonement_archive(request): 
     plans = Plan.objects.filter(appli="COM")
@@ -429,131 +401,7 @@ def listcom(request):
     communautes = Communaute.objects.all()
     return render(request, "archcore/listcom.html", { "communautes":communautes, "peut_creer_communaute": peut_creer_communaute ,"user_connecte":membre})
  
-def show_association(request,id):
-    asso = Association.objects.get(id=id)
-    galerie = Galerie.objects.filter(association=asso)
 
-    
-    membre = get_membre_from_session(request)
-    if not membre:
-        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
-    
-    createur_ou_admin=False
-    if (asso.createur == membre or (membre in asso.administrateurs.all()) ):
-        createur_ou_admin = True
-    
-    return render(request, "archcore/showassociation.html", {"association": asso, "galerie": galerie, "gestionnaire": createur_ou_admin})
-
-def edit_association(request,id):
-    association= get_object_or_404(Association, pk=id)
-    galerie = Galerie.objects.filter(association=association)
-
-    admin = False
-
-    user = request.session['userid']
-    user = get_object_or_404(Membre, pk=user)
-    if not user:
-        messages.error(request, "Merci de vous connecter au prealable.")
-        # return redirect("login")
-        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
-    
-    if user in association.administrateurs.all():
-        admin = True
-       
-    if not( association.administrateurs.filter(id=user.id).exists() or ("ADD_ASSOCIATION" in request.session["userrights"] )) :
-        messages.error(request, "Vous n'avez pas les droits pour modifier cette association.")
-        return redirect('show_association', id=association.id)
-
-    if request.method == 'POST':
-        form = AssociationForm(request.POST, instance=association)
-        
-        if form.is_valid():
-            form.save()
-            messages.success(request, f"L'association '{association.nom}' a été mise à jour avec succès.")
-            return redirect('show_association', id=association.id)
-        else:
-            messages.error(request, "Veuillez corriger les erreurs ci-dessous.")
-
-    else:
-        form = AssociationForm(instance=association)
-
-    return render(request, "archcore/editassociation.html", {"form":form, "association": association, "galerie": galerie, "admin":admin})
-
-def listassociationsfam(request, id): 
-    com = Famille.objects.get(id=id)
-    return render(request, "archcore/listassociationsfam.html", { "famille": com})
-
-def listmembresassociation(request, id): 
-    com = Association.objects.get(id=id)
-
-    membre = get_membre_from_session(request) 
-    if not membre:
-        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
-    # 
-    abo = membre.get_abonnement_actif()
-    fam = membre.associations_creees.count()
-    peut_creer_asso = False
-    if abo and abo.plan is not None:
-        peut_creer_asso= ( int(fam) < int(abo.plan.nbassociations))
-
-    return render(request, "archcore/listmembresassociation.html",  { "association": com, "peut_creer_association": peut_creer_asso } )
-
-def listassociations(request, id, mode = 0):
-    assos = Association.objects.filter(communaute=id)
-    com = Communaute.objects.get(id=id)
-    
-    membre = get_membre_from_session(request) 
-    if not membre:
-        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
-    # 
-    abo = membre.get_abonnement_actif()
-    fam = membre.associations_creees.count()
-    peut_creer_asso = False
-
-    if abo and abo.plan is not None:
-        peut_creer_asso = ( int(fam) < int(abo.plan.nbassociations))
-
-    if not mode:
-        return render(request, "archcore/listassociations_tab.html", {"associations": assos, "communaute": com , "peut_creer_association": peut_creer_asso})
-    
-    return render(request, "archcore/listassociations.html", {"associations": assos, "communaute": com, "peut_creer_association": peut_creer_asso})
-
-def add_association(request):
-
-    user = get_membre_from_session(request)
-    if request.method == "POST":
-        try:
-
-            check_abonnement_permission(request, 'association')             
-            form = AssociationForm(request.POST)
-            
-            if form.is_valid(): 
-                association = form.save(commit=False)
-                association.createur = user
-                association.save()
-
-                form.save_m2m()
-                # ajouter le créateur comme membre
-                user.associations.add(association)
-                user.associations_creees.add(association)
-                # ajouter le créateur comme admin
-                association.administrateurs.add(user)
-
-                user.save()
-                # com.save()                
-                return redirect("show_association", association.id )
-        except PermissionDenied as e:
-            form = AssociationForm(user=user)
-            messages.error(request, f"Vous n'avez pas les droits nécessaires {str(e)}")
-            # return redirect('upgrade_abonnement')  
-    
-    else:
-        # user = request.session['userid']
-        # user = get_object_or_404(Membre, pk=user)
-        form = AssociationForm(user=user)
-
-    return render(request, "archcore/new_association.html", { "form":form  })
- 
 def personnecle_create(request, idcom):
     com = Communaute.objects.get(id=idcom)
 
@@ -649,10 +497,6 @@ def show_admin_com(request,id):
 
     return render(request, "archcore/listadmincom.html", {"admins": com.administrateurs.all(), "communaute": com, "createur": createur })
 
-def show_admin_asso(request,id):
-    com = Association.objects.get(id=id)
-    # print(com.administrateurs.all())
-    return render(request, "archcore/listadminasso.html", {"admins": com.administrateurs.all(), "association": com})
 
 @csrf_protect
 def edit_communaute(request, id):

@@ -8,31 +8,34 @@
         <h3 class="bg-info text-center text-white">Mes communautés </h3>
        
         {% if communautes %}
-        <div class="card-body">
-            <table class="table">
-                <thead >
-                    <tr class="text-danger">
-                        <th>Nom</th>
-                        <th>Description</th>
-                        <th>Informations</th>
-                        <th>Chef</th>
-                    </tr>
-                </thead>
-                <tbody> 
-                    {% for com in communautes %}
-                        <tr>
-                            <td>
-                            <a href="{% url 'show_communaute' com.id %}" class="text-center">  {{com.nom}}  </a> 
-                            {% if not  com.publique %} <span class="badge bg-danger"> privée</span>{% endif %} 
-                            </td>
-                            <td>{{com.description}}</td>
-                            <td>{{com.superficie}} km2 / {{com.origine}} </td>
-                            <td>{{com.chef.nomcomplet}} </td>
+            <div class="card-body">
+                <table class="table">
+                    <thead >
+                        <tr class="text-danger">
+                            <th>Nom</th>
+                            <th>Description</th>
+                            <th>Détails</th>
+                            {% comment %} <th>Chef</th> {% endcomment %}
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody> 
+                        {% for com in communautes %}
+                            <tr>
+                                <td>
+                                <a href="{% url 'show_communaute' com.id %}" class="text-center text-uppercase text-bold">  {{com.nom}}  </a> 
+                                {% if not  com.publique %} <span class="badge bg-danger"> privée</span>{% endif %} 
+                                </td>
+                                <td>{{com.description}}</td>
+                                <td>
+                                    {% if com.origine %} <span class="badge bg-success"> {{com.superficie}} km2</span> {% endif %}
+                                    {% if com.origine %} / <span class="badge bg-success"> {{com.origine}}</span>  {% endif %} 
+                                    {% if com.chef %} / <span class="badge bg-success"> {{com.chef.nomcomplet}}</span>  {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% endif %}
 
     </div> 
@@ -40,29 +43,33 @@
         <h3 class="bg-danger text-center text-white">Mes communautés administrées </h3>
        
         {% if adcommunautes %}
-        <div class="card-body">
-            <table class="table">
-                <thead >
-                    <tr class="text-danger">
-                        <th>Nom</th>
-                        <th>Description</th> 
-                        <th>.</th>
-                    </tr>
-                </thead>
-                <tbody> 
-                    {% for com in adcommunautes %}
-                        <tr>
-                            <td>
-                            <a href="{% url 'show_communaute' com.id %}" class="text-center">  {{com.nom}}  </a> 
-                            {% if not  com.publique %} <span class="badge bg-danger"> privée</span>{% endif %} 
-                            </td>
-                            <td>{{com.description}}</td> 
-                            <td><a href="{% url 'show_com_salle' com.id %}" class="badge bg-info"> Salle d'attente </a></td>
+            <div class="card-body">
+                <table class="table">
+                    <thead >
+                        <tr class="text-danger">
+                            <th>Nom</th>
+                            <th>Informations</th> 
+                            <th>.</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody> 
+                        {% for com in adcommunautes %}
+                            <tr>
+                                <td>
+                                <a href="{% url 'show_communaute' com.id %}" class="text-center text-bold">   {{com.nom}}  </a> 
+                                {% if not  com.publique %} <span class="badge bg-danger"> privée</span>{% endif %} 
+                                </td>
+                                <td>
+                                {% if com.type %} <span class="badge bg-info">{{com.type}} </span> {% endif %} 
+                                {% if com.chef %}<span class="badge bg-info"> {{com.chef.nomcomplet}}</span>  {% endif %} 
+                                {% if com.createur %} <span class="badge bg-info"> {{com.createur.nomcomplet}}</span>  {% endif %}
+                                </td> 
+                                <td><a href="{% url 'show_com_salle' com.id %}" class="badge bg-warning"> Salle d'attente </a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% endif %}
 
     </div>

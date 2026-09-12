@@ -70,7 +70,7 @@ urlpatterns += [
     path('newm/<int:idfam>', famille.add_membre_famille, name="add_membre_famille"),
     path('delADF/', famille.delete_admin, name="delete_admin_famille"),
     path('delADCO/', communaute.delete_admin, name="delete_admin_communaute"),
-    path('delADASSO/', association.delete_admin, name="delete_admin_association"),
+    
 
     path('sf/<int:id>', famille.show_famille, name="show_famille"),
     path('spages/<int:id>', famille.page_famille, name="page_famille"),
@@ -158,21 +158,27 @@ urlpatterns += [
 ]
 urlpatterns += [ 
     path('lcom', communaute.listcom, name="listcom"),
-    path('sh_ad_co/<int:id>', communaute.show_admin_com, name="show_admin_com"),
-    path('sh_ad_asso/<int:id>', association.show_admin_asso, name="show_admin_asso"),
+    path('sh_ad_co/<int:id>', communaute.show_admin_com, name="show_admin_com"),    
     path('comab', communaute.abonement_archive, name="abonement_archive"),
     path('add_ad_com', communaute.add_admin_com, name="add_admin_com"),
-    path('add_ad_asso', communaute.add_admin_asso, name="add_admin_asso"),
-    path('add_abonnement', communaute.add_abonnement, name="add_abonnement"),
-    path('sa/<int:id>', communaute.show_association, name="show_association"),
-    path('edas/<int:id>', communaute.edit_association, name="edit_association"),
-    path('sma/<int:id>', communaute.listmembresassociation, name="listmembresassociation"),
+   
+    path('add_abonnement', communaute.add_abonnement, name="add_abonnement"),    
+    
+    
     path('sc/<int:id>', communaute.show_communaute, name="show_communaute"),
     path('nc/', communaute.add_communaute, name="add_communaute"),
     path('ec/<int:id>', communaute.edit_communaute, name="edit_communaute"),
-    path('na/', communaute.add_association, name="add_association"),
-    path('lass/<int:id>.<int:mode>', communaute.listassociations, name="listassociations"),
-    path('lassfam/<int:id>', communaute.listassociationsfam, name="listassociationsfam"),
+
+    path('na/', association.add_association, name="add_association"),
+     path('add_ad_asso', association.add_admin_asso, name="add_admin_asso"),
+    path('sma/<int:id>', association.listmembresassociation, name="listmembresassociation"),
+    path('lass/<int:id>.<int:mode>', association.listassociations, name="listassociations"),
+    path('lassfam/<int:id>', association.listassociationsfam, name="listassociationsfam"),
+    path('sh_ad_asso/<int:id>', association.show_admin_asso, name="show_admin_asso"),
+    path('sa/<int:id>', association.show_association, name="show_association"),
+    path('edas/<int:id>', association.edit_association, name="edit_association"),
+    path('delADASSO/', association.delete_admin, name="delete_admin_association"),
+
     path('ngal/', communaute.add_galerie, name="add_galerie"),
     path('ugal/<int:id>', communaute.update_galerie, name="update_galerie"),
     path('upim/', communaute.upload_image, name="upload_image"),
@@ -203,10 +209,8 @@ urlpatterns += [
     path('lc/<int:pk>/sh', communaute.lieucle_detail, name='lieucle_detail'),
     path('lc/<int:pk>/ed', communaute.lieucle_edit, name='lieucle_edit'),
     path('lc/<int:pk>/', communaute.lieucle_delete, name='lieucle_delete'),
-
     path('lcc/<int:idcom>/', communaute.lieucle_create, name='lieucle_create'),
     path('pcc/<int:idcom>/', communaute.personnecle_create, name='personnecle_create'),
-
     path('pc/<int:pk>/de', communaute.personnecle_delete, name='personnecle_delete'),
 
 ]
@@ -251,14 +255,10 @@ urlpatterns += [
     path("liv/<int:paiement_id>/remb/", librairie.rembourser_paiement, name="rembourser_paiement"),
     path("liv/his/", librairie.historique_paiements, name="historique_paiements"),
     path("liv/<int:paiement_id>/pdf/", librairie.facture_pdf, name="facture_pdf"),
-    path("fac/verif/<int:reference>", librairie.verifier_facture, name="verifier_facture"),
-    
+    path("fac/verif/<int:reference>", librairie.verifier_facture, name="verifier_facture"),    
     path("liv/<int:livre_id>/note/", librairie.noter_livre, name="noter_livre"),
-
-
 ]
 
 urlpatterns += [ 
-    path('alm', marche.listmarkets, name="listmarches"),
-   
+    path('alm', marche.listmarkets, name="listmarches"),   
 ]
