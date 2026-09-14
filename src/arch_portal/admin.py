@@ -24,6 +24,7 @@ from arch_portal.domain.models.abonnement import Abonnement
 from arch_portal.domain.models.plantarifaire import Plan
 from arch_portal.domain.models.message import Message
 from arch_portal.domain.models.salleattentefamille import SalleAttenteFamille
+from arch_portal.domain.models.salleattentefamillemere import SalleAttenteFamilleMere
 from arch_portal.domain.models.salleattentecommunaute import SalleAttenteCommunaute
 from arch_portal.domain.models.salleattenteassociation import SalleAttenteAssociation
 from arch_portal.domain.models.paiementlivre import PaiementLivre
@@ -92,6 +93,7 @@ admin.site.register(Abonnement)
 admin.site.register(Plan)
 admin.site.register(SalleAttenteCommunaute)
 admin.site.register(SalleAttenteAssociation)
+admin.site.register(SalleAttenteFamilleMere)
 admin.site.register(SalleAttenteFamille)
 admin.site.register(Message)
 admin.site.register(Wallet)

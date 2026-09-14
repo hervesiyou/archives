@@ -245,10 +245,9 @@
 
     </style>
     <style>
-    /* Ligne séparatrice visible seulement sur desktop */
+     
     .navbar{
-        background-color: var(--gold-lt) !important;
-       /*  background-color: #1a1410 !important; */
+        background-color: var(--gold-lt) !important; 
     }
     @media (min-width: 992px) {
         .border-lg-0 { border: none !important; }
@@ -396,42 +395,33 @@
                 </div>
             </div> 
 
-                {% if messages %}
-                    <header class="messages">
-                        {% for message in messages %}
-                            <div class="alert {{ message.tags }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    </header>
-                {% endif %}
-                <div class="content">
-                    {% block content %}
-                    {% comment %} <div class="error-box">
-                        <div class="error-body text-center">
-
-                            <img src="{% static 'images/logo.png' %}" alt="logo" class="img-fluid" style="width:150px; height:150px;" />
-                            <h3 class="richbook-box text-success">RICHBOOK</h3>
-                            <h1 class="error-title text-danger">ARCHIVES</h1>
-                            <h3 class="text-uppercase error-subtitle">Savoir pour comprendre !</h3>
-                            <p class="text-muted mt-4 mb-4">Comprendre pour impacter</p>
-                            <a href="{% url 'login' %}" class="btn  btn btn-outline-success btn-rounded waves-effect waves-light mb-5 text-success">Impacter pour illuminer</a> 
+            {% if messages %}
+                <header class="messages">
+                    {% for message in messages %}
+                        <div class="alert {{ message.tags }}">
+                            {{ message }}
                         </div>
-                    </div> {% endcomment %}
-                    {%  include "includes/main.html" %}
-                    {% endblock %}
-                </div>
-        </div>
-        <!-- <div class="row"> 
-            <div class="col-md-6 col-lg-4 col-xlg-4"></div>
-            <div class="col-md-6 col-lg-4 col-xlg-4">
-                <a href="{% url 'index' %}"> <i class="fa-solid fa-info-circle"></i> A propos  </a> | 
-                <a href="{% url 'faq_index' %}" title="Comment ca marche ?" > <i class="fa-solid fa-question-circle"></i> F.A.Q - Aide</a> | 
-                
-                <a href="{% url 'contact' %}" class="card-title text-success">  <i class="fa-solid fa-envelope"></i> Contactez-Nous</a>|<span class="badge bg-success text-white mx-2">{{VERSION}}</span>
+                    {% endfor %}
+                </header>
+            {% endif %}
+            <div class="content">
+                {% block content %}
+                {% comment %} <div class="error-box">
+                    <div class="error-body text-center">
 
+                        <img src="{% static 'images/logo.png' %}" alt="logo" class="img-fluid" style="width:150px; height:150px;" />
+                        <h3 class="richbook-box text-success">RICHBOOK</h3>
+                        <h1 class="error-title text-danger">ARCHIVES</h1>
+                        <h3 class="text-uppercase error-subtitle">Savoir pour comprendre !</h3>
+                        <p class="text-muted mt-4 mb-4">Comprendre pour impacter</p>
+                        <a href="{% url 'login' %}" class="btn  btn btn-outline-success btn-rounded waves-effect waves-light mb-5 text-success">Impacter pour illuminer</a> 
+                    </div>
+                </div> {% endcomment %}
+                {%  include "includes/main.html" %}
+                {% endblock %}
             </div>
-        </div> -->
+        </div> 
+        
     </div> 
 
     <footer class="mt-3">

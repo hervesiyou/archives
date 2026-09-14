@@ -218,37 +218,91 @@ class MembreEditForm(forms.ModelForm):
         widget=forms.FileInput(attrs={
             'class':'form-control',
             "accept":'image/*'
-        }),
-        
+        }),        
     )
     delete_photo = forms.BooleanField(
         required=False,
         label="Supprimer la photo actuelle"
     )
+
+    pwd = forms.CharField(
+        required=False,
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Laisser vide pour ne pas changer'
+        }),
+        label="Nouveau mot de passe"
+    )
      
     class Meta:
         model = Membre
-        exclude = ["etatvalidation","dateinscription","approbateurs","galeries" ]
+        exclude = ["etatvalidation","dateinscription","approbateurs","galeries","token", "code_unique", "messages" ]
         # fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs) 
         
-        for field in self.fields.values():
+        for name, field in self.fields.items():
             if isinstance(field.widget, CheckboxInput):
-                field.widget.attrs.update({
-                    'class': 'form-check-input'
-                })
+                field.widget.attrs.update({'class': 'form-check-input'})
             else:
-                field.widget.attrs.update({
-                    'class': 'form-control'
-                })
+                field.widget.attrs.update({'class': 'form-control'})
 
-        # for field in self.fields.values():
-        #     print(field)
-        #     field.widget.attrs.update({
-        #         'class': 'form-control'
-        #     })
+        # Labels plus clairs
+        self.fields['nomcomplet'].label = "Nom & Prénoms"
+        self.fields['login'].label = "Login / Pseudonyme"
+        self.fields['nompere'].label = "Père (lien)"
+        self.fields['nommere'].label = "Mère (lien)"
+        self.fields['datenaissance'].label = "Date de naissance"
+        self.fields['lieunaissance'].label = "Lieu de naissance"
+        self.fields['etatcivil'].label = "Etat Civil"
+        self.fields['datedeces'].label = "Date de décès"
+        self.fields['nbenfant'].label = "Nombre d'enfants"
+
+        self.helper = FormHelper()
+        self.helper.form_tag = False 
+
+        self.helper.layout = Layout(
+            Row(
+                Column('nomcomplet', css_class='col-md-8'),
+                Column('generation', css_class='col-md-4'),
+                
+                Column('fichier_image', css_class='col-md-12'), 
+                Column('description', css_class='col-md-12'),
+                Column('login', css_class='col-md-6'),
+                Column(
+                    Field('pwd', type='password', css_class='form-control'),
+                    css_class='col-md-6',
+                ),
+                # Column('pwd', css_class='col-md-6'),
+                Column('email', css_class='col-md-6'),
+                Column('telephone', css_class='col-md-6'),
+                Column('type', css_class='col-md-2'), 
+                Column('sexe', css_class='col-md-2'), 
+                Column('etatcivil', css_class='col-md-2'), 
+                Column('nbenfant', css_class='col-md-2'), 
+                Column('vivant', css_class='col-md-2'), 
+                Column('datedeces', css_class='col-md-2'), 
+                Column('datenaissance', css_class='col-md-3'), 
+                Column('lieunaissance', css_class='col-md-3'), 
+                Column('residence', css_class='col-md-3'), 
+                Column('notabilite', css_class='col-md-3'), 
+                css_class='row'
+            ),
+            Row(
+                Column('education', css_class='col-md-3'), 
+                Column('diplomes', css_class='col-md-3'), 
+                Column('profession', css_class='col-md-3'), 
+                Column('associations', css_class='col-md-3'), 
+                Column('familles', css_class='col-md-8'), 
+                Column('communautes', css_class='col-md-4'), 
+                Column('pere', css_class='col-md-3'), 
+                Column('mere', css_class='col-md-3'), 
+                Column('nompere', css_class='col-md-3'), 
+                Column('nommere', css_class='col-md-3'),                 
+                css_class='row'
+            ),
+        )
 
 class UsersLoginForm(forms.ModelForm):
     pwd = forms.CharField(widget=forms.PasswordInput, label="Mot de passe")

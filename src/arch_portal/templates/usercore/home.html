@@ -30,35 +30,38 @@
     <div >             
         {% block body %}
             {% if commandes %}
-            <div class="card-body">
-                <table class="table">
-                    <thead >
-                        <tr class="text-danger">
-                            <th>Nom</th>
-                            <th>Message</th>
-                            <th>Livres</th>
-                            <th>Librairie</th>
-                        </tr>
-                    </thead>
-                    <tbody> 
-                        {% for com in commandes %}
-                            <tr>
-                                <td>{{com.nom}} / {{com.telephone}}</td>
-                                <td>{{com.message}}</td>
-                                <td>{{com.livre}} / {{com.librairie}} </td>
-                                <td>{{com.livre.get_librairies}} </td>
+                <div class="card-body">
+                    <table class="table">
+                        <thead >
+                            <tr class="text-danger">
+                                <th>Nom</th>
+                                <th>Message</th>
+                                <th>Livres</th>
+                                <th>Librairie</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody> 
+                            {% for com in commandes %}
+                                <tr>
+                                    <td>{{com.nom}} / {{com.telephone}}</td>
+                                    <td>{{com.message}}</td>
+                                    <td>{{com.livre}} / {{com.librairie}} </td>
+                                    <td>{{com.livre.get_librairies}} </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             {% endif %}
         {% endblock %}
     </div>
 
     <div class="row">
         <div class="col-lg-12">
-            <h3 class="bg-default text-center text-white">  {{ request.session.nomcomplet}} </h3> 
+            <h3 class="bg-default text-center text-white">  
+                {{ request.session.nomcomplet}} 
+                <a href="{% url 'membre_update' user.id %}" class="text-center">   <i class="fa fa-edit"></i>  </a>
+            </h3> 
             {%  include 'usercore/partials/home.html'  with membre=user %}
         </div>
     </div>

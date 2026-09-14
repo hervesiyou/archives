@@ -79,6 +79,7 @@ urlpatterns += [
     path('nf/', famille.add_famille, name="add_famille"),
     path('sh_ad_fa/<int:id>', famille.show_admin_fam, name="show_admin_fam"),
     path('add_ad_fam', famille.add_admin_fam, name="add_admin_fam"),
+    path('add_join_fam_mere', famille.add_join_fam_mere, name="add_join_fam_mere"),
     path("fam/<int:famille_id>", famille.famille_generations, name="famille_generations"),
     path("fam/<int:famille_id>/arbre", famille.famille_arbre, name="famille_arbre"),
     path("fam/<int:famille_id>/ag", famille.famille_arbre_graphique, name="famille_arbre_graphique"),
@@ -136,6 +137,9 @@ urlpatterns += [
    
     path('admaccinv/<str:token>', core.admin_accept_invitation, name="admin_accept_invitation"),
     path('tem', core.temoignages, name="temoignages"),
+
+    path('mmes', core.mes_messages, name="mes_messages"),
+
     path('abosm', core.souscrire_abonnement, name="souscrire_abonnement"),
     path('shabo/<int:user_id>', core.show_subscriptions, name="show_subscriptions"),
     path('tarifs', membre.user_abonnement, name="tarifs"),
@@ -143,7 +147,9 @@ urlpatterns += [
     path('add_ad_comsalleatt', core.add_user_salleattcom, name="ad_sal_com"),
     path('add_ad_assosalleatt', core.add_user_salleattasso, name="ad_sal_asso"),
     path('valsatt', core.valide_salleatt, name="valide_salle_att"),
+    # path('valsattfammere', core.valide_salleatt_fammere, name="valide_salle_att_fammere"),
     path('shfasal/<int:id>', core.show_fam_salle, name="show_fam_salle"),
+    path('shfasalfusion/<int:id>', core.show_fam_salle_fusion, name="show_fam_salle_fusion"),
     path('shcosal/<int:id>', core.show_com_salle, name="show_com_salle"),
     path('shassosal/<int:id>', core.show_asso_salle, name="show_asso_salle"),
     path('a/faq', core.faq, name="faq_archcore"),
@@ -170,7 +176,7 @@ urlpatterns += [
     path('ec/<int:id>', communaute.edit_communaute, name="edit_communaute"),
 
     path('na/', association.add_association, name="add_association"),
-     path('add_ad_asso', association.add_admin_asso, name="add_admin_asso"),
+    path('add_ad_asso', association.add_admin_asso, name="add_admin_asso"),
     path('sma/<int:id>', association.listmembresassociation, name="listmembresassociation"),
     path('lass/<int:id>.<int:mode>', association.listassociations, name="listassociations"),
     path('lassfam/<int:id>', association.listassociationsfam, name="listassociationsfam"),
@@ -218,6 +224,8 @@ urlpatterns += [
 urlpatterns += [ 
     path('u/<int:id>', membre.show_user, name="show_user"),
     path('upimhis/', membre.upload_image_histoire, name="upload_image_histoire"),
+
+    path('mem/<int:pk>/ed/', membre.membre_update, name='membre_update'),
     
     path('new/', membre.add_user, name="add_user"),
     path('ed/<int:id>', membre.edit_user, name="edit_membre"),

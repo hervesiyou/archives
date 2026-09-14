@@ -18,12 +18,16 @@ from arch_portal.domain.models.librairie import Librairie
 from arch_portal.domain.models.librairiemessage import LibrairieMessage
 from arch_portal.domain.models.communitymessage import CommunauteMessage
 from arch_portal.domain.models.salleattentecommunaute import SalleAttenteCommunaute
+from arch_portal.domain.models.salleattentefamillemere import SalleAttenteFamilleMere
 from arch_portal.domain.models.salleattenteassociation import SalleAttenteAssociation
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from arch_portal.use_cases.services.subscription_service import get_membre_from_session
 
+from django.db.models import Q
+
 import json
+from datetime import date
 from arch_portal.use_cases.services.core import send_email
 from django.http import HttpResponseForbidden, JsonResponse
 from datetime import date, datetime
@@ -41,8 +45,7 @@ import threading
 
 def about(request):
     # user = get_object_or_404(Membre, id=user_id)
-    # abonnements = Abonnement.objects.filter(membre=user, is_active=True)
- 
+    # abonnements = Abonnement.objects.filter(membre=user, is_active=True) 
     return render(request, "includes/about.html" )
 
 def show_subscriptions(request, user_id):
@@ -53,8 +56,7 @@ def show_subscriptions(request, user_id):
 @transaction.atomic
 @csrf_exempt
 def souscrire_abonnement(request):
-    # les plan_appli sont FREE BASIC PRO DIAMOND
-    
+    # les plan_appli sont FREE BASIC PRO DIAMOND    
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     if is_ajax :
         if request.method == "POST" :
@@ -256,8 +258,6 @@ def souscrire_abonnement(request):
 
     return HttpResponseForbidden()
 
-
-
 def temoignages(request): 
     testimonials = [ 
         {
@@ -386,21 +386,35 @@ def show_com_salle(request,id):
     # else:
         # return redirect("login")
 
-def show_fam_salle(request,id):
-    user = get_membre_from_session(request)
-    # if(request.session["userid"]!=None):
-    # user = Membre.objects.get(id=request.session["userid"])
+def show_fam_salle_fusion(request,id):
+    user = get_membre_from_session(request) 
     if(user != None):
         com = Famille.objects.get(id=id)
-
-        users = SalleAttenteFamille.objects.filter(famille=com)
-        return render(request, "usercore/salleattentefam.html", { "famille": com, "users":users, "user":user})
+        salles = SalleAttenteFamilleMere.objects.filter(famille=com)
+        return render(request, "usercore/salleattentefammere.html", { 
+            "famille": com, 
+            "sallesattentes":salles, 
+            # "famillemere":com.famille_mere,
+            "user":user
+        })
     else:
         # raise MembreException( f" Membre {request.session['userid']} introuvable ")  
         return redirect(f"{reverse('login')}?next={request.get_full_path()}")
     # else:
         # return redirect("login")
 
+def show_fam_salle(request,id):
+    user = get_membre_from_session(request)
+    # if(request.session["userid"]!=None):
+    # user = Membre.objects.get(id=request.session["userid"])
+    if(user != None):
+        com = Famille.objects.get(id=id)
+        users = SalleAttenteFamille.objects.filter(famille=com)
+        return render(request, "usercore/salleattentefam.html", { "famille": com, "users":users, "user":user})
+    else:
+        # raise MembreException( f" Membre {request.session['userid']} introuvable ")  
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+  
 def show_asso_salle(request,id):
     user = get_membre_from_session(request)
 
@@ -414,8 +428,6 @@ def show_asso_salle(request,id):
     else:
         # raise MembreException( f" Membre {request.session['userid']} introuvable ") 
         return redirect(f"{reverse('login')}?next={request.get_full_path()}") 
-# else:
-        # return redirect("login")
 
 def admin_accept_invitation(request,token):
     
@@ -440,7 +452,6 @@ def admin_accept_invitation(request,token):
     messages.success(request,f" Bravo, vous avez accepté l'invitation de  { inv.nomcomplet} à administrer { inv.famille.nom }  !")
 
     return redirect('show_famille', id=inv.famille.id)
-
 
 def admin_create(request,id):
 
@@ -501,7 +512,27 @@ def admin_create(request,id):
             
     return redirect("edit_famille",id=famille.id )
 
+def mes_messages(request):
+    try:
+        userid = request.session.get("userid","") 
+        membre = Membre.objects.get(id=userid)
+        # ou selon votre structure : membre = request.user.membre
+    except Membre.DoesNotExist:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}") 
 
+    messages = membre.membres_message.all().order_by('-date_ajout')
+    # messages = Message.objects.filter(
+    #     Q(destinataire=membre) | Q(expediteur=membre)
+    # ).select_related('expediteur', 'destinataire').order_by('-date_envoi')
+
+    # Marquer comme lus les messages reçus
+    messages.update(lu=True)
+
+    context = {
+        'messages': messages,
+        'membre': membre,
+    }
+    return render(request, 'messages/mes_messages.html', context)
 
 @csrf_exempt
 def valide_salleatt(request):
@@ -518,7 +549,7 @@ def valide_salleatt(request):
                     return JsonResponse({'status': False ,"message": "Merci de vous connecter avant tout abonnement !"})
                 else:
                     if data.get('direction') is None:
-                        return JsonResponse({'status': False ,"message": "Probleme de procedure !"})
+                        return JsonResponse({'status': False ,"message": "Problème de procédure !"})
                     else:
                         user = Membre.objects.get(id=userid)
 
@@ -567,7 +598,31 @@ def valide_salleatt(request):
                                     salle.association.save()
                                     message = f"Merci {salle.personne.nomcomplet} , a été autorisé a adherer à  {salle.association.nom} "
                                 else:
-                                    return JsonResponse({'status': False ,"message": "Probleme de procedure de validation !"})
+                                    # je veux valider la fusion  de deux familles 
+                                    if( data.get("direction") == "FAMMERE"):
+
+                                        salle = SalleAttenteFamilleMere.objects.get(id=data.get("salle"))
+
+                                        salle.statut = 'accepte'
+                                        salle.famille.famille_mere =  salle.famillemere
+                                        salle.famillemere.familles_enfant.add(salle.famille)
+                                        salle.famille.save()
+                                        salle.famillemere.save()
+                                        # salle.approuver(user)
+
+                                        mes = Message(
+                                            sujet=f" Votre validation de la fusion  de  {salle.famille.nom}  à {salle.famillemere.nom} ",
+                                            contenu = f" Un administrateur à validé votre fusion de { salle.famille.nom} à {salle.famillemere.nom} , vous pouvez desormais y acceder .",
+                                            date_ajout = date.today()
+                                        )
+                                        
+                                        mes.save()
+                                        salle.personne.messages.add( mes )
+                                        salle.personne.save()
+                                        # salle.save()
+                                        message = f" Un administrateur à validé votre fusion de { salle.famille.nom} à {salle.famillemere.nom} , vous pouvez desormais y acceder ."
+                                    else: 
+                                        return JsonResponse({'status': False ,"message": "Probleme de procedure de fusion des familles !"})
                         
                         salle.validateur =  user
                         salle.date_validation =  date.today()

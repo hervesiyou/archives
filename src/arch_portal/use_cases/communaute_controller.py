@@ -876,8 +876,7 @@ def add_galerie(request):
 def community_history(request, community_id):
     com = Communaute.objects.get(id=community_id)
     # histoires = com.histoires.all().order_by('-date', 'nom')
-    histoires = MiniHistoire.objects.filter(communaute=com).order_by('-date', 'nom')
-    
+    histoires = MiniHistoire.objects.filter(communaute=com).order_by('-date', 'nom')    
     # histoires = com.histoires.filter(
     #     models.Q(nom__isnull=False) & ~models.Q(nom="") |
     #     models.Q(description__isnull=False) & ~models.Q(description="")

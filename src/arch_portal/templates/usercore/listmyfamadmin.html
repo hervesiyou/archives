@@ -41,7 +41,7 @@
                         <thead >
                             <tr class="text-danger">
                                 <th>Nom</th>
-                                <th>Description</th> 
+                                {% comment %} <th>Description</th>  {% endcomment %}
                                 <th>.</th>
                             </tr>
                         </thead>
@@ -51,12 +51,14 @@
                                     <td>
                                         <a href="{% url 'show_famille' com.id %}" class="text-center">  {{com.nom}}  </a>                                   
                                         {% if not  com.publique %} <span class="badge bg-danger"> privée</span>{% endif %} 
+
+                                        {{com.origine}}  - {{com.type}}
+
                                     </td>
-                                    <td>{{com.description}}
-                                    <br/>
-                                    {{com.origine}}  - {{com.type}} </td>
+                                    {% comment %} <td>{{com.description}} <br/> {{com.origine}}  - {{com.type}} </td> {% endcomment %}
                                     <td>
                                     <a href="{% url 'show_fam_salle' com.id %}" class="badge bg-info"> Salle d'attente </a>
+                                    <a href="{% url 'show_fam_salle_fusion' com.id %}" class="badge bg-danger"> Salle d'attente fusion de famille </a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -65,5 +67,7 @@
                 </div>
             </div>
         {% endif %} 
+        
 </div>
+ 
 {% endblock %}

@@ -55,7 +55,8 @@ $(document).ready(function(){
                     // console.log(returnedData);  
                     AjaxLoader.update(
                         "Traitement terminé..."
-                    );           
+                    );  
+                             
                     if (returnedData.status) {
                         Swal.fire({
                             icon: "success",
@@ -65,7 +66,7 @@ $(document).ready(function(){
                             showConfirmButton: false
 
                         }).then(
-                            ()=>{
+                            () => {
                                 $("#payMessage").html(` <div class="alert alert-info messageDiv">${returnedData.message} </div>`  )
                             }
                         ); 
@@ -351,14 +352,16 @@ $(document).ready(function(){
                 dataType    : "JSON",
                 beforeSend      : function(){
                     // alert(JSON.stringify(data) + ", url: " + this.url)
+                    AjaxLoader.show(
+                        "Demande d'union des familles en cours..."
+                    );
                 },
                 error: function(error) {
                     console.error(error);
                     // alert(JSON.stringify(error))
                 },
                 success  : function(returnedData){
-                    // console.log(returnedData); 
-            
+                    // console.log(returnedData);             
                     if (returnedData.status) {
                         Swal.fire({
                             icon: "success",
@@ -383,6 +386,9 @@ $(document).ready(function(){
 
                         }); 
                     }
+                },
+                complete: function(){
+                    AjaxLoader.hide();
                 }
 
             })
@@ -403,586 +409,791 @@ $(document).ready(function(){
     $(".partComID").on('click', function(e){                         
         e.preventDefault();
        
-			var data = {                      
- 				"comid": $(this).data("com"), 
- 				"userid": $(this).data("user"), 
-			} 
-            // alert(BASEURL)
-            if( parseInt(data.userid) > 0 && data.comid != undefined   ){
+		var data = {                      
+            "comid": $(this).data("com"), 
+            "userid": $(this).data("user"), 
+        } 
+        // alert(BASEURL)
+        if( parseInt(data.userid) > 0 && data.comid != undefined   ){
 
-                $.ajax({
-                    method      : "POST",
-                    data        : JSON.stringify(data),
-                    url         : BASEURL+"/add_ad_comsalleatt",  
-                    dataType    : "JSON",
-                    beforeSend      : function(){
-                        // alert(JSON.stringify(data))
-                        AjaxLoader.show(
-                            "Traitement en cours..."
-                        );
-                    },
-                    error: function(error) {
-                        console.error(error); 
-                    },
-                    complete: function(){
-                        AjaxLoader.hide();
-                        // window.location.reload();
-                    },
-                    success  : function(returnedData){
-                            AjaxLoader.update(
-                                "Traitement terminé..."
-                            ); 
-                            // alert(JSON.stringify(returnedData))
-                    
-                            if (returnedData.status) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: " Merci !" ,
-                                    text:   " Ajout Reussi , votre demande à été pris en compte, un adminitrateur etudiera et vous serez notifié de la validation de votre accès ! " ,
-                                    timer: 4000,
-                                    showConfirmButton: false
-        
-                                }).then((result) => {
-                                    $(".clos").click();
-                                    window.location.reload()
-                                     
-                                  });
-
-                            }else{
-                                Swal.fire({
-                    
-                                    icon: "error",
-                                    title: " Oupps !" ,
-                                    text:   "  " + returnedData.message ,
-                                    timer: 4000,
-                                    showConfirmButton: false
-        
-                                }).then((result) => {
-                                    // window.location.reload()
-                                     
-                                  });
-                                 
-                            }   
-                    }, 
-
-                });
-
-			}else{
-
-                Swal.fire({
-                    icon: "error",
-                    title: " Oupps !" ,
-                    text:   " Merci de vous connecter d'abord !!!" ,
-                    timer: 4000,
-                    showConfirmButton: false
-                });
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : BASEURL+"/add_ad_comsalleatt",  
+                dataType    : "JSON",
+                beforeSend      : function(){
+                    // alert(JSON.stringify(data))
+                    AjaxLoader.show(
+                        "Traitement en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error); 
+                },
+                complete: function(){
+                    AjaxLoader.hide();
+                    // window.location.reload();
+                },
+                success  : function(returnedData){
+                        AjaxLoader.update(
+                            "Traitement terminé..."
+                        ); 
+                        // alert(JSON.stringify(returnedData))
                 
-			}
+                        if (returnedData.status) {
+                            Swal.fire({
+                                icon: "success",
+                                title: " Merci !" ,
+                                text:   " Ajout Reussi , votre demande à été pris en compte, un adminitrateur etudiera et vous serez notifié de la validation de votre accès ! " ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                $(".clos").click();
+                                window.location.reload()
+                                    
+                                });
+
+                        }else{
+                            Swal.fire({
+                
+                                icon: "error",
+                                title: " Oupps !" ,
+                                text:   "  " + returnedData.message ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                // window.location.reload()
+                                    
+                                });
+                                
+                        }   
+                },
+                complete: function(){
+                    AjaxLoader.hide();
+                }
+
+            });
+
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de vous connecter d'abord !!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            
+        }
     })
 
     $(".partAssoID").on('click', function(e){                         
         e.preventDefault();
        
-			var data = {                      
- 				"assoid": $(this).data("asso"), 
- 				"userid": $(this).data("user"), 
-			} 
-            if( parseInt(data.userid) > 0 && data.assoid != undefined   ){
+        var data = {                      
+            "assoid": $(this).data("asso"), 
+            "userid": $(this).data("user"), 
+        } 
+        if( parseInt(data.userid) > 0 && data.assoid != undefined   ){
 
-                $.ajax({
-                    method      : "POST",
-                    data        : JSON.stringify(data),
-                    url         : BASEURL+"/add_ad_assosalleatt",  
-                    dataType    : "JSON",
-                    beforeSend      : function(){
-                        //alert(JSON.stringify(data))
-                    },
-                    error: function(error) {
-                        console.error(error); 
-                    },
-                    success  : function(returnedData){
-                            console.log(returnedData);
-                            // alert(JSON.stringify(returnedData))
-                    
-                            if (returnedData.status) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: " Merci !" ,
-                                    text:   " Ajout Reussi , votre demande à été pris en compte, un adminitrateur etudiera et vous serez notifié de la validation de votre accès ! " ,
-                                    timer: 4000,
-                                    showConfirmButton: false
-        
-                                }).then((result) => {
-                                    $(".clos").click();
-                                    window.location.reload()
-                                     
-                                  });
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : BASEURL+"/add_ad_assosalleatt",  
+                dataType    : "JSON",
+                beforeSend      : function(){
+                    //alert(JSON.stringify(data))
+                    AjaxLoader.show(
+                        "Demande d'union des familles en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error); 
+                },
+                success  : function(returnedData){
+                        // console.log(returnedData);
+                        // alert(JSON.stringify(returnedData))
+                
+                        if (returnedData.status) {
+                            Swal.fire({
+                                icon: "success",
+                                title: " Merci !" ,
+                                text:   " Ajout Reussi , votre demande à été pris en compte, un adminitrateur etudiera et vous serez notifié de la validation de votre accès ! " ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                $(".clos").click();
+                                window.location.reload()
+                                    
+                                });
 
-                            }else{
-                                Swal.fire({
-                    
-                                    icon: "error",
-                                    title: " Oupps !" ,
-                                    text:   "  " + returnedData.message ,
-                                    timer: 4000,
-                                    showConfirmButton: false
-        
-                                }).then((result) => {
-                                    window.location.reload()
-                                     
-                                  });
-                                 
-                            }   
-                    }, 
+                        }else{
+                            Swal.fire({
+                
+                                icon: "error",
+                                title: " Oupps !" ,
+                                text:   "  " + returnedData.message ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                window.location.reload()
+                                    
+                                });
+                                
+                        }   
+                }, 
+                complete: function(){
+                    AjaxLoader.hide();
+                }
 
-                });
+            });
 
-			}else{
+        }else{
 
-                Swal.fire({
-                    icon: "error",
-                    title: " Oupps !" ,
-                    text:   " Merci de vous connecter d'abord !!!" ,
-                    timer: 4000,
-                    showConfirmButton: false
-                });
-                console.table( data )
-			}
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de vous connecter d'abord !!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
+    })
+
+     $(".valideUserFAMMEREID").on('click', function(e){                         
+        e.preventDefault();
+       
+        var data = {                      
+            "salle": $(this).data("salle"), 
+            "direction": $(this).data("dir"), 
+        } 
+        // alert(JSON.stringify(data))
+        if( parseInt(data.salle) > 0 && data.direction != undefined   ){
+
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : BASEURL+"/valsatt",  
+                dataType    : "JSON",
+                beforeSend      : function(){
+                    //alert(JSON.stringify(data))
+                    AjaxLoader.show(
+                        "Demande d'union des familles en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error); 
+                },
+                success  : function(returnedData){
+                        // console.log(returnedData);
+                        // alert(JSON.stringify(returnedData))
+                
+                        if (returnedData.status) {
+                            Swal.fire({
+                                icon: "success",
+                                title: " Validation de la demande de fusion  reussie ! !" ,
+                                text:   "  "+returnedData.message ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                // $(".clos").click();
+                                window.location.reload()                                    
+                            });
+
+                        }else{
+                            Swal.fire({
+                
+                                icon: "error",
+                                title: " Oupps !" ,
+                                text:   "  " + returnedData.message ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                window.location.reload()                                    
+                            });
+                                
+                        }   
+                }, 
+                complete: function(){
+                    AjaxLoader.hide();
+                }
+
+            });
+
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de vous connecter d'abord !!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
     })
 
     $(".valideUserID").on('click', function(e){                         
         e.preventDefault();
        
-			var data = {                      
- 				"salle": $(this).data("salle"), 
- 				"direction": $(this).data("dir"), 
-			} 
-            // alert(JSON.stringify(data))
-            if( parseInt(data.salle) > 0 && data.direction != undefined   ){
+        var data = {                      
+            "salle": $(this).data("salle"), 
+            "direction": $(this).data("dir"), 
+        } 
+        // alert(JSON.stringify(data))
+        if( parseInt(data.salle) > 0 && data.direction != undefined   ){
 
-                $.ajax({
-                    method      : "POST",
-                    data        : JSON.stringify(data),
-                    url         : BASEURL+"/valsatt",  
-                    dataType    : "JSON",
-                    beforeSend      : function(){
-                        //alert(JSON.stringify(data))
-                    },
-                    error: function(error) {
-                        console.error(error); 
-                    },
-                    success  : function(returnedData){
-                            console.log(returnedData);
-                            // alert(JSON.stringify(returnedData))
-                    
-                            if (returnedData.status) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: " Validation de la demande reussie ! !" ,
-                                    text:   "  "+returnedData.message ,
-                                    timer: 4000,
-                                    showConfirmButton: false
-        
-                                }).then((result) => {
-                                    // $(".clos").click();
-                                    window.location.reload()
-                                     
-                                });
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : BASEURL+"/valsatt",  
+                dataType    : "JSON",
+                beforeSend      : function(){
+                    //alert(JSON.stringify(data))
+                    AjaxLoader.show(
+                        "Demande d'union des familles en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error); 
+                },
+                success  : function(returnedData){
+                    // console.log(returnedData);
+                    // alert(JSON.stringify(returnedData))
+            
+                    if (returnedData.status) {
+                        Swal.fire({
+                            icon: "success",
+                            title: " Validation de la demande reussie ! !" ,
+                            text:   "  "+returnedData.message ,
+                            timer: 4000,
+                            showConfirmButton: false
 
-                            }else{
-                                Swal.fire({
-                    
-                                    icon: "error",
-                                    title: " Oupps !" ,
-                                    text:   "  " + returnedData.message ,
-                                    timer: 4000,
-                                    showConfirmButton: false
-        
-                                }).then((result) => {
-                                    window.location.reload()
-                                     
-                                  });
-                                 
-                            }   
-                    }, 
+                        }).then((result) => {
+                            // $(".clos").click();
+                            window.location.reload()
+                                
+                        });
 
-                });
+                    }else{
+                        Swal.fire({
+            
+                            icon: "error",
+                            title: " Oupps !" ,
+                            text:   "  " + returnedData.message ,
+                            timer: 4000,
+                            showConfirmButton: false
 
-			}else{
+                        }).then((result) => {
+                            window.location.reload()
+                                
+                            });
+                            
+                    }   
+                }, 
+                complete: function(){
+                    AjaxLoader.hide();
+                }
 
-                Swal.fire({
-                    icon: "error",
-                    title: " Oupps !" ,
-                    text:   " Merci de vous connecter d'abord !!!" ,
-                    timer: 4000,
-                    showConfirmButton: false
-                });
-                console.table( data )
-			}
+            });
+
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de vous connecter d'abord !!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
     })
 
     $(".partFamID").on('click', function(e){                         
         e.preventDefault();
        
-			var data = {                      
- 				"famid": $(this).data("fam"), 
- 				"userid": $(this).data("user"), 
-			} 
-            if( parseInt(data.userid) > 0 && data.famid != undefined   ){
+        var data = {                      
+            "famid": $(this).data("fam"), 
+            "userid": $(this).data("user"), 
+        } 
+        if( parseInt(data.userid) > 0 && data.famid != undefined   ){
 
-                $.ajax({
-                    method      : "POST",
-                    data        : JSON.stringify(data),
-                    url         : BASEURL+"/add_ad_famsalleatt",  
-                    dataType    : "JSON",
-                    beforeSend      : function(){
-                        // alert(JSON.stringify(data))
-                    },
-                    error: function(error) {
-                        console.error(error); 
-                    },
-                    success  : function(returnedData){
-                            console.log(returnedData);
-                            // alert(JSON.stringify(returnedData))
-                    
-                            if (returnedData.status) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: " Merci !" ,
-                                    text:   " Ajout Reussi , votre demande à été pris en compte, un adminitrateur etudiera et vous serez notifié de la validation de votre accès ! " ,
-                                    timer: 4000,
-                                    showConfirmButton: false
-        
-                                }).then((result) => {
-                                    $(".clos").click();
-                                    window.location.reload()
-                                     
-                                  });
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : BASEURL+"/add_ad_famsalleatt",  
+                dataType    : "JSON",
+                beforeSend      : function(){
+                    // alert(JSON.stringify(data))
+                    AjaxLoader.show(
+                        "Demande d'union des familles en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error); 
+                },
+                success  : function(returnedData){
+                        console.log(returnedData);
+                        // alert(JSON.stringify(returnedData))
+                
+                        if (returnedData.status) {
+                            Swal.fire({
+                                icon: "success",
+                                title: " Merci !" ,
+                                text:   " Ajout Reussi , votre demande à été pris en compte, un adminitrateur etudiera et vous serez notifié de la validation de votre accès ! " ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                $(".clos").click();
+                                window.location.reload()
+                                    
+                                });
 
-                            }else{
-                                Swal.fire({
-                    
-                                    icon: "error",
-                                    title: " Oupps !" ,
-                                    text:   "  " + returnedData.message ,
-                                    timer: 4000,
-                                    showConfirmButton: false
-        
-                                }).then((result) => {
-                                    window.location.reload()
-                                     
-                                  });
-                                 
-                            }   
-                    }, 
+                        }else{
+                            Swal.fire({
+                
+                                icon: "error",
+                                title: " Oupps !" ,
+                                text:   "  " + returnedData.message ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                window.location.reload()
+                                    
+                                });
+                                
+                        }   
+                }, 
+                complete: function(){
+                    AjaxLoader.hide();
+                }
 
-                });
+            });
 
-			}else{
+        }else{
 
-                Swal.fire({
-                    icon: "error",
-                    title: " Oupps !" ,
-                    text:   " Merci de vous connecter d'abord !!!" ,
-                    timer: 4000,
-                    showConfirmButton: false
-                });
-                console.table( data )
-			}
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de vous connecter d'abord !!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
     })
 
-    $("#addAdminFamID").on('click', function(e){                         
-        e.preventDefault();
-       
-			var data = {                      
-				"adminid": $("select[name='adminFam'] option:selected").val(), 
-				"famid": $(this).data("fam"), 
-			};
-            
-           
-			if( data.adminid.length > 0 && data.famid != undefined   ){
+    $("#addAdminFamID").on('click', function(e){  
 
-                $.ajax({
-                    method      : "POST",
-                    data        : JSON.stringify(data),
-                    url         : BASEURL+"/add_ad_fam",  
-                    dataType    : "JSON",
-                    beforeSend      : function(){
-                        // alert(JSON.stringify(data))
-                    },
-                    error: function(error) {
-                        console.error(error);
-                        // alert(JSON.stringify(error))
-                    },
-                    success  : function(returnedData){
-                            console.log(returnedData);
-                            // alert(JSON.stringify(returnedData))
-                    
-                            if (returnedData.status) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: " Merci !" ,
-                                    text:   " Ajout Reussi de ce administrateur " ,
-                                    timer: 4000,
-                                    showConfirmButton: false
+        e.preventDefault();       
+        var data = {                      
+            "adminid": $("select[name='adminFam'] option:selected").val(), 
+            "famid": $(this).data("fam"), 
+        };        
         
-                                }).then((result) => {
-                                    $(".clos").click();
-                                    window.location.reload()
-                                     
-                                  });
+        if( data.adminid.length > 0 && data.famid != undefined   ){
 
-                            }else{
-                                Swal.fire({
-                    
-                                    icon: "error",
-                                    title: " Oupps !" ,
-                                    text:   "  " + returnedData.message ,
-                                    timer: 4000,
-                                    showConfirmButton: false
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : BASEURL+"/add_ad_fam",  
+                dataType    : "JSON",
+                beforeSend      : function(){
+                    // alert(JSON.stringify(data))
+                    AjaxLoader.show(
+                        "Souscription à votre abonnement en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error);
+                    // alert(JSON.stringify(error))
+                },
+                success  : function(returnedData){
+                        // console.log(returnedData);
+                        // alert(JSON.stringify(returnedData))
+                         AjaxLoader.update(
+                            "Traitement terminé..."
+                        ); 
+                
+                        if (returnedData.status) {
+                            Swal.fire({
+                                icon: "success",
+                                title: " Merci !" ,
+                                text:   " Ajout Reussi de ce administrateur " ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                $(".clos").click();
+                                window.location.reload()
+                                    
+                                });
+
+                        }else{
+                            Swal.fire({
+                
+                                icon: "error",
+                                title: " Oupps !" ,
+                                text:   "  " + returnedData.message ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                window.location.reload()
+                                    
+                                });
+                                
+                        }   
+                }, 
+                complete: function(){
+                    AjaxLoader.hide();
+                }
+
+            });
+
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de fournir toutes les informations requises!!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
+
+    });
+
+    $("#addFamMereID").on('click', function(e){  
+
+        e.preventDefault();       
+        var data = {                      
+            "fammereid": $("select[name='famMere'] option:selected").val(), 
+            "famid": $(this).data("fam"), 
+        };        
         
-                                }).then((result) => {
-                                    window.location.reload()
-                                     
-                                  });
-                                 
-                            }   
-                    }, 
+        if( data.fammereid.length > 0 && data.famid != undefined   ){
 
-                });
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : BASEURL+"/add_join_fam_mere",  
+                dataType    : "JSON",
+                beforeSend      : function(){
+                    // alert(JSON.stringify(data))
+                    AjaxLoader.show(
+                        "Demande d'union des familles en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error);
+                    // alert(JSON.stringify(error))
+                },
+                success  : function(returnedData){
+                        console.log(returnedData);
+                        // alert(JSON.stringify(returnedData))
+                         AjaxLoader.update(
+                            "Traitement terminé..."
+                        ); 
+                
+                        if (returnedData.status) {
+                            Swal.fire({
+                                icon: "success",
+                                title: " Merci !" ,
+                                text:   " Ajout Reussi de la demande, un administrateur s'en chargera ! " ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                $(".clos").click();
+                                window.location.reload()
+                                    
+                                });
 
-			}else{
+                        }else{
+                            Swal.fire({
+                
+                                icon: "error",
+                                title: " Oupps !" ,
+                                text:   "  " + returnedData.message ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                window.location.reload()
+                                    
+                            });
+                                
+                        }   
+                }, 
+                complete: function(){
+                    AjaxLoader.hide();
+                }
 
-                Swal.fire({
-                    icon: "error",
-                    title: " Oupps !" ,
-                    text:   " Merci de fournir toutes les informations requises!!!" ,
-                    timer: 4000,
-                    showConfirmButton: false
-                });
-                console.table( data )
-			}
+            });
+
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de fournir toutes les informations requises!!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
 
     });
 
     $("#addAdminComID").on('click', function(e){                         
         e.preventDefault();
        
-			var data = {                      
-				"adminid": $("select[name='admin'] option:selected").val(), 
-				"comid": $(this).data("com"), 
-			};
-           
-			if( data.adminid.length > 0 && data.comid != undefined   ){
-
-                $.ajax({
-                    method      : "POST",
-                    data        : JSON.stringify(data),
-                    url         : BASEURL+"/add_ad_com",  
-                    dataType    : "JSON",
-                    beforeSend      : function(){
-                        //alert(JSON.stringify(data))
-                    },
-                    error: function(error) {
-                        console.error(error);
-                        alert(JSON.stringify(error))
-                    },
-                    success  : function(returnedData){
-                            console.log(returnedData);
-                            // alert(JSON.stringify(returnedData))
-                    
-                            if (returnedData.status) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: " Merci !" ,
-                                    text:   " Ajout Reussi de ce administrateur " ,
-                                    timer: 4000,
-                                    showConfirmButton: false
+        var data = {                      
+            "adminid": $("select[name='admin'] option:selected").val(), 
+            "comid": $(this).data("com"), 
+        };
         
-                                }).then((result) => {
-                                    $(".clos").click();
-                                    window.location.reload()
-                                     
-                                  });
+        if( data.adminid.length > 0 && data.comid != undefined   ){
 
-                            }else{
-                                Swal.fire({
-                    
-                                    icon: "error",
-                                    title: " Oupps !" ,
-                                    text:   "  " + returnedData.message ,
-                                    timer: 4000,
-                                    showConfirmButton: false
-        
-                                }).then((result) => {
-                                    window.location.reload()
-                                     
-                                  });
-                                 
-                            }   
-                    }, 
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : BASEURL+"/add_ad_com",  
+                dataType    : "JSON",
+                beforeSend      : function(){
+                    //alert(JSON.stringify(data))
+                    AjaxLoader.show(
+                        "Demande  en cours..."
+                    );
+                },
+                error: function(error) {
+                    // console.error(error);
+                    // alert(JSON.stringify(error))
+                    AjaxLoader.show(
+                        error + " ..."
+                    );
+                },
+                success  : function(returnedData){
+                        // console.log(returnedData);
+                        // alert(JSON.stringify(returnedData))
+                
+                        if (returnedData.status) {
+                            Swal.fire({
+                                icon: "success",
+                                title: " Merci !" ,
+                                text:   " Ajout Reussi de ce administrateur " ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                $(".clos").click();
+                                window.location.reload()
+                                    
+                                });
 
-                });
-			}else{
+                        }else{
+                            Swal.fire({
+                
+                                icon: "error",
+                                title: " Oupps !" ,
+                                text:   "  " + returnedData.message ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                window.location.reload()
+                                    
+                                });
+                                
+                        }   
+                }, 
+                complete: function(){
+                    AjaxLoader.hide();
+                }
 
-                Swal.fire({
-                    icon: "error",
-                    title: " Oupps !" ,
-                    text:   " Merci de fournir toutes les informations requises!!!" ,
-                    timer: 4000,
-                    showConfirmButton: false
-                });
-                console.table( data )
-			}
+            });
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de fournir toutes les informations requises!!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
 
     });
 
     $("#addAdminAssoID").on('click', function(e){                         
         e.preventDefault();
        
-			var data = {                      
-				"adminid": $("select[name='admin'] option:selected").val(), 
-				"assoid": $(this).data("asso"), 
-			};
-           
-			if( data.adminid.length > 0 && data.assoid != undefined ){
-
-                $.ajax({
-                    method      : "POST",
-                    data        : JSON.stringify(data),
-                    url         : BASEURL+"/add_ad_asso",  
-                    dataType    : "JSON",
-                    beforeSend      : function(){
-                        // alert(JSON.stringify(data))
-                    },
-                    error: function(error) {
-                        console.error(error);
-                        // alert(JSON.stringify(error))
-                    },
-                    success  : function(returnedData){
-                            console.log(returnedData);
-                            // alert(JSON.stringify(returnedData))
-                    
-                            if (returnedData.status) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: " Merci !" ,
-                                    text:   " Ajout Reussi de ce administrateur " ,
-                                    timer: 4000,
-                                    showConfirmButton: false
+        var data = {                      
+            "adminid": $("select[name='admin'] option:selected").val(), 
+            "assoid": $(this).data("asso"), 
+        };
         
-                                }).then((result) => {
-                                    $(".clos").click();
-                                    window.location.reload()
-                                     
-                                  });
+        if( data.adminid.length > 0 && data.assoid != undefined ){
 
-                            }else{
-                                Swal.fire({
-                    
-                                    icon: "error",
-                                    title: " Oupps !" ,
-                                    text:   "  " + returnedData.message ,
-                                    timer: 4000,
-                                    showConfirmButton: false
-        
-                                }).then((result) => {
-                                    window.location.reload()
-                                     
-                                  });
-                                 
-                            }   
-                    }, 
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : BASEURL+"/add_ad_asso",  
+                dataType    : "JSON",
+                beforeSend      : function(){
+                    // alert(JSON.stringify(data))
+                    AjaxLoader.show(
+                        "Demande  en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error);
+                    // alert(JSON.stringify(error))
+                },
+                success  : function(returnedData){
+                        // console.log(returnedData);
+                        // alert(JSON.stringify(returnedData))
+                
+                        if (returnedData.status) {
+                            Swal.fire({
+                                icon: "success",
+                                title: " Merci !" ,
+                                text:   " Ajout Reussi de ce administrateur " ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                $(".clos").click();
+                                window.location.reload()
+                                    
+                                });
 
-                });
-			}else{
+                        }else{
+                            Swal.fire({
+                
+                                icon: "error",
+                                title: " Oupps !" ,
+                                text:   "  " + returnedData.message ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                window.location.reload()
+                                    
+                                });
+                                
+                        }   
+                }, 
+                complete: function(){
+                    AjaxLoader.hide();
+                }
 
-                Swal.fire({
-                    icon: "error",
-                    title: " Oupps !" ,
-                    text:   " Merci de fournir toutes les informations requises!!!" ,
-                    timer: 4000,
-                    showConfirmButton: false
-                });
-                console.table( data )
-			}
+            });
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de fournir toutes les informations requises!!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
 
     });
 
     $("#addOrderID").on('click', function(e){                         
         e.preventDefault();
-			var data = {                      
-				"nom": $("#nom").val(),
-				"telephone": $("#telephone").val(),
-				"prop_email": $("#email").val(),
-				"livre": $("#livre").data("id"),
-				"possesseur": $("#possesseur").data("id"),
-				"message": $("#message").val(),
-			};
-            // console.log(data) + JSON.stringify(data)
-			if( data.nom.length > 2 && data.telephone.length > 7 && data.message.length > 3 ){
+        var data = {                      
+            "nom": $("#nom").val(),
+            "telephone": $("#telephone").val(),
+            "prop_email": $("#email").val(),
+            "livre": $("#livre").data("id"),
+            "possesseur": $("#possesseur").data("id"),
+            "message": $("#message").val(),
+        };
+        // console.log(data) + JSON.stringify(data)
+        if( data.nom.length > 2 && data.telephone.length > 7 && data.message.length > 3 ){
 
-                $.ajax({
-                    method      : "POST",
-                    data        : JSON.stringify(data),
-                    url         : BASEURL+"/add_order/",  
-                    dataType    : "JSON",
-                    beforeSend      : function(){
-                        // alert(JSON.stringify(data))
-                    },
-                    error: function(error) {
-                        console.error(error);
-                        // alert(JSON.stringify(error))
-                    },
-                    success  : function(returnedData){
-                            console.log(returnedData);
-                            // alert(JSON.stringify(returnedData))
-                    
-                            if (returnedData.status) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: " Merci !" ,
-                                    text:   " Ajout Reussi de Votre Demande, Le proprietaire vous contactera pour la suite " ,
-                                    timer: 4000,
-                                    showConfirmButton: false
-        
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : BASEURL+"/add_order/",  
+                dataType    : "JSON",
+                beforeSend      : function(){
+                    // alert(JSON.stringify(data))
+                    AjaxLoader.show(
+                        "Demande  en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error);
+                    // alert(JSON.stringify(error))
+                },
+                success  : function(returnedData){
+                        // console.log(returnedData);
+                        // alert(JSON.stringify(returnedData))
+                
+                        if (returnedData.status) {
+                            Swal.fire({
+                                icon: "success",
+                                title: " Merci !" ,
+                                text:   " Ajout Reussi de Votre Demande, Le proprietaire vous contactera pour la suite " ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            });
+                            $(".clos").click();
+
+                        }else{
+                            Swal.fire({
+                
+                                icon: "error",
+                                title: " Oupps !" ,
+                                text:   "  " + returnedData.message ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                window.location.reload()
+                                // if (result.isConfirmed) {
+                                //   Swal.fire("Saved!", "", "success")
+                                    
+                                // }  
                                 });
-                                $(".clos").click();
+                        
+                        }   
+                }, 
+                complete: function(){
+                    AjaxLoader.hide();
+                }
 
-                            }else{
-                                Swal.fire({
-                    
-                                    icon: "error",
-                                    title: " Oupps !" ,
-                                    text:   "  " + returnedData.message ,
-                                    timer: 4000,
-                                    showConfirmButton: false
-        
-                                }).then((result) => {
-                                    window.location.reload()
-                                    // if (result.isConfirmed) {
-                                    //   Swal.fire("Saved!", "", "success")
-                                     
-                                    // }  
-                                  });
-                                // 
-                            }   
-                    }, 
-                    // complete    : function(){ 
-                    // }
+            });
+        }else{
 
-                });
-			}else{
-
-                Swal.fire({
-                    icon: "error",
-                    title: " Oupps !" ,
-                    text:   " Merci de fournir toutes les informations requises!!!"  ,
-                    timer: 4000,
-                    showConfirmButton: false
-                });
-                console.table( data )
-			}
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de fournir toutes les informations requises!!!"  ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
 
     });
 
@@ -1003,13 +1214,15 @@ $(document).ready(function(){
                     data        : JSON.stringify(data),
                     url         : url,  
                     dataType    : "JSON",
-                    contentType: "application/json", 
-                
+                    contentType: "application/json",                 
                     headers: {                         
                         "X-CSRFToken": csrftoken
                     },
                     beforeSend      : function(){
                         // alert(JSON.stringify(data) + ", " + url)
+                        AjaxLoader.show(
+                            "Demande  en cours..."
+                        );
                     },
                     error: function(error) {
                         console.error(error);
@@ -1045,6 +1258,9 @@ $(document).ready(function(){
                                 
                             }   
                     }, 
+                    complete: function(){
+                        AjaxLoader.hide();
+                    }
 
                 });
 			}else{
@@ -1056,83 +1272,89 @@ $(document).ready(function(){
                     timer: 4000,
                     showConfirmButton: false
                 });
-                console.table( data )
+                // console.table( data )
 			}
     });
 
     $("#addMessageComID").on('click', function(e){   
                               
         e.preventDefault();
-			var data = {                      
-				"nom": $("#username").val(), 
-				"id": $("#idcom").val(), 
-				"message": $("#message").val(),
-			};
-            let url =  BASEURL+"/com/mess/create";
-            const csrftoken = getCookie('csrftoken');
+        var data = {                      
+            "nom": $("#username").val(), 
+            "id": $("#idcom").val(), 
+            "message": $("#message").val(),
+        };
+        let url =  BASEURL+"/com/mess/create";
+        const csrftoken = getCookie('csrftoken');
+        
+        if( data.nom.length > 2  && data.message.length > 5 ){
+
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : url,  
+                dataType    : "JSON",
+                contentType: "application/json", 
             
-			if( data.nom.length > 2  && data.message.length > 5 ){
-
-                $.ajax({
-                    method      : "POST",
-                    data        : JSON.stringify(data),
-                    url         : url,  
-                    dataType    : "JSON",
-                    contentType: "application/json", 
+                headers: {                         
+                    "X-CSRFToken": csrftoken
+                },
+                beforeSend      : function(){
+                    // alert(JSON.stringify(data) + ", " + url)
+                    AjaxLoader.show(
+                        "Demande  en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error);
+                    // alert(JSON.stringify(error))
+                },
+                success  : function(returnedData){
+                        // console.log(returnedData);
+                        // alert(JSON.stringify(returnedData))
                 
-                    headers: {                         
-                        "X-CSRFToken": csrftoken
-                    },
-                    beforeSend      : function(){
-                        // alert(JSON.stringify(data) + ", " + url)
-                    },
-                    error: function(error) {
-                        console.error(error);
-                        // alert(JSON.stringify(error))
-                    },
-                    success  : function(returnedData){
-                            // console.log(returnedData);
-                            // alert(JSON.stringify(returnedData))
-                    
-                            if (returnedData.success) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: " Merci !" ,
-                                    text:   " Ajout Reussi de Votre Message, Le gestionnaire vous contactera pour la suite " ,
-                                    timer: 4000,
-                                    showConfirmButton: false
-        
-                                });
-                                $(".btn-close").click();
+                        if (returnedData.success) {
+                            Swal.fire({
+                                icon: "success",
+                                title: " Merci !" ,
+                                text:   " Ajout Reussi de Votre Message, Le gestionnaire vous contactera pour la suite " ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            });
+                            $(".btn-close").click();
 
-                            }else{
-                                Swal.fire({
-                    
-                                    icon: "error",
-                                    title: " Oupps !" ,
-                                    text:   "  " + returnedData.message ,
-                                    timer: 4000,
-                                    showConfirmButton: false
-        
-                                }).then((result) => {
-                                    window.location.reload() 
-                                });
-                                
-                            }   
-                    }, 
+                        }else{
+                            Swal.fire({
+                
+                                icon: "error",
+                                title: " Oupps !" ,
+                                text:   "  " + returnedData.message ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                window.location.reload() 
+                            });
+                            
+                        }   
+                }, 
+                complete: function(){
+                    AjaxLoader.hide();
+                }
 
-                });
-			}else{
+            });
+        }else{
 
-                Swal.fire({
-                    icon: "error",
-                    title: " Oupps !" ,
-                    text:   " Merci de fournir toutes les informations requises!!!" ,
-                    timer: 4000,
-                    showConfirmButton: false
-                });
-                console.table( data )
-			}
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de fournir toutes les informations requises!!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            console.table( data )
+        }
     });
 
     

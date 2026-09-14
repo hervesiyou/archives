@@ -4,6 +4,7 @@ from arch_portal.domain.forms.famille import FamilleForm
 from arch_portal.domain.forms.membre import MembreFamilleForm
 from arch_portal.domain.forms.image import ImageForm
 from arch_portal.domain.models.communaute import Communaute
+from arch_portal.domain.models.salleattentefamillemere import SalleAttenteFamilleMere
 from arch_portal.domain.models.galerie import Galerie
 from arch_portal.domain.models.famille import Famille
 # from arch_portal.domain.models.salleattentefamille import SalleAttenteFamille
@@ -320,17 +321,19 @@ def show_famille(request,id):
     user = Membre.objects.get(id=userid)
 
     galerie = Galerie.objects.filter(famille=fam).first()
-    appartient=False
+    appartient=gestionnaire=est_createur=False
     # j'appartient si je suis membre ou administrateur ou createur
     if ( user in fam.membres_famille.all() or user in fam.administrateurs.all() or user == fam.createur ):
         appartient = True
 
-    #  je check si c'est le createur ou un admin 
-    gestionnaire = False
+    #  je check si c'est le createur ou un admin  
     if fam.createur == user or (user in fam.administrateurs.all()):
         gestionnaire = True
+
+    if fam.createur == user  :
+        est_createur = True
     
-    return render(request, "famille/showfamille.html", {"famille" : fam, "appartient" : appartient, "galerie" : galerie, "gestionnaire":gestionnaire } )
+    return render(request, "famille/showfamille.html", {"famille" : fam, "appartient" : appartient,"est_createur":est_createur, "galerie" : galerie, "gestionnaire":gestionnaire } )
 
 
 def show_admin_fam(request,id):    
@@ -417,7 +420,45 @@ def delete_admin(request):
                 else:
                     return JsonResponse({'status': False ,"message": f"Désolé, tu n'as pas le droit de supprimer un administrateur à la Famille {famille.nom}"})
 
+@csrf_exempt
+def add_join_fam_mere(request):
 
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    if is_ajax :
+        if request.method == "POST" :
+            data = json.loads(request.body.decode('utf-8'))
+            if not request.session.get("userid","") :
+                return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    
+            userid = request.session.get("userid","")
+            
+            if data.get('famid') is None:
+                return JsonResponse({'status': False ,"message": "Famille incorrecte !"})
+            else:
+                if data.get("fammereid") is None:
+                    return JsonResponse({'status': False ,"message": "Identification famille incorrecte"})
+                else:
+                    if userid is None:
+                        return JsonResponse({'status': False ,"message": "Merci de vous connecter avant toute demande  !"})
+                    else:
+                        fammere = Famille.objects.get(id=data.get("fammereid"))
+                        fam = Famille.objects.get(id=data.get("famid"))
+                        membre = Membre.objects.get(id=userid)
+
+                        salleatt = SalleAttenteFamilleMere.objects.filter(famillemere=fammere,personne=membre, famille=fam).first()
+                        if salleatt:
+                            return JsonResponse({'status': False ,"message": f"Vous avez déjà une demande en attente pour rejoindre la famille {fammere.nom}."})
+                        else:
+                            salleatt =  SalleAttenteFamilleMere(
+                                            famillemere=fammere, 
+                                            personne=membre,
+                                            famille=fam
+                                        )
+                            salleatt.save()
+                            return JsonResponse({'status': True ,"message": f"En salle d'attente, {fam.nom} a join la famille {fammere.nom} avec succès ! Un administrateur de la famille {fammere.nom} doit valider votre demande pour que vous puissiez rejoindre cette famille."})
+
+        else:
+            return JsonResponse({'status': False ,"message": "Méthode non autorisée."})
 
 @csrf_exempt
 def add_admin_fam(request):
@@ -438,7 +479,7 @@ def add_admin_fam(request):
                     return JsonResponse({'status': False ,"message": "Identification utilisateur incorrecte"})
                 else:
                     if userid is None:
-                        return JsonResponse({'status': False ,"message": "Merci de vous connecter avant tout abonnement !"})
+                        return JsonResponse({'status': False ,"message": "Merci de vous connecter avant tout ajout !"})
                     else:
                         user = Membre.objects.get(id=data.get("adminid"))
                         com = Famille.objects.get(id=data.get("famid"))

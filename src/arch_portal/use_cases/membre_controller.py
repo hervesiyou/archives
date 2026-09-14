@@ -4,6 +4,7 @@ from webbrowser import get
 
 # from django.core.serializers import serialize
 from django.shortcuts import redirect, render, get_object_or_404
+from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from django.urls import reverse
 from arch_portal.domain.models.abonnement import Abonnement
@@ -12,7 +13,7 @@ from arch_portal.domain.models.wallet import Wallet
 from arch_portal.domain.models.famille import Famille
 from arch_portal.domain.exceptions.membre_exception import MembreException
 from arch_portal.use_cases.services.core import compute_sha1
-from arch_portal.domain.forms.membre import MembreForm,UsersLoginForm,UsersSubscribeForm, MembreFamilleForm
+from arch_portal.domain.forms.membre import MembreForm,UsersLoginForm,UsersSubscribeForm, MembreEditForm
 from arch_portal.domain.models.membre import Membre
 from arch_portal.domain.models.histoire import MiniHistoire
 from arch_portal.use_cases.services.subscription_service import get_membre_from_session
@@ -23,6 +24,57 @@ import threading
 from arch_portal.domain.forms.membre import MembreEditForm
 from arch_portal.use_cases.services.core import get_reste, get_usage
 # from arch_portal.domain.serializers import MembreSerializer
+
+
+@require_http_methods(["GET", "POST"])
+def membre_update(request, pk):
+    # Sécurité : seul le propriétaire ou un admin peut modifier
+    membre = get_object_or_404(Membre, pk=pk)
+    # Vérification de permission simple (session)
+    userid = request.session.get("userid", None)
+    if(userid is not  None):
+        user = Membre.objects.get(id=request.session["userid"])
+    else: 
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+
+    if user != membre :
+        messages.error(request, "Vous n'avez pas le droit de modifier ce profil.")
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = MembreEditForm(request.POST, request.FILES, instance=membre)
+        if form.is_valid():
+            membre = form.save(commit=False)
+            # Gestion du mot de passe (optionnel)
+            new_pwd = form.cleaned_data.get('pwd')
+            if new_pwd:
+                membre.pwd = compute_sha1(new_pwd)
+
+            # Gestion de la photo
+            if form.cleaned_data.get('delete_photo') and membre.photo:
+                # Optionnel : supprimer le fichier physique aussi
+                membre.photo = None
+
+            fichier = form.cleaned_data.get('fichier_image')
+            if fichier:
+                # Création d’une nouvelle Image
+                image = Image.objects.create(fichier=fichier,)
+                membre.photo = image
+
+            membre.save()
+            form.save_m2m()   # important pour les ManyToMany
+
+            messages.success(request, "Profil mis à jour avec succès.")
+            return redirect('home' )  # adaptez le nom de l’url
+    else:
+        form = MembreEditForm(instance=membre)
+
+    context = {
+        'form': form,
+        'membre': membre,
+        'title': f"Modifier le profil de {membre.nomcomplet}"
+    }
+    return render(request, 'usercore/membre_edit.html', context)
 
 def subscribe(request):
     if request.method == "POST":
@@ -141,7 +193,7 @@ def log_user(request):
 
 def show_user_messages(request):
     if(request.session["userid"]!=None):
-        user=Membre.objects.get(id=request.session["userid"])
+        user = Membre.objects.get(id=request.session["userid"])
         
         if(user != None):
             return render(request, "usercore/listmessages.html", {"user":user, })
