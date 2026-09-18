@@ -462,6 +462,10 @@ def show_communaute(request, id):
     except Galerie.DoesNotExist:
         galerie = None
 
+    #  je check si c'est le createur ou un admin  
+    if com.createur == user or (user in com.administrateurs.all()):
+        gestionnaire = True
+
     est_createur=False
     if (com.createur == user):
         est_createur=True,
@@ -476,6 +480,9 @@ def show_communaute(request, id):
             "communaute":com, 
             "galerie":galerie, 
             "appartient" : appartient,
+            "gestionnaire":gestionnaire,
+            "user_connecte":user,
+            
             'personnes_cles': com.personnescles_communaute.all().order_by('nom'),
             'lieux_cles': com.lieucles_communaute.all().order_by('nom'),
 

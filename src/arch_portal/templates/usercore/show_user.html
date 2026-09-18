@@ -144,13 +144,16 @@
     <div class="profile-hero text-center">
         <h1 class="fw-bold mb-2">{{ membre.nomcomplet }}
         
-            {% if 'ADD_MEMBRE' in request.session.userrights %}            
+            {% if 'ADD_MEMBRE' in request.session.userrights or gestionnaire %}            
                 <a href="{% url 'edit_membre' membre.id %}" title="Modifier ce membre">
                     <i class="fa fa-edit"></i> 
                 </a>
             {% endif %}
         
         </h1> 
+       {% comment %} {{ gestionnaire }}  <br> {% endcomment %}
+        {% comment %} famille membre: {{ membre.familles.all | join:", " }}<br/><hr> {% endcomment %}
+       {% comment %} fam admin: {{ user.fam_admins.all | join:", " }} {% endcomment %}      
 
         <div aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-center mb-4">

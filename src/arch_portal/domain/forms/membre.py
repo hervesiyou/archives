@@ -209,6 +209,111 @@ class MembreFamilleForm(forms.ModelForm):
             ),
         )
 
+class MembreFullEditForm(forms.ModelForm):
+
+    fichier_image = forms.ImageField(
+        required=False,
+        label="Photo de profil",
+        widget=forms.FileInput(attrs={
+            'class':'form-control',
+            "accept":'image/*'
+        }),        
+    )
+    delete_photo = forms.BooleanField(
+        required=False,
+        label="Supprimer la photo actuelle"
+    )
+     
+    class Meta:
+        model = Membre
+        exclude = [ "badges", "pwd", "etatvalidation","dateinscription","approbateurs","galeries","token", "code_unique", "messages" ]
+        
+        widgets = {
+            'description': forms.Textarea(attrs={
+                'rows': 4,
+                'cols': 50,
+                'class': 'form-control',
+                'placeholder': 'Décrivez le membre...'
+            }),
+            "datenaissance":forms.DateInput(attrs={
+                "type":"date",
+                "class":"form-control",
+            })             
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs) 
+        
+        for name, field in self.fields.items():
+            if isinstance(field.widget, CheckboxInput):
+                field.widget.attrs.update({'class': 'form-check-input'})
+            else:
+                field.widget.attrs.update({'class': 'form-control'})
+
+        # Labels plus clairs
+        self.fields['nomcomplet'].label = "Nom & Prénoms"
+        self.fields['login'].label = "Login / Pseudonyme"
+        self.fields['nompere'].label = "Père "
+        self.fields['nommere'].label = "Mère"
+        self.fields['datenaissance'].label = "Date de naissance"
+        self.fields['lieunaissance'].label = "Lieu de naissance"
+        self.fields['etatcivil'].label = "Etat Civil"
+        self.fields['datedeces'].label = "Date de décès"
+        self.fields['nbenfant'].label = "Nombre d'enfants"
+
+        self.helper = FormHelper()
+        self.helper.form_tag = False 
+
+        self.helper.layout = Layout(
+            Row(
+                Column('nomcomplet', css_class='col-md-8'),
+                Column('generation', css_class='col-md-4'),
+                
+                Column('fichier_image', css_class='col-md-12'), 
+                Column('description', css_class='col-md-12'),
+                Column('login', css_class='col-md-6'),
+                # Column(
+                #     Field('pwd', type='password', css_class='form-control'),
+                #     css_class='col-md-6',
+                # ),
+                Column('email', css_class='col-md-6'),
+                Column('telephone', css_class='col-md-6'),
+                Column('type', css_class='col-md-2'), 
+                Column('sexe', css_class='col-md-2'),
+                # Column('profession', css_class='col-md-6'),
+
+                Column('etatcivil', css_class='col-md-2'), 
+                Column('nbenfant', css_class='col-md-2'), 
+                Column('vivant', css_class='col-md-2'), 
+                Column('datedeces', css_class='col-md-2'), 
+                Column('datenaissance', css_class='col-md-3'), 
+                Column('lieunaissance', css_class='col-md-3'), 
+
+                Column('residence', css_class='col-md-3'), 
+                Column('notabilite', css_class='col-md-3'), 
+                Column('profession', css_class='col-md-6'), 
+
+                css_class='row'
+            ),
+            Row(
+                Column('education', css_class='col-md-4'), 
+                Column('diplomes', css_class='col-md-4'), 
+                Column('associations', css_class='col-md-4'), 
+                
+                Column('familles', css_class='col-md-4'), 
+                Column('communautes', css_class='col-md-4'),
+                Column('role', css_class='col-md-4'),
+                css_class='row'
+            ),
+            Row(
+                Column('pere', css_class='col-md-3'), 
+                Column('mere', css_class='col-md-3'), 
+                Column('nompere', css_class='col-md-3'), 
+                Column('nommere', css_class='col-md-3'),                 
+                css_class='row'
+            ),
+        )
+
 
 class MembreEditForm(forms.ModelForm):
 
@@ -236,8 +341,20 @@ class MembreEditForm(forms.ModelForm):
      
     class Meta:
         model = Membre
-        exclude = ["etatvalidation","dateinscription","approbateurs","galeries","token", "code_unique", "messages" ]
+        exclude = ["associations", "communautes", "familles", "role", "badges","login","pwd", "etatvalidation","dateinscription","approbateurs","galeries","token", "code_unique", "messages" ]
         # fields = '__all__'
+        widgets = {
+            'description': forms.Textarea(attrs={
+                'rows': 4,
+                'cols': 50,
+                'class': 'form-control',
+                'placeholder': 'Décrivez le membre...'
+            }),
+            "datenaissance":forms.DateInput(attrs={
+                "type":"date",
+                "class":"form-control",
+            })             
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs) 
@@ -250,9 +367,9 @@ class MembreEditForm(forms.ModelForm):
 
         # Labels plus clairs
         self.fields['nomcomplet'].label = "Nom & Prénoms"
-        self.fields['login'].label = "Login / Pseudonyme"
-        self.fields['nompere'].label = "Père (lien)"
-        self.fields['nommere'].label = "Mère (lien)"
+        # self.fields['login'].label = "Login / Pseudonyme"
+        # self.fields['nompere'].label = "Père "
+        # self.fields['nommere'].label = "Mère"
         self.fields['datenaissance'].label = "Date de naissance"
         self.fields['lieunaissance'].label = "Lieu de naissance"
         self.fields['etatcivil'].label = "Etat Civil"
@@ -264,16 +381,16 @@ class MembreEditForm(forms.ModelForm):
 
         self.helper.layout = Layout(
             Row(
-                Column('nomcomplet', css_class='col-md-8'),
-                Column('generation', css_class='col-md-4'),
+                Column('nomcomplet', css_class='col-md-12'),
+                # Column('generation', css_class='col-md-4'),
                 
                 Column('fichier_image', css_class='col-md-12'), 
                 Column('description', css_class='col-md-12'),
-                Column('login', css_class='col-md-6'),
-                Column(
-                    Field('pwd', type='password', css_class='form-control'),
-                    css_class='col-md-6',
-                ),
+                # Column('login', css_class='col-md-6'),
+                # Column(
+                #     Field('pwd', type='password', css_class='form-control'),
+                #     css_class='col-md-6',
+                # ),
                 # Column('pwd', css_class='col-md-6'),
                 Column('email', css_class='col-md-6'),
                 Column('telephone', css_class='col-md-6'),
@@ -292,14 +409,14 @@ class MembreEditForm(forms.ModelForm):
             Row(
                 Column('education', css_class='col-md-3'), 
                 Column('diplomes', css_class='col-md-3'), 
-                Column('profession', css_class='col-md-3'), 
-                Column('associations', css_class='col-md-3'), 
-                Column('familles', css_class='col-md-8'), 
-                Column('communautes', css_class='col-md-4'), 
-                Column('pere', css_class='col-md-3'), 
-                Column('mere', css_class='col-md-3'), 
-                Column('nompere', css_class='col-md-3'), 
-                Column('nommere', css_class='col-md-3'),                 
+                Column('profession', css_class='col-md-6'), 
+                # Column('associations', css_class='col-md-3'), 
+                # Column('familles', css_class='col-md-8'), 
+                # Column('communautes', css_class='col-md-4'), 
+                # Column('pere', css_class='col-md-3'), 
+                # Column('mere', css_class='col-md-3'), 
+                # Column('nompere', css_class='col-md-3'), 
+                # Column('nommere', css_class='col-md-3'),                 
                 css_class='row'
             ),
         )
@@ -381,6 +498,66 @@ class UsersSubscribeForm(forms.ModelForm):
                 Column(Field('login'), css_class='col-12'),
                 Column(Field('pwd'), css_class='col-12 col-md-6'),
                 Column(Field('password_confirm'), css_class='col-12 col-md-6'),
+                css_class='row'
+            ),
+        )
+
+
+class DemandeResetPasswordForm(forms.Form):
+    email = forms.EmailField(label="Adresse email", max_length=50)
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not Membre.objects.filter(email=email).exists():
+            # Ne pas révéler si l'email existe ou non (sécurité)
+            pass
+        return email
+
+    def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs) 
+            self.fields["email"].label = 'Email '
+            
+            # Configuration Crispy Forms
+            self.helper = FormHelper()
+            self.helper.form_tag = False
+            self.helper.form_class = 'row g-3'          # Très important
+            
+            self.helper.layout = Layout( 
+                Row(
+                    Column(Field('email'), css_class='col-12 form-control'), 
+                    css_class='row'
+                ),
+            )
+    
+
+class ResetPasswordForm(forms.Form):
+    ancien_password = forms.CharField(label="Ancien mot de passe", widget=forms.PasswordInput)
+    nouveau_password = forms.CharField(label="Nouveau mot de passe", widget=forms.PasswordInput, min_length=4)
+    confirmation_password = forms.CharField(label="Confirmez le nouveau mot de passe", widget=forms.PasswordInput)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        nouveau = cleaned_data.get('nouveau_password')
+        confirmation = cleaned_data.get('confirmation_password')
+
+        if nouveau and confirmation and nouveau != confirmation:
+            raise forms.ValidationError("Les deux mots de passe ne correspondent pas.")
+
+        return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)  
+        
+        # Configuration Crispy Forms
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.form_class = 'row g-3' 
+        
+        self.helper.layout = Layout( 
+            Row(
+                Column(Field('ancien_password'), css_class='col-12 form-control'), 
+                Column(Field('nouveau_password'), css_class='col-12 form-control'), 
+                Column(Field('confirmation_password'), css_class='col-12 form-control'), 
                 css_class='row'
             ),
         )

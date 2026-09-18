@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-
-
 {% block title %} {{communaute.nom}} {% endblock %}
 {% block css %}
      <link rel="stylesheet" href="{% static 'css/minidescription.css' %}" /> 
@@ -15,8 +13,17 @@
             <a href="{% url 'home' %}" class="my-2"> <i class="fa fa-home"></i> Accueil </a>  >
             <a href="{% url 'listcom' %}" class="my-2"> <i class="fas fa-users"></i> Communautés </a> > {{ communaute.nom }}
 
-            {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+            {% if  'ADD_COMMUNAUTE' in request.session.userrights or gestionnaire %}
                 <a href="{% url 'edit_communaute' communaute.id %}" title="Editer"><i class="fa fa-edit"></i>  </a> 
+            {% endif %}
+            {% if  gestionnaire %}
+                <a   class="btn btn-sm btn-outline-success text-success"
+                    title="Cliquer ici diffuser un message aux utilisateurs de la communauté" 
+                        data-bs-toggle="modal"  
+                        data-bs-target="#messageDiffusionModal">  
+                    <i class="fa fa-envelope"></i> 
+                    <span>Diffuser un message </span>
+                </a>
             {% endif %}
         </div>
         <div class="row">
@@ -137,17 +144,25 @@
                                     {% endif %}
                                 </div>                        
                                 <div class="col-lg-12 my-3">
-                                    <a href="{% url 'com_geographie' communaute.id %}" title="Détail geographique">
+                                    <a   class="btn btn-sm btn-outline-success text-success"
+                                        title="Cliquer ici pour laisser un message aux gestionnaires de la communauté" 
+                                         data-bs-toggle="modal"  
+                                         data-bs-target="#messageModal">  
+                                        <i class="fa fa-envelope"></i> 
+                                        {% comment %} <span> Laisser une message aux gestionnaires </span> {% endcomment %}
+                                    </a>
+                                    <a href="{% url 'com_geographie' communaute.id %}" 
+                                        title="Détail geographique"
+                                        class="btn btn-sm btn-outline-success text-success">
                                         <span> Carte géographique </span>
                                     </a>
-                                    <a class="btn btn-sm btn-outline-success text-success"  data-bs-toggle="modal"  data-bs-target="#messageModal">  
-                                        <span> Laisser une message </span>
-                                    </a>
+                                    
 
                                     {% comment %} data-bs-toggle="modal"  data-bs-target="#donModal" {% endcomment %}
                                     <a class="btn btn-sm btn-outline-info text-success" 
-                                    href="{% url 'don_create' communaute.id %}"
+                                        href="{% url 'don_create' communaute.id %}"
                                     >  
+                                        <i class="fa fa-donate"></i> 
                                         <span> Faire un Don </span>
                                     </a>
                                     {% if  'VOIR_MESSAGES_COMMUNAUTES' in request.session.userrights %}  - 
@@ -591,7 +606,7 @@
                 </div>
 
                 <div class="form-section">
-                    <h3>Poster un Message</h3> 
+                    <h5 class="text-success text-center m-2"> Envoyer un Message  </h5> 
 
                     {% comment %} <div class="error-message" id="errorMessage"></div> {% endcomment %}
 
@@ -614,7 +629,11 @@
                             <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
                         </div>
                         <div class="modal-footer">
-                            <input type="button" id="addMessageComID"  class="submit-btn btn btn-success" value="Envoyer le Message"/>
+                            <input type="button" 
+                                id="addMessageComID"  
+                                class="submit-btn btn btn-success" 
+                                value="Envoyer le Message" 
+                            />
                         </div>
                     </form>
                 </div> 
@@ -670,7 +689,7 @@
 
     </div>
 
-   <div class="modal fade" id="donModal" tabindex="-1">
+    <div class="modal fade" id="donModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-success text-white">
@@ -687,6 +706,8 @@
 
     {% include 'archcore/includes/add_pers_cle.html' with form=form_personne %}
     {% include 'archcore/includes/add_lieu_cle.html' with form=form_lieu %}
+
+    {% include "archcore/includes/message_diffusion.html" %}
  
     <div class="modal fade" id="infosModal" tabindex="-1" aria-labelledby="addInfosModalLabel" aria-hidden="true">
         <div class="modal-dialog ">

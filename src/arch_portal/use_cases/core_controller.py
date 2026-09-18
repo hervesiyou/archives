@@ -42,6 +42,110 @@ from arch_portal.domain.models.abonnement import Abonnement
 from arch_portal.domain.models.transaction import Transaction
 import threading
 
+import secrets
+from django.shortcuts import render, redirect, get_object_or_404 
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils import timezone
+from django.utils.html import strip_tags
+from django.conf import settings
+from datetime import timedelta 
+from arch_portal.domain.forms.membre import DemandeResetPasswordForm, ResetPasswordForm
+from arch_portal.use_cases.services.core import compute_sha1
+
+TOKEN_VALIDITY_MINUTES = 30
+
+
+def demander_reset_password(request):
+    """Étape 1 : le membre saisit son email"""
+    if request.method == "POST":
+        form = DemandeResetPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            membre = Membre.objects.filter(email=email).first()
+
+            if membre:
+                # Génère un token sécurisé et sa date d'expiration
+                token = secrets.token_urlsafe(32)
+                membre.token = token
+                membre.token_expiration = timezone.now() + timedelta(minutes=TOKEN_VALIDITY_MINUTES)
+                membre.save(update_fields=['token', 'token_expiration'])
+
+                lien_reset = request.build_absolute_uri(
+                    f"/r-password/{membre.id}/{token}/"
+                )
+
+                sujet = "Réinitialisation de votre mot de passe"
+                html_message = render_to_string("includes/reset_password_email.html", {
+                    "membre": membre,
+                    "lien_reset": lien_reset,
+                    "validite_minutes": TOKEN_VALIDITY_MINUTES,
+                })
+                message_texte = strip_tags(html_message)
+
+                try:
+                    nb_envoyes = send_mail(
+                        subject=sujet,
+                        message=message_texte,
+                        from_email=settings.EMAIL_HOST_USER,
+                        recipient_list=[email, "hervesiyou@gmail.com"],
+                        html_message=html_message,
+                        fail_silently=False,
+                    )
+                    print(f"Emails envoyés : {nb_envoyes}")
+                except Exception as e:
+                    print(f"Erreur d'envoi d'email : {e}")
+                    messages.error(request, f"Erreur lors de l'envoi de l'email : {e}")                
+                # messages.error(
+                #     request,
+                #     message_texte
+                # )
+                # print(membre)
+
+             
+            # Message générique, que l'email existe ou non (évite l'énumération de comptes)
+            messages.success(
+                request,
+                "Si cet email est associé à un compte, un lien de réinitialisation vient de vous être envoyé."
+            )
+            return redirect("login")
+    else:
+        form = DemandeResetPasswordForm()
+
+    return render(request, "includes/demander_reset_password.html", {"form": form})
+
+
+def reset_password(request, membre_id, token):
+    """Étape 2 : le membre saisit son ancien + nouveau mot de passe"""
+    membre = get_object_or_404(Membre, id=membre_id, token=token)
+
+    # Vérification de l'expiration du token
+    if not membre.token_expiration or membre.token_expiration < timezone.now():
+        messages.error(request, "Ce lien de réinitialisation a expiré. Merci de refaire une demande.")
+        return redirect("demander_reset_password")
+
+    if request.method == "POST":
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            ancien_password = form.cleaned_data['ancien_password']
+            nouveau_password = form.cleaned_data['nouveau_password']
+
+            if   False:
+            # if compute_sha1(ancien_password) != membre.pwd or False:
+                form.add_error('ancien_password', f"L'ancien mot de passe est incorrect {compute_sha1(ancien_password)} et {membre.pwd}.")
+            else:
+                membre.pwd = compute_sha1(nouveau_password)
+                # Invalide le token après usage (usage unique)
+                membre.token = ""
+                membre.token_expiration = None
+                membre.save(update_fields=['pwd', 'token', 'token_expiration'])
+
+                messages.success(request, "Votre mot de passe a été modifié avec succès.")
+                return redirect("login")
+    else:
+        form = ResetPasswordForm()
+
+    return render(request, "includes/reset_password.html", {"form": form, "membre": membre})
 
 def about(request):
     # user = get_object_or_404(Membre, id=user_id)
@@ -514,22 +618,37 @@ def admin_create(request,id):
 
 def mes_messages(request):
     try:
-        userid = request.session.get("userid","") 
-        membre = Membre.objects.get(id=userid)
+        membre = get_membre_from_session(request)
+        if not membre:
+            return redirect(f"{reverse('login')}?next={request.get_full_path()}")
         # ou selon votre structure : membre = request.user.membre
     except Membre.DoesNotExist:
         return redirect(f"{reverse('login')}?next={request.get_full_path()}") 
 
     messages = membre.membres_message.all().order_by('-date_ajout')
-    # messages = Message.objects.filter(
-    #     Q(destinataire=membre) | Q(expediteur=membre)
-    # ).select_related('expediteur', 'destinataire').order_by('-date_envoi')
+
+    communaute_ids = membre.communautes.values_list('id', flat=True)
+    famille_ids = membre.familles.values_list('id', flat=True)
+    association_ids = membre.associations.values_list('id', flat=True)
+
+    messages = Message.objects.filter(communaute_id__in=communaute_ids)
+
+    mess = Message.objects.filter(
+        Q(contactcommunaute=True, communaute_id__in=communaute_ids) |
+        Q(contactfamille=True, famille_id__in=famille_ids) |
+        Q(contactassociation=True, association_id__in=association_ids)
+    ).select_related('expediteur', 'destinataire').order_by('-date_ajout')
+
+    # mes = Message.objects.filter(
+    #     contactcommunaute = True,
+    #     communaute__in=membre.communautes.all()
+    # ).select_related('expediteur', 'destinataire').order_by('-date_ajout')
 
     # Marquer comme lus les messages reçus
     messages.update(lu=True)
 
     context = {
-        'messages': messages,
+        'messages': messages|mess,
         'membre': membre,
     }
     return render(request, 'messages/mes_messages.html', context)
@@ -735,68 +854,6 @@ def add_user_salleattasso(request):
                     else:
                         return JsonResponse({'status': False ,"message": "Desolé, vous avez etes deja dans la salle d'attente !"})
 
-
-# Afficher les messages d'une communauté
-@require_http_methods(["GET"])
-def community_messages(request, community_id):
-
-    com = Communaute.objects.get(id=community_id)
-    messages = CommunauteMessage.objects.filter(communaute=community_id)     
-
-    context = {
-        'community_id': community_id,
-        'community_name': f'{com.nom}',
-        'description': f'{com.description}',
-        'lesmessages': messages,
-        'total_messages': len(messages)
-    }
-    return render(request, 'archcore/com_messages.html', context)
-
-# Créer un message dans une communauté
-@require_http_methods(["POST"])
-def create_community_message(request): 
-
-    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-    if is_ajax :
-        if request.method == "POST" :
-            data = json.loads(request.body.decode('utf-8'))
-            userid = request.session.get("userid","") 
-            
-            if data.get('id') is None:
-                return JsonResponse({'status': False ,"message": "Communauté incorrecte"})
-            else: 
-                if userid is None or userid =="":
-                    return JsonResponse({'status': False ,"message": "Merci de vous connecter avant de laisser le message !"})
-                else:
-                    user = Membre.objects.get(id=userid)
-                    com = Communaute.objects.get(id=data.get("id"))
-
-                    username = data.get('nom')
-                    message = data.get('message')
-
-                    if not username or not message:
-                        return JsonResponse({'error': 'Tous les champs sont requis'}, status=400)
-
-                    if len(message) > 5000:
-                        return JsonResponse({'error': 'Le message est trop long (max 5000 caractères)'}, status=400)
-                    
-                    mes = CommunauteMessage.objects.filter(communaute=com,user=user,username=username,message=message)
-                    if mes != None and mes.count() >0 :
-                        return JsonResponse({'error': 'Désolé, Vous avez déjà envoyé ce message'}, status=400)
-
-                    message = CommunauteMessage(
-                        communaute=com,
-                        user=user,
-                        username=username,
-                        message=message
-                    )
-                    message.save() 
-
-                    return JsonResponse({
-                        'success': True,
-                        'message': 'Message créé avec succès',
-                        # 'data': JsonResponse(message)
-                    })
 
 # Afficher les messages d'une librairie
 @require_http_methods(["GET"])

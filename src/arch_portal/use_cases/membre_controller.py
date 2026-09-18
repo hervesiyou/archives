@@ -13,7 +13,7 @@ from arch_portal.domain.models.wallet import Wallet
 from arch_portal.domain.models.famille import Famille
 from arch_portal.domain.exceptions.membre_exception import MembreException
 from arch_portal.use_cases.services.core import compute_sha1
-from arch_portal.domain.forms.membre import MembreForm,UsersLoginForm,UsersSubscribeForm, MembreEditForm
+from arch_portal.domain.forms.membre import MembreForm,UsersLoginForm, UsersSubscribeForm, MembreEditForm, MembreFullEditForm
 from arch_portal.domain.models.membre import Membre
 from arch_portal.domain.models.histoire import MiniHistoire
 from arch_portal.use_cases.services.subscription_service import get_membre_from_session
@@ -21,7 +21,7 @@ from arch_portal.use_cases.services.core import generate_token, send_email_inscr
 from arch_portal.domain.models.image import Image
 from django.http import  JsonResponse, request
 import threading
-from arch_portal.domain.forms.membre import MembreEditForm
+# from arch_portal.domain.forms.membre import MembreEditForm
 from arch_portal.use_cases.services.core import get_reste, get_usage
 # from arch_portal.domain.serializers import MembreSerializer
 
@@ -191,17 +191,6 @@ def log_user(request):
 
     return render(request, "usercore/login.html", {"form":form, "next": next_url })
 
-def show_user_messages(request):
-    if(request.session["userid"]!=None):
-        user = Membre.objects.get(id=request.session["userid"])
-        
-        if(user != None):
-            return render(request, "usercore/listmessages.html", {"user":user, })
-        else:
-            raise MembreException( f" Membre {request.session['userid']} introuvable ")  
-    else:
-        # return redirect("login")
-        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
 def user_abonnement(request):
     userid = request.session.get("userid", None)
@@ -238,8 +227,6 @@ def show_user_home(request):
 
 def show_user_famadmin(request):
     user = get_membre_from_session(request)
-    # if(request.session["userid"] != None):
-    # user = Membre.objects.get(id=request.session["userid"])
     if(user != None):
         #  les familles que j'ai cree et celle que j'administre
         adfamilles = user.familles_creees.union(user.fam_admins.all())
@@ -249,20 +236,15 @@ def show_user_famadmin(request):
     else:
         # raise MembreException( f" Membre {request.session['userid']} introuvable ")  
         return redirect(f"{reverse('login')}?next={request.get_full_path()}")
-    # else:
-        # return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
 def show_user_comadmin(request):
-    if(request.session["userid"] != None):
-        user = Membre.objects.get(id=request.session["userid"])
-        if(user != None):
-            adcoms = user.com_admins.all()
-            coms = user.communautes.all()
-            return render(request, "usercore/listmycomadmin.html", {"user":user , "communautes": coms, "adcommunautes":adcoms})
-        else:
-            # raise MembreException( f" Membre {request.session['userid']} introuvable ")  
-            return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    user = get_membre_from_session(request) 
+    if(user != None):
+        adcoms = user.com_admins.all()
+        coms = user.communautes.all()
+        return render(request, "usercore/listmycomadmin.html", {"user":user , "communautes": coms, "adcommunautes":adcoms})
     else:
+        # raise MembreException( f" Membre {request.session['userid']} introuvable ")  
         return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
 def show_user_assoadmin(request):
@@ -279,8 +261,19 @@ def show_user_assoadmin(request):
 
 def show_user(request,id):
     # membre = Membre.objects.get(id=id)
-    membre = Membre.objects.prefetch_related('mini_histoire').get(id=id)
-    return render(request, "usercore/show_user.html", {"membre":membre})
+    user = get_membre_from_session(request) 
+    gestionnaire = False
+
+    if(user != None):
+        membre = Membre.objects.prefetch_related('mini_histoire').get(id=id)
+        #Le membre appartient à une famille administrée par cet utilisateur connecté
+        if membre.familles.filter(pk__in=user.fam_admins.values('pk')).exists():
+            gestionnaire = True       
+
+        return render(request, "usercore/show_user.html", { "membre" : membre, "user" : user, "gestionnaire" :gestionnaire })
+    else:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    
 
 def add_user(request):
 
@@ -328,9 +321,11 @@ def upload_image_histoire(request):
 
 def edit_user(request, id):
     membre = get_object_or_404(Membre, id=id)
+    if(membre == None): 
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
     if request.method == 'POST':
-        form = MembreEditForm(request.POST, request.FILES, instance=membre)       
+        form = MembreFullEditForm(request.POST, request.FILES, instance=membre)       
 
         if form.is_valid():
             membre=form.save(commit=False) 
@@ -347,7 +342,7 @@ def edit_user(request, id):
         else:
             messages.error(request, f"❌ Veuillez corriger les erreurs {form.errors} du formulaire.")
     else:
-        form = MembreEditForm(instance=membre)
+        form = MembreFullEditForm(instance=membre)
 
     return render(request, 'usercore/edit_user.html', {
         'form': form,

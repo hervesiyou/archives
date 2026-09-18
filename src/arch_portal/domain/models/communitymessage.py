@@ -24,6 +24,8 @@ class CommunauteMessage(models.Model):
     )
     username = models.CharField( max_length=150,  editable=False )
     message = models.TextField()
+
+    actif = models.BooleanField(default=False)
     
     created_at = models.DateTimeField(  auto_now_add=True,db_index=True  )
     updated_at = models.DateTimeField( auto_now=True )

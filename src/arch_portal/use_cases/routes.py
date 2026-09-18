@@ -14,6 +14,7 @@ import arch_portal.use_cases.projet_controller as projet
 import arch_portal.use_cases.formart_controller as formationarticle
 import arch_portal.use_cases.publicite_controller as publicite
 import arch_portal.use_cases.information_controller as info
+import arch_portal.use_cases.message_controller as message
 from django.views.generic import TemplateView
 
 from django.contrib.sitemaps.views import sitemap
@@ -156,20 +157,33 @@ urlpatterns += [
     path('faqi', core.faqindex, name="faq_index"),
     path('cont', core.contact, name="contact"),
 
-    path('com/<int:community_id>/messages', core.community_messages, name='community_messages'),
-    path('com/mess/crea', core.create_community_message, name='create_community_message'),
+    path('com/<int:community_id>/messages', message.community_messages, name='community_messages'),
+    path('com/mess/crea', message.create_community_message, name='create_community_message'),
+    path('com/mess/diff', message.diffusion_community_message, name='diffusion_community_message'),
+    path('com/mess/diffasso', message.diffusion_association_message, name='diffusion_association_message'),
+    path('com/mess/difffam', message.diffusion_famille_message, name='diffusion_famille_message'),
+    path('com/mess/pub', message.publie_community_message, name='publie_community_message'),
+    path('com/addmess', message.send_community_message, name='send_community_message'),
+    path('u/seemes', message.show_user_messages, name="home_messageadmin"),
+    path('u/messcom', message.show_messages_communautaire, name="home_messages_com"),
+
     path('lib/<int:library_id>/messages/', core.library_messages, name='library_messages'),
     path('lib/mess/crea', core.create_library_message, name='create_library_message'),
     # path('lib/<int:library_id>/mess/create', core.create_library_message, name='create_library_message'),
 ]
+
+urlpatterns += [
+    path("m-d-p-o/", core.demander_reset_password, name="demander_reset_password"),
+    path("r-password/<int:membre_id>/<str:token>/", core.reset_password, name="reset_password"),
+]
+
 urlpatterns += [ 
     path('lcom', communaute.listcom, name="listcom"),
     path('sh_ad_co/<int:id>', communaute.show_admin_com, name="show_admin_com"),    
     path('comab', communaute.abonement_archive, name="abonement_archive"),
     path('add_ad_com', communaute.add_admin_com, name="add_admin_com"),
    
-    path('add_abonnement', communaute.add_abonnement, name="add_abonnement"),    
-    
+    path('add_abonnement', communaute.add_abonnement, name="add_abonnement"),  
     
     path('sc/<int:id>', communaute.show_communaute, name="show_communaute"),
     path('nc/', communaute.add_communaute, name="add_communaute"),
@@ -237,7 +251,7 @@ urlpatterns += [
     path('u/adfam', membre.show_user_famadmin, name="home_famadmin"),
     path('u/adcom', membre.show_user_comadmin, name="home_comadmin"),
     path('u/adasso', membre.show_user_assoadmin, name="home_assoadmin"),
-    path('u/seemes', membre.show_user_messages, name="home_messageadmin"),
+   
     path('u/abo', membre.user_abonnement, name="home_abonnement"), 
     path('valusins/<str:token>', membre.user_valide_inscription, name="user_valide_inscription"),   
 ]

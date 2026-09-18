@@ -6,7 +6,7 @@ from crispy_forms.layout import Layout, Row, Column
 class FamilleForm(forms.ModelForm):
     class Meta:
         model = Famille
-        exclude = ["galerie"]
+        exclude = ["galerie","famille_mere", ]
 
     def clean(self):
         cleaned_data = super().clean()
@@ -29,9 +29,9 @@ class FamilleForm(forms.ModelForm):
         self.helper.form_tag = False 
         self.helper.layout = Layout(
             Row(
-                Column('nom', css_class='col-md-6'),
-                Column('famille_mere', css_class='col-md-3'),
-                Column('publique', css_class='col-md-3 div-check'),
+                Column('nom', css_class='col-md-10'),
+                # Column('famille_mere', css_class='col-md-3'),
+                Column('publique', css_class='col-md-2 div-check'),
                 Column('description', css_class='col-md-6'),
                 Column('origine', css_class='col-md-6'),
                 Column('histoire', css_class='col-md-12'), 

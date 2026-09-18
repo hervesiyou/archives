@@ -1281,10 +1281,10 @@ $(document).ready(function(){
         e.preventDefault();
         var data = {                      
             "nom": $("#username").val(), 
-            "id": $("#idcom").val(), 
+            "idcom": $("#idcom").val(), 
             "message": $("#message").val(),
         };
-        let url =  BASEURL+"/com/mess/create";
+        let url =  BASEURL+"/com/mess/crea";
         const csrftoken = getCookie('csrftoken');
         
         if( data.nom.length > 2  && data.message.length > 5 ){
@@ -1325,8 +1325,325 @@ $(document).ready(function(){
                             $(".btn-close").click();
 
                         }else{
-                            Swal.fire({
+                            Swal.fire({                
+                                icon: "error",
+                                title: " Oupps !" ,
+                                text:   "  " + returnedData.message ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                window.location.reload() 
+                            });
+                            
+                        }   
+                }, 
+                complete: function(){
+                    AjaxLoader.hide();
+                }
+
+            });
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de fournir toutes les informations requises!!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            console.table( data )
+        }
+    });
+
+    $("#addMessageDiffusionComID").on('click', function(e){   
+                              
+        e.preventDefault();
+        var data = {                      
+            // "nom": $("#username").val(), 
+            "sujet": $("#sujetdiff").val(), 
+            "idcom": $("#idcom").val(), 
+            "message": $("#messagediff").val(),
+        };
+        let url =  BASEURL+"/com/mess/diff";
+        const csrftoken = getCookie('csrftoken');
+        
+        if( data.sujet.length > 2  && data.message.length >= 5 ){
+
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : url,  
+                dataType    : "JSON",
+                contentType: "application/json", 
+            
+                headers: {                         
+                    "X-CSRFToken": csrftoken
+                },
+                beforeSend      : function(){
+                    // alert(JSON.stringify(data) + ", " + url)
+                    AjaxLoader.show(
+                        "Demande  en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error);
+                    // alert(JSON.stringify(error))
+                },
+                success  : function(returnedData){
                 
+                        if (returnedData.success) {
+                            Swal.fire({
+                                icon: "success",
+                                title: " Merci !" ,
+                                text:   " Ajout Reussi de Votre Message, les membres de la communautés les recevront pour la suite " ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            });
+                            $(".btn-close").click();
+
+                        }else{
+                            Swal.fire({                
+                                icon: "error",
+                                title: " Oupps !" ,
+                                text:   "  " + returnedData.message ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                window.location.reload() 
+                            });
+                            
+                        }   
+                }, 
+                complete: function(){
+                    AjaxLoader.hide();
+                }
+
+            });
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de fournir toutes les informations requises!!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
+    });
+
+    
+    $("#addMessageDiffusionAssoID").on('click', function(e){   
+                              
+        e.preventDefault();
+        var data = {                      
+            // "nom": $("#username").val(), 
+            "sujet": $("#sujetdiff").val(), 
+            "idasso": $("#idasso").val(), 
+            "message": $("#messagediff").val(),
+        };
+        let url =  BASEURL+"/com/mess/diffasso";
+        const csrftoken = getCookie('csrftoken');
+        
+        if( data.sujet.length > 2  && data.message.length >= 5 ){
+
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : url,  
+                dataType    : "JSON",
+                contentType: "application/json", 
+            
+                headers: {                         
+                    "X-CSRFToken": csrftoken
+                },
+                beforeSend      : function(){
+                    // alert(JSON.stringify(data) + ", " + url)
+                    AjaxLoader.show(
+                        "Demande  en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error);
+                    // alert(JSON.stringify(error))
+                },
+                success  : function(returnedData){
+                
+                        if (returnedData.success) {
+                            Swal.fire({
+                                icon: "success",
+                                title: " Merci !" ,
+                                text:   " Ajout Reussi de Votre Message ,les membres de l'association les recevront pour la suite " ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            });
+                            $(".btn-close").click();
+
+                        }else{
+                            Swal.fire({                
+                                icon: "error",
+                                title: " Oupps !" ,
+                                text:   "  " + returnedData.message ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                window.location.reload() 
+                            });
+                            
+                        }   
+                }, 
+                complete: function(){
+                    AjaxLoader.hide();
+                }
+
+            });
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de fournir toutes les informations requises!!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
+    });
+
+    $("#addMessageDiffusionFamID").on('click', function(e){   
+                              
+        e.preventDefault();
+        var data = {                      
+            // "nom": $("#username").val(), 
+            "sujet": $("#sujetdifffam").val(), 
+            "idfam": $("#idfam").val(), 
+            "message": $("#messagedifffam").val(),
+        };
+        let url =  BASEURL+"/com/mess/difffam";
+        const csrftoken = getCookie('csrftoken');
+        
+        if( data.sujet.length > 2  && data.message.length >= 5 ){
+
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : url,  
+                dataType    : "JSON",
+                contentType: "application/json", 
+            
+                headers: {                         
+                    "X-CSRFToken": csrftoken
+                },
+                beforeSend      : function(){
+                    // alert(JSON.stringify(data) + ", " + url)
+                    AjaxLoader.show(
+                        "Demande  en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error);
+                    // alert(JSON.stringify(error))
+                },
+                success  : function(returnedData){
+                
+                        if (returnedData.success) {
+                            Swal.fire({
+                                icon: "success",
+                                title: " Merci !" ,
+                                text:   " Ajout Reussi de Votre Message ,les membres de la famille les recevront pour la suite " ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            });
+                            $(".btn-close").click();
+
+                        }else{
+                            Swal.fire({                
+                                icon: "error",
+                                title: " Oupps !" ,
+                                text:   "  " + returnedData.message ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                window.location.reload() 
+                            });
+                            
+                        }   
+                }, 
+                complete: function(){
+                    AjaxLoader.hide();
+                }
+
+            });
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de fournir toutes les informations requises!!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
+    });
+
+
+    $(".publieMessageID").on('click', function(e){   
+                              
+        e.preventDefault();
+        var data = { 
+            "id": $(this).data("id"), 
+        };
+        let url =  BASEURL+"/com/mess/pub";
+        const csrftoken = getCookie('csrftoken');
+        // alert(data.id)
+        
+        if( data.id.length > 0  ){
+
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : url,  
+                dataType    : "JSON",
+                contentType: "application/json", 
+            
+                headers: {                         
+                    "X-CSRFToken": csrftoken
+                },
+                beforeSend      : function(){
+                    // alert(JSON.stringify(data) + ", " + url)
+                    AjaxLoader.show(
+                        "Demande  en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error);
+                    // alert(JSON.stringify(error))
+                },
+                success  : function(returnedData){ 
+                
+                        if (returnedData.success) {
+                            Swal.fire({
+                                icon: "success",
+                                title: " Merci !" ,
+                                text:   " Publication de ce message reussi ! " ,
+                                timer: 4000,
+                                showConfirmButton: false
+    
+                            }).then((result) => {
+                                window.location.reload() 
+                            });
+                            // $(".btn-close").click();
+
+                        }else{
+                            Swal.fire({                
                                 icon: "error",
                                 title: " Oupps !" ,
                                 text:   "  " + returnedData.message ,

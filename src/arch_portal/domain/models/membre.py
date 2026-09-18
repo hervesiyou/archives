@@ -67,6 +67,8 @@ class Membre(models.Model):
     role = models.ManyToManyField(  Role, null=True, blank=True )
     badges = models.ManyToManyField(  Badge, blank=True,  related_name="membres")
 
+    token_expiration = models.DateTimeField(null=True, blank=True)
+
     code_unique = models.CharField(
         max_length=40,
         # unique=True,

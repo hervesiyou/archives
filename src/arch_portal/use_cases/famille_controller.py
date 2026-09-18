@@ -312,13 +312,16 @@ def listfamilles(request, id, mode=0):
 
 def show_famille(request,id):
     fam = Famille.objects.get(id=id)
+    user = get_membre_from_session(request) 
+    if not user:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
-    if not request.session.get("userid","") :
-        return redirect("login" )
+    # if not request.session.get("userid","") :
+    #     return redirect(f"{reverse('login')}?next={request.get_full_path()}")
     
     #  ce utilisateur ne peut voir les info detaillée de la famille que si il appartient à la famille ou a des droits
-    userid = request.session.get("userid","")
-    user = Membre.objects.get(id=userid)
+    # userid = request.session.get("userid","")
+    # user = Membre.objects.get(id=userid)
 
     galerie = Galerie.objects.filter(famille=fam).first()
     appartient=gestionnaire=est_createur=False
@@ -333,7 +336,14 @@ def show_famille(request,id):
     if fam.createur == user  :
         est_createur = True
     
-    return render(request, "famille/showfamille.html", {"famille" : fam, "appartient" : appartient,"est_createur":est_createur, "galerie" : galerie, "gestionnaire":gestionnaire } )
+    return render(request, "famille/showfamille.html", {
+        "famille" : fam, "appartient" : appartient,
+        "est_createur":est_createur, 
+        "galerie" : galerie,
+        "user_connecte":user,
+        "gestionnaire":gestionnaire 
+        } 
+    )
 
 
 def show_admin_fam(request,id):    
@@ -511,6 +521,7 @@ def add_famille(request):
                 com.administrateurs.add(user)
                 #  je le met comme createur de la famille
                 com.createur = user
+                com.famille_mere = Famille.objects.filter(nom="BASE").first()  if Famille.objects.filter(nom="BASE").exists() else None
                 # je met cet utilisateur comme membre de cette famille
                 user.familles.add(com)
                 user.save()
