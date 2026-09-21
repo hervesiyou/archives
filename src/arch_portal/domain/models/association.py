@@ -1,6 +1,8 @@
 from django.db import models
 from arch_portal.domain.models.CONST_DATA import ASSO_CHOICES
 from arch_portal.domain import models as modeles
+from arch_portal.domain.models.publicite import Tag
+ 
 
 class Association(models.Model):
     class Meta:
@@ -16,13 +18,15 @@ class Association(models.Model):
     contact = models.TextField( blank=True)
 
     createur = models.ForeignKey("Membre", on_delete=models.SET_NULL,blank=True, null=True, related_name="associations_creees")
-
     famille = models.ForeignKey("Famille", on_delete=models.SET_NULL,blank=True, null=True)
     communaute = models.ForeignKey("Communaute", on_delete=models.SET_NULL,blank=True, null=True,related_name="associations_communautaire")
     localisation = models.TextField( blank=True)
 
     administrateurs = models.ManyToManyField("Membre", related_name="asso_admins", blank=True, null=True)
     type = models.CharField( max_length=50, choices=ASSO_CHOICES, blank=True,null=1 )
+
+    tags = models.ManyToManyField( Tag, related_name="associations", blank=True, help_text=( "Centres d'intérêt / types de librairies ciblés. "  "Laisser vide = publicité générique affichée en l'absence de correspondance."  ),  )
+
 
     def __str__(self):
         return self.nom

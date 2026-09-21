@@ -7,6 +7,13 @@ EXCHANGE_RATE = {
     "DC":5
 }
 
+@register.filter
+def sub(value, arg):
+    try:
+        return int(value) - int(arg)
+    except (TypeError, ValueError):
+        return 0
+
 @register.filter(name="convertXAFDC")
 def convertXAFToDC(somme:float):
     return round((somme / EXCHANGE_RATE.get("DC")))

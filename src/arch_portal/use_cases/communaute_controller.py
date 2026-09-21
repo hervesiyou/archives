@@ -426,10 +426,9 @@ def lieucle_create(request, idcom):
     com = Communaute.objects.get(id=idcom) 
 
     if( request.method == "POST" ):
-        person_form = LieuCleForm(request.POST,request.FILES)
-        
-        print(request.POST["nom"])
-        print(person_form.errors)
+        person_form = LieuCleForm(request.POST,request.FILES)        
+        # print(request.POST["nom"])
+        # print(person_form.errors)
 
         if (person_form.is_valid()):
             person = person_form.save(commit=False)
@@ -450,6 +449,8 @@ def show_communaute(request, id):
 
     form_personne = PersonneCleForm()
     form_lieu = LieuCleForm()
+
+    est_createur=gestionnaire=False
     #  ce utilisateur ne peut voir les info detaillée de la famille que si il appartient à la famille ou a des droits
     userid = request.session.get("userid","")
     if not userid :
@@ -466,7 +467,7 @@ def show_communaute(request, id):
     if com.createur == user or (user in com.administrateurs.all()):
         gestionnaire = True
 
-    est_createur=False
+    
     if (com.createur == user):
         est_createur=True,
     

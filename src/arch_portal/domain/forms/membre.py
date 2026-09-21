@@ -476,7 +476,7 @@ class UsersSubscribeForm(forms.ModelForm):
         self.fields["login"].label = 'Login ou Pseudonyme'
         self.fields["datenaissance"].label = 'Date de naissance'
         self.fields["lieunaissance"].label = 'Lieu de naissance'
-        self.fields["nomcomplet"].label = 'Nom complet'
+        self.fields["nomcomplet"].label = 'Nom Complet (Noms & Prénoms)'
         self.fields['login'].help_text = "Le login ou pseudonyme que vous allez utiliser pour vous connecter."
 
         # Configuration Crispy Forms
@@ -489,9 +489,9 @@ class UsersSubscribeForm(forms.ModelForm):
                 Column(Field('nomcomplet'), css_class='col-12'),
                 Column(Field('email'), css_class='col-12 col-md-6'),
                 Column(Field('telephone'), css_class='col-12 col-md-6'),
-                Column(Field('sexe'), css_class='col-12 col-md-4'),
-                Column(Field('datenaissance'), css_class='col-12 col-md-4'),
-                Column(Field('lieunaissance'), css_class='col-12 col-md-4'),
+                Column(Field('sexe'), css_class='col-4 col-md-4'),
+                Column(Field('datenaissance'), css_class='col-4 col-md-4'),
+                Column(Field('lieunaissance'), css_class='col-4 col-md-4'),
                 css_class='row'
             ),
             Row(
@@ -501,7 +501,6 @@ class UsersSubscribeForm(forms.ModelForm):
                 css_class='row'
             ),
         )
-
 
 class DemandeResetPasswordForm(forms.Form):
     email = forms.EmailField(label="Adresse email", max_length=50)
@@ -528,8 +527,6 @@ class DemandeResetPasswordForm(forms.Form):
                     css_class='row'
                 ),
             )
-    
-
 class ResetPasswordForm(forms.Form):
     ancien_password = forms.CharField(label="Ancien mot de passe", widget=forms.PasswordInput)
     nouveau_password = forms.CharField(label="Nouveau mot de passe", widget=forms.PasswordInput, min_length=4)

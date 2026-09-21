@@ -13,6 +13,12 @@ from .role import Role
 from .message import Message
 from .communaute import Communaute
 from .badge import Badge
+from .plantarifaire import Plan
+
+# from django.db.models import Sum, IntegerField, Value
+# from django.db.models.functions import Cast, Coalesce, NullIf
+# from arch_portal.use_cases.services.subscription_service import check_abonnement_permission
+
 
 # from arch_portal.use_cases.services.core import compute_sha1
 
@@ -177,9 +183,49 @@ class Membre(models.Model):
             return self.associations.filter(id=ass_or_id).exists()
         return self.associations.filter(id=ass_or_id.id).exists()
 
-
     def get_abonnement_actif(self):
         return self.abonnements.filter( is_active=True, fin__gte=timezone.now().date()).order_by("-debut").first()
+
+    def get_abonnements_permissions(self):
+         
+        return {
+            "communautes": int( self.communautes_creees.count() or 0 ) ,
+            "evenements": int( self.evenements_cree.count() or 0  ) ,
+            "associations": int( self.associations_creees.count() or 0),
+            "cagnottes": int( self.cagnottes.count() or 0),
+            "livres": int( self.livres_possedes.count() or 0),
+            "librairies": int( self.librairies.count() or 0),
+            "familles": int( self.familles_creees.count() or 0),
+            "projets": int( self.projets_creees.count() or 0),
+        }
+    def plans_tarifaires(self):
+        """Tous les plans (sans doublon) des abonnements de ce membre.""" 
+        return Plan.objects.filter(abonnements__membre=self, abonnements__is_active=True ).distinct()
+
+    def nb_evenements(self):
+        return sum( int(plan.nbevenements or 0) for plan in self.plans_tarifaires() )
+
+    def nb_livres(self):
+        return sum( int(plan.nblivres or 0) for plan in self.plans_tarifaires() )
+
+    def nb_cagnottes(self):
+         return sum( int(plan.nbcagnotes or 0) for plan in self.plans_tarifaires() )
+
+    def nb_familles(self):
+        return sum( int(plan.nbfamilles or 0) for plan in self.plans_tarifaires() )
+
+    def nb_librairies(self):
+        return sum( int(plan.nblibrairies or 0) for plan in self.plans_tarifaires() )
+
+    def nb_associations(self):
+        return sum( int(plan.nbassociations or 0) for plan in self.plans_tarifaires() )
+
+    def nb_projets(self):
+        return sum( int(plan.nbprojets or 0) for plan in self.plans_tarifaires() )
+
+    def nb_communautes(self):
+        return sum( int(plan.nbcommunautes or 0) for plan in self.plans_tarifaires() )
+                   
     
     def peut_creer( self, entite_type) ->bool:
         abo = self.get_abonnement_actif()

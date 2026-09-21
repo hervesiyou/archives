@@ -16,7 +16,7 @@ class Plan(models.Model):
     nbevenements = models.CharField(max_length=10, blank=True, default=0)
     nbassociations = models.CharField(max_length=10, blank=True, default=1)
     
-    nbevenements = models.CharField(max_length=10, blank=True, default=1)
+    # nbevenements = models.CharField(max_length=10, blank=True, default=1)
 
     avantages = models.TextField( blank=True)
     prix = models.DecimalField(max_digits=10, decimal_places=2, blank=True)   
@@ -24,7 +24,7 @@ class Plan(models.Model):
     is_default=models.BooleanField(default=False, verbose_name="Plan par defaut")
 
     def __str__(self):
-        return self.nom
+        return f"{self.code} {self.prix} FCFA  - {self._get("nbevenements")}" if self.prix else self.nom
 
     class Meta: 
         verbose_name = "Plan tarifaire"
@@ -46,3 +46,6 @@ class Plan(models.Model):
         if self.is_default:
             Plan.objects.filter(is_default=True).exclude(pk=self.pk).update(is_default=False)
         super().save(*args, **kwargs)
+
+    def _get(self, field):
+        return getattr(self, field, None)

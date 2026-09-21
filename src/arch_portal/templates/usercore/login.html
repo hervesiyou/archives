@@ -97,7 +97,6 @@
                 Connexion
             </h3>
         </div>
-
         <div class="login-body">
             {% if form.non_field_errors %}
                 <div class="alert alert-danger">
@@ -131,9 +130,16 @@
                 <p class="text-center text-muted small mt-3">
                     Vous serez redirigé après connexion
                 </p>
-            {% endif %}
-            <a href="{% url 'demander_reset_password' %}" class="text-success p-5" > Mot de passe oublié ?</a>
+            {% endif %}   
+            <hr/>
+            <div class="text-center">
+                {% comment %} <div class="col-12"> {% endcomment %}
+                    <a href="{% url 'demander_reset_password' %}" class="text-danger m-3 mark h5" > Mot de passe oublié ?</a>
+                {% comment %} </div> {% endcomment %}
+            </div>        
+
         </div>
+            
     </div>
 
 </div>

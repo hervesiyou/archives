@@ -8,6 +8,8 @@ import secrets
 import string
 from django.utils.text import slugify
 
+from arch_portal.domain.models.publicite import Tag
+
 class Famille(models.Model):
     class Meta:
         verbose_name = "Famille"
@@ -41,6 +43,9 @@ class Famille(models.Model):
         null=True, 
         blank=True
     )
+
+    tags = models.ManyToManyField( Tag, related_name="familles", blank=True, help_text=( "Centres d'intérêt / types de librairies ciblés. "  "Laisser vide = publicité générique affichée en l'absence de correspondance."  ),  )
+
 
     def __str__(self):
         return self.nom

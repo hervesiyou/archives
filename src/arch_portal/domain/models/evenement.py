@@ -3,8 +3,8 @@ from  arch_portal.domain  import models as modele
 
 class Evenement(models.Model):
     class Meta:
-        verbose_name = "Evenements"
-        verbose_name_plural = " Les Evenements "
+        verbose_name = "Evenements de communauté"
+        verbose_name_plural = " Les Evenements Communautaires"
 
     db_table = "evenements"
     date=models.DateTimeField(auto_now=True)

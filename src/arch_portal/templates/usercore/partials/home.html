@@ -34,14 +34,20 @@
 
 
     <div class="row">
-
         <!-- Infos personnelles -->
         <div class="col-lg-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-header bg-success text-white">
                     <i class="fa-solid fa-id-card me-2"></i>
                     Informations personnelles
-                </div>
+                </div> 
+
+                {% comment %} {% for plan in membre.plans_tarifaires %}
+                    <span class="badge bg-info"> {{ plan }}</span> 
+                    {{ membre.nb_evenements }}
+                    {{ membre.nb_communautes }}
+                    {{ membre.nb_associations }}
+                {% endfor %} {% endcomment %}
 
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
@@ -202,34 +208,115 @@
                 <div class="card-body">                                                       
                     <h3 class="text-success" >Utilisation de votre plan</h3>
 
-                    <table class="table">
-                        <tr class="bg-primary text-white text-center">
-                            <th>Module</th>
-                            <th>Utilisé</th>
-                            <th>Limite</th>
-                            <th>Reste</th>
+                    {% comment %} {{ membre.get_abonnements_permissions}} {% endcomment %}
+                    <table class="table table-bordered ">
+                        <tr class="text-white text-center">
+                            <th  class="bg-primary" >Module</th>
+                            <th class="bg-primary" >Limite</th>
+                            <th class="bg-primary" >Utilisé</th>
+                            <th class="bg-primary" >Reste</th>
                         </tr>
 
                         <tr>
                             <td class="text-bold text-primary"> <b> Familles</b> </td>
-                            <td>{{ usage.familles }}</td>
-                            <td>{{ plan.nbfamilles }}</td>
-                            <td>{{ reste.familles }}</td>
+                            <td>
+                                <span class="badge bg-info">{{membre.nb_familles}}</span>
+                                {{ usage.familles }}
+                            </td>
+                            <td>{{ plan.nbfamilles }}
+                                <span class="badge bg-danger">{{membre.get_abonnements_permissions.familles}}</span>
+                            </td>
+                            <td>
+                                {{ reste.familles }}
+                                <span class="badge bg-warning"> {{ membre.nb_familles|sub:membre.get_abonnements_permissions.familles }} </span>
+                            </td>
                         </tr>
 
                         <tr>
                             <td class="text-bold text-primary"> <b>Communautés </b></td>
-                            <td>{{ usage.communautes }}</td>
-                            <td>{{ plan.nbcommunautes }}</td>
-                            <td>{{ reste.communautes }}</td>
+                            <td>
+                                <span class="badge bg-info">{{membre.nb_communautes}}</span>
+                                {{ usage.communautes }}
+                            </td>
+                            <td>{{ plan.nbcommunautes }}
+                                <span class="badge bg-danger">{{membre.get_abonnements_permissions.communautes}}</span>
+                            </td>
+                            <td>
+                                {{ reste.communautes }}
+                                <span class="badge bg-warning"> {{ membre.nb_communautes|sub:membre.get_abonnements_permissions.communautes }} </span>
+                            </td>
                         </tr>
 
                         <tr>
                             <td class="text-bold text-primary"> <b>Livres </b></td>
-                            <td>{{ usage.livres }}</td>
-                            <td>{{ plan.nblivres }}</td>
-                            <td>{{ reste.livres }}</td>
+                            <td>
+                                <span class="badge bg-info">{{membre.nb_livres}}</span>
+                                {{ usage.livres }}
+                            </td>
+                            <td>{{ plan.nblivres }}
+                                <span class="badge bg-danger">{{membre.get_abonnements_permissions.livres}}</span>
+                            </td>
+                            <td>
+                                {{ reste.livres }}
+                                <span class="badge bg-warning"> {{ membre.nb_associations|sub:membre.get_abonnements_permissions.associations }} </span>
+                            </td>
                         </tr>
+                        <tr>
+                            <td class="text-bold text-primary"> <b>Librairies </b></td>
+                            <td>
+                                <span class="badge bg-info">{{membre.nb_librairies}}</span>
+                                {{ usage.librairies }}
+                            </td>
+                            <td>{{ plan.nblibrairies }}
+                                <span class="badge bg-danger">{{membre.get_abonnements_permissions.librairies}}</span>
+                            </td>
+                            <td>
+                                {{ reste.librairies }}
+                                <span class="badge bg-warning"> {{ membre.nb_livres|sub:membre.get_abonnements_permissions.livres }} </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-bold text-primary"> <b>Cagnottes </b></td>
+                            <td>
+                                <span class="badge bg-info">{{membre.nb_cagnottes}}</span>
+                                {{ usage.cagnottes }}
+                            </td>
+                            <td>{{ plan.nbcagnotes }}
+                                <span class="badge bg-danger">{{membre.get_abonnements_permissions.cagnottes}}</span>
+                            </td>
+                            <td>
+                                {{ reste.cagnottes }}
+                                <span class="badge bg-warning"> {{ membre.nb_cagnottes|sub:membre.get_abonnements_permissions.cagnottes }} </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-bold text-primary"> <b>Associations </b></td>
+                            <td>
+                                <span class="badge bg-info">{{membre.nb_associations}}</span>
+                                {{ usage.associations }}
+                            </td>
+                            <td>{{ plan.nbassociations }}
+                                <span class="badge bg-danger">{{membre.get_abonnements_permissions.associations}}</span>
+                            </td>
+                            <td>
+                                {{ reste.associations }}
+                                <span class="badge bg-warning"> {{ membre.nb_associations|sub:membre.get_abonnements_permissions.associations }} </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-bold text-primary"> <b>Projets </b></td>
+                            <td>
+                                <span class="badge bg-info">{{membre.nb_projets}}</span>
+                                {{ usage.projets }}
+                            </td>
+                            <td>{{ plan.nbprojets }}
+                                <span class="badge bg-danger">{{membre.get_abonnements_permissions.projets}}</span>
+                            </td>
+                            <td>{{ reste.projets }} 
+                                <span class="badge bg-warning"> {{ membre.nb_projets|sub:membre.get_abonnements_permissions.projets }} </span>
+                            </td>
+                        </tr>
+
                     </table>
                 </div>
             </div>

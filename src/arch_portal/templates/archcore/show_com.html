@@ -6,7 +6,6 @@
 {% endblock %}
 
 {% block content %}
-
     <div class="container ">
 
         <div class="my-4">
@@ -136,8 +135,7 @@
                                         <div class="badge bg-success text-white">CREATEUR</div>
                                     {% endif %}
                                     </h4>
-                                    <h5 class="card-subtitle">{{communaute.description}}</h5>
-                              
+                                    <h5 class="card-subtitle">{{communaute.description}}</h5>                        
                                    
                                     {% if not appartient %} 
                                         <a href="#" data-com="{{communaute.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partComID"> Je souhaite être {{ communaute.nom }}</a>
@@ -155,8 +153,7 @@
                                         title="Détail geographique"
                                         class="btn btn-sm btn-outline-success text-success">
                                         <span> Carte géographique </span>
-                                    </a>
-                                    
+                                    </a>                                  
 
                                     {% comment %} data-bs-toggle="modal"  data-bs-target="#donModal" {% endcomment %}
                                     <a class="btn btn-sm btn-outline-info text-success" 
@@ -262,8 +259,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-4 mt-3">
-                                        <div class="bg-dark p-10 text-white text-center">
-                                            
+                                        <div class="bg-dark p-10 text-white text-center">                                            
                                             <h6 class="mb-0 mt-1"> 
                                             <a href="{% url 'allprestataires' communaute.id %}">Prestataires</a>
                                             </h6>
@@ -298,7 +294,7 @@
                                             {% if galerie  is not None and galerie.id is not None %}
                                                 <a class="btn btn-outline-success" href="{% url 'show_galerie' galerie.id %}"> Photos de {{ communaute.nom}} </a>
                                             {% endif %}
-                                            {% if 'ADD_GALERIE' in request.session.userrights %}
+                                            {% if 'ADD_GALERIE' in request.session.userrights or  gestionnaire %}
                                                 <a class="d-block badge bg-info" href="{% url 'add_galerie' %}" alt="Ajouter une galerie" title="Ajouter une galerie">
                                                     <i class="fa-solid fa-plus me-2 text-success"></i>
                                                     <i class="fa-solid fa-images me-2 text-success"></i>                                       
@@ -315,7 +311,7 @@
                                             {% comment %} {% if galerie  is not None and galerie.id is not None %}
                                                 <a class="btn btn-outline-success" href="{% url 'show_galerie' galerie.id %}"> Article de {{ communaute.nom}} </a>
                                             {% endif %} {% endcomment %}
-                                            {% if 'ADD_ARTICLE' in request.session.userrights %}
+                                            {% if 'ADD_ARTICLE' in request.session.userrights or  gestionnaire %}
                                                 <a class="d-block badge bg-info" href="{% url 'ajouter_article' communaute.id %}" alt="Ajouter un article" title="Ajouter un article">
                                                     <i class="fa-solid fa-plus me-2 text-success"></i>
                                                     <i class="fa-solid fa-images me-2 text-success"></i>                                       
@@ -330,7 +326,7 @@
                                             {% comment %} {% if galerie  is not None and galerie.id is not None %}
                                                 <a class="btn btn-outline-success" href="{% url 'show_galerie' galerie.id %}"> Formation de {{ communaute.nom}} </a>
                                             {% endif %} {% endcomment %}
-                                            {% if 'ADD_FORMATION' in request.session.userrights %}
+                                            {% if 'ADD_FORMATION' in request.session.userrights or  gestionnaire %}
                                                 <a class="d-block badge bg-info" href="{% url 'ajouter_formation' communaute.id %}" alt="Ajouter une formation" title="Ajouter une formation">
                                                     <i class="fa-solid fa-plus me-2 text-success"></i>
                                                     <i class="fa-solid fa-images me-2 text-success"></i>                                       
@@ -365,8 +361,7 @@
                                                         data-bs-toggle="modal" 
                                                         data-bs-target="#adminModal" 
                                                         type="button"> <i class="fa fa-plus"></i> Ajouter  </a>
-                                                </div>
-                                                
+                                                </div>                                                
                                             {% endif %}
                                             </small>
                                         </div>
@@ -389,8 +384,7 @@
                                                     data-bs-target="#personnes" type="button" role="tab">
                                                 Personnes Clés <span class="badge bg-success ms-1">{{ personnes_cles.count }}</span>
                                         
-                                            {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
-                                                
+                                            {% if  'ADD_COMMUNAUTE' in request.session.userrights or  gestionnaire %}                                                
                                                 <span type="button" class="btn btn-success btn-sm" 
                                                         data-bs-toggle="modal" 
                                                         data-bs-target="#addPersonneModal">
@@ -405,7 +399,7 @@
                                                     data-bs-target="#lieux" type="button" role="tab">
                                                 Lieux Clés <span class="badge bg-success ms-1">{{ lieux_cles.count }}</span>
                                             
-                                            {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
+                                            {% if  'ADD_COMMUNAUTE' in request.session.userrights or  gestionnaire %}
                                                 
                                                 <span type="button" class="btn btn-success btn-sm" 
                                                         data-bs-toggle="modal" 
@@ -420,13 +414,11 @@
 
                             <div class="tab-content" id="commTabContent">
                             
-                                <div class="tab-pane fade show active" id="overview" role="tabpanel">
-                                    
+                                <div class="tab-pane fade show active" id="overview" role="tabpanel">                                    
                                     <div class="card shadow-sm">
                                         <div class="card-body">
                                             <h4 class="card-title">Description détaillée</h4>
                                             <p>{{ communaute.histoire_detaillee|linebreaks }}</p>
-                                            <!-- ... autres infos existantes -->
                                         </div>
                                     </div>
                                 </div>
@@ -441,8 +433,7 @@
                                                 <i class="fa-solid fa-plus me-2"></i>Ajouter une personne
                                             </a>
                                         {% endif %} {% endcomment %}
-                                        {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
-                                                
+                                        {% if  'ADD_COMMUNAUTE' in request.session.userrights or  gestionnaire %}                                                
                                             <button type="button" class="btn btn-success btn-sm"  title="Ajouter une personne clé"
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#addPersonneModal">
@@ -499,8 +490,7 @@
                                                 <i class="fa-solid fa-plus me-2"></i>Ajouter un lieu
                                             </a>
                                         {% endif %} {% endcomment %}
-                                        {% if  'ADD_COMMUNAUTE' in request.session.userrights %}
-                                                
+                                        {% if  'ADD_COMMUNAUTE' in request.session.userrights or  gestionnaire %}                                                
                                             <button type="button" class="btn btn-success btn-sm" 
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#addLieuModal">
@@ -564,8 +554,8 @@
                 <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-danger text-white ">
-                    <h5 class="modal-title " id="exampleModalLabel"> Ajout d'un administrateur à  {{ communaute.nom}} </h5>
-                    <button type="button" class="btn-close clos" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title " id="exampleModalLabel"> Ajout d'un administrateur à  {{ communaute.nom}} </h5>
+                        <button type="button" class="btn-close clos" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
         
                     <form  method="post" >
@@ -583,10 +573,12 @@
                         </div>
 
                         <div class="modal-footer">
-
-                        {% comment %} disabled  {% endcomment %}
-                        <input type="button" data-com="{{communaute.id}}" class="btn btn-primary" id="addAdminComID" 
-                        value="Enregistrer" />
+                            {% comment %} disabled  {% endcomment %}
+                            <input type="button" 
+                                data-com="{{communaute.id}}" 
+                                class="btn btn-primary" 
+                                id="addAdminComID" 
+                                value="Enregistrer" />
                         </div>
         
                     </form>
@@ -600,43 +592,41 @@
             <div class="modal-dialog">
                 <div class="modal-content">
 
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title">Envoi du message aux gestionnaires de <span class=""> {{communaute.nom}} </span> </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title">Envoi du message aux gestionnaires de <span class=""> {{communaute.nom}} </span> </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
 
-                <div class="form-section">
-                    <h5 class="text-success text-center m-2"> Envoyer un Message  </h5> 
-
-                    {% comment %} <div class="error-message" id="errorMessage"></div> {% endcomment %}
-
-                    <form method="post"  >
-                        <div class="modal-body">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label for="username" class="form_label" >Votre Nom *</label>
-                                <input type="text" id="username" name="username"  class="form-control" required placeholder="Entrez votre nom">
-                            </div>
-
-                            <div class="form-group">
-                                <input type="hidden" id="idcom" value="{{communaute.id}}" />
-                                <label for="message" class="form_label">Votre Message *</label>
-                                <textarea id="message" name="message" class="form-control"  required placeholder="Écrivez votre message ici..."></textarea>
-                                <div class="char-count">
-                                    <span id="charCount">0</span>/5000
+                    <div class="form-section">
+                        <h5 class="text-success text-center m-2"> Envoyer un Message  </h5> 
+                        {% comment %} <div class="error-message" id="errorMessage"></div> {% endcomment %}
+                        <form method="post"  >
+                            <div class="modal-body">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="username" class="form_label" >Votre Nom *</label>
+                                    <input type="text" id="username" name="username"  class="form-control" required placeholder="Entrez votre nom">
                                 </div>
+
+                                <div class="form-group">
+                                    <input type="hidden" id="idcom" value="{{communaute.id}}" />
+                                    <label for="message" class="form_label">Votre Message *</label>
+                                    <textarea id="message" name="message" class="form-control"  required placeholder="Écrivez votre message ici..."></textarea>
+                                    <div class="char-count">
+                                        <span id="charCount">0</span>/5000
+                                    </div>
+                                </div>
+                                <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
                             </div>
-                            <div class="h-captcha" data-sitekey="{{ HCAPTCHA }}" data-callback="enableCommandeButton"></div>
-                        </div>
-                        <div class="modal-footer">
-                            <input type="button" 
-                                id="addMessageComID"  
-                                class="submit-btn btn btn-success" 
-                                value="Envoyer le Message" 
-                            />
-                        </div>
-                    </form>
-                </div> 
+                            <div class="modal-footer">
+                                <input type="button" 
+                                    id="addMessageComID"  
+                                    class="submit-btn btn btn-success" 
+                                    value="Envoyer le Message" 
+                                />
+                            </div>
+                        </form>
+                    </div> 
 
                 </div>
             </div>

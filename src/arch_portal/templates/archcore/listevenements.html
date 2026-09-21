@@ -25,8 +25,7 @@
         </div>
     </div>
     
-    <h5 class="card-title my-3">
-        
+    <h5 class="card-title my-3">        
         <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a>
         &nbsp;
         {% if  'ADD_EVENEMENT' in request.session.userrights %}

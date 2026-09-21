@@ -1,24 +1,18 @@
 {% extends "base.html" %}
 {% load static %}
-{% load crispy_forms_tags %}
-
+{% comment %} {% load crispy_forms_tags %} {% endcomment %}
+ {% load crispy_forms_tags crispy_forms_filters %}
 {% block title %}Inscription – RICHBOOK{% endblock %}
 
 {% block css %}
-    <style>
-        :root {
-            --richbook-green: #198754;
-            --richbook-green-dark: #146c43;
-            --richbook-gray: #6c757d;
-        }
-
+    <style> 
         .register-hero {
             background: linear-gradient(rgba(0,0,0,0.50), rgba(0,0,0,0.70)),
                         url('https://images.unsplash.com/photo-1522202176988-66273c2b033f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1471&q=80') center/cover no-repeat;
             color: white;
-            padding: 6rem 1rem 4rem;
+            padding: 3rem 1rem 4rem;
             border-radius: 0 0 1.5rem 1.5rem;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             text-shadow: 0 2px 6px rgba(0,0,0,0.7);
             text-align: center;
         }
@@ -41,7 +35,7 @@
         }
 
         .register-body {
-            padding: 2.5rem 2.2rem;
+            /*padding: 2.5rem 2.2rem;*/
         }
 
         .form-control, .form-select {
@@ -86,43 +80,289 @@
 
         @media (max-width: 576px) {
             .register-hero { padding: 4rem 1rem 3rem; }
-            .register-body { padding: 2rem 1.5rem; }
+            /*.register-body { padding: 2rem 1.5rem; }*/
         }
+     
+        :root {
+            --ink: #0E2F2B;
+            --teal: #0F5A52;
+            --teal-dark: #0A4640;
+            --saffron: #F2B32C;
+            --paper: #EEF3F2;
+            --surface: #FFFFFF;
+            --text: #1E2B29;
+            --muted: #5E706D;
+            --line: #D5DFDD;
+            --danger: #B3261E;
+            --font-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+            --font-body: 'Figtree', 'Segoe UI', system-ui, sans-serif;
+            --richbook-green: #198754;
+            --richbook-green-dark: #146c43;
+            --richbook-gray: #6c757d;
+        } 
+        .auth-shell {
+            display: grid;
+            grid-template-columns: 1fr;
+             width: 100%; 
+           
+            background: var(--surface);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 24px 60px -30px rgba(14, 47, 43, .45);
+        }
+
+        @media (min-width: 992px) {
+            .auth-shell { grid-template-columns: 5fr 7fr; }
+        }
+
+        /* ---------- Panneau gauche ---------- */
+        .auth-aside {
+            position: relative;
+            padding: 2rem 1.75rem 2.5rem;
+            color: #E4EEEC;
+            background-color: var(--ink);
+            background-image:
+                linear-gradient(135deg, rgba(255,255,255,.06) 25%, transparent 25%),
+                linear-gradient(225deg, rgba(255,255,255,.06) 25%, transparent 25%),
+                linear-gradient(45deg,  rgba(255,255,255,.06) 25%, transparent 25%),
+                linear-gradient(315deg, rgba(255,255,255,.06) 25%, transparent 25%);
+            background-position: 28px 0, 28px 0, 0 0, 0 0;
+            background-size: 56px 56px;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .auth-aside::after {
+            content: "";
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 8px;
+            background: repeating-linear-gradient(90deg, var(--saffron) 0 24px, transparent 24px 36px);
+        }
+
+        @media (min-width: 992px) {
+            .auth-aside { padding: 3rem 2.5rem 3.25rem; justify-content: space-between; }
+        }
+
+        .auth-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: .65rem;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: #fff;
+        }
+
+        .auth-brand .mark {
+            display: grid;
+            place-items: center;
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: var(--saffron);
+            color: var(--ink);
+        }
+
+        .auth-aside h1 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(1.9rem, 3.2vw, 2.7rem);
+            line-height: 1.08;
+            letter-spacing: -.02em;
+            color: #fff;
+            margin: 0 0 .9rem;
+        }
+
+        .auth-aside .lead-text {
+            max-width: 34ch;
+            color: #B9CBC8;
+            margin: 0;
+        }
+
+        .steps {
+            list-style: none;
+            counter-reset: step;
+            margin: 0;
+            padding: 0;
+            display: none;
+        }
+
+        @media (min-width: 992px) {
+            .steps { display: grid; gap: 1rem; }
+        }
+
+        .steps li {
+            counter-increment: step;
+            display: flex;
+            align-items: flex-start;
+            gap: .85rem;
+            font-size: .95rem;
+            color: #D6E4E1;
+        }
+
+        .steps li::before {
+            content: counter(step);
+            flex: 0 0 28px;
+            height: 28px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            border: 1.5px solid var(--saffron);
+            color: var(--saffron);
+            font-weight: 600;
+            font-size: .85rem;
+        }
+
+        /* ---------- Panneau formulaire ---------- */
+        .auth-main { padding: 2rem 1.25rem; }
+        @media (min-width: 576px) { .auth-main { padding: 2.25rem 2.25rem; } }
+        @media (min-width: 992px) { .auth-main { padding: 3rem 3rem; } }
+
+        .auth-main h2 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.85rem;
+            letter-spacing: -.015em;
+            margin: 0 0 .35rem;
+        }
+
+        .auth-main .sub { color: var(--muted); margin: 0 0 1.75rem; }
+        .form-section {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            margin: 0 0 1rem;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--teal);
+        }
+        .form-section::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--line);
+        }
+
+        .form-section + .row { margin-bottom: 1.75rem; }
+        /* Champs (crispy) */
+        .form-label {
+            font-weight: 600;
+            font-size: .9rem;
+            margin-bottom: .35rem;
+        }
+        .asteriskField { color: var(--danger); margin-left: 2px; }
+        .form-control, .form-select {
+            padding: .65rem .85rem;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background-color: #FBFCFC;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: #fff;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 .22rem rgba(15, 90, 82, .18);
+        }
+
+        .form-control::placeholder { color: #9AA9A6; }
+        .form-text { color: var(--muted); font-size: .82rem; }
+        .invalid-feedback { display: block; font-size: .84rem; color: var(--danger); }
+        .mb-3 { margin-bottom: 0 !important; } /* l'espacement est géré par g-3 */
+
+        /* Afficher / masquer le mot de passe */
+        .pw-wrap { position: relative; }
+        .pw-wrap .form-control,
+        .pw-wrap .form-control.is-invalid { padding-right: 2.9rem; background-image: none; }
+
+        .pw-toggle {
+            position: absolute;
+            top: 50%; right: .4rem;
+            transform: translateY(-50%);
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+            padding: .45rem .6rem;
+            border-radius: 8px;
+        }
+
+        .pw-toggle:hover { color: var(--teal); background: rgba(15, 90, 82, .08); }
+        .pw-toggle:focus-visible { outline: 3px solid var(--saffron); outline-offset: 1px; }
+
+        /* Captcha + bouton */
+        .hcaptcha-wrapper {
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
+        .captcha-hint {
+            text-align: center;
+            font-size: .85rem;
+            color: var(--muted);
+            margin: .6rem 0 0;
+        }
+
+        .btn-register {
+            padding: .85rem 1rem;
+            border: 0;
+            border-radius: 12px;
+            background: var(--teal);
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.02rem;
+        }
+
+        .btn-register:hover:not(:disabled),
+        .btn-register:active:not(:disabled) { background: var(--richbook-green); color: #fff; }
+        .btn-register:focus-visible { outline: 3px solid var(--richbook-green); outline-offset: 2px; }
+
+        .btn-register:disabled {
+            background: #CBD7D5;
+            color: #6B7C79;
+            opacity: 1;
+            cursor: not-allowed;
+        }
+
+        .auth-foot {
+            margin: 1.5rem 0 0;
+            text-align: center;
+            color: var(--muted);
+            font-size: .95rem;
+        }
+
+        .auth-foot a { color: var(--teal); font-weight: 600; }
+        .alert ul { margin: 0; padding-left: 1.1rem; }
     </style>
 {% endblock %}
 
 {% block content %}
 
 <div class="container">
-
-    <!-- Bannière d’accueil -->
+    
     <div class="register-hero">
         <h1 class="fw-bold mb-3">Rejoignez la famille RICHBOOK</h1>
         <p class="lead mb-0">
             Créez votre compte pour retrouver vos racines, vos livres et votre communauté
         </p>
     </div>
-
     <!-- Carte d’inscription -->
-    <div class="register-card shadow-lg">
-        <div class="register-header">
+    {% comment %} <div class="register-card shadow-lg"> {% endcomment %}
+        {% comment %} <div class="register-header">
             <h3 class="mb-0">
                 <i class="fa-solid fa-user-plus me-2"></i>
                 Inscription
             </h3>
-        </div>
-
+        </div> {% endcomment %}
         <div class="register-body">
-
             {% if form.non_field_errors %}
                 <div class="alert alert-danger">
                     {{ form.non_field_errors }}
                 </div>
             {% endif %}
-
-            <form method="post" action="" novalidate>
+            {% comment %} <form method="post" action="" novalidate>
                 {% csrf_token %}
-
                 {{ form|crispy }}
 
                 <div class="hcaptcha-wrapper">
@@ -138,23 +378,91 @@
                         M'inscrire
                     </button>
                 </div>
-            </form>
+            </form> {% endcomment %}
+            <main class="auth-shell">
+                <!-- Panneau gauche -->
+                <aside class="auth-aside">
+                    <div class="auth-brand"> <span class="mark"><i class="fa-solid fa-users"></i></span> Espace membres   </div>
+                    <div>
+                        <h1>Créez votre compte membre </h1>
+                        <p class="lead-text">Cela prend quelques minutes. Vous pourrez ensuite vous connecter avec votre login.</p>
+                    </div>
+                    <ol class="steps">
+                        <li>Renseignez vos informations personnelles.</li>
+                        <li>Choisissez votre login et votre mot de passe.</li>
+                        <li>Validez le captcha, puis cliquez sur « M'inscrire ».</li>
+                    </ol>
+                </aside>
+                <!-- Panneau formulaire -->
+                <section class="auth-main">
+                    <h2>Inscription</h2>
+                    <p class="sub">Les champs marqués d'un * sont obligatoires.</p>
 
-            <div class="text-center mt-4">
-                <p class="text-muted mb-2">Déjà membre ?</p>
-                <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}"  class="link-login fs-5">
-                    <i class="fa-solid fa-arrow-right-to-bracket me-2"></i>
-                    Se connecter
-                </a>
-            </div>
-        </div>
-        <div class="m-3">
-            <div class="alert alert-danger">
-                Merci de consulter votre adresse Email, un message vous a été envoyé pour vous permettre de valider votre compte !
-            </div>
-        </div>
-    </div>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %}" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
 
+                    <form method="post" action="" novalidate id="inscription-form">
+                        {% csrf_token %}
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>
+                        {% endif %}
+
+                        <h3 class="form-section"><i class="fa-regular fa-id-card"></i> Vos informations</h3>
+                        <div class="row g-3">
+                            <div class="col-12">{{ form.nomcomplet|as_crispy_field }}</div>
+                            <div class="col-12 col-md-6">{{ form.email|as_crispy_field }}</div>
+                            <div class="col-12 col-md-6">{{ form.telephone|as_crispy_field }}</div>
+                            <div class="col-12 col-md-4">{{ form.sexe|as_crispy_field }}</div>
+                            <div class="col-12 col-md-4">{{ form.datenaissance|as_crispy_field }}</div>
+                            <div class="col-12 col-md-4">{{ form.lieunaissance|as_crispy_field }}</div>
+                            <div class="col-12">{{ form.residence|as_crispy_field }}</div>
+                        </div>
+
+                        <h3 class="form-section"><i class="fa-solid fa-lock"></i> Votre compte</h3>
+                        <div class="row g-3">
+                            <div class="col-12">{{ form.login|as_crispy_field }}</div>
+                            <div class="col-12 col-md-6">{{ form.pwd|as_crispy_field }}</div>
+                            <div class="col-12 col-md-6">{{ form.password_confirm|as_crispy_field }}</div>
+                        </div>
+
+                        <div class="hcaptcha-wrapper mt-4">
+                            <div class="h-captcha"
+                                data-sitekey="{{ HCAPTCHA }}"
+                                data-callback="enableCommandeButton"
+                                data-expired-callback="disableCommandeButton"></div>
+                        </div>
+                        <p class="captcha-hint" id="captcha-hint"> Validez le captcha pour activer le bouton.</p>
+
+                        <div class="d-grid mt-3">
+                            <button type="submit" id="InsID" class="  btn-register" disabled>
+                                <i class="fa-solid fa-check-circle me-2"></i>
+                                M'inscrire
+                            </button>
+                        </div>
+                    </form>
+                    <div class="text-center mt-4">
+                        <p class="text-muted mb-2">Déjà membre ?</p>
+                        <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}"  class="link-login fs-5">
+                            <i class="fa-solid fa-arrow-right-to-bracket me-2"></i>
+                            Se connecter
+                        </a>
+                    </div>
+
+                    {# Remplacez le href par votre URL de connexion via la balise url de Django #}
+                    {% comment %} <p class="auth-foot">Vous avez déjà un compte ? <a href="#">Se connecter</a></p> {% endcomment %}
+                    <div class="m-3">
+                        <div class="alert alert-danger">
+                            Merci de consulter votre adresse Email, un message vous a été envoyé pour vous permettre de valider votre compte !
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div> 
 </div>
 
 {% endblock %}
@@ -164,5 +472,49 @@
         function enableCommandeButton() {
             document.getElementById('InsID').disabled = false;
         }
+    </script>
+    {% comment %} <script src="https://js.hcaptcha.com/1/api.js" async defer></script> {% endcomment %}
+    <script>
+        const btn  = document.getElementById('InsID');
+        const hint = document.getElementById('captcha-hint');
+        const form = document.getElementById('inscription-form');
+
+        // Callbacks hCaptcha (doivent être globaux)
+        function enableCommandeButton() {
+            btn.disabled = false;
+            hint.hidden = true;
+        }
+        function disableCommandeButton() {
+            btn.disabled = true;
+            hint.hidden = false;
+        }
+
+        // Afficher / masquer les mots de passe
+        document.querySelectorAll('input[type="password"]').forEach(function (input) {
+            const wrap = document.createElement('div');
+            wrap.className = 'pw-wrap';
+            input.parentNode.insertBefore(wrap, input);
+            wrap.appendChild(input);
+
+            const toggle = document.createElement('button');
+            toggle.type = 'button';
+            toggle.className = 'pw-toggle';
+            toggle.setAttribute('aria-label', 'Afficher le mot de passe');
+            toggle.innerHTML = '<i class="fa-regular fa-eye"></i>';
+            wrap.appendChild(toggle);
+
+            toggle.addEventListener('click', function () {
+                const visible = input.type === 'text';
+                input.type = visible ? 'password' : 'text';
+                toggle.setAttribute('aria-label', visible ? 'Afficher le mot de passe' : 'Masquer le mot de passe');
+                toggle.innerHTML = '<i class="fa-regular ' + (visible ? 'fa-eye' : 'fa-eye-slash') + '"></i>';
+            });
+        });
+
+        // Évite le double envoi
+        form.addEventListener('submit', function () {
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Inscription en cours…';
+        });
     </script>
 {% endblock %}

@@ -19,6 +19,8 @@ class Librairie(models.Model):
     image = models.ForeignKey("Image",on_delete=models.SET_NULL, null=True, blank=True)
     # livres = models.ManyToManyField("Livre",related_name="mes_livres",  blank=True)
     
+    createur = models.ForeignKey("Membre",on_delete=models.SET_NULL,related_name="librairies_creees", null=True, blank=True)
+
     def __str__(self): 
         return "{} ".format(str(self.nom).capitalize())
     
