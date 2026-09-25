@@ -1366,7 +1366,7 @@ $(document).ready(function(){
             "message": $("#messagediff").val(),
         };
         let url =  BASEURL+"/com/mess/diff";
-        const csrftoken = getCookie('csrftoken');
+        const csrftoken = $('input[name="csrfmiddlewaretoken"]').first().val();
         
         if( data.sujet.length > 2  && data.message.length >= 5 ){
 
@@ -1446,7 +1446,8 @@ $(document).ready(function(){
             "message": $("#messagediff").val(),
         };
         let url =  BASEURL+"/com/mess/diffasso";
-        const csrftoken = getCookie('csrftoken');
+        // const csrftoken = getCookie('csrftoken');
+        const csrftoken = $('input[name="csrfmiddlewaretoken"]').first().val();
         
         if( data.sujet.length > 2  && data.message.length >= 5 ){
 
@@ -1525,7 +1526,8 @@ $(document).ready(function(){
             "message": $("#messagedifffam").val(),
         };
         let url =  BASEURL+"/com/mess/difffam";
-        const csrftoken = getCookie('csrftoken');
+        // const csrftoken = getCookie('csrftoken');
+        const csrftoken = $('input[name="csrfmiddlewaretoken"]').first().val();
         
         if( data.sujet.length > 2  && data.message.length >= 5 ){
 

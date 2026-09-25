@@ -18,11 +18,10 @@ class Image(models.Model):
 
     def save(self, *args, **kwargs):
         # Appeler la méthode save() du parent
-        super().save(*args, **kwargs)
         # Ouvrir l'image avec Pillow
+        super().save(*args, **kwargs)
         if( self.fichier ):
             img = PILImage.open(self.fichier.path)
-
             # Redimensionner l'image (par exemple, 800x800)
             if img.height > 2800 or img.width > 2800:
                 output_size = (1024, 800)

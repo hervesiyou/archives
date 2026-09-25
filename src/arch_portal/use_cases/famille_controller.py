@@ -144,16 +144,14 @@ def build_family_tree(membre):
 def build_family_tree_levels(famille):
 
     membres = Membre.objects.filter( familles=famille ).select_related("nompere", "nommere")
-
     nodes = {}
     children_map = defaultdict(list)
-
     # 1. nodes
     for m in membres:
         nodes[m.id] = {
             "id": m.id,
             "nom": m.nomcomplet,
-            "photo": m.photo.url if m.photo else None,
+            "photo": m.photo.fichier.url  if m.photo and m.photo.fichier else None,
             "enfants": []
         }
 

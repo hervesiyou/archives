@@ -23,6 +23,7 @@ class Association(models.Model):
     localisation = models.TextField( blank=True)
 
     administrateurs = models.ManyToManyField("Membre", related_name="asso_admins", blank=True, null=True)
+    # evenements = models.ManyToManyField("Evenement", related_name="associations", blank=True, null=True)
     type = models.CharField( max_length=50, choices=ASSO_CHOICES, blank=True,null=1 )
 
     tags = models.ManyToManyField( Tag, related_name="associations", blank=True, help_text=( "Centres d'intérêt / types de librairies ciblés. "  "Laisser vide = publicité générique affichée en l'absence de correspondance."  ),  )

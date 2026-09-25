@@ -13,6 +13,7 @@ from arch_portal.domain.models.livre import Livre
 from arch_portal.domain.models.badge import Badge
 
 
+
 @staticmethod
 def get_usage(membre):
     return {

@@ -177,6 +177,14 @@ urlpatterns += [
     path("r-password/<int:membre_id>/<str:token>/", core.reset_password, name="reset_password"),
 ]
 
+urlpatterns += [
+    path( "asso/<int:association_id>/",  association.association_detail, name="association_detail",  ),
+    path( "asso/<int:association_id>/pres/upd/",  association.presentation_edit,  name="association_presentation_edit",  ),
+    path( "asso/<int:association_id>/<str:type_objet>/add/", association.enfant_create,  name="association_enfant_create",  ),
+    path("asso/<int:association_id>/<str:type_objet>/<int:objet_id>/ed/",  association.enfant_update, name="association_enfant_update", ),
+    path("asso/<int:association_id>/<str:type_objet>/<int:objet_id>/del/", association.enfant_delete, name="association_enfant_delete",  ),
+]
+
 urlpatterns += [ 
     path('lcom', communaute.listcom, name="listcom"),
     path('sh_ad_co/<int:id>', communaute.show_admin_com, name="show_admin_com"),    

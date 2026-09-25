@@ -506,7 +506,7 @@ def show_fam_salle_fusion(request,id):
     user = get_membre_from_session(request) 
     if(user != None):
         com = Famille.objects.get(id=id)
-        salles = SalleAttenteFamilleMere.objects.filter(famille=com)
+        salles = SalleAttenteFamilleMere.objects.filter(famillemere=com)
         return render(request, "usercore/salleattentefammere.html", { 
             "famille": com, 
             "sallesattentes":salles, 

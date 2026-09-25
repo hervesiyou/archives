@@ -84,14 +84,17 @@ def show_evenement(request, id):
 
  
 def mes_evenements_likes(request):
-  
-    userid = request.session.get("userid","") 
-    if userid is not None:
-        user = get_object_or_404(Membre, id=userid)
-        likes =   EvenementLike.objects.filter(user=user).select_related("evenement", "evenement__communaute").order_by("-created_at")
-    else:
-        return redirect("login")
+    
+    membre = get_membre_from_session(request)
+    if not membre:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
+    # userid = request.session.get("userid","") 
+    # if userid is not None:
+    # user = get_object_or_404(Membre, id=userid)
+    likes = EvenementLike.objects.filter(user=membre).select_related("evenement", "evenement__communaute").order_by("-created_at")
+    # else:
+    # return redirect("login")
     return render(request, "archcore/evenement_likes.html", {"likes": likes })
 
  
