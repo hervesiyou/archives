@@ -172,141 +172,153 @@ def souscrire_abonnement(request):
         # Vérifier si le membre a déjà un abonnement actif pour ce plan
         abonnement = Abonnement.objects.filter(membre_id=membre, plan_appli=plan, type=type, is_active=True).first()
         if abonnement:
-                response = {
-                    "status": False,
-                    "message": f"Vous avez déjà un abonnement actif pour le plan {plan}."
-                }
-                return JsonResponse(response)
+            response = {
+                "status": False,
+                "message": f"Vous avez déjà un abonnement actif pour le plan {plan}."
+            }
+            return JsonResponse(response)
 
         response = {"status": False, "message": "Une erreur est survenue lors de la souscription à l'abonnement."}
-        if not membre or not plan:
-            # raise ValueError("Membre et plan sont requis pour souscrire à un abonnement.")
+        if not membre or not plan: 
             response["message"] = "Membre et plan sont requis pour souscrire à un abonnement.."
             response["status"] = False
             return JsonResponse(response)
+        
         try:
             #  pour le moment les plans sont en dur, mais à terme ils seront dans la base de données et on pourra faire un switch case sur le nom du plan pour appliquer des règles spécifiques à chaque plan
             membre = Membre.objects.get(id=membre)
-        except Membre.DoesNotExist:
-            # raise MembreException(f"Membre avec id {membre} introuvable.")
-            response["message"] = f"Membre avec  {membre} introuvable."
+        except Membre.DoesNotExist: 
+            response["message"] = f"Membre avec {membre} introuvable."
             response["status"] = False
             return JsonResponse(response)
         
-        if membre is None:
-            # raise MembreException(f"Membre avec id {membre} introuvable.")
+        if membre is None: 
             response["message"] = f"Membre avec id {membre} introuvable."
             response["status"] = False
             return JsonResponse(response)  
         
         if plan == "FREE":
-            prix = 0 
-            p = Plan.objects.create(
-                nom = f"PL-{type}-{plan}-{membre.login}",
-                nbcommunautes = 0,
-                nbadministrateurs = 0,
-                nbfamilles = 1,
-                nblivres = 0,
-                nbcagnotes = 1,
-                nblibrairies = 0,
-                prix = prix
-            )
+            p = Plan.objects.filter(code=plan).first()
+            if p is None:            
+                prix = 0 
+                p = Plan.objects.create(
+                    nom = f"PL-{type}-{plan}-{membre.login}",
+                    nbcommunautes = 0,
+                    nbadministrateurs = 0,
+                    nbfamilles = 1,
+                    nblivres = 0,
+                    nbcagnotes = 1,
+                    nblibrairies = 0,
+                    prix = prix
+                )
         
         elif plan == "BASIC":
-            prix = 19000  
-            p = Plan.objects.create(
-                nom = f"PL-{type}-{plan}-{membre.login}",
-                nbcommunautes = 1,
-                nbadministrateurs = 5,
-                nbfamilles = 10,
-                nblivres = 0,
-                nbcagnotes = 3,
-                nblibrairies = 0,
-
-                nbassociations = 1,
-                nbprojets = 1,
-                nbevenements = 1,
-
-                prix = prix
-            ) 
+            p = Plan.objects.filter(code=plan).first()
+            if p is None:
+                prix = 19000  
+                p = Plan.objects.create(
+                    nom = f"PL-{type}-{plan}-{membre.login}",
+                    nbcommunautes = 1,
+                    nbadministrateurs = 5,
+                    nbfamilles = 10,
+                    nblivres = 0,
+                    nbcagnotes = 3,
+                    nblibrairies = 0,
+                    nbassociations = 1,
+                    nbprestataires = 2,
+                    nbpublicites = 2,
+                    nbprojets = 1,
+                    nbevenements = 1,
+                    prix = prix
+                ) 
             
         elif plan == "PRO":
-            prix = 29000
-            p = Plan.objects.create(
-                nom = f"PL-{type}-{plan}-{membre.login}",
-                nbcommunautes = 2,
-                nbadministrateurs = 10,
-                nbfamilles = 20,
-                nblivres = 0,
-                nbcagnotes = 6,
-                nblibrairies = 0,
-
-                nbassociations=5,
-                nbprojets = 3,
-                nbevenements = 5,
-
-                prix = prix
-            ) 
+            p = Plan.objects.filter(code=plan).first()
+            if p is None:
+                prix = 29000
+                p = Plan.objects.create(
+                    nom = f"PL-{type}-{plan}-{membre.login}",
+                    nbcommunautes = 2,
+                    nbadministrateurs = 10,
+                    nbfamilles = 20,
+                    nblivres = 0,
+                    nbcagnotes = 6,
+                    nblibrairies = 0,
+                    nbassociations=5,
+                    nbprestataires = 5,
+                    nbpublicites = 5,
+                    nbprojets = 3,
+                    nbevenements = 5,
+                    prix = prix
+                ) 
             
         elif plan == "DIAMOND":
-            prix = 50000
-            p = Plan.objects.create(
-                nom = f"PL-{type}-{plan}-{membre.login}",
-                nbcommunautes = 5,
-                nbadministrateurs = 15,
-                nbfamilles = 50,
-                nblivres = 0,
-                nbcagnotes = 10,
-                nblibrairies = 0,
-
-                nbassociations=10,
-                nbprojets = 10,
-                nbevenements = 10,
-
-                prix = prix
-            )
+            p = Plan.objects.filter(code=plan).first()
+            if p is None:
+                prix = 50000
+                p = Plan.objects.create(
+                    nom = f"PL-{type}-{plan}-{membre.login}",
+                    nbcommunautes = 5,
+                    nbadministrateurs = 15,
+                    nbfamilles = 50,
+                    nblivres = 0,
+                    nbcagnotes = 10,
+                    nblibrairies = 0,
+                    nbprestataires = 10,
+                    nbpublicites = 10,
+                    nbassociations=10,
+                    nbprojets = 10,
+                    nbevenements = 10,
+                    prix = prix
+                )
              
         elif plan =="FREEREADER":
-            prix = 7000
-            p = Plan.objects.create(
-                nom = f"PL-{type}-{plan}-{membre.login}",
-                nbcommunautes = 0,
-                nbadministrateurs = 0,
-                nbfamilles = 0,
-                nblivres = 0,
-                nbcagnotes = 0,
-                nblibrairies = 0,
-                prix = prix
-            )
+            p = Plan.objects.filter(code=plan).first()
+            if p is None:
+                prix = 7000
+                p = Plan.objects.create(
+                    nom = f"PL-{type}-{plan}-{membre.login}",
+                    nbcommunautes = 0,
+                    nbadministrateurs = 0,
+                    nbfamilles = 0,
+                    nblivres = 0,
+                    nbcagnotes = 0,
+                    nblibrairies = 0,
+                    prix = prix
+                )
 
         elif plan == "PROREADER":
-            prix = 12000
-            p = Plan.objects.create(
-                nom = f"PL-{type}-{plan}-{membre.login}",
-                nbcommunautes = 0,
-                nbadministrateurs = 0,
-                nbfamilles = 0,
-                nblivres = 0,
-                nbcagnotes = 0,
-                nblibrairies = 0,
-                prix = prix
-            )
+            p = Plan.objects.filter(code=plan).first()
+            if p is None:
+                prix = 12000
+                p = Plan.objects.create(
+                    nom = f"PL-{type}-{plan}-{membre.login}",
+                    nbcommunautes = 0,
+                    nbadministrateurs = 0,
+                    nbfamilles = 0,
+                    nblivres = 0,
+                    nbcagnotes = 0,
+                    nblibrairies = 0,
+                    prix = prix
+                )
 
         elif plan == "PROLIBRAIRE":
-            prix = 29000 
-            p = Plan.objects.create(
-                nom = f"PL-{type}-{plan}-{membre.login}",
-                nbcommunautes = 0,
-                nbadministrateurs = 0,
-                nbfamilles = 0,
-                nblivres = 100,
-                nbcagnotes = 0,
-                nblibrairies = 1,
-                prix = prix
-            )      
+            p = Plan.objects.filter(code=plan).first()
+            if p is None:
+                prix = 29000 
+                p = Plan.objects.create(
+                    nom = f"PL-{type}-{plan}-{membre.login}",
+                    nbcommunautes = 0,
+                    nbadministrateurs = 0,
+                    nbfamilles = 0,
+                    nblivres = 100,
+                    nbcagnotes = 0,
+                    nblibrairies = 1,
+                    prix = prix
+                )      
             
         wallet = membre.wallet
-        if wallet.solde < prix:
+        if wallet.solde < p.prix:
             response["message"] = "Solde insuffisant pour souscrire à ce plan d'abonnement."
             response["status"] = False
             return JsonResponse(response)
@@ -317,20 +329,20 @@ def souscrire_abonnement(request):
             plan = p,
             debut=date.today(),
             plan_appli=plan,
-            prix=prix,
+            prix=p.prix,
             type=type,
             is_active=True,
             duree=365
         )
 
-        wallet.solde -= Decimal(prix)
+        wallet.solde -= Decimal(p.prix)
         wallet.save() 
         abonnement.save()
 
         transaction_paiement =  Transaction.objects.create(
             code=f"TRX-ABO-{abonnement.id}",
             wallet=wallet,
-            montant=Decimal(prix),
+            montant=Decimal(p.prix),
             type="ABONNEMENT",
             status="SUCCESS",
             description=f"Abonnement au plan {abonnement.plan_appli} pour le membre {membre.nomcomplet}"
@@ -340,7 +352,7 @@ def souscrire_abonnement(request):
             membre=membre,
             abonnement=abonnement,
             transaction=transaction_paiement,
-            montant=Decimal(prix),
+            montant=Decimal(p.prix),
             devise="XAF",
             status="PAYEE"
         )
@@ -660,97 +672,110 @@ def valide_salleatt(request):
         if request.method == "POST" :
             data = json.loads(request.body.decode('utf-8'))
             userid = request.session.get("userid","") 
+            # je recupere l'administrateur connecté qui veut faire la validation
+            user = get_membre_from_session(request)
+            if not user:
+                return redirect(f"{reverse('login')}?next={request.get_full_path()}")
             
             if data.get('salle') is None:
                 return JsonResponse({'status': False ,"message": "Famille incorrecte"})
             else: 
-                if userid is None:
-                    return JsonResponse({'status': False ,"message": "Merci de vous connecter avant tout abonnement !"})
+                # if userid is None:
+                #     return JsonResponse({'status': False ,"message": "Merci de vous connecter avant tout abonnement !"})
+                # else:
+                if data.get('direction') is None:
+                    return JsonResponse({'status': False ,"message": "Problème de procédure !"})
                 else:
-                    if data.get('direction') is None:
-                        return JsonResponse({'status': False ,"message": "Problème de procédure !"})
-                    else:
-                        user = Membre.objects.get(id=userid)
+                    # user = Membre.objects.get(id=userid)
+                    if( data.get("direction") == "FAM"):
+                        # je veux valider l'appartenance d'un membre à une famille
+                        salle = SalleAttenteFamille.objects.get(id=data.get("salle"))
+                        salle.famille.membres_famille.add( salle.personne )
+                        mes = Message(
+                            sujet=f" Votre validation d'accès à {salle.famille.nom} ",
+                            contenu=f" Un administrateur à validé votre accès à la FAMILLE : {salle.famille.nom}, vous pouvez desormais y acceder .",
+                            date_ajout=date.today()
+                        )
+                        mes.save()
 
-                        if( data.get("direction") == "FAM"):
-                            # je veux valider l'appartenance d'un membre à une famille
-                            salle = SalleAttenteFamille.objects.get(id=data.get("salle"))
-                            salle.famille.membres_famille.add(salle.personne)
+                        salle.statut = "accepte"
+                        salle.message = f" {salle.personne.nomcomplet} a été validé le {date.today()} par {user.nomcomplet} !"
+                        salle.personne.messages.add( mes )
+
+                        # dans le cas d'un membre cree par un administrateur
+                        if salle.personne.token == "SIMPLEMEMBRE":
+                            salle.personne.etatvalidation = True
+
+                        salle.personne.save()
+                        salle.famille.save()                       
+
+                        message = f"Merci {salle.personne.nomcomplet} , a été autorisé a adherer à  {salle.famille.nom} "
+
+                    else:
+                        if( data.get("direction") == "COM"):
+                            salle = SalleAttenteCommunaute.objects.get(id=data.get("salle"))
+                            salle.communaute.membres_communaute.add(salle.personne)
                             mes = Message(
-                                sujet=f" Votre validation d'accès à {salle.famille.nom} ",
-                                contenu=f" Un administrateur à validé votre accès à la FAMILLE : {salle.famille.nom}, vous pouvez desormais y acceder .",
+                                sujet=f" Votre validation d'accès à {salle.communaute.nom} ",
+                                contenu=f" Un administrateur à validé votre accès à la COMMUNAUTE : {salle.communaute.nom}, vous pouvez desormais y acceder .",
                                 date_ajout=date.today()
                             )
+                                
                             mes.save()
                             salle.personne.messages.add( mes )
                             salle.personne.save()
-                            salle.famille.save()
-                            message = f"Merci {salle.personne.nomcomplet} , a été autorisé a adherer à  {salle.famille.nom} "
+                            salle.communaute.save()
+                            message = f"Merci {salle.personne.nomcomplet} , a été autorisé a adherer à  {salle.communaute.nom} "
                         else:
-                            if( data.get("direction") == "COM"):
-                                salle = SalleAttenteCommunaute.objects.get(id=data.get("salle"))
-                                salle.communaute.membres_communaute.add(salle.personne)
+                            if( data.get("direction") == "ASSO"):
+                                salle = SalleAttenteAssociation.objects.get(id=data.get("salle"))
+                                salle.association.membres_association.add(salle.personne)
                                 mes = Message(
-                                    sujet=f" Votre validation d'accès à {salle.communaute.nom} ",
-                                    contenu=f" Un administrateur à validé votre accès à la COMMUNAUTE : {salle.communaute.nom}, vous pouvez desormais y acceder .",
-                                    date_ajout=date.today()
+                                    sujet=f" Votre validation d'accès à {salle.association.nom} ",
+                                    contenu = f" Un administrateur à validé votre accès à l'ASSOCIATION : {salle.association.nom}, vous pouvez desormais y acceder .",
+                                    date_ajout = date.today()
                                 )
-                                 
+                                
                                 mes.save()
                                 salle.personne.messages.add( mes )
                                 salle.personne.save()
-                                salle.communaute.save()
-                                message = f"Merci {salle.personne.nomcomplet} , a été autorisé a adherer à  {salle.communaute.nom} "
+                                salle.association.save()
+                                message = f"Merci {salle.personne.nomcomplet} , a été autorisé a adherer à  {salle.association.nom} "
                             else:
-                                if( data.get("direction") == "ASSO"):
-                                    salle = SalleAttenteAssociation.objects.get(id=data.get("salle"))
-                                    salle.association.membres_association.add(salle.personne)
+                                # je veux valider la fusion  de deux familles 
+                                if( data.get("direction") == "FAMMERE"):
+
+                                    salle = SalleAttenteFamilleMere.objects.get(id=data.get("salle"))
+
+                                    salle.statut = 'accepte'
+                                    salle.famille.famille_mere =  salle.famillemere
+                                    salle.famillemere.familles_enfant.add(salle.famille)
+                                    salle.famille.save()
+                                    salle.famillemere.save()
+                                    # salle.approuver(user)
+
                                     mes = Message(
-                                        sujet=f" Votre validation d'accès à {salle.association.nom} ",
-                                        contenu = f" Un administrateur à validé votre accès à l'ASSOCIATION : {salle.association.nom}, vous pouvez desormais y acceder .",
+                                        sujet=f" Votre validation de la fusion  de  {salle.famille.nom}  à {salle.famillemere.nom} ",
+                                        contenu = f" Un administrateur à validé votre fusion de { salle.famille.nom} à {salle.famillemere.nom} , vous pouvez desormais y acceder .",
                                         date_ajout = date.today()
                                     )
                                     
                                     mes.save()
                                     salle.personne.messages.add( mes )
                                     salle.personne.save()
-                                    salle.association.save()
-                                    message = f"Merci {salle.personne.nomcomplet} , a été autorisé a adherer à  {salle.association.nom} "
-                                else:
-                                    # je veux valider la fusion  de deux familles 
-                                    if( data.get("direction") == "FAMMERE"):
-
-                                        salle = SalleAttenteFamilleMere.objects.get(id=data.get("salle"))
-
-                                        salle.statut = 'accepte'
-                                        salle.famille.famille_mere =  salle.famillemere
-                                        salle.famillemere.familles_enfant.add(salle.famille)
-                                        salle.famille.save()
-                                        salle.famillemere.save()
-                                        # salle.approuver(user)
-
-                                        mes = Message(
-                                            sujet=f" Votre validation de la fusion  de  {salle.famille.nom}  à {salle.famillemere.nom} ",
-                                            contenu = f" Un administrateur à validé votre fusion de { salle.famille.nom} à {salle.famillemere.nom} , vous pouvez desormais y acceder .",
-                                            date_ajout = date.today()
-                                        )
-                                        
-                                        mes.save()
-                                        salle.personne.messages.add( mes )
-                                        salle.personne.save()
-                                        # salle.save()
-                                        message = f" Un administrateur à validé votre fusion de { salle.famille.nom} à {salle.famillemere.nom} , vous pouvez desormais y acceder ."
-                                    else: 
-                                        return JsonResponse({'status': False ,"message": "Probleme de procedure de fusion des familles !"})
-                        
-                        salle.validateur =  user
-                        salle.date_validation =  date.today()
-                        salle.valide = True
-                        
-                        salle.save()
-                        #  ici je peux aussi envoyer un mail à l'utilisateur
-                        return JsonResponse({'status': True ,"message": message})
-               
+                                    # salle.save()
+                                    message = f" Un administrateur à validé votre fusion de { salle.famille.nom} à {salle.famillemere.nom} , vous pouvez desormais y acceder ."
+                                else: 
+                                    return JsonResponse({'status': False ,"message": "Probleme de procedure de fusion des familles !"})
+                    
+                    salle.validateur =  user
+                    salle.date_validation =  date.today()
+                    salle.valide = True
+                    
+                    salle.save()
+                    #  ici je peux aussi envoyer un mail à l'utilisateur
+                    return JsonResponse({'status': True ,"message": message})
+            
 
 @csrf_exempt
 def add_user_salleattfam(request):

@@ -36,28 +36,28 @@ class Membre(models.Model):
     email = models.CharField(max_length=50, blank=True)
     telephone = models.CharField(max_length=50, null=True, blank=True)
     etatvalidation = models.BooleanField(default=False,null=True)
-    token = models.CharField( blank=True,null=True,max_length=100, default="")
-    dateinscription = models.DateTimeField(null=True,auto_now_add=True)
+    token = models.CharField( blank=True,null=True,max_length=100, default = "")
+    dateinscription = models.DateTimeField(null=True,auto_now_add = True )
     
-    generation =  models.CharField(max_length=50, choices=GENERATIONS,blank=True,null=1)
-    type =  models.CharField(max_length=50, choices=TYPE_MEMBER_CHOICES,blank=True,null=1)
+    generation =  models.CharField(max_length=50, choices=GENERATIONS,blank=True, null=1)
+    type =  models.CharField(max_length=50, choices=TYPE_MEMBER_CHOICES,blank=True, null=1)
     sexe =  models.CharField(max_length=50, choices=SEX_CHOICES,blank=True,null=1)
      
     datenaissance = models.CharField(max_length=50, null=True)
-    lieunaissance = models.CharField(max_length=50, null=True, blank=True)
+    lieunaissance = models.CharField(max_length=50, null=True, blank=True )
     residence = models.CharField(max_length=150, null=True, blank=True)
-    etatcivil = models.CharField(max_length=50, choices=ETATCIVIL_CHOICES, null=True, blank=True)
-    nbenfant = models.IntegerField(default=0)
-    notabilite = models.CharField(max_length=250, null=True, blank=True)
-    education = models.CharField(max_length=250, null=True, blank=True)
-    diplomes = models.CharField(max_length=250, null=True, blank=True)
-    profession = models.CharField(max_length=150, null=True, blank=True)
+    etatcivil = models.CharField(max_length=50, choices=ETATCIVIL_CHOICES, null=True, blank=True )
+    nbenfant = models.IntegerField( default=0 )
+    notabilite = models.CharField(max_length=250, null=True, blank=True )
+    education = models.CharField(max_length=250, null=True, blank=True )
+    diplomes = models.CharField(max_length=250, null=True, blank=True )
+    profession = models.CharField(max_length=150, null=True, blank=True )
     
-    messages = models.ManyToManyField(Message,related_name="membres_message", blank=True)
-    familles = models.ManyToManyField(Famille,related_name="membres_famille", null=True)
-    associations = models.ManyToManyField(Association, related_name="membres_association", null=True, blank=True)
+    messages = models.ManyToManyField(Message,related_name="membres_message", blank=True )
+    familles = models.ManyToManyField(Famille,related_name="membres_famille", null=True )
+    associations = models.ManyToManyField(Association, related_name="membres_association", null=True, blank=True )
     images = models.ManyToManyField(Image, null=True, blank=True)
-    communautes = models.ManyToManyField(Communaute, related_name="membres_communaute", null=True, blank=True)
+    communautes = models.ManyToManyField(Communaute, related_name="membres_communaute", null=True, blank=True )
     galeries = models.ManyToManyField(Galerie, related_name="mes_galeries", null=True, blank=True)
     approbateurs = models.ManyToManyField("self", null=True, blank=True)
     # wallet = models.OneToOneField(Wallet, on_delete=models.CASCADE, null=True, blank=True)
@@ -65,15 +65,15 @@ class Membre(models.Model):
     pere = models.CharField(max_length=150,null=True, blank=True)
     mere = models.CharField(max_length=150,null=True, blank=True)
 
-    nompere = models.ForeignKey('self',on_delete=models.SET_NULL, related_name="papa",null=True, blank=True)
-    nommere = models.ForeignKey('self',on_delete=models.SET_NULL,related_name="mama",null=True, blank=True)
-    vivant = models.BooleanField(default=True)
-    datedeces = models.CharField(max_length=50, null=True, blank=True)
+    nompere = models.ForeignKey('self',on_delete=models.SET_NULL, related_name="papa", null=True, blank=True )
+    nommere = models.ForeignKey('self',on_delete=models.SET_NULL, related_name="mama", null=True, blank=True )
+    vivant = models.BooleanField( default=True )
+    datedeces = models.CharField(max_length=50, null=True, blank=True )
 
     role = models.ManyToManyField(  Role, null=True, blank=True )
-    badges = models.ManyToManyField(  Badge, blank=True,  related_name="membres")
+    badges = models.ManyToManyField(  Badge, blank=True,  related_name="membres" )
 
-    token_expiration = models.DateTimeField(null=True, blank=True)
+    token_expiration = models.DateTimeField( null=True, blank=True )
 
     code_unique = models.CharField(
         max_length=40,
@@ -95,12 +95,10 @@ class Membre(models.Model):
         # self.pwd = compute_sha1(self.pwd)  # Hash the password before saving
         if self.pere != None and self.mere != None:
             if len(self.pere)<3 and len(self.mere)<3:
-                if len(self.nompere.nomcomplet)<3 and len(self.nommere.nomcomplet)<3:
-                    # print("merci de choisir les parents")
+                if len(self.nompere.nomcomplet)<3 and len(self.nommere.nomcomplet)<3: 
                     raise ValueError("Merci de fournir les parents de ce membre")
 
         super().save(*args, **kwargs)
-
 
     def _generer_code_unique(self):
         """
@@ -108,7 +106,6 @@ class Membre(models.Model):
         Format :INITIALS-ANNEE-SEXE-SUFFIXE
         Exemple :  JD-1990-M-A7K92P4X
         """
-
         nom = (self.nomcomplet or "").strip()
         morceaux = nom.split()
         if len(morceaux) >= 2:
@@ -146,7 +143,6 @@ class Membre(models.Model):
     def montant_total_contributions(self):
         total = self.contributions.aggregate( total=models.Sum("montant") )["total"]
         total_don = self.dons_effectues.aggregate( total=models.Sum("montant") )["total"]
-
         return (total + total_don ) or 0
 
     def jappartient_asso(self,asso):
@@ -189,15 +185,18 @@ class Membre(models.Model):
     def get_abonnements_permissions(self):
          
         return {
-            "communautes": int( self.communautes_creees.count() or 0 ) ,
-            "evenements": int( self.evenements_cree.count() or 0  ) ,
-            "associations": int( self.associations_creees.count() or 0),
-            "cagnottes": int( self.cagnottes.count() or 0),
-            "livres": int( self.livres_possedes.count() or 0),
-            "librairies": int( self.librairies.count() or 0),
-            "familles": int( self.familles_creees.count() or 0),
-            "projets": int( self.projets_creees.count() or 0),
+            "communautes" : int( self.communautes_creees.count() or 0 ) ,
+            "evenements" : int( self.evenements_cree.count() or 0  ) ,
+            "associations" : int( self.associations_creees.count() or 0) ,
+            "cagnottes" : int( self.cagnottes.count() or 0 ) ,
+            "livres" : int( self.livres_possedes.count() or 0 ) ,
+            "librairies" : int( self.librairies.count() or 0 ) ,
+            "familles" : int( self.familles_creees.count() or 0 ) ,
+            "projets" : int( self.projets_creees.count() or 0 ) ,
+            "publicites" : int( self.publicites_creees.count() or 0 ) ,
+            "prestataires" : int( self.prestataires_creees.count() or 0 ) ,
         }
+    
     def plans_tarifaires(self):
         """Tous les plans (sans doublon) des abonnements de ce membre.""" 
         return Plan.objects.filter(abonnements__membre=self, abonnements__is_active=True ).distinct()
@@ -222,6 +221,12 @@ class Membre(models.Model):
 
     def nb_projets(self):
         return sum( int(plan.nbprojets or 0) for plan in self.plans_tarifaires() )
+
+    def nb_publicites(self):
+            return sum( int(plan.nbpublicites or 0) for plan in self.plans_tarifaires() )
+
+    def nb_prestataires(self):
+            return sum( int(plan.nbprestataires or 0) for plan in self.plans_tarifaires() )
 
     def nb_communautes(self):
         return sum( int(plan.nbcommunautes or 0) for plan in self.plans_tarifaires() )

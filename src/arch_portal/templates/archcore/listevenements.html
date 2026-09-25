@@ -28,8 +28,9 @@
     <h5 class="card-title my-3">        
         <a href="{% url 'show_communaute' communaute.id %}" class="text-center"> {{ communaute.nom }} </a>
         &nbsp;
-        {% if  'ADD_EVENEMENT' in request.session.userrights %}
-        <a href="{% url 'add_evenement' %}" class="btn btn-xs btn-success text-white"> Nouvel evenement</a>
+        {% comment %} {{membre.nb_evenements }} - {{ max}} - {{ reste }}  {% endcomment %}
+        {% if 'ADD_EVENEMENT' in request.session.userrights or  reste > 0  %}
+            <a href="{% url 'add_evenement' %}" class="btn btn-xs btn-success text-white"> Nouvel evenement</a>
         {% endif %}
     </h5>
     
@@ -37,10 +38,10 @@
         <div class="col-lg-2"></div>
         <div class="col-lg-4">
             {% comment %} <div class="form-group"> {% endcomment %}
-                <input class="col-10 form-control" type="text" value="" name="rechLivre" />
+            <input class="col-10 form-control" type="text" value="" name="rechLivre" />
         </div>
         <div class="col-lg-3">
-                <button  class="btn btn-rounded  btn-success "> Rechercher </button>
+            <button  class="btn btn-rounded  btn-success "> Rechercher </button>
             {% comment %} </div> {% endcomment %}
         </div>
         <div class="col-lg-3">

@@ -4,7 +4,7 @@ from arch_portal.domain.forms.evenement import EvenementForm
 from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.evenement import Evenement
 from arch_portal.domain.models.membre import Membre
-
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required 
 from arch_portal.domain.models.evenementlike import EvenementLike
 from django.contrib  import messages
@@ -12,11 +12,33 @@ from arch_portal.use_cases.services.subscription_service import check_abonnement
 from django.core.exceptions import PermissionDenied
 
 def listevenements(request, id, mode=0):
+
+    membre = get_membre_from_session(request)
+    if not membre:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+
+    max = membre.get_abonnements_permissions()
     events = Evenement.objects.filter(communaute=id)
     com = Communaute.objects.get(id=id)
     if not mode: 
-        return render(request, "archcore/listevenements_tab.html", {"evenements": events, "communaute": com})
-    return render(request, "archcore/listevenements.html", {"evenements": events, "communaute": com})
+        return render(request, "archcore/listevenements_tab.html", 
+            {
+                "evenements": events, 
+                "communaute": com, 
+                "membre": membre,
+                "reste":int( membre.nb_evenements() - max["evenements"]) , 
+                "max": max["evenements"]
+            }
+        )
+    
+    return render(request, "archcore/listevenements.html", {
+            "evenements": events, 
+            "communaute": com , 
+            "membre": membre,
+            "reste":int( membre.nb_evenements() - max["evenements"]) , 
+            "max": max["evenements"]
+        }
+    )
 
 def edit_evenement(request, id):
     evenement = get_object_or_404(Evenement, id=id)
@@ -43,7 +65,6 @@ def edit_evenement(request, id):
 def show_evenement(request, id):
     # event = Evenement.objects.get(id=id)
     # return render(request, "archcore/showevenement.html", {"evenement": event})
-
     event = get_object_or_404(Evenement, id=id)
     # galerie = get_object_or_404(Galerie, id=event.ev_galerie_id)
     galerie = Galerie.objects.filter(evenement=event)
@@ -77,17 +98,22 @@ def mes_evenements_likes(request):
 def toggle_like_evenement(request, id):
 
     event = get_object_or_404(Evenement, id=id)  
-    userid = request.session.get("userid","") 
-    if userid is not None:
-        user = get_object_or_404(Membre, id=userid)  
-        like = EvenementLike.objects.filter(  user=user,  evenement=event ).first()
-    else:
-        return redirect("login")
+    # userid = request.session.get("userid","")
+    membre = get_membre_from_session(request)
+    if not membre:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    
+    # if userid is not None:
+    # user = get_object_or_404(Membre, id=userid)  
+    like = EvenementLike.objects.filter(  user=membre,  evenement = event ).first()
+    # else:
+    #     # return redirect("login")
+    #     return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
     if like:
         like.delete()
     else:
-        EvenementLike.objects.create( user=user, evenement=event )
+        EvenementLike.objects.create( user=membre, evenement=event )
 
     return render(request, "archcore/showevenement.html", {"evenement": event, "deja_like": like })
 

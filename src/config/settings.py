@@ -34,13 +34,10 @@ SESSION_COOKIE_AGE = 1800
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-6qwz@+o1x4+mh(s&(2ud$o70(ls+*@c0$)iaco$nf3xyh73opw'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-
 # ALLOWED_HOSTS = []
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 APP_HCAPTCHA = os.getenv("APP_HCAPTCHA")

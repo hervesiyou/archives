@@ -12,6 +12,7 @@ from arch_portal.domain.models.pagefamille import Pagefamille
 from arch_portal.domain.models.role import Role
 from arch_portal.domain.models.membre import Membre
 from arch_portal.domain.models.image import Image
+from arch_portal.use_cases.services.core import compute_sha1
 
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -374,7 +375,11 @@ def add_membre_famille(request,idfam):
         form = MembreFamilleForm(request.POST, request.FILES)
         # print(form.errors)
         if form.is_valid():  
-            com = form.save(commit=False) 
+            com = form.save(commit=False)  
+            # meme si le user n'est pas actif je crypte son pwd, pour ces comptes particulierement je met le token à  SIMPLEMENBRE
+            com.pwd = compute_sha1(com.pwd)
+            com.token = "SIMPLEMEMBRE"
+            # com.save()
 
             if form.cleaned_data.get("delete_photo"):
                 if com.photo:
@@ -391,7 +396,6 @@ def add_membre_famille(request,idfam):
             com.familles.add(famille)
             com.communautes.add(famille.communaute)
             # com.associations.add(famille.communaute.associations_communautaire)
-
             # form.save_m2m() 
             messages.success(request, "✅ Membre ajouté avec succès")
             return redirect("show_famille",famille.id )
@@ -412,7 +416,6 @@ def delete_admin(request):
             if not request.session.get("userid","") :
                 # return redirect("login" )
                 return redirect(f"{reverse('login')}?next={request.get_full_path()}")
-
             
             membre = get_membre_from_session(request)
             if not membre:

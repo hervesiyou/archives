@@ -20,6 +20,7 @@ from arch_portal.use_cases.services.subscription_service import get_membre_from_
 from arch_portal.use_cases.services.core import generate_token, send_email_inscription, send_email_information_nouveau_inscrit
 from arch_portal.domain.models.image import Image
 from django.http import  JsonResponse, request
+from arch_portal.domain.models.salleattentefamille import SalleAttenteFamille
 import threading
 # from arch_portal.domain.forms.membre import MembreEditForm
 from arch_portal.use_cases.services.core import get_reste, get_usage
@@ -166,8 +167,22 @@ def log_user(request):
             if user != None:
 
                 if user.etatvalidation != True:
-                    messages.info(request,f" Desolé { form.cleaned_data['login']}  votre adresse email n'a pas été  validée ! Un lien vous a été envoyé dans  votre email pour valider votre compte, merci de cliquer dessus .")
-                    # return redirect("login")
+                    # dans le cas ou un compte qui cherche à se logger n'est pas valide, mais que son token = SIMPLEMEMBRE, alors c'est un 
+                    # membre ajouté dans une famille, on le dirige vers la salle d'attente de la famille
+                    if user.token == "SIMPLEMEMBRE":
+                        ab = SalleAttenteFamille.objects.filter(personne=user, famille=user.familles.first())
+                       
+                        if len(ab) == 0: 
+                            ab = SalleAttenteFamille( personne = user,famille= user.familles.first(), )
+                            ab.save() 
+                            message = f"Oups ! {user.nomcomplet} , votre  compte n'est pas encore validé, merci de contacter un administrateur  de la  famille {user.familles.first().nom} pour qu'il valide votre compte !"                           
+                        else:
+                            message = f"Desolé, vous avez etes deja dans la salle d'attente, merci de contacter un administrateur  de la  famille {user.familles.first().nom} pour qu'il valide votre compte !!"
+
+                        messages.error(request, message=message)
+                    else:
+                        messages.info(request,f" Desolé { form.cleaned_data['login']}  votre adresse email n'a pas été  validée ! Un lien vous a été envoyé dans  votre email pour valider votre compte, merci de cliquer dessus .")
+                         
                     return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
                 request.session["username"] = user.login 
@@ -282,6 +297,9 @@ def add_user(request):
         # print(form.errors)
         if form.is_valid():  
             com = form.save(commit=False) 
+            # meme si le user n'est pas actif je crypte son pwd, pour ces comptes particulierement je met le token à  SIMPLEMENBRE
+            com.pwd = compute_sha1(com.pwd)
+            com.token = "SIMPLEMEMBRE"
 
             if form.cleaned_data.get("delete_photo"):
                 if com.photo:

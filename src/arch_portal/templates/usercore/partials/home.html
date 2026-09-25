@@ -233,6 +233,21 @@
                         </tr>
 
                         <tr>
+                            <td class="text-bold text-primary"> <b> Evenements</b> </td>
+                            <td>
+                                <span class="badge bg-info">{{membre.nb_evenements}}</span>
+                                {{ usage.evenements }}
+                            </td>
+                            <td>{{ plan.nbevenements }}
+                                <span class="badge bg-danger">{{membre.get_abonnements_permissions.evenements}}</span>
+                            </td>
+                            <td>
+                                {{ reste.evenements }}
+                                <span class="badge bg-warning"> {{ membre.nb_evenements|sub:membre.get_abonnements_permissions.evenements }} </span>
+                            </td>
+                        </tr>
+
+                        <tr>
                             <td class="text-bold text-primary"> <b>Communautés </b></td>
                             <td>
                                 <span class="badge bg-info">{{membre.nb_communautes}}</span>
@@ -314,6 +329,33 @@
                             </td>
                             <td>{{ reste.projets }} 
                                 <span class="badge bg-warning"> {{ membre.nb_projets|sub:membre.get_abonnements_permissions.projets }} </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-bold text-primary"> <b>Prestataires </b></td>
+                            <td>
+                                <span class="badge bg-info">{{membre.nb_prestataires}}</span>
+                                {{ usage.prestataires }}
+                            </td>
+                            <td>{{ plan.nbprestataires}}
+                                <span class="badge bg-danger">{{membre.get_abonnements_permissions.prestataires}}</span>
+                            </td>
+                            <td>{{ reste.prestataires }} 
+                                <span class="badge bg-warning"> {{ membre.nb_prestataires|sub:membre.get_abonnements_permissions.prestataires }} </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-bold text-primary"> <b>Publicités </b></td>
+                            <td>
+                                <span class="badge bg-info">{{membre.nb_publicites}}</span>
+                                {{ usage.publicites }}
+                            </td>
+                            <td>{{ plan.nbpublicites}}
+                                <span class="badge bg-danger">{{membre.get_abonnements_permissions.publicites}}</span>
+                            </td>
+                            <td>{{ reste.publicites }} 
+                                <span class="badge bg-warning"> {{ membre.nb_publicites|sub:membre.get_abonnements_permissions.publicites }} </span>
                             </td>
                         </tr>
 

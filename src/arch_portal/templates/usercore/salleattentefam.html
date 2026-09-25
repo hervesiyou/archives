@@ -30,12 +30,12 @@
                              {% if com.valide %} 
                                 <span class="badge bg-success"> Déja validé</span>
                              {% else %}
-                             <span class="badge bg-danger"> Pas encore validé</span>
+                                <span class="badge bg-danger"> Pas encore validé</span>
                              {% endif %}
                             </td>
                             <td>{{com.date_demande}}
                                 {% if not com.valide %} 
-                                <a href="#" class="badge bg-success valideUserID" data-salle="{{com.id}}" data-dir="FAM">Valider son appartenance</a>
+                                    <a href="#" class="badge bg-success valideUserID" data-salle="{{com.id}}" data-dir="FAM">Valider son appartenance</a>
                                 {% endif %}
                             </td>
                         </tr>

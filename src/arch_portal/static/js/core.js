@@ -658,7 +658,7 @@ $(document).ready(function(){
                 beforeSend      : function(){
                     //alert(JSON.stringify(data))
                     AjaxLoader.show(
-                        "Demande d'union des familles en cours..."
+                        "Demande de validation de l'appartenance à la  famille en cours..."
                     );
                 },
                 error: function(error) {
