@@ -14,6 +14,7 @@
 
             {% if  'ADD_COMMUNAUTE' in request.session.userrights or gestionnaire %}
                 <a href="{% url 'edit_communaute' communaute.id %}" title="Editer"><i class="fa fa-edit"></i>  </a> 
+                 
             {% endif %}
             {% if  gestionnaire %}
                 <a   class="btn btn-sm btn-outline-success text-success"
@@ -394,6 +395,15 @@
                                                 </div>                                                
                                             {% endif %}
                                             </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6  mt-3">
+                                        <div class="bg-dark p-10 my-2 text-white text-center">
+                                            <a href="{% url 'afficher_contacts' 'communaute' communaute.id  %}" 
+                                                title=" {{ communaute.nom }}" 
+                                                class="  text-info">
+                                                    <i class="fa fa-cog"></i> Contacts 
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

@@ -46,6 +46,8 @@ from arch_portal.domain.models.article import Article
 from arch_portal.domain.models.formation import Formation
 from arch_portal.domain.models.information import Information
 from arch_portal.domain.models.facture import Facture
+from arch_portal.domain.models.contact_info import ContactInfo
+from arch_portal.domain.models.association_infos import Activite, MembreBureau, Presentation
 # from arch_portal.domain.models. import Formation
 from arch_portal.domain.models.publicite import Publicite, Tag, PubliciteEvent
 
@@ -53,6 +55,10 @@ admin.site.site_header = "Richbook Administration"
 admin.site.site_title = "Administration - RICHBOOK"
 admin.site.index_title = "Tableau de bord"
 
+admin.site.register(ContactInfo)
+admin.site.register(Presentation)
+admin.site.register(MembreBureau)
+admin.site.register(Activite)
 admin.site.register(Facture)
 admin.site.register(Information)
 admin.site.register(Prestataire)

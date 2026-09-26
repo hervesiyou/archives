@@ -15,12 +15,13 @@ import arch_portal.use_cases.formart_controller as formationarticle
 import arch_portal.use_cases.publicite_controller as publicite
 import arch_portal.use_cases.information_controller as info
 import arch_portal.use_cases.message_controller as message
+import arch_portal.use_cases.contact_controller as contact
 from django.views.generic import TemplateView
 
 from django.contrib.sitemaps.views import sitemap
 from arch_portal.use_cases.sitemaps import StaticViewSitemap, CommunauteSitemap, AssociationSitemap, LivreSitemap
-from django.views.static import serve
-import os
+# from django.views.static import serve
+# import os
  
 sitemaps = {
     'static': StaticViewSitemap,
@@ -34,7 +35,18 @@ urlpatterns = [
     path('google-site-verification.html', TemplateView.as_view(template_name='google-site-verification.html', content_type='text/html'), name='google_verification'), 
     path('robots.txt', TemplateView.as_view( template_name='robots.txt',  content_type='text/plain' ), name='robots_txt'),
 ] 
- 
+
+urlpatterns += [
+    # /contacts/famille/12/            -> liste des contacts de la famille 12
+    # /contacts/communaute/3/          -> liste des contacts de la communauté 3
+    # /contacts/association/7/         -> liste des contacts de l'association 7
+    # /contacts/famille/12/ajouter/
+    path("con/<str:type_objet>/<int:object_id>/", contact.afficher_contacts, name="afficher_contacts"),
+    path("con/<str:type_objet>/<int:object_id>/add/", contact.ajouter_contact, name="ajouter_contact"), 
+    path("con/<int:contact_id>/upd/", contact.modifier_contact, name="modifier_contact"),
+    path("con/<int:contact_id>/del/", contact.supprimer_contact, name="supprimer_contact"),
+]
+
 urlpatterns += [
     path("pres/cam/", publicite.liste_publicites, name="liste_publicite"),
     path("pres/cam/nou/", publicite.creer_publicite, name="creer_publicite"),
@@ -70,8 +82,7 @@ urlpatterns += [
 
     path('newm/<int:idfam>', famille.add_membre_famille, name="add_membre_famille"),
     path('delADF/', famille.delete_admin, name="delete_admin_famille"),
-    path('delADCO/', communaute.delete_admin, name="delete_admin_communaute"),
-    
+    path('delADCO/', communaute.delete_admin, name="delete_admin_communaute"),   
 
     path('sf/<int:id>', famille.show_famille, name="show_famille"),
     path('spages/<int:id>', famille.page_famille, name="page_famille"),
