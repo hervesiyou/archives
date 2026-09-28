@@ -106,18 +106,21 @@ urlpatterns += [
 urlpatterns += [
     path( "info/",  info.information_list,  name="list_informations" ),
     path( "infocom/<int:pk>/",  info.informations_list_com,  name="informations_list_com" ),
+    path( "infofam/<int:pk>/",  info.informations_list_fam,  name="informations_list_fam" ),
     path( "infoasso/<int:pk>/",  info.informations_list_asso,  name="informations_list_asso" ),
     path( "infolib/<int:pk>/",  info.informations_list_lib,  name="informations_list_lib" ),
     path( "info/<int:pk>/",  info.information_detail,  name="detail_information" ),
-    path( "info/crea/",  info.information_create,  name="create_information" ),
+    path( "info/crea/<str:entity_type>/<int:entity_id>/",  info.information_create_entity,  name="create_information_entity" ),
+    path( "info/create/",  info.information_create,  name="create_information" ),
     path( "info/<int:pk>/ed/",  info.information_update,  name="update_information" ),
     path( "info/<int:pk>/del/",  info.information_delete,  name="delete_information" ),
-
 ]
 
 urlpatterns += [
+    path( "cag/<str:entity_type>/<int:entity_id>/",  cagnotte.list_cagnottes_entity,  name="list_cagnottes_entity" ),
     path( "cag/",  cagnotte.list_cagnottes,  name="list_cagnottes" ),
     path( "cag/ad",   cagnotte.add_cagnotte,  name="add_cagnotte"   ),
+    path( "cag/ad/<str:entity_type>/<int:entity_id>/",   cagnotte.add_cagnotte_entity,  name="add_cagnotte_entity"   ),
     path( "cag/<int:id>/",  cagnotte.show_cagnotte, name="show_cagnotte" ),
     path( "cag/<int:id>/con/",  cagnotte.contribute_cagnotte,  name="contribute_cagnotte"   ),
     path(  "cag/<int:id>/clo/", cagnotte.close_cagnotte,  name="close_cagnotte"  ),

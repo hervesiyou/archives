@@ -34,29 +34,28 @@
                             <h3 class="mb-2 fw-bold">{{evenement.communaute}}</h3>
                            
                             <h4>
-                            {% comment %} {{ galerie.0.images|pprint}} {% endcomment %}
+                                {% comment %} {{ galerie.0.images|pprint}} {% endcomment %}
 
-                            {% if galerie is not None and galerie.0.id is not None %}
-                                <a class="btn btn-outline-success" href="{% url 'show_galerie' galerie.0.id %}"> Photos de {{ evenement.titre }} </a>
-                            {% endif %}
+                                {% if galerie is not None and galerie.0.id is not None %}
+                                    <a class="btn btn-outline-success" href="{% url 'show_galerie' galerie.0.id %}"> Photos de {{ evenement.titre }} </a>
+                                {% endif %}
                                 <a href="{% url 'mes_evenements_likes' %}" class="btn btn-outline-info"> Mes evenements interessants</a>
                             </h4>
-                            <a href="{% url 'list_cagnottes' %}" title="" class="btn btn-sm btn-outline-warning" >
-                                        <span> Voir les cagnottes  </span>
-                                  </a>
+                            <a href="{% url 'list_cagnottes_entity' 'evenement' evenement.id  %}" title="Lister les cagnottes de {{evenement.title }}" class="btn btn-sm btn-outline-warning" >
+                                <span> Voir les cagnottes  </span>
+                            </a>
                             {% if 'ADD_GALERIE' in request.session.userrights %}
                                 <a class=" badge bg-info" href="{% url 'add_galerie' %}" alt="Ajouter une galerie" title="Ajouter une galerie">
                                     <i class="fa-solid fa-plus me-2 text-success"></i>
                                     <i class="fa-solid fa-images me-2 text-success"></i>                                       
                                 </a>
-                            {% endif %}
-                             
+                            {% endif %}                             
 
                         </div>
                     </div>
                     <div class="col-md-2 border-left text-center pt-2">
                         <h3 class="mb-0 fw-bold">150</h3>
-                        <span class="text-muted">Interessés</span>
+                            <span class="text-muted">Interessés</span>
                         <div>
 
                         {% if request.session.username %}

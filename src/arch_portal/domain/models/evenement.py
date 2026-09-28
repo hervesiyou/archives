@@ -17,6 +17,7 @@ class Evenement(models.Model):
 
     periodicite=models.CharField(max_length=50)
     createur = models.ForeignKey("Membre", on_delete=models.SET_NULL,blank=True, null=True, related_name="evenements_cree")
+    administrateurs = models.ManyToManyField("Membre", related_name="evenements_administres", blank=True, null=True)
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)
     #     # self.likes.set(0)

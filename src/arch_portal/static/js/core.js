@@ -1375,8 +1375,7 @@ $(document).ready(function(){
                 data        : JSON.stringify(data),
                 url         : url,  
                 dataType    : "JSON",
-                contentType: "application/json", 
-            
+                contentType: "application/json",             
                 headers: {                         
                     "X-CSRFToken": csrftoken
                 },

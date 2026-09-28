@@ -169,7 +169,7 @@
                                         </a>
                                     {% endif %}
 
-                                    <a href="{% url 'list_cagnottes' %}" title="" class="btn btn-sm btn-outline-warning" >
+                                    <a href="{% url 'list_cagnottes_entity' 'communaute' communaute.id %}" title="" class="btn btn-sm btn-outline-warning" >
                                         <span> Voir les cagnottes  </span>
                                     </a>
                                 </div>
@@ -769,22 +769,19 @@
     </script>
 
     <script>
+        $(".expand-toggle").change(function() {
+            var isChecked = $(this).is(":checked"); 
+            var textContainer = $(this).closest(".text-container");
+            if (isChecked) {
+                textContainer.find(".short-text").css("max-height", "none");
+                textContainer.find(".plus").hide();
+                textContainer.find(".moins").show();
+            } else {
+                textContainer.find(".short-text").css("max-height", "3.6em");
+                textContainer.find(".plus").show();
+                textContainer.find(".moins").hide();
+            }
 
-     $(".expand-toggle").change(function() {
-        var isChecked = $(this).is(":checked"); 
-        var textContainer = $(this).closest(".text-container");
-        if (isChecked) {
-            textContainer.find(".short-text").css("max-height", "none");
-            textContainer.find(".plus").hide();
-            textContainer.find(".moins").show();
-        } else {
-            textContainer.find(".short-text").css("max-height", "3.6em");
-            textContainer.find(".plus").show();
-            textContainer.find(".moins").hide();
-        }
-
-     });
-    
-
+        });
     </script>
 {% endblock %}
