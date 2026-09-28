@@ -6,8 +6,42 @@
     <div class="card mb-4 shadow">
         <div class="card-body text-center">
 
-            <div class="mb-3">
+            {% comment %} <div class="mb-3">
                 <i class="fa-solid fa-user-circle fa-4x text-success"></i>
+            </div> {% endcomment %}
+             
+            <div class="position-relative d-inline-block mb-3">
+
+                {% if membre.photo and membre.photo.fichier %}
+                    <img src="{{ membre.photo.fichier.url }}"
+                        alt="Photo de {{ membre }}"
+                        class="rounded-circle shadow"
+                        style="
+                            width: 130px;
+                            height: 130px;
+                            object-fit: cover;
+                            border: 4px solid white;
+                            outline: 3px solid #198754;
+                        ">
+                {% else %}
+                    <div class="rounded-circle bg-light shadow d-flex align-items-center justify-content-center"
+                        style="
+                            width: 130px;
+                            height: 130px;
+                            border: 3px solid #198754;
+                        ">
+                        <i class="fa-solid fa-user text-success"
+                        style="font-size: 60px;"></i>
+                    </div>
+                {% endif %}
+
+                <!-- Statut -->
+                <span class="position-absolute bottom-0 end-0
+                            bg-success border border-white rounded-circle"
+                    style="width: 20px; height: 20px;"
+                    title="Connecté">
+                </span>
+
             </div>
 
             <h4 class="mb-1 text-uppercase"> {{ membre }}  </h4>
@@ -221,13 +255,14 @@
                             <td class="text-bold text-primary"> <b> Familles</b> </td>
                             <td>
                                 <span class="badge bg-info">{{membre.nb_familles}}</span>
-                                {{ usage.familles }}
+                                {% comment %} {{ usage.familles }} {% endcomment %}
                             </td>
-                            <td>{{ plan.nbfamilles }}
+                            <td>
+                            {% comment %} {{ plan.nbfamilles }} {% endcomment %}
                                 <span class="badge bg-danger">{{membre.get_abonnements_permissions.familles}}</span>
                             </td>
                             <td>
-                                {{ reste.familles }}
+                                {% comment %} {{ reste.familles }} {% endcomment %}
                                 <span class="badge bg-warning"> {{ membre.nb_familles|sub:membre.get_abonnements_permissions.familles }} </span>
                             </td>
                         </tr>
@@ -236,13 +271,14 @@
                             <td class="text-bold text-primary"> <b> Evenements</b> </td>
                             <td>
                                 <span class="badge bg-info">{{membre.nb_evenements}}</span>
-                                {{ usage.evenements }}
+                                {% comment %} {{ usage.evenements }} {% endcomment %}
                             </td>
-                            <td>{{ plan.nbevenements }}
+                            <td>
+                            {% comment %} {{ plan.nbevenements }} {% endcomment %}
                                 <span class="badge bg-danger">{{membre.get_abonnements_permissions.evenements}}</span>
                             </td>
                             <td>
-                                {{ reste.evenements }}
+                                {% comment %} {{ reste.evenements }} {% endcomment %}
                                 <span class="badge bg-warning"> {{ membre.nb_evenements|sub:membre.get_abonnements_permissions.evenements }} </span>
                             </td>
                         </tr>
@@ -251,13 +287,14 @@
                             <td class="text-bold text-primary"> <b>Communautés </b></td>
                             <td>
                                 <span class="badge bg-info">{{membre.nb_communautes}}</span>
-                                {{ usage.communautes }}
+                                {% comment %} {{ usage.communautes }} {% endcomment %}
                             </td>
-                            <td>{{ plan.nbcommunautes }}
+                            <td>
+                            {% comment %} {{ plan.nbcommunautes }} {% endcomment %}
                                 <span class="badge bg-danger">{{membre.get_abonnements_permissions.communautes}}</span>
                             </td>
                             <td>
-                                {{ reste.communautes }}
+                                {% comment %} {{ reste.communautes }} {% endcomment %}
                                 <span class="badge bg-warning"> {{ membre.nb_communautes|sub:membre.get_abonnements_permissions.communautes }} </span>
                             </td>
                         </tr>
@@ -266,13 +303,14 @@
                             <td class="text-bold text-primary"> <b>Livres </b></td>
                             <td>
                                 <span class="badge bg-info">{{membre.nb_livres}}</span>
-                                {{ usage.livres }}
+                                {% comment %} {{ usage.livres }} {% endcomment %}
                             </td>
-                            <td>{{ plan.nblivres }}
+                            <td>
+                            {% comment %} {{ plan.nblivres }} {% endcomment %}
                                 <span class="badge bg-danger">{{membre.get_abonnements_permissions.livres}}</span>
                             </td>
                             <td>
-                                {{ reste.livres }}
+                                {% comment %} {{ reste.livres }} {% endcomment %}
                                 <span class="badge bg-warning"> {{ membre.nb_associations|sub:membre.get_abonnements_permissions.associations }} </span>
                             </td>
                         </tr>
@@ -280,13 +318,14 @@
                             <td class="text-bold text-primary"> <b>Librairies </b></td>
                             <td>
                                 <span class="badge bg-info">{{membre.nb_librairies}}</span>
-                                {{ usage.librairies }}
+                                {% comment %} {{ usage.librairies }} {% endcomment %}
                             </td>
-                            <td>{{ plan.nblibrairies }}
+                            <td>
+                            {% comment %} {{ plan.nblibrairies }} {% endcomment %}
                                 <span class="badge bg-danger">{{membre.get_abonnements_permissions.librairies}}</span>
                             </td>
                             <td>
-                                {{ reste.librairies }}
+                                {% comment %} {{ reste.librairies }} {% endcomment %}
                                 <span class="badge bg-warning"> {{ membre.nb_livres|sub:membre.get_abonnements_permissions.livres }} </span>
                             </td>
                         </tr>
@@ -294,13 +333,14 @@
                             <td class="text-bold text-primary"> <b>Cagnottes </b></td>
                             <td>
                                 <span class="badge bg-info">{{membre.nb_cagnottes}}</span>
-                                {{ usage.cagnottes }}
+                                {% comment %} {{ usage.cagnottes }} {% endcomment %}
                             </td>
-                            <td>{{ plan.nbcagnotes }}
+                            <td>
+                            {% comment %} {{ plan.nbcagnotes }} {% endcomment %}
                                 <span class="badge bg-danger">{{membre.get_abonnements_permissions.cagnottes}}</span>
                             </td>
                             <td>
-                                {{ reste.cagnottes }}
+                                {% comment %} {{ reste.cagnottes }} {% endcomment %}
                                 <span class="badge bg-warning"> {{ membre.nb_cagnottes|sub:membre.get_abonnements_permissions.cagnottes }} </span>
                             </td>
                         </tr>
@@ -308,13 +348,14 @@
                             <td class="text-bold text-primary"> <b>Associations </b></td>
                             <td>
                                 <span class="badge bg-info">{{membre.nb_associations}}</span>
-                                {{ usage.associations }}
+                                {% comment %} {{ usage.associations }} {% endcomment %}
                             </td>
-                            <td>{{ plan.nbassociations }}
+                            <td>
+                            {% comment %} {{ plan.nbassociations }} {% endcomment %}
                                 <span class="badge bg-danger">{{membre.get_abonnements_permissions.associations}}</span>
                             </td>
                             <td>
-                                {{ reste.associations }}
+                                {% comment %} {{ reste.associations }} {% endcomment %}
                                 <span class="badge bg-warning"> {{ membre.nb_associations|sub:membre.get_abonnements_permissions.associations }} </span>
                             </td>
                         </tr>
@@ -322,12 +363,14 @@
                             <td class="text-bold text-primary"> <b>Projets </b></td>
                             <td>
                                 <span class="badge bg-info">{{membre.nb_projets}}</span>
-                                {{ usage.projets }}
+                                {% comment %} {{ usage.projets }} {% endcomment %}
                             </td>
-                            <td>{{ plan.nbprojets }}
+                            <td>
+                            {% comment %} {{ plan.nbprojets }} {% endcomment %}
                                 <span class="badge bg-danger">{{membre.get_abonnements_permissions.projets}}</span>
                             </td>
-                            <td>{{ reste.projets }} 
+                            <td>
+                            {% comment %} {{ reste.projets }}  {% endcomment %}
                                 <span class="badge bg-warning"> {{ membre.nb_projets|sub:membre.get_abonnements_permissions.projets }} </span>
                             </td>
                         </tr>
@@ -336,12 +379,14 @@
                             <td class="text-bold text-primary"> <b>Prestataires </b></td>
                             <td>
                                 <span class="badge bg-info">{{membre.nb_prestataires}}</span>
-                                {{ usage.prestataires }}
+                                {% comment %} {{ usage.prestataires }} {% endcomment %}
                             </td>
-                            <td>{{ plan.nbprestataires}}
+                            <td>
+                            {% comment %} {{ plan.nbprestataires}} {% endcomment %}
                                 <span class="badge bg-danger">{{membre.get_abonnements_permissions.prestataires}}</span>
                             </td>
-                            <td>{{ reste.prestataires }} 
+                            <td>
+                            {% comment %} {{ reste.prestataires }}  {% endcomment %}
                                 <span class="badge bg-warning"> {{ membre.nb_prestataires|sub:membre.get_abonnements_permissions.prestataires }} </span>
                             </td>
                         </tr>
@@ -349,12 +394,14 @@
                             <td class="text-bold text-primary"> <b>Publicités </b></td>
                             <td>
                                 <span class="badge bg-info">{{membre.nb_publicites}}</span>
-                                {{ usage.publicites }}
+                                {% comment %} {{ usage.publicites }} {% endcomment %}
                             </td>
-                            <td>{{ plan.nbpublicites}}
+                            <td>
+                            {% comment %} {{ plan.nbpublicites}} {% endcomment %}
                                 <span class="badge bg-danger">{{membre.get_abonnements_permissions.publicites}}</span>
                             </td>
-                            <td>{{ reste.publicites }} 
+                            <td>
+                            {% comment %} {{ reste.publicites }}  {% endcomment %}
                                 <span class="badge bg-warning"> {{ membre.nb_publicites|sub:membre.get_abonnements_permissions.publicites }} </span>
                             </td>
                         </tr>
