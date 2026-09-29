@@ -98,3 +98,18 @@ class Famille(models.Model):
 
     def get_sous_familles(self):
         return mod.Famille.objects.filter(famille_mere=self.id)
+
+    def user_a_access(self, user):
+            
+        if self.publique:
+            return True
+
+        if self.createur == user:
+            return True
+
+        if self.chef == user:
+            return True
+        if self.membres_famille.filter(id=user.id).exists():
+            return True 
+        
+        return user in self.administrateurs.all()

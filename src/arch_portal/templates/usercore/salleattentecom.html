@@ -6,8 +6,7 @@
 <div class="row mt-5"> 
     <div class="col-lg-12">
         <h3 class="bg-info text-center text-white">Utilisateur souhaitant adherer à <a href="{% url 'show_communaute' communaute.id %}" class="text-center">   {{communaute.nom}} </a> </h3>
-       
-        
+               
         <div class="card-body">
             <table class="table">
                 <thead >
@@ -24,8 +23,7 @@
                     
                         <tr>
                             <td>
-                                <a href="{% url 'show_user' com.id %}" class="text-center">  {{com.personne.nomcomplet}}  </a> 
-                         
+                                <a href="{% url 'show_user' com.id %}" class="text-center">  {{com.personne.nomcomplet}}  </a>                          
                             </td>
                             <td>{{com.personne.telephone}}, {{com.personne.sexe}} , fils de {{com.personne.pere}} et de {{com.personne.mere}} </td>
                             <td>  
@@ -38,7 +36,12 @@
                             <td>
                                 {{com.date_demande}}
                                 {% if not com.valide %} 
-                                <a href="#" class="badge bg-success valideUserID" data-dir="COM" data-salle="{{com.id}}">Valider son appartenance</a>
+                                    <a href="#" class="badge bg-success valideUserID" data-dir="COM" data-salle="{{com.id}}"> Valider son appartenance</a>
+                                    <a href="#" 
+                                        class="badge bg-danger inValideUserID" 
+                                        data-dir="COM" data-salle="{{com.id}}"> 
+                                        Refuser son appartenance
+                                    </a>
                                 {% endif %}
                              </td>
                         </tr>

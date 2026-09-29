@@ -2,19 +2,25 @@
 {% load crispy_forms_tags %}
 {% block title %} Nouvelle Communauté {% endblock %}
 {% block css %} 
-  <style>
-    .div-check{ 
-        margin: 37px 0 31px 0; 
-        height: 5px;
-    }
- 
-    .form-row { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #ddd; }
-    .delete-form-btn { color: red; font-weight: bold; cursor: pointer; }
-</style>
+    <style>
+        .div-check{ 
+            margin: 37px 0 31px 0; 
+            height: 5px;
+        }
+    
+        .form-row { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #ddd; }
+        .delete-form-btn { color: red; font-weight: bold; cursor: pointer; }
+    </style>
 {% endblock %}
 {% block content %}
     
     <div class="container card-body">
+        <div class="my-4 breadcrumb">
+            <a href="{% url 'home' %}" class="my-2"> <i class="fa fa-home"></i> Accueil </a> 
+            <a href="{% url 'listcom' %}" class="my-2"> <i class="fas fa-users"></i> > Communautés </a> 
+            <a href="{% url 'show_communaute' communaute.id %}" class="my-2"> <i class="fas fa-users"></i> > {{ communaute.nom }} </a>  
+            
+        </div>
         
         <div class="row">            
             <div class="col-lg-12">

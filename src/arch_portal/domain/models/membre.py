@@ -72,7 +72,6 @@ class Membre(models.Model):
 
     role = models.ManyToManyField(  Role, null=True, blank=True )
     badges = models.ManyToManyField(  Badge, blank=True,  related_name="membres" )
-
     token_expiration = models.DateTimeField( null=True, blank=True )
 
     code_unique = models.CharField(
@@ -231,6 +230,17 @@ class Membre(models.Model):
     def nb_communautes(self):
         return sum( int(plan.nbcommunautes or 0) for plan in self.plans_tarifaires() )
                    
+    def peut_gerer_lien(self, objet):
+        if objet.createur == self:
+            return True
+
+        if objet.chef == self:
+            return True
+
+        if self in  objet.administrateurs.all():
+            return True
+
+        return False
     
     def peut_creer( self, entite_type) ->bool:
         abo = self.get_abonnement_actif()

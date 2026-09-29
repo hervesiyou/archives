@@ -13,9 +13,9 @@
             <a href="{% url 'listcom' %}" class="my-2"> <i class="fas fa-users"></i> Communautés </a> > {{ communaute.nom }}
 
             {% if  'ADD_COMMUNAUTE' in request.session.userrights or gestionnaire %}
-                <a href="{% url 'edit_communaute' communaute.id %}" title="Editer"><i class="fa fa-edit"></i>  </a> 
-                 
+                <a href="{% url 'edit_communaute' communaute.id %}" title="Editer"><i class="fa fa-edit"></i>  </a>                  
             {% endif %}
+            
             {% if  gestionnaire %}
                 <a   class="btn btn-sm btn-outline-success text-success"
                     title="Cliquer ici diffuser un message aux utilisateurs de la communauté" 
@@ -134,6 +134,10 @@
                                     {% endif %}
                                     {% if est_createur %} 
                                         <div class="badge bg-success text-white">CREATEUR</div>
+                                        <a class=" btn btn-sm btn-outline-info" href="{% url 'liste_publicite_com' communaute.id %}">
+                                            <i class="fa-solid fa-diagram-project text-success"></i>
+                                            <span class="ms-1 d-inline d-lg-none d-xl-inline">Publicités</span>
+                                        </a>
                                     {% endif %}
                                     </h4>
                                     <h5 class="card-subtitle">{{communaute.description}}</h5>                        
@@ -462,6 +466,50 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5> Lien d'invitation</h5>
+                                        {% comment %} {{ communaute.liens }} {% endcomment %}
+                                        {% comment %} {{liens}} {% endcomment %}
+                                        {% if liens %}
+                                            <div class="input-group mb-3">
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    value="{{ request.scheme }}://{{ request.get_host }}{% url 'acces_par_lien' liens.token %}"
+                                                    readonly
+                                                    id="lienAcces"
+                                                >
+                                                <button  class="btn btn-outline-primary"  onclick="copierLien()"  >  Copier  </button>
+                                            </div>
+                                            
+                                            {% if gestionnaire %}
+                                                <a  href="{% url 'revoker_lien' liens.id %}"
+                                                    class="btn btn-outline-danger"
+                                                >
+                                                    Révoquer le lien
+                                                </a>
+
+                                                <a
+                                                    href="{% url 'regenerer_lien' 'communaute' liens.id %}"
+                                                    class="btn btn-outline-warning"
+                                                >
+                                                    Régénérer
+                                                </a>
+                                            {% endif %}
+
+                                        {% else %}
+                                            {% if gestionnaire %}
+                                                <a  href="{% url 'generer_lien' 'communaute' communaute.id %}"
+                                                    class="btn btn-primary"
+                                                >
+                                                    Générer le lien d'accès
+                                                </a>
+                                            {% endif %}
+                                        {% endif %}
+
+                                    </div>
+                                </div>
 
                                 <!-- Onglet Personnes Clés -->
                                 <div class="tab-pane fade" id="personnes" role="tabpanel">
@@ -783,5 +831,12 @@
             }
 
         });
+    </script>
+    <script>
+        function copierLien() {
+            const input = document.getElementById("lienAcces");
+            navigator.clipboard.writeText(input.value);
+            alert("Lien copié !");
+        }
     </script>
 {% endblock %}

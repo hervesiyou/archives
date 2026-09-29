@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block title %}Nos Librairies – RICHBOOK{% endblock %}
 
 {% block css %}
@@ -105,110 +104,110 @@
 
 {% block content %}
 
-<div class="container">
-
-    <!-- En-tête visuel -->
-    <div class=" text-center">
-        <h1 class="fw-bold mb-3">Nos Librairies</h1>
-
-        <div aria-label="breadcrumb">
-            <ol class="breadcrumb justify-content-center">
-                <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa fa-home me-1"></i>Accueil</a></li>
-                <li class="breadcrumb-item active"><i class="fa fa-book me-1"></i>Librairies</li>
-            </ol>
+    <div class="container">
+        <!-- En-tête visuel -->
+        <div class=" text-center">
+            <h1 class="fw-bold mb-3">Nos Librairies</h1>
+            <div aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="fa fa-home me-1"></i>Accueil</a></li>
+                    <li class="breadcrumb-item active"><i class="fa fa-book me-1"></i>Librairies</li>
+                </ol>
+            </div>
+             {% comment %} {{ user.nb_librairies}}
+             {{ user.get_abonnements_permissions.librairies}}
+             {{peut_creer}} {% endcomment %}
+            {% if 'ADD_LIBRAIRIE' in request.session.userrights or peut_creer %}
+                <a href="{% url 'add_librairie' %}" class="btn btn-lg btn-danger my-2">
+                    <i class="fa fa-plus-circle me-2"></i>Nouvelle librairie
+                </a>
+            {% endif %}
         </div>
 
-        {% if 'ADD_LIBRAIRIE' in request.session.userrights %}
-            <a href="{% url 'add_librairie' %}" class="btn btn-lg btn-danger mt-2">
-                <i class="fa fa-plus-circle me-2"></i>Nouvelle librairie
-            </a>
-        {% endif %}
-    </div>
-
-    <!-- Barre de recherche -->
-    <div class="row justify-content-center mb-5">
-        <div class="col-12 col-md-8 col-lg-6">
-            <form method="post" action="{% url 'search_book' %}" class="input-group input-group-lg">
-                {% csrf_token %}
-                <input type="text" 
-                       class="form-control" 
-                       name="rechLivre" 
-                       value="{{ name|default:'' }}" 
-                       placeholder="Rechercher un livre dans toutes les librairies...">
-                <button class="btn btn-danger" type="submit">
-                    <i class="fa fa-search"></i>
-                </button>
-            </form>
+        <!-- Barre de recherche -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-12 col-md-8 col-lg-6">
+                <form method="post" action="{% url 'search_book' %}" class="input-group input-group-lg">
+                    {% csrf_token %}
+                    <input type="text" 
+                        class="form-control" 
+                        name="rechLivre" 
+                        value="{{ name|default:'' }}" 
+                        placeholder="Rechercher un livre dans toutes les librairies...">
+                    <button class="btn btn-danger" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </form>
+            </div>
         </div>
-    </div>
 
-    <!-- Grille des librairies -->
-    <div class="row g-4">
-        {% for lib in librairies %}
-            <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
-                <div class="card lib-card h-100">
-                    
-                    <div class="lib-header">
-                        <a href="{% url 'listbooks' id=lib.id mode=1 %}">
-                            {{ lib.nom }}
-                        </a>
-                    </div>
-
-                    {%  if lib.image %}
-                        {% with first_image=lib.image %}
-                            <div class="my-2 text-center">
-                                <img src="{{ first_image.fichier.url }}"  style="max-width: 100%; max-height: 400px;" alt="{{ lib.description|default:'Couverture de la communauté' }}">
-                            </div>
-                        {% endwith %}
-                    {% else %}
-                        <div class="my-4">
-                            {% comment %} <img src="{% static 'images/com.jpg' %} " alt="user" style="max-width: 100%; max-height: 400px;" > {% endcomment %}
-                            <img src="{% static 'images/richbooklib.png' %}" 
-                         class="lib-avatar card-img-top" 
-                         alt="{{ lib.nom }}">
-                        </div>                            
-                    {% endif %}
-
-
-                    
-
-                    <div class="lib-body d-flex flex-column">
-                        <div class="lib-desc flex-grow-1">
-                            <a href="{% url 'listbooks' id=lib.id mode=1 %}" class="text-dark text-decoration-none">
-                                {{ lib.description|truncatechars:140 }}
+        <!-- Grille des librairies -->
+        <div class="row g-4">
+            {% for lib in librairies %}
+                <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="card lib-card h-100">
+                        
+                        <div class="lib-header">
+                            <a href="{% url 'listbooks' id=lib.id mode=1 %}">
+                                {{ lib.nom }}
                             </a>
                         </div>
 
-                        <a href="{% url 'show_librairie' lib.id %}" 
-                           class="btn btn-outline-danger mt-3 w-100">
-                            Voir la librairie →
-                        </a>
-                    </div>
+                        {%  if lib.image %}
+                            {% with first_image=lib.image %}
+                                <div class="my-2 text-center">
+                                    <img src="{{ first_image.fichier.url }}"  style="max-width: 100%; max-height: 400px;" alt="{{ lib.description|default:'Couverture de la communauté' }}">
+                                </div>
+                            {% endwith %}
+                        {% else %}
+                            <div class="my-4">
+                                {% comment %} <img src="{% static 'images/com.jpg' %} " alt="user" style="max-width: 100%; max-height: 400px;" > {% endcomment %}
+                                <img src="{% static 'images/richbooklib.png' %}" 
+                            class="lib-avatar card-img-top" 
+                            alt="{{ lib.nom }}">
+                            </div>                            
+                        {% endif %}
 
-                    <div class="lib-footer d-flex justify-content-between">
-                        <span class="badge bg-light text-danger">
-                            {{ lib.type|default:"Générale" }}
-                        </span>
-                        <span class="badge bg-success">
-                            <i class="fa fa-book me-1"></i>
-                            {{ lib.nombre_livres }} livres
-                        </span>
-                    </div>
 
+                        
+
+                        <div class="lib-body d-flex flex-column">
+                            <div class="lib-desc flex-grow-1">
+                                <a href="{% url 'listbooks' id=lib.id mode=1 %}" class="text-dark text-decoration-none">
+                                    {{ lib.description|truncatechars:140 }}
+                                </a>
+                            </div>
+
+                            <a href="{% url 'show_librairie' lib.id %}" 
+                            class="btn btn-outline-danger mt-3 w-100">
+                                Voir la librairie →
+                            </a>
+                        </div>
+
+                        <div class="lib-footer d-flex justify-content-between">
+                            <span class="badge bg-light text-danger">
+                                {{ lib.type|default:"Générale" }}
+                            </span>
+                            <span class="badge bg-success">
+                                <i class="fa fa-book me-1"></i>
+                                {{ lib.nombre_livres }} livres
+                            </span>
+                        </div>
+
+                    </div>
                 </div>
-            </div>
-        {% empty %}
-            <div class="col-12 text-center py-5">
-                <h4 class="text-muted">Aucune librairie enregistrée pour le moment</h4>
-                {% if 'ADD_LIBRAIRIE' in request.session.userrights %}
-                    <a href="{% url 'add_librairie' %}" class="btn btn-danger mt-3">
-                        Créer la première librairie
-                    </a>
-                {% endif %}
-            </div>
-        {% endfor %}
-    </div>
+            {% empty %}
+                <div class="col-12 text-center py-5">
+                    <h4 class="text-muted">Aucune librairie enregistrée pour le moment</h4>
+                    {% if 'ADD_LIBRAIRIE' in request.session.userrights %}
+                        <a href="{% url 'add_librairie' %}" class="btn btn-danger mt-3">
+                            Créer la première librairie
+                        </a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
 
-</div>
+    </div>
 
 {% endblock %}

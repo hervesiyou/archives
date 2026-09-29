@@ -9,7 +9,7 @@ class Plan(models.Model):
     nbcommunautes = models.CharField( max_length=10, blank=True, default = 0)
     nbadministrateurs = models.CharField( max_length=10, blank=True, default = 1)
     nbfamilles = models.CharField( max_length=10, blank=True, default = 1)
-    nblivres = models.CharField( max_length=10, blank=True, default = 1 )
+    nblivres = models.CharField( max_length=10, blank=True, default = 0 )
     nbcagnotes = models.CharField( max_length=10, blank=True, default = 1 )
     nblibrairies = models.CharField( max_length=10, blank=True, default = 0 )
 

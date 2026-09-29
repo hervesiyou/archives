@@ -1,6 +1,6 @@
 from arch_portal.domain.models.galerie import Galerie
 from django.shortcuts import redirect, render, get_object_or_404
-from arch_portal.domain.forms.evenement import EvenementForm
+from arch_portal.domain.forms.evenement import EvenementEditForm, EvenementForm
 from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.models.evenement import Evenement
 from arch_portal.domain.models.membre import Membre
@@ -53,12 +53,12 @@ def edit_evenement(request, id):
         return redirect('show_evenement', id=evenement.id)
     
     if request.method == "POST":
-        form = EvenementForm(request.POST, instance=evenement)
+        form = EvenementEditForm(request.POST, instance=evenement)
         if form.is_valid():
             form.save()
             return redirect("show_evenement", id=evenement.id)
     else:
-        form = EvenementForm(instance=evenement)
+        form = EvenementEditForm(instance=evenement)
 
     return render(request, "archcore/edit_evenement.html", {"form": form, "evenement": evenement, "admin":admin})
 

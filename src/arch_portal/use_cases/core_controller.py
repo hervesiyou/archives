@@ -193,7 +193,7 @@ def souscrire_abonnement(request):
             return JsonResponse(response)
         
         if membre is None: 
-            response["message"] = f"Membre avec id {membre} introuvable."
+            response["message"] = f"Membre {membre} introuvable."
             response["status"] = False
             return JsonResponse(response)  
         
@@ -302,7 +302,7 @@ def souscrire_abonnement(request):
                     prix = prix
                 )
 
-        elif plan == "PROLIBRAIRE":
+        elif plan == "PROLIBRAIRIE":
             p = Plan.objects.filter(code=plan).first()
             if p is None:
                 prix = 29000 
@@ -666,6 +666,104 @@ def mes_messages(request):
     return render(request, 'messages/mes_messages.html', context)
 
 @csrf_exempt
+def invalide_salleatt(request):
+
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    if is_ajax :
+        if request.method == "POST" :
+            data = json.loads(request.body.decode('utf-8')) 
+            user = get_membre_from_session(request)
+            if not user:
+                return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+            
+            if data.get('salle') is None:
+                return JsonResponse({'status': False ,"message": "Famille incorrecte"})
+            else:  
+                if data.get('direction') is None:
+                    return JsonResponse({'status': False ,"message": "Problème de procédure !"})
+                else: 
+                    if( data.get("direction") == "FAM"):
+                        # je veux valider l'appartenance d'un membre à une famille
+                        salle = SalleAttenteFamille.objects.get(id=data.get("salle"))
+                        famille = salle.famille
+                        personne = salle.personne
+
+                        salle.delete()                             
+                        mes = Message(
+                            sujet=f" Votre demande d'accès à {famille.nom} a été rejéttée",
+                            contenu=f" Un administrateur à rejetté votre accès à la Famille : {famille.nom} .",
+                            date_ajout=date.today()
+                        )
+                            
+                        mes.save()
+                        personne.messages.add( mes )
+                        personne.save()
+                        message = f"Désolé { personne.nomcomplet } , vous n'êtes pas autorisé à adherer à  { famille.nom } "
+                        
+                    else:
+                        if( data.get("direction") == "COM"):
+
+                            salle = SalleAttenteCommunaute.objects.get( id=data.get("salle") )
+                            communaute = salle.communaute
+                            personne = salle.personne
+
+                            salle.delete()                             
+                            mes = Message(
+                                sujet=f" Votre demande d'accès à {communaute.nom} a été rejéttée",
+                                contenu=f" Un administrateur à rejetté votre accès à la COMMUNAUTE : {communaute.nom} .",
+                                date_ajout=date.today()
+                            )
+                                
+                            mes.save()
+                            personne.messages.add( mes )
+                            personne.save()
+                            # communaute.save()
+                            message = f"Désolé { personne.nomcomplet } , vous n'êtes pas autorisé à adherer à  { communaute.nom } "
+                        else:
+                            if( data.get("direction") == "ASSO"):
+                                salle = SalleAttenteAssociation.objects.get(id=data.get("salle"))
+                                association = salle.association
+                                personne = salle.personne
+    
+                                salle.delete()                             
+                                mes = Message(
+                                    sujet=f" Votre demande d'accès à {association.nom} a été rejéttée",
+                                    contenu=f" Un administrateur à rejetté votre accès à l'Association : {association.nom} .",
+                                    date_ajout=date.today()
+                                )
+                                    
+                                mes.save()
+                                personne.messages.add( mes )
+                                personne.save()
+                                message = f"Désolé { personne.nomcomplet } , vous n'êtes pas autorisé à adherer à  { association.nom } "
+                            else:
+                                # je veux valider la fusion  de deux familles 
+                                if( data.get("direction") == "FAMMERE"):
+
+                                    salle = SalleAttenteFamilleMere.objects.get(id=data.get("salle"))
+                                    famillemere = salle.famillemere
+                                    famille = salle.famille
+                                    personne = salle.personne
+        
+                                    salle.delete()                             
+                                    mes = Message(
+                                        sujet=f" Votre demande d'accès à {famillemere.nom} a été rejéttée",
+                                        contenu=f" Un administrateur à rejetté votre fusion avec : {famillemere.nom} .",
+                                        date_ajout=date.today()
+                                    )
+                                        
+                                    mes.save()
+                                    personne.messages.add( mes )
+                                    personne.save()
+                                    message = f" Un administrateur à refusé votre fusion de { famille.nom } à { famillemere.nom }  ."
+                                else: 
+                                    return JsonResponse({'status': False ,"message": "Probleme de procedure de fusion des familles !"})
+                     
+                    #  ici je peux aussi envoyer un mail à l'utilisateur
+                    return JsonResponse({'status': True ,"message": message})
+
+
+@csrf_exempt
 def valide_salleatt(request):
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     if is_ajax :
@@ -679,10 +777,7 @@ def valide_salleatt(request):
             
             if data.get('salle') is None:
                 return JsonResponse({'status': False ,"message": "Famille incorrecte"})
-            else: 
-                # if userid is None:
-                #     return JsonResponse({'status': False ,"message": "Merci de vous connecter avant tout abonnement !"})
-                # else:
+            else:  
                 if data.get('direction') is None:
                     return JsonResponse({'status': False ,"message": "Problème de procédure !"})
                 else:

@@ -3,7 +3,6 @@
 {% load custom_filters %}
 
 {% load famille_tags %}
-
 {% block title %}Familles de {{ communaute.nom }}{% endblock %}
 
 {% block css %}
@@ -120,7 +119,7 @@
             </ol>
         </div>
 
-        {% if 'ADD_FAMILLE' in request.session.userrights %}
+        {% if 'ADD_FAMILLE' in request.session.userrights or peut_creer_famille %}
             <a href="{% url 'add_famille' %}" class="btn btn-lg btn-success mb-2">
                 <i class="fa fa-plus-circle"></i> Nouvelle famille
             </a>
@@ -154,7 +153,7 @@
                             
                         <div class="family-header text-center">
                         
-                            {%  if fam.image %}
+                            {% if fam.image %}
                                 {% with first_image=fam.image %}
                                     <div class="book-image">
                                         <img src="{{ first_image.fichier.url }}" alt="{{ fam.description|default:'Couverture de la famille' }}" style="width: 100%; max-height: 200px;">
@@ -221,8 +220,7 @@
                             </div>
                             <span class="badge bg-secondary">
                                 <i class="fa fa-users me-1"></i> {{ fam.membres.count }} membres
-                            </span>
-                        
+                            </span>                        
                         </div> 
 
                     </div>

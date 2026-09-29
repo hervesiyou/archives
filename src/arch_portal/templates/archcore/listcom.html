@@ -27,13 +27,18 @@
                            <div class="col-lg-4 col-md-6 mb-4  card card-hover">
                                 <div class="box bg-success text-center">
                                     {% comment %} <h1 class="font-light text-white"><i class="mdi mdi-view-dashboard"></i> </h1> {% endcomment %}
-                                    {% if  com.publique %}
+                                    {% if  com.publique or com.a_acces %}
                                         <h6 class="text-white"><i class="fa-solid fa-person-shelter"></i> {{ com.nom}} </h6>
                                         {% comment %} {% if  'VOIR_COMMUNAUTE' in request.session.userrights or com.publique %} {% endcomment %}
-                                    <a href="{% url 'listfamilles' id=com.id mode=1 %}" class="text-center badge bg-white text-success"> Voir ses familles </a>
+                                        <a href="{% url 'listfamilles' id=com.id mode=1 %}" class="text-center badge bg-white text-success"> Voir ses familles </a>
                                     {% else %}
-                                        <h6 class="text-white"><i class="fa-solid fa-person-shelter"></i> {{ com.nom}} </h6>
-                                        <a href="#" data-com="{{com.id}}" data-user="{{request.session.userid}}" class="badge bg-danger partComID"> Je souhaite être {{ com.nom }}</a>
+                                  
+                                        {% if not com.a_acces %}
+                                            <h6 class="text-white"><i class="fa-solid fa-person-shelter"></i> {{ com.nom}} </h6>
+                                            <a href="#" data-com="{{com.id}}" data-user="{{request.session.userid}}" 
+                                                class="badge bg-danger partComID"> Je souhaite être {{ com.nom }}
+                                            </a>
+                                        {% endif %}
                                     {% endif %}
                                 </div>
                                 <div class="card community-card h-100 shadow-sm border-0 overflow-hidden">
@@ -78,16 +83,16 @@
  
                                         <p class="card-text community-desc flex-grow-1">
                                             <a href="{% url 'listfamilles' id=com.id mode=1 %}" class="stretched-link">
-                                            {{com.description}} 
+                                                {{com.description}} 
                                             </a>
                                         </p>                                       
                                         <div class="mt-auto">
                                     
                                             {% if not com.publique %}
                                             
-                                                {% if com.createur == user_connecte %}
+                                                {% if com.createur == user_connecte or com.a_acces %}
                                                     <a href="{% url 'show_communaute' com.id %}" class="btn btn-outline-success w-100">
-                                                    Découvrir la communauté →
+                                                        Découvrir la communauté →
                                                     </a>
                                                 {% else %}
                                                     <a href="#" data-com="{{com.id}}" data-user="{{request.session.userid}}" class="btn btn-outline-danger w-100 partComID"> Je souhaite être {{ com.nom }}</a>
@@ -95,9 +100,9 @@
 
                                             {% else %}
                                                 
-                                                    <a href="{% url 'show_communaute' com.id %}" class="btn btn-primary w-100">
+                                                <a href="{% url 'show_communaute' com.id %}" class="btn btn-primary w-100">
                                                     Découvrir la communauté →
-                                                    </a>
+                                                </a>
                                                     
                                             {% endif %}
                                         </div>

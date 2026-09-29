@@ -16,6 +16,7 @@ import arch_portal.use_cases.publicite_controller as publicite
 import arch_portal.use_cases.information_controller as info
 import arch_portal.use_cases.message_controller as message
 import arch_portal.use_cases.contact_controller as contact
+import arch_portal.use_cases.lienaccess_controller as lien
 from django.views.generic import TemplateView
 
 from django.contrib.sitemaps.views import sitemap
@@ -29,8 +30,15 @@ sitemaps = {
     'associations': AssociationSitemap,
     'livres': LivreSitemap, 
 }
- 
+
 urlpatterns = [
+    path( "acces/g/<str:entite>/<int:id>/",  lien.generer_lien,  name="generer_lien"),
+    path( "acces/<str:token>/",  lien.acces_par_lien,  name="acces_par_lien"),
+    path( "lie/revoq/<int:id>/", lien.revoker_lien,  name="revoker_lien"),
+    path( "lie/regen/<str:entite>/<int:id>/", lien.regenerer_lien, name="regenerer_lien"),
+]
+
+urlpatterns += [
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('google-site-verification.html', TemplateView.as_view(template_name='google-site-verification.html', content_type='text/html'), name='google_verification'), 
     path('robots.txt', TemplateView.as_view( template_name='robots.txt',  content_type='text/plain' ), name='robots_txt'),
@@ -49,6 +57,10 @@ urlpatterns += [
 
 urlpatterns += [
     path("pres/cam/", publicite.liste_publicites, name="liste_publicite"),
+    path("pres/c/user", publicite.liste_publicites_user, name="liste_publicite_user"),
+    path("pres/c/<int:id>", publicite.liste_publicites_com, name="liste_publicite_com"),
+    path("pres/ass/<int:id>", publicite.liste_publicites_asso, name="liste_publicite_asso"),
+    path("pres/fam/<int:id>", publicite.liste_publicites_fam, name="liste_publicite_fam"),
     path("pres/cam/nou/", publicite.creer_publicite, name="creer_publicite"),
     path("pres/cam/<int:pk>/mod/", publicite.modifier_publicite, name="modifier_publicite"),
     path("pres/cam/<int:pk>/sup/", publicite.supprimer_publicite, name="supprimer_publicite"),
@@ -162,6 +174,7 @@ urlpatterns += [
     path('add_ad_comsalleatt', core.add_user_salleattcom, name="ad_sal_com"),
     path('add_ad_assosalleatt', core.add_user_salleattasso, name="ad_sal_asso"),
     path('valsatt', core.valide_salleatt, name="valide_salle_att"),
+    path('invalsatt', core.invalide_salleatt, name="invalide_salle_att"),
     # path('valsattfammere', core.valide_salleatt_fammere, name="valide_salle_att_fammere"),
     path('shfasal/<int:id>', core.show_fam_salle, name="show_fam_salle"),
     path('shfasalfusion/<int:id>', core.show_fam_salle_fusion, name="show_fam_salle_fusion"),

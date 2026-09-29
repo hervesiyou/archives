@@ -66,3 +66,18 @@ class  Communaute(models.Model):
 
     def get_articles(self):
         return self.articles.all().order_by('-dateajout')
+
+    def user_a_access(self, user):
+        
+        if self.publique:
+            return True
+
+        if self.createur == user:
+            return True
+
+        if self.chef == user:
+            return True
+        if self.membres_communaute.filter(id=user.id).exists():
+            return True
+        
+        return user in self.administrateurs.all()

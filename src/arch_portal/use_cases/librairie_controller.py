@@ -32,7 +32,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from arch_portal.use_cases.services.subscription_service import get_membre_from_session
 from django.core.exceptions import PermissionDenied
 from arch_portal.use_cases.services.subscription_service import check_abonnement_permission, get_membre_from_session
-
+from django.urls import reverse
 import qrcode
 from io import BytesIO
 from reportlab.lib.pagesizes import A4
@@ -55,7 +55,15 @@ def faq(request):
 
 def listlibs(request):
     libs = Librairie.objects.all()
-    return render(request, "libcore/listlibrairies.html", { "librairies" : libs, } )
+    membre = get_membre_from_session(request)
+    if not membre:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+
+    peut_creer =False
+    if membre.nb_librairies() > membre.get_abonnements_permissions()["librairies"]:
+        peut_creer = True
+    
+    return render(request, "libcore/listlibrairies.html", { "librairies" : libs, 'user':membre , "peut_creer" : peut_creer} )
 
 def listbooks(request, id,mode=False):
     livres = Livre.objects.filter(librairies=id)
@@ -502,11 +510,7 @@ def show_book(request,id):
     # paiements_valides = PaiementLivre.objects.filter(
     #     acheteur=user,
     #     statut="PAYE"
-    # )
-
-    
-
-    
+    # )   
     if librairieid is None and liv.librairies.count() < 1:
         messages.error(request, "La librairie de ce livre n'existe pas , merci de choisir un autre  livre .")
         return  redirect("listlibs")
@@ -530,9 +534,7 @@ def add_book(request):
         return  redirect("listlibs")
     
     if request.method == "POST":
-
         try:
-
             check_abonnement_permission(request, 'livre')
 
             form = LivreForm(request.POST, request.FILES)
@@ -617,7 +619,6 @@ def search_book_lib(request,id):
     
     return render(request, "libcore/listsearchedbooks.html", { "livres":livres , "name": name, "librairie": lib} )
    
-
 def search_book(request):
     name = request.POST.get("rechLivre","")
     # print(name) 
@@ -630,25 +631,44 @@ def search_book(request):
     
     return render(request, "libcore/listsearchedbooks.html", { "livres":livres , "name": name} )
     
-
 def show_librairie(request,id):
+
+    membre = get_membre_from_session(request)
+    if not membre:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    
     lib = Librairie.objects.get(id=id)
     # je garde les informations de la librairie consultée en cours , ca peut aider lors de l'ajout du livre
     request.session['librairie'] = lib.nom
     request.session['librairieid'] = lib.id
-    return render(request, "libcore/show_librairie.html", { "librairie" : lib, } )
+
+    peut_creer = False
+    if membre.nb_livres() > membre.get_abonnements_permissions()["livres"]:
+        peut_creer = True
+
+    possesseur =( membre == lib.possesseur)
+
+    return render(request, "libcore/show_librairie.html", { "librairie" : lib, "peut_creer": peut_creer, "user":membre , "possesseur" : possesseur } )
 
 def add_librairie(request):
+    membre = get_membre_from_session(request)
+    if not membre:
+        return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+    
     if request.method == "POST": 
         try:
 
             check_abonnement_permission(request, 'librairie')
-            form = LibrairieForm(request.POST)
+            form = LibrairieForm(request.POST, possesseur=membre)
 
             if form.is_valid():  
-                com = form.save() 
+                com = form.save(commit=False) 
+                com.createur = membre
                 com.save()
                 return redirect("show_librairie",com.id )
+            else:
+                messages.error(request, f" { form.errors}.")
+                return redirect("listlibs")
             
         except PermissionDenied as e:
             messages.error(request, str(e))

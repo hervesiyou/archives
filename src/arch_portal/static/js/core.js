@@ -40,7 +40,6 @@ $(document).ready(function(){
                 url         : BASEURL+"/abosm",  
                 dataType    : "JSON",
                 headers: { "X-CSRFToken": getCookie("csrftoken") },
-
                 beforeSend      : function(){
                     // alert(JSON.stringify(data) + ", url: " + this.url)
                     AjaxLoader.show(
@@ -64,7 +63,6 @@ $(document).ready(function(){
                             text:   " Ajout Reussi de Votre Abonnement ! " ,
                             timer: 4000,
                             showConfirmButton: false
-
                         }).then(
                             () => {
                                 $("#payMessage").html(` <div class="alert alert-info messageDiv">${returnedData.message} </div>`  )
@@ -78,14 +76,12 @@ $(document).ready(function(){
                             text:   " " + returnedData.message ,
                             timer: 4000,
                             showConfirmButton: true
-
                         }); 
                     }
                 },
                 complete: function(){
                     AjaxLoader.hide();
                 }
-
             })
 
         }else{
@@ -695,6 +691,81 @@ $(document).ready(function(){
                             window.location.reload()
                                 
                             });
+                            
+                    }   
+                }, 
+                complete: function(){
+                    AjaxLoader.hide();
+                }
+
+            });
+
+        }else{
+
+            Swal.fire({
+                icon: "error",
+                title: " Oupps !" ,
+                text:   " Merci de vous connecter d'abord !!!" ,
+                timer: 4000,
+                showConfirmButton: false
+            });
+            // console.table( data )
+        }
+    })
+
+    $(".inValideUserID").on('click', function(e){                         
+        e.preventDefault();
+       
+        var data = {                      
+            "salle": $(this).data("salle"), 
+            "direction": $(this).data("dir"), 
+        } 
+        // alert(JSON.stringify(data))
+        if( parseInt(data.salle) > 0 && data.direction != undefined   ){
+
+            $.ajax({
+                method      : "POST",
+                data        : JSON.stringify(data),
+                url         : BASEURL+"/invalsatt",  
+                dataType    : "JSON",
+                beforeSend      : function(){
+                    // alert(JSON.stringify(data))
+                    AjaxLoader.show(
+                        "Invalidation de l'appartenance à la  famille en cours..."
+                    );
+                },
+                error: function(error) {
+                    console.error(error); 
+                },
+                success  : function(returnedData){
+                    // console.log(returnedData);
+                    // alert(JSON.stringify(returnedData))
+            
+                    if (returnedData.status) {
+                        Swal.fire({
+                            icon: "success",
+                            title: " Invalidation de la demande reussie ! !" ,
+                            text:   "  "+returnedData.message ,
+                            timer: 4000,
+                            showConfirmButton: false
+
+                        }).then((result) => {
+                            // $(".clos").click();
+                            window.location.reload()                                
+                        });
+
+                    }else{
+                        Swal.fire({
+            
+                            icon: "error",
+                            title: " Oupps !" ,
+                            text:   "  " + returnedData.message ,
+                            timer: 4000,
+                            showConfirmButton: false
+
+                        }).then((result) => {
+                            window.location.reload()                                
+                        });
                             
                     }   
                 }, 

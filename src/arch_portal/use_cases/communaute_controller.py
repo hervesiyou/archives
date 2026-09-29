@@ -7,7 +7,7 @@ from django.conf import settings
 # from arch_portal.domain.models import communaute
 from arch_portal.domain.forms.don import DonForm
 from arch_portal.domain.forms.galerie import GalerieForm
-from arch_portal.domain.forms.communaute import CommunauteForm 
+from arch_portal.domain.forms.communaute import CommunauteForm , CommunauteEditForm
 from arch_portal.domain.models.communaute import Communaute
 from arch_portal.domain.forms.image import ImageForm
 from arch_portal.domain.models.abonnement import Abonnement
@@ -43,6 +43,8 @@ from arch_portal.domain.models.personnecle import PersonneCle
 from arch_portal.domain.models.lieucle   import LieuCle  
 from arch_portal.domain.forms.lieucle   import LieuCleForm  
 from arch_portal.domain.forms.personnecle   import PersonneCleForm 
+
+from arch_portal.domain.models.lien_acces import LienAcces
 # ────────────── PERSONNES CLÉS ──────────────
  
 def personnecle_create(request, type_entite, entite_id):
@@ -399,7 +401,15 @@ def listcom(request):
         peut_creer_communaute = ( int(coms) < int(abo.plan.nbcommunautes))    
 
     communautes = Communaute.objects.all()
-    return render(request, "archcore/listcom.html", { "communautes":communautes, "peut_creer_communaute": peut_creer_communaute ,"user_connecte":membre})
+    # je check si c'est le createur ou un admin ou appartient deja
+    for com in communautes:
+        com.a_acces = com.user_a_access(membre)
+
+    return render(request, "archcore/listcom.html", { 
+            "communautes":communautes, 
+            "peut_creer_communaute": peut_creer_communaute ,
+            "user_connecte":membre
+        })
  
 
 def personnecle_create(request, idcom):
@@ -466,7 +476,6 @@ def show_communaute(request, id):
     #  je check si c'est le createur ou un admin  
     if com.createur == user or (user in com.administrateurs.all()):
         gestionnaire = True
-
     
     if (com.createur == user):
         est_createur=True,
@@ -476,6 +485,8 @@ def show_communaute(request, id):
     if ( user in com.membres_communaute.all()):
         appartient = True
 
+    lien = LienAcces.objects.filter(communaute=com).first()
+
     return render(request, "archcore/show_com.html", 
         {
             "communaute":com, 
@@ -483,6 +494,7 @@ def show_communaute(request, id):
             "appartient" : appartient,
             "gestionnaire":gestionnaire,
             "user_connecte":user,
+            'liens': lien,
             
             'personnes_cles': com.personnescles_communaute.all().order_by('nom'),
             'lieux_cles': com.lieucles_communaute.all().order_by('nom'),
@@ -509,21 +521,10 @@ def show_admin_com(request,id):
 @csrf_protect
 def edit_communaute(request, id):
     com = get_object_or_404(Communaute, id=id)
-    '''
-    PersonneFormSet = inlineformset_factory(
-        Communaute, PersonneCle, form=PersonneCleForm,
-        fields='__all__', extra=1, can_delete=True
-    )
-    LieuFormSet = inlineformset_factory(
-        Communaute, LieuCle, form=LieuCleForm,
-        fields='__all__', extra=1, can_delete=True
-    )
-    '''
-
     image_instance = com.image if hasattr(com, 'image') else None
 
     if request.method == "POST":
-        form = CommunauteForm(request.POST, instance=com) 
+        form = CommunauteEditForm(request.POST, instance=com) 
         image_form = ImageForm(request.POST, request.FILES, instance=image_instance)
 
         histoires_formset = MiniHistoireFormSet(request.POST, instance=com, prefix='mini_histoire')
@@ -585,7 +586,7 @@ def edit_communaute(request, id):
             messages.success(request, "Communauté modifiée avec succès.")
             return redirect("show_communaute",com.id )
     else:
-        form = CommunauteForm(instance=com)
+        form = CommunauteEditForm(instance=com)
         histoires_formset = MiniHistoireFormSet(instance=com, prefix='mini_histoire')
         rois_formset = RoiFormSet(instance=com, prefix='rois_communaute')
         # personnes_formset = PersonneFormSet( instance=com, prefix='personnes')
@@ -593,7 +594,7 @@ def edit_communaute(request, id):
 
         image_form = ImageForm()
    
-    context ={
+    context = {
         "form": form,
         "histoires_formset": histoires_formset,
         "rois_formset": rois_formset,
@@ -687,6 +688,8 @@ def add_communaute(request):
 
                 personnes_formset.save()
                 lieux_formset.save()
+                #  creation du lien d'access
+                lien = LienAcces.genererCommunaute(com)
 
                 messages.success(request, "Communauté créée avec succès.")
                 return redirect("show_communaute", com.id)

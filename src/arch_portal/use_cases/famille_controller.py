@@ -1,6 +1,6 @@
 
 from django.shortcuts import redirect, render, get_object_or_404
-from arch_portal.domain.forms.famille import FamilleForm
+from arch_portal.domain.forms.famille import FamilleForm, FamilleEditForm
 from arch_portal.domain.forms.membre import MembreFamilleForm
 from arch_portal.domain.forms.image import ImageForm
 from arch_portal.domain.models.communaute import Communaute
@@ -23,6 +23,8 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from arch_portal.use_cases.services.subscription_service import check_abonnement_permission, get_membre_from_session
 from collections import defaultdict, deque
+
+from arch_portal.domain.models.lien_acces import LienAcces
 
 def page_famille(request, id):
     famille = get_object_or_404(Famille, pk=id)
@@ -68,7 +70,6 @@ def edit_famille(request, id):
         # return redirect("login" )
         return redirect(f"{reverse('login')}?next={request.get_full_path()}")
     
-    
     user = request.session['userid']
     user = get_object_or_404(Membre, pk=user)
     
@@ -82,7 +83,7 @@ def edit_famille(request, id):
     image_instance = famille.image if hasattr(famille, 'image') else None
 
     if request.method == 'POST':
-        form = FamilleForm(request.POST, instance=famille)
+        form = FamilleEditForm(request.POST, instance=famille)
         image_form = ImageForm(request.POST, request.FILES, instance=image_instance)
 
         if form.is_valid() and image_form.is_valid():
@@ -102,7 +103,7 @@ def edit_famille(request, id):
 
     else:
         # GET : formulaire vierge + formset pré-rempli avec les images existantes
-        form = FamilleForm(instance=famille)
+        form = FamilleEditForm(instance=famille)
         image_form = ImageForm(instance=image_instance)
 
     return render(request, 'famille/edit_famille.html', {'famille': famille, 'administrateurs':len(admins), 'admins':admins, 'form': form , 'image_form': image_form,})
@@ -305,8 +306,13 @@ def listfamilles(request, id, mode=0):
     if abo and abo.plan is not None:
         peut_creer_famille= ( int(fam) < int(abo.plan.nbfamilles))
 
+    # je check si c'est le createur ou un admin ou appartient deja
+    for com in familles:
+        com.a_acces = com.user_a_access(membre)
+
     if not mode: 
         return render(request, "archcore/listfamilles_tab.html", { "familles" : familles, "communaute" : lib , "peut_creer_famille":peut_creer_famille } )
+    
     return render(request, "archcore/listfamilles.html", { "familles" : familles, "communaute" : lib , "peut_creer_famille":peut_creer_famille } )
 
 def show_famille(request,id):
@@ -334,13 +340,17 @@ def show_famille(request,id):
 
     if fam.createur == user  :
         est_createur = True
+
+    lien = LienAcces.objects.filter(famille=fam).first()
     
     return render(request, "famille/showfamille.html", {
         "famille" : fam, "appartient" : appartient,
         "est_createur":est_createur, 
         "galerie" : galerie,
         "user_connecte":user,
-        "gestionnaire":gestionnaire 
+        "gestionnaire":gestionnaire,
+
+        'liens': lien,
         } 
     )
 
@@ -525,6 +535,9 @@ def add_famille(request):
                 com.famille_mere = Famille.objects.filter(nom="BASE").first()  if Famille.objects.filter(nom="BASE").exists() else None
                 # je met cet utilisateur comme membre de cette famille
                 user.familles.add(com)
+                #  je cree le lien de cette famille
+                lien = LienAcces.genererFamille(com)
+                
                 user.save()
                 com.save()
 

@@ -1,6 +1,5 @@
  {% extends "base.html" %}
 {% load static %}
-
 {% block title %}{{ librairie.nom }} – Librairie RICHBOOK{% endblock %}
 
 {% block css %}
@@ -94,7 +93,12 @@
             <span class="badge bg-light text-dark fs-5 px-3 py-2">
                 {{ librairie.nombre_livres }} livre {{ librairie.nombre_livres|pluralize }}
             </span>
-            {% if  'ADD_LIVRE' in request.session.userrights %}
+
+             {% comment %} {{ user.nb_livres}}
+             {{ user.get_abonnements_permissions.livres}}
+             {{peut_creer}}   {% endcomment %}
+
+            {% if  'ADD_LIVRE' in request.session.userrights or peut_creer %}
                 <a href="{% url 'addbook' %}" class="btn btn-sm btn-info"><i class="fa fa-plus"></i>  Ajouter un livre</a>
             {% endif %}
         </p>        
@@ -125,19 +129,7 @@
                         </div>
                     </form>
                 </div>
-            </div>
-
-            <!-- À développer plus tard : filtres par domaine, prix, etc. -->
-            <!-- <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h5 class="card-title">Domaines populaires</h5>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><a href="#">Littérature africaine</a></li>
-                        <li class="list-group-item"><a href="#">Histoire & Patrimoine</a></li>
-                        ...
-                    </ul>
-                </div>
-            </div> -->
+            </div> 
 
         </div>
 
@@ -193,7 +185,7 @@
                 {% empty %}
                     <div class="col-12 text-center py-5">
                         <h4 class="text-muted">Aucun livre disponible dans cette librairie pour le moment</h4>
-                        {% if 'ADD_LIVRE' in request.session.userrights %}
+                        {% if 'ADD_LIVRE' in request.session.userrights or peut_creer %}
                             <a href="{% url 'addbook' %}" class="btn btn-success mt-3">
                                 Ajouter un livre
                             </a>
@@ -217,8 +209,8 @@
                     data-bs-target="#messageModal">
                 <i class="fa fa-envelope me-1"></i>Laisser un message
             </button>
-
-            {% if 'VOIR_MESSAGES_LIBRAIRIES' in request.session.userrights %}
+            
+            {% if 'VOIR_MESSAGES_LIBRAIRIES' in request.session.userrights or possesseur %}
                 <a href="{% url 'library_messages' librairie.id %}" 
                    class="btn btn-success">
                     <i class="fa fa-eye me-1"></i>Voir les messages
